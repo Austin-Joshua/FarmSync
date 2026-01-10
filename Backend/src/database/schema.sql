@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
     land_size DECIMAL(10, 2) DEFAULT 0,
     soil_type VARCHAR(100),
     google_id VARCHAR(255) UNIQUE,
+    apple_id VARCHAR(255) UNIQUE,
+    microsoft_id VARCHAR(255) UNIQUE,
     picture_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -243,3 +245,36 @@ CREATE TABLE IF NOT EXISTS crop_recommendations (
 CREATE INDEX idx_crop_recommendations_user_id ON crop_recommendations(user_id);
 CREATE INDEX idx_crop_recommendations_farm_id ON crop_recommendations(farm_id);
 CREATE INDEX idx_crop_recommendations_created_at ON crop_recommendations(created_at);
+
+-- Audit Logs table (for tracking system activity)
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    user_id VARCHAR(36) NOT NULL,
+    action ENUM('login', 'logout', 'create', 'update', 'delete', 'view', 'export', 'admin_action') NOT NULL,
+    resource_type VARCHAR(50) NOT NULL,
+    resource_id VARCHAR(36),
+    details TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_user_id (user_id),
+    INDEX idx_action (action),
+    INDEX idx_created_at (created_at),
+    INDEX idx_resource (resource_type, resource_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Push Subscriptions table (for push notifications)
+CREATE TABLE IF NOT EXISTS push_subscriptions (
+    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    user_id VARCHAR(36) NOT NULL,
+    endpoint TEXT NOT NULL,
+    p256dh_key TEXT NOT NULL,
+    auth_key TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_user_id (user_id),
+    INDEX idx_endpoint (endpoint(255)),
+    UNIQUE KEY unique_user_endpoint (user_id, endpoint(255)),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

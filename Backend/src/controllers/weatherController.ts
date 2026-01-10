@@ -51,6 +51,29 @@ export const getClimateAlerts = async (req: AuthRequest, res: Response): Promise
     const weatherData = await weatherService.getWeatherData(latitude, longitude);
     const alerts = weatherService.detectClimateAlerts(weatherData);
 
+    // Send email notifications for critical/high severity alerts if user is authenticated
+    if (req.user && alerts.length > 0) {
+      const criticalAlerts = alerts.filter(
+        alert => alert.severity === 'critical' || alert.severity === 'high'
+      );
+
+      if (criticalAlerts.length > 0 && req.user.email) {
+        // Send email asynchronously (don't block response)
+        Promise.all(
+          criticalAlerts.map(async (alert) => {
+            try {
+              const { EmailService } = await import('../services/emailService');
+              return EmailService.sendClimateAlert(req.user!.email!, alert).catch(
+                (err: any) => console.error('Failed to send email alert:', err)
+              );
+            } catch (err) {
+              console.error('Failed to import email service:', err);
+            }
+          })
+        ).catch(console.error);
+      }
+    }
+
     res.json({
       message: 'Climate alerts retrieved successfully',
       data: {

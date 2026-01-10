@@ -3,6 +3,7 @@ import { AuthRequest } from '../middleware/auth';
 import { AuthService } from '../services/authService';
 import { AppError } from '../middleware/errorHandler';
 import { body } from 'express-validator';
+import { validatePassword } from '../utils/passwordValidator';
 
 export const register = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -14,6 +15,12 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
 
     if (role !== 'farmer' && role !== 'admin') {
       throw new AppError('Role must be either farmer or admin', 400);
+    }
+
+    // Validate password strength
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      throw new AppError(`Password validation failed: ${passwordValidation.errors.join(', ')}`, 400);
     }
 
     const result = await AuthService.register(name, email, password, role, location);
@@ -37,6 +44,14 @@ export const login = async (req: AuthRequest, res: Response): Promise<void> => {
 
     const result = await AuthService.login(email, password);
 
+    // Log login action to audit log
+    const { logLogin } = await import('../middleware/auditLogger');
+    logLogin(
+      result.user.id,
+      req.ip || req.socket.remoteAddress || undefined,
+      req.headers['user-agent'] || undefined
+    ).catch((err) => console.error('Failed to log login:', err));
+
     res.json({
       message: 'Login successful',
       ...result,
@@ -55,6 +70,14 @@ export const googleLogin = async (req: AuthRequest, res: Response): Promise<void
     }
 
     const result = await AuthService.googleLogin(idToken);
+
+    // Log login action to audit log
+    const { logLogin } = await import('../middleware/auditLogger');
+    logLogin(
+      result.user.id,
+      req.ip || req.socket.remoteAddress || undefined,
+      req.headers['user-agent'] || undefined
+    ).catch((err) => console.error('Failed to log login:', err));
 
     res.json({
       message: 'Google login successful',
@@ -152,11 +175,16 @@ export const updateProfile = async (req: AuthRequest, res: Response): Promise<vo
   }
 };
 
-// Validation rules - Allow any email format
+// Validation rules - Allow any email format, but enforce strong password
 export const registerValidation = [
   body('name').trim().notEmpty().withMessage('Name is required'),
   body('email').trim().notEmpty().withMessage('Email is required'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('password')
+    .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
+    .matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter')
+    .matches(/[a-z]/).withMessage('Password must contain at least one lowercase letter')
+    .matches(/[0-9]/).withMessage('Password must contain at least one number')
+    .matches(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/).withMessage('Password must contain at least one special character'),
   body('role').isIn(['farmer', 'admin']).withMessage('Role must be farmer or admin'),
 ];
 
@@ -167,4 +195,66 @@ export const loginValidation = [
 
 export const googleLoginValidation = [
   body('idToken').notEmpty().withMessage('Google ID token is required'),
+];
+
+export const appleLogin = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { idToken, userData } = req.body;
+
+    if (!idToken) {
+      throw new AppError('Apple ID token is required', 400);
+    }
+
+    const result = await AuthService.appleLogin(idToken, userData);
+
+    // Log login action to audit log
+    const { logLogin } = await import('../middleware/auditLogger');
+    logLogin(
+      result.user.id,
+      req.ip || req.socket.remoteAddress || undefined,
+      req.headers['user-agent'] || undefined
+    ).catch((err) => console.error('Failed to log login:', err));
+
+    res.json({
+      message: 'Apple login successful',
+      ...result,
+    });
+  } catch (error: any) {
+    throw new AppError(error.message, 401);
+  }
+};
+
+export const microsoftLogin = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { accessToken } = req.body;
+
+    if (!accessToken) {
+      throw new AppError('Microsoft access token is required', 400);
+    }
+
+    const result = await AuthService.microsoftLogin(accessToken);
+
+    // Log login action to audit log
+    const { logLogin } = await import('../middleware/auditLogger');
+    logLogin(
+      result.user.id,
+      req.ip || req.socket.remoteAddress || undefined,
+      req.headers['user-agent'] || undefined
+    ).catch((err) => console.error('Failed to log login:', err));
+
+    res.json({
+      message: 'Microsoft login successful',
+      ...result,
+    });
+  } catch (error: any) {
+    throw new AppError(error.message, 401);
+  }
+};
+
+export const appleLoginValidation = [
+  body('idToken').notEmpty().withMessage('Apple ID token is required'),
+];
+
+export const microsoftLoginValidation = [
+  body('accessToken').notEmpty().withMessage('Microsoft access token is required'),
 ];

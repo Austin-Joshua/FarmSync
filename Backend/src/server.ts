@@ -23,6 +23,8 @@ import irrigationRoutes from './routes/irrigationRoutes';
 import mlRoutes from './routes/mlRoutes';
 import weatherRoutes from './routes/weatherRoutes';
 import diseaseScanRoutes from './routes/diseaseScanRoutes';
+import auditLogRoutes from './routes/auditLogRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 
 const app: Express = express();
 
@@ -81,6 +83,8 @@ app.use('/api/irrigations', irrigationRoutes);
 app.use('/api/ml', mlRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/disease', diseaseScanRoutes);
+app.use('/api/audit-logs', auditLogRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // 404 handler
 app.use(notFoundHandler);

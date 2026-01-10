@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useLocation } from '../hooks/useLocation';
+import { useTheme } from '../context/ThemeContext';
 import { MapPin } from 'lucide-react';
 
 // Fix for default marker icon in Leaflet with React
@@ -31,6 +32,7 @@ function MapUpdater({ center }: { center: [number, number] }) {
 
 const LocationMap = ({ latitude, longitude, locationName, height = '400px' }: LocationMapProps) => {
   const { location: gpsLocation } = useLocation();
+  const { theme } = useTheme();
   const [mapLocation, setMapLocation] = useState<{ lat: number; lon: number; name?: string } | null>(null);
 
   useEffect(() => {
@@ -48,11 +50,11 @@ const LocationMap = ({ latitude, longitude, locationName, height = '400px' }: Lo
 
   if (!mapLocation) {
     return (
-      <div className="card bg-gray-50 flex items-center justify-center" style={{ height }}>
+      <div className="card bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center" style={{ height }}>
         <div className="text-center">
-          <MapPin size={48} className="mx-auto text-gray-400 mb-3" />
-          <p className="text-gray-600">No location available</p>
-          <p className="text-sm text-gray-500 mt-2">Enable location to view map</p>
+          <MapPin size={48} className="mx-auto text-gray-400 dark:text-gray-500 mb-3" />
+          <p className="text-gray-600 dark:text-gray-400">No location available</p>
+          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">Enable location to view map</p>
         </div>
       </div>
     );
@@ -61,25 +63,34 @@ const LocationMap = ({ latitude, longitude, locationName, height = '400px' }: Lo
   const center: [number, number] = [mapLocation.lat, mapLocation.lon];
 
   return (
-    <div className="card p-0 overflow-hidden" style={{ height }}>
+    <div className="card p-0 overflow-hidden border border-gray-200 dark:border-gray-700" style={{ height }}>
       <MapContainer
+        key={theme} // Force re-render when theme changes
         center={center}
         zoom={13}
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={true}
+        className="dark:brightness-90"
       >
         <MapUpdater center={center} />
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        {theme === 'dark' ? (
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors & <a href="https://carto.com/">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          />
+        ) : (
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+        )}
         <Marker position={center}>
           <Popup>
             <div className="text-center">
-              <MapPin size={20} className="mx-auto mb-2 text-primary-600" />
-              <strong>{mapLocation.name || 'Your Location'}</strong>
+              <MapPin size={20} className="mx-auto mb-2 text-primary-600 dark:text-primary-400" />
+              <strong className="text-gray-900 dark:text-gray-100">{mapLocation.name || 'Your Location'}</strong>
               <br />
-              <span className="text-xs text-gray-600">
+              <span className="text-xs text-gray-600 dark:text-gray-400">
                 {mapLocation.lat.toFixed(6)}, {mapLocation.lon.toFixed(6)}
               </span>
             </div>

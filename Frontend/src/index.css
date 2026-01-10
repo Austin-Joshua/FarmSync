@@ -3,50 +3,274 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-dark-bg: #111827;
+    --color-dark-surface: #1f2937;
+    --color-dark-surface-elevated: #374151;
+    --color-dark-text-primary: #f9fafb;
+    --color-dark-text-secondary: #d1d5db;
+    --color-dark-text-tertiary: #9ca3af;
+    --color-dark-border: #374151;
+    --color-dark-border-hover: #4b5563;
+  }
+
   body {
-    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white;
+    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /* Auto-adjust text colors for dark mode */
-  :is(.dark .text-gray-900) {
-    color: rgb(255 255 255);
+  /* Enhanced dark mode text color overrides for better readability */
+  .dark {
+    color-scheme: dark;
   }
 
-  :is(.dark .text-gray-800) {
-    color: rgb(243 244 246);
+  /* Dark mode text color overrides using direct CSS values to avoid circular dependencies */
+  .dark .text-gray-900 {
+    color: rgb(243 244 246); /* gray-100 */
   }
 
-  :is(.dark .text-gray-700) {
-    color: rgb(209 213 219);
+  .dark .text-gray-800 {
+    color: rgb(229 231 235); /* gray-200 */
   }
 
-  :is(.dark .text-gray-600) {
-    color: rgb(156 163 175);
+  .dark .text-gray-700 {
+    color: rgb(209 213 219); /* gray-300 */
   }
 
-  :is(.dark .text-gray-500) {
-    color: rgb(107 114 128);
+  .dark .text-gray-600 {
+    color: rgb(156 163 175); /* gray-400 */
   }
 
-  :is(.dark .text-gray-400) {
-    color: rgb(75 85 99);
+  .dark .text-gray-500 {
+    color: rgb(107 114 128); /* gray-500 */
+  }
+
+  .dark .text-gray-400 {
+    color: rgb(75 85 99); /* gray-600 */
+  }
+
+  /* Smooth transitions for all color changes */
+  * {
+    @apply transition-colors duration-200;
+  }
+
+  /* Prevent transitions on transform/opacity for performance */
+  *:not([class*="transition"]) {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   }
 }
 
 @layer components {
   .card {
-    @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-lg border border-gray-200 dark:border-gray-700;
+    @apply bg-white dark:bg-gray-800 rounded-lg shadow-md dark:shadow-dark-lg p-6 transition-all duration-200 ease-out hover:shadow-lg dark:hover:shadow-dark-xl hover:scale-[1.01] border border-gray-200 dark:border-gray-700;
+  }
+
+  .card-elevated {
+    @apply bg-white dark:bg-gray-850 rounded-lg shadow-lg dark:shadow-dark-xl p-6 transition-all duration-200 ease-out hover:shadow-xl dark:hover:shadow-dark-xl hover:scale-[1.01] border border-gray-200 dark:border-gray-700;
   }
 
   .btn-primary {
-    @apply bg-primary-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-primary-700 active:scale-95;
+    @apply bg-primary-600 dark:bg-primary-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-150 ease-in-out hover:bg-primary-700 dark:hover:bg-primary-600 hover:scale-105 active:scale-95 shadow-md dark:shadow-dark-lg hover:shadow-lg dark:hover:shadow-dark-xl;
   }
 
   .btn-secondary {
-    @apply bg-earth-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-earth-700 active:scale-95;
+    @apply bg-earth-600 dark:bg-earth-500 text-white px-4 py-2 rounded-lg font-medium transition-all duration-150 ease-in-out hover:bg-earth-700 dark:hover:bg-earth-600 hover:scale-105 active:scale-95 shadow-md dark:shadow-dark-lg hover:shadow-lg dark:hover:shadow-dark-xl;
   }
 
   .input-field {
-    @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400;
+    @apply w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent transition-all duration-150 ease-in-out bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 hover:border-primary-300 dark:hover:border-primary-600;
+  }
+
+  /* Enhanced dark mode surface classes */
+  .dark-surface {
+    @apply bg-gray-800 dark:bg-gray-850;
+  }
+
+  .dark-surface-elevated {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+
+  .dark-text-primary {
+    @apply text-gray-900 dark:text-gray-100;
+  }
+
+  .dark-text-secondary {
+    @apply text-gray-600 dark:text-gray-400;
+  }
+
+  .dark-text-tertiary {
+    @apply text-gray-500 dark:text-gray-500;
+  }
+
+  .dark-border {
+    @apply border-gray-200 dark:border-gray-700;
+  }
+
+  .dark-border-hover {
+    @apply border-gray-300 dark:border-gray-600;
+  }
+}
+
+@layer utilities {
+  .animate-in {
+    animation-duration: 300ms;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-fill-mode: both;
+  }
+
+  .fade-in {
+    animation-name: fadeIn;
+  }
+
+  .slide-in-from-bottom-4 {
+    animation-name: slideInFromBottom4;
+  }
+
+  .slide-in-from-top-2 {
+    animation-name: slideInFromTop2;
+  }
+
+  .slide-in-from-right-4 {
+    animation-name: slideInFromRight4;
+  }
+
+  .slide-in-from-left-2 {
+    animation-name: slideInFromLeft2;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInFromBottom4 {
+    from {
+      opacity: 0;
+      transform: translateY(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInFromTop2 {
+    from {
+      opacity: 0;
+      transform: translateY(-0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInFromRight4 {
+    from {
+      opacity: 0;
+      transform: translateX(1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInFromLeft2 {
+    from {
+      opacity: 0;
+      transform: translateX(-0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Staggered animation delays */
+  .delay-0 { 
+    animation-delay: 0ms; 
+    animation-duration: 200ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-25 { 
+    animation-delay: 25ms; 
+    animation-duration: 200ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-30 { 
+    animation-delay: 30ms; 
+    animation-duration: 200ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-40 { 
+    animation-delay: 40ms; 
+    animation-duration: 250ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-50 { 
+    animation-delay: 50ms; 
+    animation-duration: 300ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-75 { 
+    animation-delay: 75ms; 
+    animation-duration: 200ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-100 { 
+    animation-delay: 100ms; 
+    animation-duration: 200ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-125 { 
+    animation-delay: 125ms; 
+    animation-duration: 200ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-150 { 
+    animation-delay: 150ms; 
+    animation-duration: 200ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-175 { 
+    animation-delay: 175ms; 
+    animation-duration: 200ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-200 { 
+    animation-delay: 200ms; 
+    animation-duration: 250ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-250 { 
+    animation-delay: 250ms; 
+    animation-duration: 250ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-300 { 
+    animation-delay: 300ms; 
+    animation-duration: 300ms; 
+    animation-fill-mode: both; 
+  }
+  .delay-350 { 
+    animation-delay: 350ms; 
+    animation-duration: 300ms; 
+    animation-fill-mode: both; 
+  }
+
+  /* Progress bar with CSS variable for dynamic width */
+  .progress-bar {
+    width: var(--progress-width, 0%);
+    transition: width 0.3s ease;
+  }
+
+  /* Dynamic background color using CSS variable */
+  .dynamic-bg-color {
+    background-color: var(--dynamic-bg-color, transparent);
   }
 }

@@ -95,6 +95,34 @@ class ApiService {
     return response;
   }
 
+  async appleLogin(idToken: string, userData?: { name?: string; email?: string }) {
+    const response = await this.request<{ token: string; user: any }>('/auth/apple', {
+      method: 'POST',
+      body: JSON.stringify({ idToken, userData }),
+    });
+
+    if (response.token && response.user) {
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
+    }
+
+    return response;
+  }
+
+  async microsoftLogin(accessToken: string) {
+    const response = await this.request<{ token: string; user: any }>('/auth/microsoft', {
+      method: 'POST',
+      body: JSON.stringify({ accessToken }),
+    });
+
+    if (response.token && response.user) {
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
+    }
+
+    return response;
+  }
+
   async getProfile() {
     return this.request('/auth/profile');
   }
@@ -452,6 +480,45 @@ class ApiService {
     return this.request('/weather/location/current', {
       method: 'POST',
       body: JSON.stringify({ latitude, longitude }),
+    });
+  }
+
+  // Audit Logs
+  async getActivitySummary(days: number = 7) {
+    return this.request(`/audit-logs/activity-summary?days=${days}`);
+  }
+
+  async getAuditLogs(limit: number = 100, offset: number = 0) {
+    return this.request(`/audit-logs?limit=${limit}&offset=${offset}`);
+  }
+
+  async getLoginHistory(limit: number = 100) {
+    return this.request(`/audit-logs/login-history?limit=${limit}`);
+  }
+
+  async getMyAuditLogs(limit: number = 100) {
+    return this.request(`/audit-logs/me?limit=${limit}`);
+  }
+
+  // Push Notifications
+  async subscribePushNotification(subscription: { endpoint: string; keys: { p256dh: string; auth: string } }) {
+    return this.request('/notifications/push/subscribe', {
+      method: 'POST',
+      body: JSON.stringify(subscription),
+    });
+  }
+
+  async unsubscribePushNotification(endpoint?: string) {
+    return this.request('/notifications/push/unsubscribe', {
+      method: 'DELETE',
+      body: JSON.stringify({ endpoint }),
+    });
+  }
+
+  // Email Notifications
+  async sendTestEmail() {
+    return this.request('/notifications/email/test', {
+      method: 'POST',
     });
   }
 }

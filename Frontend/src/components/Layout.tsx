@@ -5,11 +5,11 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import {
-  LayoutDashboard,
+  Home,
   User,
   Sprout,
   Droplets,
-  DollarSign,
+  IndianRupee,
   TrendingUp,
   FileText,
   LogOut,
@@ -23,9 +23,10 @@ import {
   Languages,
   Check,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Logo from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
+import Clock from './Clock';
 
 interface LayoutProps {
   children: ReactNode;
@@ -40,6 +41,9 @@ const Layout = ({ children }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileLangOpen, setMobileLangOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileProfileMenuRef = useRef<HTMLDivElement>(null);
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -48,11 +52,11 @@ const Layout = ({ children }: LayoutProps) => {
   ];
 
   const menuItems = [
-    { path: '/dashboard', label: t('navigation.dashboard'), icon: LayoutDashboard },
+    { path: '/dashboard', label: t('navigation.home'), icon: Home },
     { path: '/crops', label: t('navigation.cropManagement'), icon: Sprout },
     { path: '/fertilizers', label: t('navigation.fertilizers'), icon: Droplets },
     { path: '/irrigation', label: t('navigation.irrigation'), icon: Droplets },
-    { path: '/expenses', label: t('navigation.expenses'), icon: DollarSign },
+    { path: '/expenses', label: t('navigation.expenses'), icon: IndianRupee },
     { path: '/yield', label: t('navigation.yieldTracking'), icon: TrendingUp },
     { path: '/reports', label: t('navigation.reports'), icon: FileText },
     { path: '/history', label: t('navigation.history'), icon: History },
@@ -63,9 +67,36 @@ const Layout = ({ children }: LayoutProps) => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+    setProfileMenuOpen(false);
+  };
+
+  const handleMyAccount = () => {
+    navigate('/settings');
+    setProfileMenuOpen(false);
   };
 
   const isActive = (path: string) => location.pathname === path;
+
+  // Close profile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const isDesktopMenuOpen = profileMenuRef.current && profileMenuRef.current.contains(target);
+      const isMobileMenuOpen = mobileProfileMenuRef.current && mobileProfileMenuRef.current.contains(target);
+      
+      if (!isDesktopMenuOpen && !isMobileMenuOpen && profileMenuOpen) {
+        setProfileMenuOpen(false);
+      }
+    };
+
+    if (profileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [profileMenuOpen]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
@@ -73,7 +104,40 @@ const Layout = ({ children }: LayoutProps) => {
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-primary-700 text-white p-4 flex items-center justify-between">
         <Logo size="small" />
         <div className="flex items-center gap-2">
+          <Clock />
           <LanguageSwitcher variant="mobile" />
+          {/* Profile Menu for Mobile */}
+          <div className="relative" ref={mobileProfileMenuRef}>
+            <button
+              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+              className="p-2 hover:bg-primary-600 rounded-lg transition-colors"
+              title={user?.name || t('navigation.profile')}
+            >
+              <User size={20} className="flex-shrink-0" />
+            </button>
+            {profileMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{user?.name || t('common.user')}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
+                </div>
+                <button
+                  onClick={handleMyAccount}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 transition-colors"
+                >
+                  <Settings size={16} className="flex-shrink-0" />
+                  {t('common.myAccount')}
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 transition-colors"
+                >
+                  <LogOut size={16} className="flex-shrink-0" />
+                  {t('auth.logout')}
+                </button>
+              </div>
+            )}
+          </div>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="p-2 hover:bg-primary-600 rounded-lg transition-colors"
@@ -84,8 +148,24 @@ const Layout = ({ children }: LayoutProps) => {
       </div>
 
       {/* Desktop header */}
-      <div className="hidden lg:flex fixed top-0 left-0 right-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 items-center justify-end">
+      <div className={`hidden lg:flex fixed top-0 left-0 right-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 items-center justify-between transition-all duration-300 ${
+        sidebarCollapsed ? 'lg:pl-[5rem] lg:pr-6' : 'lg:pl-[17rem] lg:pr-6'
+      }`}>
+        {/* FarmSync Title on the left */}
+        <div className="flex items-center">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center hover:opacity-80 transition-opacity"
+          >
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">
+              FarmSync
+            </h1>
+          </button>
+        </div>
+        
+        {/* Right side controls */}
         <div className="flex items-center gap-3">
+          <Clock />
           <LanguageSwitcher variant="desktop" />
           <button
             onClick={toggleTheme}
@@ -94,13 +174,38 @@ const Layout = ({ children }: LayoutProps) => {
           >
             {theme === 'light' ? <Moon size={20} className="flex-shrink-0" /> : <Sun size={20} className="flex-shrink-0" />}
           </button>
-          <button
-            onClick={handleLogout}
-            className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors dark:text-gray-300 dark:hover:text-red-400 dark:hover:bg-gray-700"
-            title="Logout"
-          >
-            <LogOut size={20} className="flex-shrink-0" />
-          </button>
+          {/* Profile Menu */}
+          <div className="relative" ref={profileMenuRef}>
+            <button
+              onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+              className="p-2 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors dark:text-gray-300 dark:hover:text-primary-400 dark:hover:bg-gray-700"
+              title={user?.name || t('navigation.profile')}
+            >
+              <User size={20} className="flex-shrink-0" />
+            </button>
+            {profileMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{user?.name || t('common.user')}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email}</p>
+                </div>
+                <button
+                  onClick={handleMyAccount}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 transition-colors"
+                >
+                  <Settings size={16} className="flex-shrink-0" />
+                  {t('common.myAccount')}
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 flex items-center gap-2 transition-colors"
+                >
+                  <LogOut size={16} className="flex-shrink-0" />
+                  {t('auth.logout')}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -112,74 +217,100 @@ const Layout = ({ children }: LayoutProps) => {
           sidebarCollapsed ? 'lg:w-16' : 'lg:w-64'
         }`}
       >
-        {/* FarmSync title when sidebar is collapsed - appears to the right */}
-        {sidebarCollapsed && (
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="hidden lg:block fixed left-16 top-6 z-50 hover:opacity-80 transition-opacity cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 rounded-r-lg"
-            title={t('navigation.dashboard')}
-            aria-label={t('navigation.dashboard')}
-          >
-            <div className="bg-primary-700 text-white px-3 py-2 rounded-r-lg shadow-lg">
-              <span className="text-sm font-bold whitespace-nowrap">FarmSync</span>
-            </div>
-          </button>
-        )}
-        <div className={`p-6 border-b border-primary-700 ${sidebarCollapsed ? 'lg:px-3 lg:py-4' : ''}`}>
-          <div className="flex items-center justify-between gap-3">
-            <div className={`flex-1 ${sidebarCollapsed ? 'lg:hidden' : ''}`}>
-              {/* Custom logo with FarmSync title */}
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="flex items-center gap-3 font-bold text-2xl hover:opacity-80 transition-opacity cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-800 rounded-lg p-1"
-                title={t('navigation.dashboard')}
-                aria-label={t('navigation.dashboard')}
-              >
-                <div className="relative flex-shrink-0">
-                  <div className="flex items-center justify-center w-10 h-10 bg-white rounded-lg shadow-sm">
-                    <span className="text-primary-600 text-2xl">🌾</span>
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs">↻</span>
+        <div className={`border-b border-primary-700 ${sidebarCollapsed ? 'lg:p-2 lg:py-3' : 'p-6'}`}>
+          <div className={`flex items-center ${sidebarCollapsed ? 'lg:flex-col lg:gap-2 lg:justify-center' : 'justify-between gap-3'}`}>
+            {!sidebarCollapsed ? (
+              <>
+                {/* Expanded state - Full logo with title */}
+                <div className="flex-1">
+                  <button
+                    onClick={() => navigate('/dashboard')}
+                    className="flex items-center gap-3 font-bold text-2xl hover:opacity-80 transition-opacity cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-800 rounded-lg p-1"
+                    title={t('navigation.home')}
+                    aria-label={t('navigation.home')}
+                  >
+                    <div className="relative flex-shrink-0">
+                      <div className="flex items-center justify-center w-10 h-10 bg-white rounded-lg shadow-sm relative">
+                        {/* Professional Farm icon with sync symbol */}
+                        <svg 
+                          className="text-primary-600 w-7 h-7"
+                          viewBox="0 0 24 24" 
+                          fill="currentColor" 
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          {/* Farm/Field layers */}
+                          <path d="M12 2L4 6L12 10L20 6L12 2Z" fill="currentColor" opacity="0.9"/>
+                          <path d="M4 6L12 10L20 6L12 2L4 6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                          {/* Growing plant */}
+                          <path d="M12 10V18M9 14L12 10L15 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                          <path d="M10 16L12 18L14 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                        </svg>
+                        {/* Sync symbol overlay */}
+                        <div className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary-500 rounded-full flex items-center justify-center shadow-md">
+                          <svg className="text-white w-2.5 h-2.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M9 3L11 1L9 -1"/>
+                            <path d="M11 1C10 4 8 6 5 6C2 6 1 4 1 1"/>
+                            <path d="M3 9L1 11L3 13"/>
+                            <path d="M1 11C2 8 4 6 7 6C10 6 11 8 11 11"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <span className="text-white tracking-tight">FarmSync</span>
+                  </button>
+                </div>
+                <button
+                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  className="hidden lg:flex p-2 text-primary-200 hover:bg-primary-700 hover:text-white rounded-lg transition-all duration-200"
+                  title="Collapse Sidebar"
+                >
+                  <Menu size={20} className="flex-shrink-0" />
+                </button>
+              </>
+            ) : (
+              <>
+                {/* Collapsed state - Only icon, no popout title */}
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  className="flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-800 rounded-lg p-1"
+                  title={t('navigation.home')}
+                  aria-label={t('navigation.home')}
+                >
+                  <div className="relative">
+                    <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm relative">
+                      {/* Professional Farm icon with sync symbol - smaller version */}
+                      <svg 
+                        className="text-primary-600 w-5 h-5"
+                        viewBox="0 0 24 24" 
+                        fill="currentColor" 
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M12 2L4 6L12 10L20 6L12 2Z" fill="currentColor" opacity="0.9"/>
+                        <path d="M4 6L12 10L20 6L12 2L4 6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                        <path d="M12 10V18M9 14L12 10L15 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                        <path d="M10 16L12 18L14 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                      </svg>
+                      {/* Sync symbol overlay - smaller */}
+                      <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-primary-500 rounded-full flex items-center justify-center shadow-md">
+                        <svg className="text-white w-1.5 h-1.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M9 3L11 1L9 -1"/>
+                          <path d="M11 1C10 4 8 6 5 6C2 6 1 4 1 1"/>
+                          <path d="M3 9L1 11L3 13"/>
+                          <path d="M1 11C2 8 4 6 7 6C10 6 11 8 11 11"/>
+                        </svg>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <span className="text-white tracking-tight">FarmSync</span>
-              </button>
-            </div>
-            <div className={`hidden ${sidebarCollapsed ? 'lg:flex lg:flex-col lg:items-center lg:gap-2' : ''}`}>
-              {/* Compact icon for collapsed state */}
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-800 rounded-lg p-1"
-                title={t('navigation.dashboard')}
-                aria-label={t('navigation.dashboard')}
-              >
-                <div className="relative">
-                  <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm">
-                    <span className="text-primary-600 text-lg">🌾</span>
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-primary-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs">↻</span>
-                    </div>
-                  </div>
-                </div>
-              </button>
-              {/* Collapse button - visible in collapsed state */}
-              <button
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                className="p-2 text-primary-200 hover:bg-primary-700 hover:text-white rounded-lg transition-all duration-200"
-                title="Expand Sidebar"
-              >
-                <Menu size={20} className="flex-shrink-0" />
-              </button>
-            </div>
-            {/* Collapse button - visible in expanded state */}
-            <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className={`hidden lg:flex p-2 text-primary-200 hover:bg-primary-700 hover:text-white rounded-lg transition-all duration-200 ${sidebarCollapsed ? 'lg:hidden' : ''}`}
-              title="Collapse Sidebar"
-            >
-              <Menu size={20} className="flex-shrink-0" />
-            </button>
+                </button>
+                <button
+                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  className="p-2 text-primary-200 hover:bg-primary-700 hover:text-white rounded-lg transition-all duration-200 mt-2"
+                  title="Expand Sidebar"
+                >
+                  <Menu size={20} className="flex-shrink-0" />
+                </button>
+              </>
+            )}
           </div>
         </div>
 
@@ -193,12 +324,12 @@ const Layout = ({ children }: LayoutProps) => {
                   navigate(item.path);
                   setSidebarOpen(false);
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-150 ease-in-out hover:scale-[1.02] active:scale-[0.98] ${
                   sidebarCollapsed ? 'lg:px-2 lg:py-3 lg:justify-center lg:gap-0' : ''
                 } ${
                   isActive(item.path)
                     ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-primary-200 hover:bg-primary-700 hover:text-white'
+                    : 'text-primary-200 hover:bg-primary-700 hover:text-white hover:shadow-md'
                 }`}
                 title={sidebarCollapsed ? item.label : ''}
               >

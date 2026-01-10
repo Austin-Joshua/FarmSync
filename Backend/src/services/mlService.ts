@@ -24,6 +24,10 @@ export interface CropRecommendationResult {
   recommendations?: CropRecommendation[];
   model_accuracy?: number;
   error?: string;
+  fallback_used?: boolean;
+  message?: string;
+  ml_error?: string;
+  rule_based?: boolean;
 }
 
 export class MLService {
@@ -38,9 +42,13 @@ export class MLService {
     try {
       // Check if model exists
       if (!(await this.isModelAvailable())) {
+        // Fallback to rule-based recommendations
+        const { RuleBasedCropService } = await import('./ruleBasedCropService');
+        const ruleBasedResult = RuleBasedCropService.getCropRecommendation(input);
         return {
-          success: false,
-          error: 'ML model not found. Please train the model first by running: python ml/train_model.py',
+          ...ruleBasedResult,
+          fallback_used: true,
+          message: 'ML model not available. Using rule-based recommendations.',
         };
       }
 
@@ -55,12 +63,37 @@ export class MLService {
 
       // Call Python prediction script
       const result = await this.callPythonPredictor(input);
+      
+      // If ML prediction fails, fallback to rule-based
+      if (!result.success) {
+        const { RuleBasedCropService } = await import('./ruleBasedCropService');
+        const ruleBasedResult = RuleBasedCropService.getCropRecommendation(input);
+        return {
+          ...ruleBasedResult,
+          fallback_used: true,
+          message: 'ML prediction failed. Using rule-based recommendations.',
+          ml_error: result.error,
+        };
+      }
+      
       return result;
     } catch (error: any) {
-      return {
-        success: false,
-        error: error.message || 'Failed to get crop recommendation',
-      };
+      // Fallback to rule-based on any error
+      try {
+        const { RuleBasedCropService } = await import('./ruleBasedCropService');
+        const ruleBasedResult = RuleBasedCropService.getCropRecommendation(input);
+        return {
+          ...ruleBasedResult,
+          fallback_used: true,
+          message: 'ML service unavailable. Using rule-based recommendations.',
+          error: error.message,
+        };
+      } catch (fallbackError: any) {
+        return {
+          success: false,
+          error: error.message || 'Failed to get crop recommendation',
+        };
+      }
     }
   }
 

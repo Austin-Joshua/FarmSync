@@ -10,9 +10,10 @@ interface StatCardProps {
     value: number;
     isPositive: boolean;
   };
+  onClick?: () => void;
 }
 
-const StatCard = ({ title, value, icon: Icon, color = 'green', trend }: StatCardProps) => {
+const StatCard = ({ title, value, icon: Icon, color = 'green', trend, onClick }: StatCardProps) => {
   const colorClasses = {
     green: 'bg-primary-100 text-primary-600',
     blue: 'bg-blue-100 text-blue-600',
@@ -21,7 +22,10 @@ const StatCard = ({ title, value, icon: Icon, color = 'green', trend }: StatCard
   };
 
   return (
-    <div className="card hover:scale-105 transition-transform duration-300">
+    <div 
+      className={`card hover:scale-105 transition-transform duration-300 ${onClick ? 'cursor-pointer hover:shadow-lg' : ''}`}
+      onClick={onClick}
+    >
       <div className="flex items-center justify-between">
         <div>
           <p className="text-gray-600 text-sm font-medium mb-1">{title}</p>

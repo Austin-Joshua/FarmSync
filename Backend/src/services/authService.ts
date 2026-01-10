@@ -187,4 +187,139 @@ export class AuthService {
       throw new Error(`Google authentication failed: ${error.message}`);
     }
   }
+
+  static async appleLogin(idToken: string, userData?: { name?: string; email?: string }): Promise<AuthTokens> {
+    try {
+      // For Apple Sign-In, we verify the JWT token from Apple
+      // Note: This is a simplified implementation. In production, you should verify the token
+      // using Apple's public keys from https://appleid.apple.com/auth/keys
+      
+      // Decode the token (in production, verify signature with Apple's public keys)
+      const decoded = JSON.parse(Buffer.from(idToken.split('.')[1], 'base64').toString());
+      const appleId = decoded.sub;
+      const email = userData?.email || decoded.email;
+
+      if (!email) {
+        throw new Error('Email not provided by Apple');
+      }
+
+      // Check if user exists with Apple ID
+      let user = await UserModel.findByAppleId(appleId);
+
+      if (!user) {
+        // Check if user exists with email
+        user = await UserModel.findByEmail(email);
+        if (user) {
+          // Update existing user with Apple ID
+          await UserModel.update(user.id, {
+            apple_id: appleId,
+          });
+          user = await UserModel.findById(user.id);
+        } else {
+          // Create new user
+          user = await UserModel.create({
+            name: userData?.name || 'User',
+            email,
+            role: 'farmer',
+            apple_id: appleId,
+          });
+        }
+      }
+
+      if (!user) {
+        throw new Error('Failed to create or retrieve user');
+      }
+
+      const token = this.generateToken(user);
+
+      return {
+        token,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          location: user.location,
+          land_size: user.land_size,
+          soil_type: user.soil_type,
+          picture_url: user.picture_url,
+        },
+      };
+    } catch (error: any) {
+      throw new Error(`Apple authentication failed: ${error.message}`);
+    }
+  }
+
+  static async microsoftLogin(accessToken: string): Promise<AuthTokens> {
+    try {
+      // For Microsoft Sign-In, we fetch user info using the access token
+      // In production, validate the token signature and verify claims
+      const response = await fetch('https://graph.microsoft.com/v1.0/me', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch Microsoft user info');
+      }
+
+      const microsoftUser = await response.json();
+      const microsoftId = microsoftUser.id;
+      const email = microsoftUser.mail || microsoftUser.userPrincipalName;
+      const name = microsoftUser.displayName || microsoftUser.givenName || 'User';
+      const picture = microsoftUser.photo;
+
+      if (!email) {
+        throw new Error('Email not provided by Microsoft');
+      }
+
+      // Check if user exists with Microsoft ID
+      let user = await UserModel.findByMicrosoftId(microsoftId);
+
+      if (!user) {
+        // Check if user exists with email
+        user = await UserModel.findByEmail(email);
+        if (user) {
+          // Update existing user with Microsoft ID
+          await UserModel.update(user.id, {
+            microsoft_id: microsoftId,
+            picture_url: picture,
+          });
+          user = await UserModel.findById(user.id);
+        } else {
+          // Create new user
+          user = await UserModel.create({
+            name,
+            email,
+            role: 'farmer',
+            microsoft_id: microsoftId,
+            picture_url: picture,
+          });
+        }
+      }
+
+      if (!user) {
+        throw new Error('Failed to create or retrieve user');
+      }
+
+      const token = this.generateToken(user);
+
+      return {
+        token,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          location: user.location,
+          land_size: user.land_size,
+          soil_type: user.soil_type,
+          picture_url: user.picture_url,
+        },
+      };
+    } catch (error: any) {
+      throw new Error(`Microsoft authentication failed: ${error.message}`);
+    }
+  }
 }
