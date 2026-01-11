@@ -148,25 +148,25 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
 
   if (!location.latitude || !location.longitude) {
     return (
-      <div className="card bg-gradient-to-br from-blue-50 to-cyan-50">
+      <div className="card bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-600">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <MapPin size={20} className="text-primary-600" />
+          <h3 className="text-lg font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
+            <MapPin size={20} className="text-orange-600 dark:text-orange-400" />
             {t('weather.title')}
           </h3>
         </div>
         <div className="text-center py-6">
-          <MapPin size={48} className="mx-auto text-gray-400 mb-3" />
-          <p className="text-gray-600 mb-4">{t('weather.enableLocationMessage')}</p>
+          <MapPin size={48} className="mx-auto text-gray-400 dark:text-gray-500 mb-3" />
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{t('weather.enableLocationMessage')}</p>
           <button
             onClick={requestLocation}
-            className="btn-primary flex items-center gap-2 mx-auto"
+            className="btn-primary flex items-center gap-2 mx-auto shadow-lg hover:shadow-xl transition-all duration-200"
           >
             <MapPin size={18} />
             {t('weather.enableLocation')}
           </button>
           {location.error && (
-            <p className="text-red-600 text-sm mt-2">{location.error}</p>
+            <p className="text-red-600 dark:text-red-400 text-sm mt-2">{location.error}</p>
           )}
         </div>
       </div>
@@ -174,16 +174,16 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
   }
 
   return (
-    <div className="card bg-gradient-to-br from-blue-50 to-cyan-50">
+    <div className="card bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-600">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-            <MapPin size={20} className="text-primary-600" />
+          <h3 className="text-lg font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
+            <MapPin size={20} className="text-orange-600 dark:text-orange-400" />
             {t('weather.title')}
           </h3>
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="p-2 hover:bg-white rounded-lg transition-colors disabled:opacity-50"
+            className="p-2 hover:bg-white dark:hover:bg-gray-600 rounded-lg transition-colors disabled:opacity-50 text-gray-700 dark:text-gray-300"
             title={t('weather.refresh')}
           >
             <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
@@ -192,17 +192,17 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
 
       {loading && !weather && (
         <div className="flex items-center justify-center py-8">
-          <Loader size={32} className="animate-spin text-primary-600" />
+          <Loader size={32} className="animate-spin text-orange-600 dark:text-orange-400" />
         </div>
       )}
 
       {error && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
-          <div className="flex items-center gap-2 text-yellow-800">
+        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-4">
+          <div className="flex items-center gap-2 text-yellow-800 dark:text-yellow-300">
             <AlertCircle size={18} />
             <span className="text-sm">{error}</span>
           </div>
-          <p className="text-xs text-yellow-700 mt-1">
+          <p className="text-xs text-yellow-700 dark:text-yellow-400 mt-1">
             Note: Weather data may be limited. Configure OpenWeather API key in Backend/.env for full features.
           </p>
         </div>
@@ -211,12 +211,12 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
       {weather && (
         <>
           <div className="mb-4">
-            <p className="text-sm text-gray-600 mb-1 flex items-center gap-1">
-              <MapPin size={14} />
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1 flex items-center gap-1">
+              <MapPin size={14} className="text-orange-600 dark:text-orange-400" />
               {locationName || `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`}
             </p>
                 {lastUpdate && (
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-500 dark:text-gray-500">
                     {t('weather.updated')}: {lastUpdate.toLocaleTimeString()}
                   </p>
                 )}
@@ -226,11 +226,11 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
             <div className="flex items-center gap-3">
               <div className="text-5xl">{getWeatherIcon(weather.icon)}</div>
               <div>
-                <div className="text-4xl font-bold text-gray-900">
+                <div className="text-4xl font-bold text-gray-900 dark:text-gray-100">
                   {Math.round(weather.temperature)}°C
                 </div>
-                <div className="text-sm text-gray-600 capitalize">{weather.condition}</div>
-                <div className="text-xs text-gray-500">
+                <div className="text-sm text-gray-600 dark:text-gray-400 capitalize">{weather.condition}</div>
+                <div className="text-xs text-gray-500 dark:text-gray-500">
                   {t('weather.feelsLike')} {Math.round(weather.feelsLike)}°C
                 </div>
               </div>
@@ -238,40 +238,40 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
           </div>
 
           <div className="grid grid-cols-2 gap-3 mt-4">
-            <div className="bg-white/60 rounded-lg p-3">
-              <div className="flex items-center gap-2 text-gray-600 mb-1">
-                <Droplet size={16} className="text-blue-500" />
+            <div className="bg-white/60 dark:bg-gray-700/60 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
+                <Droplet size={16} className="text-blue-500 dark:text-blue-400" />
                 <span className="text-xs">{t('weather.humidity')}</span>
               </div>
-              <div className="text-lg font-semibold text-gray-900">{weather.humidity}%</div>
+              <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">{weather.humidity}%</div>
             </div>
 
-            <div className="bg-white/60 rounded-lg p-3">
-              <div className="flex items-center gap-2 text-gray-600 mb-1">
-                <CloudRain size={16} className="text-blue-600" />
+            <div className="bg-white/60 dark:bg-gray-700/60 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
+                <CloudRain size={16} className="text-blue-600 dark:text-blue-400" />
                 <span className="text-xs">{t('weather.rainfall')}</span>
               </div>
-              <div className="text-lg font-semibold text-gray-900">
+              <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {weather.rainfall > 0 ? `${weather.rainfall.toFixed(1)}mm` : t('weather.none')}
               </div>
             </div>
 
-            <div className="bg-white/60 rounded-lg p-3">
-              <div className="flex items-center gap-2 text-gray-600 mb-1">
-                <Wind size={16} className="text-gray-500" />
+            <div className="bg-white/60 dark:bg-gray-700/60 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
+                <Wind size={16} className="text-gray-500 dark:text-gray-400" />
                 <span className="text-xs">{t('weather.windSpeed')}</span>
               </div>
-              <div className="text-lg font-semibold text-gray-900">
+              <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {weather.windSpeed.toFixed(1)} m/s
               </div>
             </div>
 
-            <div className="bg-white/60 rounded-lg p-3">
-              <div className="flex items-center gap-2 text-gray-600 mb-1">
-                <Thermometer size={16} className="text-orange-500" />
+            <div className="bg-white/60 dark:bg-gray-700/60 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
+                <Thermometer size={16} className="text-orange-500 dark:text-orange-400" />
                 <span className="text-xs">{t('weather.pressure')}</span>
               </div>
-              <div className="text-lg font-semibold text-gray-900">
+              <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                 {weather.pressure} hPa
               </div>
             </div>

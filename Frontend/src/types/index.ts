@@ -111,12 +111,34 @@ export interface StockRecord {
 
 // Settings Types
 export interface UserSettings {
-  userId: string;
-  enableHistorySaving: boolean;
-  autoSaveStockRecords: boolean;
-  autoSaveIncomeRecords: boolean;
-  notificationsEnabled: boolean;
+  userId?: string;
+  enableHistorySaving?: boolean;
+  autoSaveStockRecords?: boolean;
+  autoSaveIncomeRecords?: boolean;
+  notificationsEnabled?: boolean;
   theme: 'light' | 'dark';
+  language?: string;
+  notifications?: boolean;
+  currency?: string;
+  dataRetention?: number;
+  // New settings
+  weatherAlerts?: boolean;
+  stockAlertThreshold?: number;
+  autoRefresh?: boolean;
+  refreshInterval?: number;
+  dateFormat?: string;
+  timeZone?: string;
+  units?: 'metric' | 'imperial';
+  emailNotifications?: boolean;
+  smsNotifications?: boolean;
+  pushNotifications?: boolean;
+  cropRecommendations?: boolean;
+  irrigationReminders?: boolean;
+  lowStockAlert?: boolean;
+  climateWarnings?: boolean;
+  harvestReminders?: boolean;
+  systemUpdates?: boolean;
+  dashboardWidgets?: string[];
 }
 
 // Admin Types
