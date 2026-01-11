@@ -1,6 +1,6 @@
 // Dashboard - Summary Overview Page (Read-Only)
 // This page provides a consolidated view without modifying any existing modules
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import StatCard from '../components/StatCard';
 import WeatherCard from '../components/WeatherCard';
 import ClimateAlert from '../components/ClimateAlert';
@@ -62,6 +62,13 @@ const Dashboard = () => {
     type: 'totalFields' | 'activeCrops' | 'totalYield' | 'netProfit' | null;
     data?: any;
   }>({ type: null });
+
+  // Redirect admin users to admin dashboard
+  useEffect(() => {
+    if (user?.role === 'admin') {
+      navigate('/admin', { replace: true });
+    }
+  }, [user, navigate]);
 
   // Ensure default values (0) for new accounts
   const totalLandArea = mockLandProperties.length > 0 

@@ -5,6 +5,7 @@ import { AppError } from '../middleware/errorHandler';
 import { body } from 'express-validator';
 import { validatePassword } from '../utils/passwordValidator';
 import { uploadProfilePicture, getProfilePictureUrl } from '../middleware/upload';
+import { EmailService } from '../services/emailService';
 import fs from 'fs';
 import path from 'path';
 
@@ -27,6 +28,12 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
     }
 
     const result = await AuthService.register(name, email, password, role, location);
+
+    // Send welcome email (don't block registration if email fails)
+    EmailService.sendWelcomeEmail(email, name, role).catch((emailError) => {
+      console.error('Failed to send welcome email:', emailError);
+      // Don't throw error - registration should succeed even if email fails
+    });
 
     res.status(201).json({
       message: 'User registered successfully',

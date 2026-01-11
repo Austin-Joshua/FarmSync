@@ -332,4 +332,69 @@ export class EmailService {
       html,
     });
   }
+
+  /**
+   * Send welcome email to new users
+   */
+  static async sendWelcomeEmail(email: string, name: string, role: string): Promise<EmailResult> {
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #16a34a; color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px; }
+            .welcome-box { background: #dcfce7; padding: 20px; border-left: 4px solid #16a34a; margin: 20px 0; border-radius: 4px; }
+            .button { display: inline-block; background: #16a34a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #6b7280; font-size: 12px; border-top: 1px solid #e5e7eb; padding-top: 20px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🌾 Welcome to FarmSync!</h1>
+            </div>
+            <div class="content">
+              <h2>Hello ${name}!</h2>
+              <p>Thank you for creating your FarmSync account. We're excited to have you on board!</p>
+              
+              <div class="welcome-box">
+                <h3>Your Account Details:</h3>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Role:</strong> ${role.charAt(0).toUpperCase() + role.slice(1)}</p>
+              </div>
+
+              <p>Your FarmSync account has been successfully created. You can now:</p>
+              <ul>
+                <li>Manage your farm records and crops</li>
+                <li>Track expenses and yields</li>
+                <li>Get crop recommendations</li>
+                <li>Monitor weather and climate alerts</li>
+                <li>Generate reports and analytics</li>
+              </ul>
+
+              <p style="text-align: center;">
+                <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard" class="button">Go to Dashboard</a>
+              </p>
+
+              <p>If you have any questions or need assistance, please don't hesitate to reach out to our support team.</p>
+
+              <div class="footer">
+                <p><strong>FarmSync</strong> - Digital Farm Record Management System</p>
+                <p>This is an automated email. Please do not reply to this message.</p>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    return this.sendEmail({
+      to: email,
+      subject: '🌾 Welcome to FarmSync - Your Account Has Been Created!',
+      html,
+    });
+  }
 }

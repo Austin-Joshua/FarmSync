@@ -34,14 +34,26 @@ class ApiService {
         headers,
       });
 
-      const data = await response.json();
-
+      // Handle network errors
       if (!response.ok) {
-        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        try {
+          const data = await response.json();
+          errorMessage = data.error || data.message || errorMessage;
+        } catch {
+          // If response is not JSON, use status text
+          errorMessage = response.statusText || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
+      const data = await response.json();
       return data;
     } catch (error: any) {
+      // Handle network/fetch errors
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Failed to connect to server. Please make sure the backend server is running on http://localhost:5000');
+      }
       throw new Error(error.message || 'An error occurred');
     }
   }
@@ -528,6 +540,11 @@ class ApiService {
 
   async getMyAuditLogs(limit: number = 100) {
     return this.request(`/audit-logs/me?limit=${limit}`);
+  }
+
+  // Admin Statistics
+  async getAdminStatistics() {
+    return this.request('/admin/statistics');
   }
 
   // Push Notifications
