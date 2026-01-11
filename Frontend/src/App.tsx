@@ -8,6 +8,7 @@ import Layout from './components/Layout';
 // Pages
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import CropManagement from './pages/CropManagement';
 import FertilizerPesticide from './pages/FertilizerPesticide';
@@ -38,6 +39,14 @@ const AppContent = () => {
       <Route path="/register" element={<Register />} />
 
       {/* Protected Routes */}
+      <Route
+        path="/onboarding"
+        element={
+          <ProtectedRoute>
+            <Onboarding />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/dashboard"
         element={

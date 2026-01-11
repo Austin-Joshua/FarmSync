@@ -13,6 +13,8 @@
     "add-ml-table": "tsx src/database/addRecommendationsTable.ts",
     "add-user-settings": "tsx src/database/addUserSettingsColumns.ts",
     "add-disease-scans": "tsx src/database/addDiseaseScansTable.ts",
+    "add-onboarded-field": "tsx src/database/addIsOnboardedField.ts",
+    "verify-db": "tsx src/database/verifyAuthDB.ts",
     "train-ml": "cd ml && python train_model.py",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit"

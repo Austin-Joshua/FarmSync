@@ -6,9 +6,6 @@ import api from '../services/api';
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  googleLogin: (idToken: string) => Promise<boolean>;
-  appleLogin: (idToken: string, userData?: { name?: string; email?: string }) => Promise<boolean>;
-  microsoftLogin: (accessToken: string) => Promise<boolean>;
   register: (name: string, email: string, password: string, role: UserRole) => Promise<boolean>;
   updateUser: (updates: { name?: string; location?: string; land_size?: number; soil_type?: string; picture_url?: string }) => Promise<boolean>;
   uploadProfilePicture: (file: File) => Promise<boolean>;
@@ -59,6 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           land_size: response.user.land_size,
           soil_type: response.user.soil_type,
           picture_url: response.user.picture_url,
+          is_onboarded: response.user.is_onboarded ?? false,
         };
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -70,82 +68,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     } catch (error: any) {
       console.error('Login error:', error);
-      throw error;
-    }
-  };
-
-  const googleLogin = async (idToken: string): Promise<boolean> => {
-    try {
-      const response = await api.googleLogin(idToken);
-      if (response.user && response.token) {
-        const userData: User = {
-          id: response.user.id,
-          name: response.user.name,
-          email: response.user.email,
-          role: response.user.role,
-          location: response.user.location,
-          land_size: response.user.land_size,
-          soil_type: response.user.soil_type,
-        };
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('token', response.token);
-        return true;
-      }
-      return false;
-    } catch (error: any) {
-      console.error('Google login error:', error);
-      throw error;
-    }
-  };
-
-  const appleLogin = async (idToken: string, userData?: { name?: string; email?: string }): Promise<boolean> => {
-    try {
-      const response = await api.appleLogin(idToken, userData);
-      if (response.user && response.token) {
-        const userDataObj: User = {
-          id: response.user.id,
-          name: response.user.name,
-          email: response.user.email,
-          role: response.user.role,
-          location: response.user.location,
-          land_size: response.user.land_size,
-          soil_type: response.user.soil_type,
-          picture_url: response.user.picture_url,
-        };
-        setUser(userDataObj);
-        localStorage.setItem('user', JSON.stringify(userDataObj));
-        localStorage.setItem('token', response.token);
-        return true;
-      }
-      return false;
-    } catch (error: any) {
-      console.error('Apple login error:', error);
-      throw error;
-    }
-  };
-
-  const microsoftLogin = async (accessToken: string): Promise<boolean> => {
-    try {
-      const response = await api.microsoftLogin(accessToken);
-      if (response.user && response.token) {
-        const userData: User = {
-          id: response.user.id,
-          name: response.user.name,
-          email: response.user.email,
-          role: response.user.role,
-          location: response.user.location,
-          land_size: response.user.land_size,
-          soil_type: response.user.soil_type,
-        };
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        localStorage.setItem('token', response.token);
-        return true;
-      }
-      return false;
-    } catch (error: any) {
-      console.error('Microsoft login error:', error);
       throw error;
     }
   };
@@ -168,6 +90,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           land_size: response.user.land_size,
           soil_type: response.user.soil_type,
           picture_url: response.user.picture_url,
+          is_onboarded: response.user.is_onboarded ?? false,
         };
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -196,6 +119,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           land_size: response.user.land_size || undefined,
           soil_type: response.user.soil_type || undefined,
           picture_url: response.user.picture_url || undefined,
+          is_onboarded: response.user.is_onboarded ?? false,
         };
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -221,6 +145,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           land_size: response.user.land_size || undefined,
           soil_type: response.user.soil_type || undefined,
           picture_url: response.user.picture_url || undefined,
+          is_onboarded: response.user.is_onboarded ?? false,
         };
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -244,9 +169,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         login,
-        googleLogin,
-        appleLogin,
-        microsoftLogin,
         register,
         updateUser,
         uploadProfilePicture,

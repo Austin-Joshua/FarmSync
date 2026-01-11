@@ -111,48 +111,6 @@ class ApiService {
     return response;
   }
 
-  async googleLogin(idToken: string) {
-    const response = await this.request<{ token: string; user: any }>('/auth/google', {
-      method: 'POST',
-      body: JSON.stringify({ idToken }),
-    });
-
-    if (response.token && response.user) {
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
-    }
-
-    return response;
-  }
-
-  async appleLogin(idToken: string, userData?: { name?: string; email?: string }) {
-    const response = await this.request<{ token: string; user: any }>('/auth/apple', {
-      method: 'POST',
-      body: JSON.stringify({ idToken, userData }),
-    });
-
-    if (response.token && response.user) {
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
-    }
-
-    return response;
-  }
-
-  async microsoftLogin(accessToken: string) {
-    const response = await this.request<{ token: string; user: any }>('/auth/microsoft', {
-      method: 'POST',
-      body: JSON.stringify({ accessToken }),
-    });
-
-    if (response.token && response.user) {
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
-    }
-
-    return response;
-  }
-
   async getProfile() {
     return this.request('/auth/profile');
   }
@@ -230,7 +188,7 @@ class ApiService {
 
   // Crops
   async getCrops(farmId?: string) {
-    const query = farmId ? `?farmId=${farmId}` : '';
+    const query = farmId ? `?farm_id=${farmId}` : '';
     return this.request(`/crops${query}`);
   }
 

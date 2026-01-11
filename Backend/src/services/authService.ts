@@ -89,20 +89,26 @@ export class AuthService {
   }
 
   static async login(email: string, password: string): Promise<AuthTokens> {
+    // Find user by email (includes password_hash for verification)
     const user = await UserModel.findByEmail(email);
     if (!user) {
+      // Don't reveal if email exists - security best practice
       throw new Error('Invalid email or password');
     }
 
+    // Check if user has a password (not OAuth-only account)
     if (!user.password_hash) {
-      throw new Error('Please use Google login for this account');
+      throw new Error('Invalid email or password');
     }
 
+    // Verify password matches the hash stored in database
     const isValid = await UserModel.verifyPassword(user, password);
     if (!isValid) {
+      // Don't reveal if password is wrong or email doesn't exist - same error message
       throw new Error('Invalid email or password');
     }
 
+    // Generate JWT token for authenticated user
     const token = this.generateToken(user);
 
     return {

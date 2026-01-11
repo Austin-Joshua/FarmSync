@@ -88,11 +88,12 @@ const Register = () => {
         setError('');
         // Redirect immediately after success
         setTimeout(() => {
-          // Redirect based on role
+          // Redirect based on role - new farmers need onboarding
           if (role === 'admin') {
             navigate('/admin', { replace: true });
           } else {
-            navigate('/dashboard', { replace: true });
+            // New farmer users need onboarding
+            navigate('/onboarding', { replace: true });
           }
         }, 500);
       } else {

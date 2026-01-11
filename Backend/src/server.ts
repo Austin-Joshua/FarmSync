@@ -27,6 +27,7 @@ import diseaseScanRoutes from './routes/diseaseScanRoutes';
 import auditLogRoutes from './routes/auditLogRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import adminRoutes from './routes/adminRoutes';
+import userRoutes from './routes/userRoutes';
 
 const app: Express = express();
 
@@ -73,7 +74,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Request logging
-app.use((req, res, next) => {
+app.use((req, _, next) => {
   logger.info(`${req.method} ${req.path}`, {
     ip: req.ip,
     userAgent: req.get('user-agent'),
@@ -84,13 +85,16 @@ app.use((req, res, next) => {
 // Static file serving for uploads
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// Root endpoint
+app.get('/', (_, res) => res.send('Backend is running'));
+
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (_, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // Database connection test endpoint
-app.get('/health/db', async (req, res) => {
+app.get('/health/db', async (_, res) => {
   try {
     const { pool } = await import('./config/database');
     const connection = await pool.getConnection();
@@ -131,6 +135,7 @@ app.use('/api/disease', diseaseScanRoutes);
 app.use('/api/audit-logs', auditLogRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/user', userRoutes);
 
 // 404 handler
 app.use(notFoundHandler);

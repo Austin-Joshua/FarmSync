@@ -8,6 +8,7 @@ export interface User {
   email: string;
   password_hash?: string;
   role: 'farmer' | 'admin';
+  is_onboarded?: boolean;
   location?: string;
   land_size?: number;
   soil_type?: string;
@@ -39,7 +40,11 @@ export class UserModel {
   }
 
   static async findById(id: string): Promise<User | null> {
-    return queryOne<User>(pool, 'SELECT id, name, email, role, location, land_size, soil_type, picture_url, created_at FROM users WHERE id = ?', [id]);
+    return queryOne<User>(pool, 'SELECT id, name, email, role, is_onboarded, location, land_size, soil_type, picture_url, created_at FROM users WHERE id = ?', [id]);
+  }
+
+  static async findByIdWithPassword(id: string): Promise<User | null> {
+    return queryOne<User>(pool, 'SELECT * FROM users WHERE id = ?', [id]);
   }
 
   static async findByGoogleId(googleId: string): Promise<User | null> {
@@ -80,7 +85,7 @@ export class UserModel {
     );
 
     // MySQL doesn't support RETURNING, so fetch the created user
-    const user = await queryOne<User>(pool, 'SELECT id, name, email, role, location, land_size, soil_type, picture_url, created_at FROM users WHERE email = ?', [data.email]);
+    const user = await queryOne<User>(pool, 'SELECT id, name, email, role, is_onboarded, location, land_size, soil_type, picture_url, created_at FROM users WHERE email = ?', [data.email]);
     if (!user) throw new Error('Failed to create user');
     return user;
   }

@@ -11,6 +11,7 @@ export interface User {
   land_size?: number;
   soil_type?: string;
   picture_url?: string;
+  is_onboarded?: boolean;
 }
 
 export interface Farm {
