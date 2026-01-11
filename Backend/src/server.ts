@@ -36,8 +36,26 @@ app.use(helmet());
 // CORS configuration
 app.use(
   cors({
-    origin: config.frontendUrl,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      // Allow localhost origins and configured frontend URL
+      const allowedOrigins = [
+        config.frontendUrl,
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+      ];
+      if (allowedOrigins.indexOf(origin) !== -1 || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
@@ -71,6 +89,28 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Database connection test endpoint
+app.get('/health/db', async (req, res) => {
+  try {
+    const { pool } = await import('./config/database');
+    const connection = await pool.getConnection();
+    await connection.ping();
+    connection.release();
+    res.json({ 
+      status: 'ok', 
+      database: 'connected',
+      timestamp: new Date().toISOString() 
+    });
+  } catch (error: any) {
+    res.status(500).json({ 
+      status: 'error', 
+      database: 'disconnected',
+      error: error.message,
+      timestamp: new Date().toISOString() 
+    });
+  }
+});
+
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
@@ -98,14 +138,28 @@ app.use(notFoundHandler);
 // Error handler (must be last)
 app.use(errorHandler);
 
+// Handle uncaught exceptions and unhandled promise rejections
+process.on('uncaughtException', (error: Error) => {
+  logger.error('Uncaught Exception:', error);
+  // Don't exit - let the server continue running
+});
+
+process.on('unhandledRejection', (reason: any, promise: Promise<any>) => {
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Don't exit - let the server continue running
+});
+
 // Start server
 const PORT = config.port;
+const HOST = '0.0.0.0'; // Listen on all interfaces
 
-app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`, {
+app.listen(PORT, HOST, () => {
+  logger.info(`Server running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`, {
     environment: config.nodeEnv,
     frontendUrl: config.frontendUrl,
   });
+  console.log(`✅ Backend server is running on http://localhost:${PORT}`);
+  console.log(`✅ Frontend URL: ${config.frontendUrl}`);
 });
 
 export default app;

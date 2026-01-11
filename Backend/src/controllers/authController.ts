@@ -27,7 +27,13 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
       throw new AppError(`Password validation failed: ${passwordValidation.errors.join(', ')}`, 400);
     }
 
-    const result = await AuthService.register(name, email, password, role, location);
+    // Add timeout to registration process
+    const registrationPromise = AuthService.register(name, email, password, role, location);
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Registration timeout: Database operation took too long')), 8000)
+    );
+
+    const result = await Promise.race([registrationPromise, timeoutPromise]) as Awaited<ReturnType<typeof AuthService.register>>;
 
     // Send welcome email (don't block registration if email fails)
     EmailService.sendWelcomeEmail(email, name, role).catch((emailError) => {
@@ -40,7 +46,14 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
       ...result,
     });
   } catch (error: any) {
-    throw new AppError(error.message, 400);
+    // Provide more specific error messages
+    if (error.message.includes('timeout')) {
+      throw new AppError('Registration timed out. Please check database connection and try again.', 500);
+    }
+    if (error.message.includes('ECONNREFUSED') || error.message.includes('connect')) {
+      throw new AppError('Database connection failed. Please check database server.', 500);
+    }
+    throw new AppError(error.message, error.statusCode || 400);
   }
 };
 
@@ -54,20 +67,26 @@ export const login = async (req: AuthRequest, res: Response): Promise<void> => {
 
     const result = await AuthService.login(email, password);
 
-    // Log login action to audit log
+    // Log login action to audit log (don't block login if audit logging fails)
     const { logLogin } = await import('../middleware/auditLogger');
     logLogin(
       result.user.id,
       req.ip || req.socket.remoteAddress || undefined,
       req.headers['user-agent'] || undefined
-    ).catch((err) => console.error('Failed to log login:', err));
+    ).catch((err) => {
+      console.error('Failed to log login:', err);
+      // Don't throw error - login should succeed even if audit logging fails
+    });
 
     res.json({
       message: 'Login successful',
       ...result,
     });
   } catch (error: any) {
-    throw new AppError(error.message, 401);
+    // Ensure error is properly handled
+    const errorMessage = error?.message || 'Login failed';
+    const statusCode = error instanceof AppError ? error.statusCode : 401;
+    throw new AppError(errorMessage, statusCode);
   }
 };
 

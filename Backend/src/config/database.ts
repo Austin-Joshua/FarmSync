@@ -14,6 +14,8 @@ const poolConfig = {
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
+  // Connection timeout (valid MySQL2 option)
+  connectTimeout: 10000, // 10 seconds
 };
 
 export const pool = mysql.createPool(poolConfig);
