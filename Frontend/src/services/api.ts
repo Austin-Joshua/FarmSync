@@ -29,12 +29,20 @@ class ApiService {
     }
 
     try {
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+
       const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         ...options,
         headers,
+        signal: controller.signal,
       });
 
-      // Handle network errors
+      clearTimeout(timeoutId);
+
+      // Handle HTTP errors (401, 400, 500, etc.)
+      // These are NOT connection errors - they're application errors
       if (!response.ok) {
         let errorMessage = `HTTP error! status: ${response.status}`;
         try {
@@ -44,17 +52,27 @@ class ApiService {
           // If response is not JSON, use status text
           errorMessage = response.statusText || errorMessage;
         }
-        throw new Error(errorMessage);
+        // Create an error object that preserves the status code
+        const httpError: any = new Error(errorMessage);
+        httpError.status = response.status;
+        httpError.response = response;
+        throw httpError;
       }
 
       const data = await response.json();
       return data;
     } catch (error: any) {
-      // Handle network/fetch errors
-      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      // Handle timeout/abort errors (these are actual connection issues)
+      if (error.name === 'AbortError') {
+        throw new Error('Request timed out. Please check if the backend server is running on http://localhost:5000');
+      }
+      // Handle network/fetch errors (these are actual connection issues)
+      if (error.name === 'TypeError' && (error.message.includes('fetch') || error.message.includes('Failed') || error.message.includes('NetworkError'))) {
         throw new Error('Failed to connect to server. Please make sure the backend server is running on http://localhost:5000');
       }
-      throw new Error(error.message || 'An error occurred');
+      // For other errors (like 401, 400, etc.), preserve the original error message
+      // These are NOT connection errors - they're authentication/validation errors
+      throw error; // Re-throw to preserve the original error message
     }
   }
 

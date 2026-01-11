@@ -348,14 +348,36 @@ const Login = () => {
         setError(t('auth.loginError'));
       }
     } catch (err: any) {
-      let errorMessage = t('auth.loginError');
+      let errorMessage = t('auth.loginError') || 'Login failed';
+      
       if (err?.message) {
-        if (err.message.includes('Failed to connect') || err.message.includes('fetch')) {
+        // Check for actual connection errors (network/fetch errors)
+        if (err.message.includes('Failed to connect') || 
+            err.message.includes('fetch') || 
+            err.message.includes('NetworkError') ||
+            err.message.includes('Network request failed') ||
+            err.message.includes('timed out')) {
           errorMessage = 'Cannot connect to server. Please make sure the backend server is running on http://localhost:5000';
-        } else {
+        } 
+        // Check for authentication errors (these are NOT connection errors)
+        else if (err.message.includes('Invalid email or password') ||
+                 err.message.includes('Invalid') ||
+                 err.message.includes('not found') ||
+                 err.message.includes('incorrect')) {
+          errorMessage = err.message; // Show the actual auth error
+        }
+        // Check for HTTP errors (401, 403, etc. - these are NOT connection errors)
+        else if (err.message.includes('401') || 
+                 err.message.includes('403') || 
+                 err.message.includes('Unauthorized')) {
+          errorMessage = 'Invalid email or password. Please check your credentials and try again.';
+        }
+        // Other errors (show the actual error message)
+        else {
           errorMessage = err.message;
         }
       }
+      
       setError(errorMessage);
     } finally {
       setLoading(false);

@@ -24,14 +24,37 @@ const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  // Reset loading state if component unmounts or on navigation
+  React.useEffect(() => {
+    return () => {
+      setLoading(false);
+    };
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
 
     // Basic validation
-    if (!name || !email || !password || !confirmPassword) {
-      setError('All fields are required');
+    if (!name || !name.trim()) {
+      setError('Full name is required');
+      setLoading(false);
+      return;
+    }
+    if (!email || !email.trim()) {
+      setError('Email address is required');
+      setLoading(false);
+      return;
+    }
+    if (!password) {
+      setError('Password is required');
+      setLoading(false);
+      return;
+    }
+    if (!confirmPassword) {
+      setError('Please confirm your password');
+      setLoading(false);
       return;
     }
 
@@ -51,9 +74,19 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const successResult = await register(name, email, password, role);
+      // Add timeout to prevent hanging (20 seconds for registration)
+      const timeoutPromise = new Promise<never>((_, reject) => 
+        setTimeout(() => reject(new Error('Registration request timed out. Please check if the backend server is running.')), 20000)
+      );
+
+      const registerPromise = register(name.trim(), email.trim(), password, role);
+      const successResult = await Promise.race([registerPromise, timeoutPromise]) as boolean;
+
       if (successResult) {
         setSuccess(t('auth.registerSuccess') || 'Registration successful! Redirecting...');
+        // Clear error state if any
+        setError('');
+        // Redirect immediately after success
         setTimeout(() => {
           // Redirect based on role
           if (role === 'admin') {
@@ -61,15 +94,30 @@ const Register = () => {
           } else {
             navigate('/dashboard', { replace: true });
           }
-        }, 1000);
+        }, 500);
       } else {
         setError(t('auth.registerError') || 'Registration failed. Please try again.');
+        setLoading(false);
       }
     } catch (err: any) {
       console.error('Registration error:', err);
-      const errorMessage = err?.response?.data?.error || err?.response?.data?.message || err?.message || t('auth.registerError') || 'Registration failed. Please try again.';
+      let errorMessage = t('auth.registerError') || 'Registration failed. Please try again.';
+      
+      if (err?.message) {
+        if (err.message.includes('Failed to connect') || err.message.includes('fetch') || err.message.includes('timed out')) {
+          errorMessage = 'Cannot connect to server. Please make sure the backend server is running on http://localhost:5000';
+        } else if (err.message.includes('already exists')) {
+          errorMessage = 'An account with this email already exists. Please use a different email or log in.';
+        } else {
+          errorMessage = err.message;
+        }
+      } else if (err?.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      } else if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      }
+      
       setError(errorMessage);
-    } finally {
       setLoading(false);
     }
   };
