@@ -26,49 +26,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   });
   const [hasTriedAutoLogin, setHasTriedAutoLogin] = useState(false);
 
-  // Auto-login with test credentials if no user is found (only once on mount)
+  // Check for existing saved user session on mount
   useEffect(() => {
-    const autoLogin = async () => {
-      // Only auto-login if no user is saved, no token exists, and we haven't tried yet
-      const savedUser = localStorage.getItem('user');
-      const savedToken = localStorage.getItem('token');
-      
-      if (!savedUser && !savedToken && !hasTriedAutoLogin) {
-        setHasTriedAutoLogin(true);
-        try {
-          // Wait a bit for backend to be ready
-          await new Promise(resolve => setTimeout(resolve, 500));
-          
-          // Try to auto-login with test farmer credentials
-          const response = await api.login('farmer@test.com', 'farmer123');
-          if (response.user) {
-            const userData: User = {
-              id: response.user.id,
-              name: response.user.name,
-              email: response.user.email,
-              role: response.user.role,
-              location: response.user.location,
-              land_size: response.user.land_size,
-              soil_type: response.user.soil_type,
-              picture_url: response.user.picture_url,
-            };
-            setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData));
-            if (response.token) {
-              localStorage.setItem('token', response.token);
-            }
-            console.log('Auto-login successful');
-          }
-        } catch (error: any) {
-          // If auto-login fails, user will need to login manually
-          console.log('Auto-login failed:', error?.message || 'Unknown error');
-          // Don't show error to user, just let them login manually
-        }
+    // User should register/login with their own credentials
+    // No auto-login with test credentials - users must create accounts through registration
+    const savedUser = localStorage.getItem('user');
+    const savedToken = localStorage.getItem('token');
+    
+    if (savedUser && savedToken) {
+      // User already has a session, restore it
+      try {
+        const userData = JSON.parse(savedUser);
+        setUser(userData);
+      } catch (error) {
+        // Invalid saved data, clear it
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
       }
-    };
-
-    autoLogin();
-  }, [hasTriedAutoLogin]);
+    }
+  }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {

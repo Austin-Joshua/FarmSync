@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { LogIn, Mail, Lock } from 'lucide-react';
+import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import Logo from '../components/Logo';
 import { PublicClientApplication } from '@azure/msal-browser';
 
@@ -35,6 +35,7 @@ const Login = () => {
   const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -45,6 +46,17 @@ const Login = () => {
   const navigate = useNavigate();
   const [msalInstance, setMsalInstance] = useState<PublicClientApplication | null>(null);
   const googleButtonRef = useRef<HTMLDivElement>(null);
+  
+  // OAuth Configuration - DISABLED for now (available for future installation)
+  // To enable OAuth in the future:
+  // 1. Add VITE_GOOGLE_CLIENT_ID, VITE_MICROSOFT_CLIENT_ID, or VITE_APPLE_CLIENT_ID to .env
+  // 2. Set enableOAuth to true
+  // 3. Uncomment the OAuth buttons section below
+  const enableOAuth = false; // Set to true to enable OAuth buttons
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+  const microsoftClientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID || '';
+  const appleClientId = import.meta.env.VITE_APPLE_CLIENT_ID || '';
+  const hasOAuth = enableOAuth && !!(googleClientId || microsoftClientId || appleClientId);
 
   // Handle Google credential response
   const handleGoogleCredentialResponse = useCallback(async (response: { credential: string }) => {
@@ -141,7 +153,7 @@ const Login = () => {
     
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
     if (!clientId) {
-      setError('Google Sign-In is not configured. Please add VITE_GOOGLE_CLIENT_ID to your .env file. You can still use email/password login.');
+      // Silently return - button should not be visible if not configured
       return;
     }
 
@@ -178,7 +190,7 @@ const Login = () => {
     
     const clientId = import.meta.env.VITE_APPLE_CLIENT_ID || '';
     if (!clientId) {
-      setError('Apple Sign-In is not configured. Please add VITE_APPLE_CLIENT_ID to your .env file. You can still use email/password login.');
+      // Silently return - button should not be visible if not configured
       return;
     }
 
@@ -277,7 +289,7 @@ const Login = () => {
     
     const clientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID || '';
     if (!clientId) {
-      setError('Microsoft Sign-In is not configured. Please add VITE_MICROSOFT_CLIENT_ID to your .env file. You can still use email/password login.');
+      // Silently return - button should not be visible if not configured
       return;
     }
 
@@ -378,13 +390,15 @@ const Login = () => {
 
         {/* Login Form */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
-          {/* OAuth Buttons */}
-          <div className="space-y-3 mb-6">
-            {/* Google Login Button */}
-            <>
-              {/* Hidden Google button for rendering */}
-              <div ref={googleButtonRef} className="hidden"></div>
-              <button
+          {/* OAuth Buttons - Only show if configured */}
+          {hasOAuth && (
+            <div className="space-y-3 mb-6">
+              {/* Google Login Button */}
+              {googleClientId && (
+                <>
+                  {/* Hidden Google button for rendering */}
+                  <div ref={googleButtonRef} className="hidden"></div>
+                  <button
                 type="button"
                 onClick={handleGoogleLogin}
                 disabled={googleLoading || loading || appleLoading || microsoftLoading}
@@ -400,10 +414,12 @@ const Login = () => {
                   {googleLoading ? t('auth.connecting') : t('auth.continueGoogle') || 'Sign in with Google'}
                 </span>
               </button>
-            </>
+                </>
+              )}
 
-            {/* Microsoft Login Button */}
-            <button
+              {/* Microsoft Login Button */}
+              {microsoftClientId && (
+                <button
               type="button"
               onClick={handleMicrosoftLogin}
               disabled={microsoftLoading || loading || googleLoading || appleLoading}
@@ -419,9 +435,11 @@ const Login = () => {
                 {microsoftLoading ? t('auth.connecting') : t('auth.signInMicrosoft') || 'Sign in with Microsoft'}
               </span>
             </button>
+              )}
 
-            {/* Apple Login Button */}
-            <button
+              {/* Apple Login Button */}
+              {appleClientId && (
+                <button
               type="button"
               onClick={handleAppleLogin}
               disabled={appleLoading || loading || googleLoading || microsoftLoading}
@@ -434,10 +452,13 @@ const Login = () => {
                 {appleLoading ? t('auth.connecting') : t('auth.signInApple') || 'Sign in with Apple'}
               </span>
             </button>
-          </div>
+              )}
+            </div>
+          )}
 
-          {/* Divider */}
-          <div className="relative mb-6">
+          {/* Divider - Only show if OAuth buttons are visible */}
+          {hasOAuth && (
+            <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
             </div>
@@ -445,6 +466,7 @@ const Login = () => {
               <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">{t('auth.orContinueEmail')}</span>
             </div>
           </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -472,14 +494,22 @@ const Login = () => {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="input-field pl-10"
+                  className="input-field pl-10 pr-10"
                   placeholder={t('auth.enterPassword')}
                   required
                   disabled={loading || googleLoading || appleLoading || microsoftLoading}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
             </div>
 
