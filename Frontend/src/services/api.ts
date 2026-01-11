@@ -544,6 +544,19 @@ class ApiService {
       method: 'POST',
     });
   }
+
+  // User Profile & Database Status
+  async getUserProfile() {
+    return this.request('/user/profile');
+  }
+
+  async getUserStatus() {
+    return this.request('/user/status');
+  }
+
+  async getDatabaseStatus() {
+    return this.request('/user/db-status');
+  }
 }
 
 export const api = new ApiService();

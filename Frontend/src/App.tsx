@@ -18,6 +18,7 @@ import YieldTracking from './pages/YieldTracking';
 import Reports from './pages/Reports';
 import History from './pages/History';
 import Settings from './pages/Settings';
+import UserPage from './pages/UserPage';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 import { useEffect } from 'react';
@@ -133,6 +134,16 @@ const AppContent = () => {
           <ProtectedRoute>
             <Layout>
               <Settings />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/user"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <UserPage />
             </Layout>
           </ProtectedRoute>
         }
