@@ -4,6 +4,9 @@ import { AuthService } from '../services/authService';
 import { AppError } from '../middleware/errorHandler';
 import { body } from 'express-validator';
 import { validatePassword } from '../utils/passwordValidator';
+import { uploadProfilePicture, getProfilePictureUrl } from '../middleware/upload';
+import fs from 'fs';
+import path from 'path';
 
 export const register = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -124,7 +127,7 @@ export const updateProfile = async (req: AuthRequest, res: Response): Promise<vo
       throw new AppError('User not authenticated', 401);
     }
 
-    const { name, location, land_size, soil_type } = req.body;
+    const { name, location, land_size, soil_type, picture_url } = req.body;
     const updates: any = {};
 
     if (name !== undefined) {
@@ -150,6 +153,10 @@ export const updateProfile = async (req: AuthRequest, res: Response): Promise<vo
       updates.soil_type = soil_type || null;
     }
 
+    if (picture_url !== undefined) {
+      updates.picture_url = picture_url || null;
+    }
+
     if (Object.keys(updates).length === 0) {
       throw new AppError('No valid fields to update', 400);
     }
@@ -171,6 +178,73 @@ export const updateProfile = async (req: AuthRequest, res: Response): Promise<vo
       },
     });
   } catch (error: any) {
+    throw new AppError(error.message, error.statusCode || 500);
+  }
+};
+
+/**
+ * Upload profile picture
+ * POST /api/auth/profile/picture
+ */
+export const uploadProfilePictureHandler = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      throw new AppError('User not authenticated', 401);
+    }
+
+    if (!req.file) {
+      throw new AppError('No file uploaded', 400);
+    }
+
+    // Get the uploaded file
+    const filename = req.file.filename;
+    const pictureUrl = getProfilePictureUrl(filename);
+
+    // Get current user to check for old picture
+    const { UserModel } = await import('../models/User');
+    const currentUser = await UserModel.findById(req.user.id);
+    
+    // Delete old profile picture if it exists
+    if (currentUser?.picture_url) {
+      const oldPicturePath = path.join(__dirname, '../../uploads/profiles', path.basename(currentUser.picture_url));
+      if (fs.existsSync(oldPicturePath)) {
+        try {
+          fs.unlinkSync(oldPicturePath);
+        } catch (error) {
+          console.error('Error deleting old profile picture:', error);
+        }
+      }
+    }
+
+    // Update user's picture_url
+    const user = await UserModel.update(req.user.id, { picture_url: pictureUrl });
+
+    res.json({
+      message: 'Profile picture uploaded successfully',
+      picture_url: user.picture_url,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        location: user.location || null,
+        land_size: user.land_size || null,
+        soil_type: user.soil_type || null,
+        picture_url: user.picture_url,
+      },
+    });
+  } catch (error: any) {
+    // Delete the uploaded file if there was an error
+    if (req.file) {
+      const filePath = path.join(__dirname, '../../uploads/profiles', req.file.filename);
+      if (fs.existsSync(filePath)) {
+        try {
+          fs.unlinkSync(filePath);
+        } catch (deleteError) {
+          console.error('Error deleting uploaded file:', deleteError);
+        }
+      }
+    }
     throw new AppError(error.message, error.statusCode || 500);
   }
 };

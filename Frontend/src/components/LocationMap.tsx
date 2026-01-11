@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -34,6 +34,7 @@ const LocationMap = ({ latitude, longitude, locationName, height = '400px' }: Lo
   const { location: gpsLocation } = useLocation();
   const { theme } = useTheme();
   const [mapLocation, setMapLocation] = useState<{ lat: number; lon: number; name?: string } | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Use provided coordinates or GPS coordinates
@@ -48,9 +49,15 @@ const LocationMap = ({ latitude, longitude, locationName, height = '400px' }: Lo
     }
   }, [latitude, longitude, locationName, gpsLocation]);
 
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.style.setProperty('--map-height', height);
+    }
+  }, [height]);
+
   if (!mapLocation) {
     return (
-      <div className="card bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center" style={{ height }}>
+      <div ref={containerRef} className="card bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center map-container">
         <div className="text-center">
           <MapPin size={48} className="mx-auto text-gray-400 dark:text-gray-500 mb-3" />
           <p className="text-gray-600 dark:text-gray-400">No location available</p>
@@ -63,7 +70,7 @@ const LocationMap = ({ latitude, longitude, locationName, height = '400px' }: Lo
   const center: [number, number] = [mapLocation.lat, mapLocation.lon];
 
   return (
-    <div className="card p-0 overflow-hidden border border-gray-200 dark:border-gray-700" style={{ height }}>
+    <div ref={containerRef} className="card p-0 overflow-hidden border border-gray-200 dark:border-gray-700 map-container">
       <MapContainer
         key={theme} // Force re-render when theme changes
         center={center}

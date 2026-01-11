@@ -273,4 +273,9 @@
   .dynamic-bg-color {
     background-color: var(--dynamic-bg-color, transparent);
   }
+
+  /* Map container with dynamic height using CSS variable */
+  .map-container {
+    height: var(--map-height, 400px);
+  }
 }

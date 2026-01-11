@@ -35,14 +35,14 @@ const ProgressBar = ({
     <div 
       ref={containerRef}
       className={`w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 relative overflow-hidden ${className}`}
+      role={role}
+      aria-valuenow={ariaValueNow ?? value}
+      aria-valuemin={ariaValueMin}
+      aria-valuemax={ariaValueMax}
+      aria-label={ariaLabel}
     >
       <div 
         className={`h-2 rounded-full transition-all duration-300 progress-bar ${barClassName}`}
-        role={role}
-        aria-valuenow={ariaValueNow ?? value}
-        aria-valuemin={ariaValueMin}
-        aria-valuemax={ariaValueMax}
-        aria-label={ariaLabel}
       />
     </div>
   );

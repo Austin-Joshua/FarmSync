@@ -26,7 +26,7 @@ const ColoredDot = ({
     <div
       ref={dotRef}
       className={`${size} rounded-full dynamic-bg-color ${className}`}
-      aria-hidden={ariaHidden}
+      aria-hidden={ariaHidden ? "true" : "false"}
     />
   );
 };

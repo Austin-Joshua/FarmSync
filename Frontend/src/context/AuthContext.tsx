@@ -10,7 +10,8 @@ interface AuthContextType {
   appleLogin: (idToken: string, userData?: { name?: string; email?: string }) => Promise<boolean>;
   microsoftLogin: (accessToken: string) => Promise<boolean>;
   register: (name: string, email: string, password: string, role: UserRole) => Promise<boolean>;
-  updateUser: (updates: { name?: string; location?: string; land_size?: number; soil_type?: string }) => Promise<boolean>;
+  updateUser: (updates: { name?: string; location?: string; land_size?: number; soil_type?: string; picture_url?: string }) => Promise<boolean>;
+  uploadProfilePicture: (file: File) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
 }
@@ -49,6 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               location: response.user.location,
               land_size: response.user.land_size,
               soil_type: response.user.soil_type,
+              picture_url: response.user.picture_url,
             };
             setUser(userData);
             localStorage.setItem('user', JSON.stringify(userData));
@@ -80,6 +82,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           location: response.user.location,
           land_size: response.user.land_size,
           soil_type: response.user.soil_type,
+          picture_url: response.user.picture_url,
         };
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -132,6 +135,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           location: response.user.location,
           land_size: response.user.land_size,
           soil_type: response.user.soil_type,
+          picture_url: response.user.picture_url,
         };
         setUser(userDataObj);
         localStorage.setItem('user', JSON.stringify(userDataObj));
@@ -187,6 +191,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           location: response.user.location,
           land_size: response.user.land_size,
           soil_type: response.user.soil_type,
+          picture_url: response.user.picture_url,
         };
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -202,7 +207,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateUser = async (updates: { name?: string; location?: string; land_size?: number; soil_type?: string }): Promise<boolean> => {
+  const updateUser = async (updates: { name?: string; location?: string; land_size?: number; soil_type?: string; picture_url?: string }): Promise<boolean> => {
     try {
       const response = await api.updateProfile(updates);
       if (response.user) {
@@ -214,6 +219,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           location: response.user.location || undefined,
           land_size: response.user.land_size || undefined,
           soil_type: response.user.soil_type || undefined,
+          picture_url: response.user.picture_url || undefined,
         };
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
@@ -222,6 +228,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     } catch (error: any) {
       console.error('Update profile error:', error);
+      throw error;
+    }
+  };
+
+  const uploadProfilePicture = async (file: File): Promise<boolean> => {
+    try {
+      const response = await api.uploadProfilePicture(file);
+      if (response.user) {
+        const userData: User = {
+          id: response.user.id,
+          name: response.user.name,
+          email: response.user.email,
+          role: response.user.role,
+          location: response.user.location || undefined,
+          land_size: response.user.land_size || undefined,
+          soil_type: response.user.soil_type || undefined,
+          picture_url: response.user.picture_url || undefined,
+        };
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+        return true;
+      }
+      return false;
+    } catch (error: any) {
+      console.error('Upload profile picture error:', error);
       throw error;
     }
   };
@@ -242,6 +273,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         microsoftLogin,
         register,
         updateUser,
+        uploadProfilePicture,
         logout,
         isAuthenticated: !!user,
       }}

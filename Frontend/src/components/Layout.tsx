@@ -75,6 +75,22 @@ const Layout = ({ children }: LayoutProps) => {
     setProfileMenuOpen(false);
   };
 
+  // Get profile picture URL
+  const getProfilePictureUrl = (): string | null => {
+    if (user?.picture_url) {
+      // If picture_url is already a full URL, return it; otherwise construct it
+      if (user.picture_url.startsWith('http')) {
+        return user.picture_url;
+      }
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const baseUrl = apiBaseUrl.replace('/api', '');
+      return `${baseUrl}${user.picture_url}`;
+    }
+    return null;
+  };
+
+  const profilePictureUrl = getProfilePictureUrl();
+
   const isActive = (path: string) => location.pathname === path;
 
   // Close profile menu when clicking outside
@@ -110,10 +126,20 @@ const Layout = ({ children }: LayoutProps) => {
           <div className="relative" ref={mobileProfileMenuRef}>
             <button
               onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-              className="p-2 hover:bg-primary-600 rounded-lg transition-colors"
+              className="p-1 hover:bg-primary-600 rounded-full transition-colors"
               title={user?.name || t('navigation.profile')}
             >
-              <User size={20} className="flex-shrink-0" />
+              {profilePictureUrl ? (
+                <img
+                  src={profilePictureUrl}
+                  alt={user?.name || 'Profile'}
+                  className="w-8 h-8 rounded-full object-cover border-2 border-white"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center text-white text-sm font-semibold">
+                  {user?.name?.charAt(0).toUpperCase() || (user?.email?.charAt(0).toUpperCase() || 'U')}
+                </div>
+              )}
             </button>
             {profileMenuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
@@ -178,10 +204,20 @@ const Layout = ({ children }: LayoutProps) => {
           <div className="relative" ref={profileMenuRef}>
             <button
               onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-              className="p-2 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors dark:text-gray-300 dark:hover:text-primary-400 dark:hover:bg-gray-700"
+              className="p-1 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-full transition-colors dark:text-gray-300 dark:hover:text-primary-400 dark:hover:bg-gray-700"
               title={user?.name || t('navigation.profile')}
             >
-              <User size={20} className="flex-shrink-0" />
+              {profilePictureUrl ? (
+                <img
+                  src={profilePictureUrl}
+                  alt={user?.name || 'Profile'}
+                  className="w-8 h-8 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600"
+                />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white text-sm font-semibold">
+                  {user?.name?.charAt(0).toUpperCase() || (user?.email?.charAt(0).toUpperCase() || 'U')}
+                </div>
+              )}
             </button>
             {profileMenuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">

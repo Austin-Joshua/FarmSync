@@ -127,11 +127,41 @@ class ApiService {
     return this.request('/auth/profile');
   }
 
-  async updateProfile(data: { name?: string; location?: string; land_size?: number; soil_type?: string }) {
+  async updateProfile(data: { name?: string; location?: string; land_size?: number; soil_type?: string; picture_url?: string }) {
     return this.request('/auth/profile', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
+  }
+
+  async uploadProfilePicture(file: File): Promise<ApiResponse<{ picture_url: string; user: any }>> {
+    const token = this.getAuthToken();
+    const formData = new FormData();
+    formData.append('picture', file);
+
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    // Don't set Content-Type header - let the browser set it with boundary for FormData
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/profile/picture`, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return data;
+    } catch (error: any) {
+      throw new Error(error.message || 'An error occurred');
+    }
   }
 
   // Dashboard

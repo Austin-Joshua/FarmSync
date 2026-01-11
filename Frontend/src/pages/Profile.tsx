@@ -2,14 +2,16 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
-import { User, MapPin, Ruler, Droplets, Edit2, Save, X, Phone, Mail, Home, Hash } from 'lucide-react';
+import { User, MapPin, Ruler, Droplets, Edit2, Save, X, Phone, Mail, Home, Hash, Camera, Loader } from 'lucide-react';
 import { translateSoilType } from '../utils/translations';
 
 const Profile = () => {
   const { t } = useTranslation();
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, uploadProfilePicture } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingPicture, setUploadingPicture] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -87,7 +89,73 @@ const Profile = () => {
       irrigationType: (user as any)?.irrigation_type || '',
       farmerId: (user as any)?.farmer_id || '',
     });
+    setPreviewUrl(null);
   };
+
+  const handlePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert(t('profile.invalidImageType') || 'Please select a valid image file');
+      return;
+    }
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert(t('profile.imageTooLarge') || 'Image size must be less than 5MB');
+      return;
+    }
+
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handlePictureUpload = async () => {
+    const fileInput = document.getElementById('profile-picture-input') as HTMLInputElement;
+    const file = fileInput?.files?.[0];
+    
+    if (!file) {
+      alert(t('profile.noFileSelected') || 'Please select an image file');
+      return;
+    }
+
+    setUploadingPicture(true);
+    try {
+      await uploadProfilePicture(file);
+      setPreviewUrl(null);
+      // Reset file input
+      if (fileInput) fileInput.value = '';
+      alert(t('profile.pictureUploaded') || 'Profile picture uploaded successfully');
+    } catch (error: any) {
+      alert(`${t('profile.failedToUploadPicture') || 'Failed to upload picture'}: ${error.message}`);
+      setPreviewUrl(null);
+    } finally {
+      setUploadingPicture(false);
+    }
+  };
+
+  // Get profile picture URL
+  const getProfilePictureUrl = (): string | null => {
+    if (previewUrl) return previewUrl;
+    if (user?.picture_url) {
+      // If picture_url is already a full URL, return it; otherwise construct it
+      if (user.picture_url.startsWith('http')) {
+        return user.picture_url;
+      }
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const baseUrl = apiBaseUrl.replace('/api', '');
+      return `${baseUrl}${user.picture_url}`;
+    }
+    return null;
+  };
+
+  const profilePictureUrl = getProfilePictureUrl();
 
   return (
     <div className="space-y-6">
@@ -118,9 +186,65 @@ const Profile = () => {
         <div className="flex flex-col md:flex-row gap-6">
           {/* Avatar Section */}
           <div className="flex-shrink-0">
-            <div className="w-32 h-32 bg-primary-600 rounded-full flex items-center justify-center text-white text-5xl">
-              {user?.name?.charAt(0).toUpperCase() || (user?.email?.charAt(0).toUpperCase() || 'U')}
+            <div className="relative">
+              <div className="w-32 h-32 rounded-full overflow-hidden bg-primary-600 flex items-center justify-center text-white text-5xl border-4 border-white dark:border-gray-800 shadow-lg">
+                {profilePictureUrl ? (
+                  <img
+                    src={profilePictureUrl}
+                    alt={user?.name || 'Profile'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  user?.name?.charAt(0).toUpperCase() || (user?.email?.charAt(0).toUpperCase() || 'U')
+                )}
+              </div>
+              <label
+                htmlFor="profile-picture-input"
+                className="absolute bottom-0 right-0 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-2 cursor-pointer shadow-lg transition-colors"
+                title={t('profile.changePicture') || 'Change picture'}
+              >
+                <Camera size={18} />
+                <input
+                  id="profile-picture-input"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handlePictureChange}
+                />
+              </label>
             </div>
+            {previewUrl && (
+              <div className="mt-4 space-y-2">
+                <button
+                  onClick={handlePictureUpload}
+                  disabled={uploadingPicture}
+                  className="w-full btn-primary flex items-center justify-center gap-2 disabled:opacity-50"
+                >
+                  {uploadingPicture ? (
+                    <>
+                      <Loader size={16} className="animate-spin" />
+                      {t('profile.uploading') || 'Uploading...'}
+                    </>
+                  ) : (
+                    <>
+                      <Camera size={16} />
+                      {t('profile.uploadPicture') || 'Upload Picture'}
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    setPreviewUrl(null);
+                    const fileInput = document.getElementById('profile-picture-input') as HTMLInputElement;
+                    if (fileInput) fileInput.value = '';
+                  }}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300 flex items-center justify-center gap-2"
+                >
+                  <X size={16} />
+                  {t('common.cancel')}
+                </button>
+              </div>
+            )}
             <div className="mt-4 text-center">
               <span className="inline-block px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 rounded-full text-sm font-medium">
                 {user?.role === 'admin' ? `👨‍💼 ${t('auth.admin')}` : `👨‍🌾 ${t('auth.farmer')}`}

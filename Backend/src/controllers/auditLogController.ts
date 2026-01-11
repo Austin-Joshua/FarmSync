@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
-import { AppError } from '../utils/errorHandler';
+import { AppError } from '../middleware/errorHandler';
 import { AuditLogModel } from '../models/AuditLog';
 
 /**
