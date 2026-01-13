@@ -18,8 +18,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(() => {
     // Check localStorage for persisted user
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem('user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (error) {
+      console.error('Error parsing saved user:', error);
+      localStorage.removeItem('user');
+      return null;
+    }
   });
   const [hasTriedAutoLogin, setHasTriedAutoLogin] = useState(false);
 
@@ -27,19 +33,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     // User should register/login with their own credentials
     // No auto-login with test credentials - users must create accounts through registration
-    const savedUser = localStorage.getItem('user');
-    const savedToken = localStorage.getItem('token');
-    
-    if (savedUser && savedToken) {
-      // User already has a session, restore it
-      try {
-        const userData = JSON.parse(savedUser);
-        setUser(userData);
-      } catch (error) {
-        // Invalid saved data, clear it
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
+    try {
+      const savedUser = localStorage.getItem('user');
+      const savedToken = localStorage.getItem('token');
+      
+      if (savedUser && savedToken) {
+        // User already has a session, restore it
+        try {
+          const userData = JSON.parse(savedUser);
+          setUser(userData);
+        } catch (error) {
+          // Invalid saved data, clear it
+          console.error('Error parsing saved user data:', error);
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+        }
       }
+    } catch (error) {
+      console.error('Error in AuthProvider initialization:', error);
     }
   }, []);
 
@@ -184,7 +195,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    // Return a default context instead of throwing to prevent crashes
+    console.warn('useAuth called outside AuthProvider, returning default context');
+    return {
+      user: null,
+      login: async () => false,
+      register: async () => false,
+      updateUser: async () => false,
+      uploadProfilePicture: async () => false,
+      logout: () => {},
+      isAuthenticated: false,
+    };
   }
   return context;
 };

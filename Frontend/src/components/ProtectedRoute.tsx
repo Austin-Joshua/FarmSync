@@ -27,6 +27,7 @@ const needsOnboarding = (user: any): boolean => {
 };
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  // useAuth now returns a default context instead of throwing
   const { isAuthenticated, user } = useAuth();
   const [isChecking, setIsChecking] = useState(true);
   const location = useLocation();
@@ -35,7 +36,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     // Give auto-login a moment to complete
     const timer = setTimeout(() => {
       setIsChecking(false);
-    }, 1000);
+    }, 500); // Reduced from 1000ms to 500ms
 
     return () => clearTimeout(timer);
   }, []);

@@ -1,4 +1,5 @@
 // Main App component with routing
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -27,7 +28,7 @@ import Fields from './pages/Fields';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 import SessionTimeoutWarning from './components/SessionTimeoutWarning';
-import { useEffect } from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
 import { initializeServiceWorker } from './utils/serviceWorkerRegistration';
 
 // Component to handle document title updates
@@ -198,17 +199,23 @@ const AppContent = () => {
         }
       />
 
-      {/* Default redirect - will auto-login if not authenticated */}
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      {/* Default redirect - redirect to login if not authenticated */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 };
 
 function App() {
-  // Register service worker on app load
+  // Register service worker on app load (don't block if it fails)
   useEffect(() => {
-    initializeServiceWorker();
+    try {
+      initializeServiceWorker().catch((error) => {
+        console.warn('Service worker registration failed:', error);
+      });
+    } catch (error) {
+      console.warn('Service worker initialization error:', error);
+    }
   }, []);
 
   // Set initial document title to FarmSync
@@ -217,14 +224,16 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <AppContent />
-          <SessionTimeoutWarning />
-        </BrowserRouter>
-      </AuthProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <AppContent />
+            <SessionTimeoutWarning />
+          </BrowserRouter>
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 
