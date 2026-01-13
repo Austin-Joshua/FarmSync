@@ -3,7 +3,6 @@ import path from 'path';
 import { pool } from '../config/database';
 import { addAuditLogsTable } from './addAuditLogsTable';
 import { addPushSubscriptionsTable } from './addPushSubscriptionsTable';
-import { addOAuthFields } from './addOAuthFields';
 
 async function migrate() {
   try {
@@ -19,9 +18,6 @@ async function migrate() {
     
     // Add push subscriptions table
     await addPushSubscriptionsTable();
-
-    // Add OAuth fields (Apple and Microsoft)
-    await addOAuthFields();
     
     console.log('Database migration completed successfully!');
     process.exit(0);

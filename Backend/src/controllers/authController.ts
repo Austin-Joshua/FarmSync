@@ -90,32 +90,6 @@ export const login = async (req: AuthRequest, res: Response): Promise<void> => {
   }
 };
 
-export const googleLogin = async (req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const { idToken } = req.body;
-
-    if (!idToken) {
-      throw new AppError('Google ID token is required', 400);
-    }
-
-    const result = await AuthService.googleLogin(idToken);
-
-    // Log login action to audit log
-    const { logLogin } = await import('../middleware/auditLogger');
-    logLogin(
-      result.user.id,
-      req.ip || req.socket.remoteAddress || undefined,
-      req.headers['user-agent'] || undefined
-    ).catch((err) => console.error('Failed to log login:', err));
-
-    res.json({
-      message: 'Google login successful',
-      ...result,
-    });
-  } catch (error: any) {
-    throw new AppError(error.message, 401);
-  }
-};
 
 export const getProfile = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -293,68 +267,3 @@ export const loginValidation = [
   body('password').notEmpty().withMessage('Password is required'),
 ];
 
-export const googleLoginValidation = [
-  body('idToken').notEmpty().withMessage('Google ID token is required'),
-];
-
-export const appleLogin = async (req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const { idToken, userData } = req.body;
-
-    if (!idToken) {
-      throw new AppError('Apple ID token is required', 400);
-    }
-
-    const result = await AuthService.appleLogin(idToken, userData);
-
-    // Log login action to audit log
-    const { logLogin } = await import('../middleware/auditLogger');
-    logLogin(
-      result.user.id,
-      req.ip || req.socket.remoteAddress || undefined,
-      req.headers['user-agent'] || undefined
-    ).catch((err) => console.error('Failed to log login:', err));
-
-    res.json({
-      message: 'Apple login successful',
-      ...result,
-    });
-  } catch (error: any) {
-    throw new AppError(error.message, 401);
-  }
-};
-
-export const microsoftLogin = async (req: AuthRequest, res: Response): Promise<void> => {
-  try {
-    const { accessToken } = req.body;
-
-    if (!accessToken) {
-      throw new AppError('Microsoft access token is required', 400);
-    }
-
-    const result = await AuthService.microsoftLogin(accessToken);
-
-    // Log login action to audit log
-    const { logLogin } = await import('../middleware/auditLogger');
-    logLogin(
-      result.user.id,
-      req.ip || req.socket.remoteAddress || undefined,
-      req.headers['user-agent'] || undefined
-    ).catch((err) => console.error('Failed to log login:', err));
-
-    res.json({
-      message: 'Microsoft login successful',
-      ...result,
-    });
-  } catch (error: any) {
-    throw new AppError(error.message, 401);
-  }
-};
-
-export const appleLoginValidation = [
-  body('idToken').notEmpty().withMessage('Apple ID token is required'),
-];
-
-export const microsoftLoginValidation = [
-  body('accessToken').notEmpty().withMessage('Microsoft access token is required'),
-];

@@ -28,9 +28,6 @@ export interface CreateUserData {
   location?: string;
   land_size?: number;
   soil_type?: string;
-  google_id?: string;
-  apple_id?: string;
-  microsoft_id?: string;
   picture_url?: string;
 }
 
@@ -47,17 +44,6 @@ export class UserModel {
     return queryOne<User>(pool, 'SELECT * FROM users WHERE id = ?', [id]);
   }
 
-  static async findByGoogleId(googleId: string): Promise<User | null> {
-    return queryOne<User>(pool, 'SELECT * FROM users WHERE google_id = ?', [googleId]);
-  }
-
-  static async findByAppleId(appleId: string): Promise<User | null> {
-    return queryOne<User>(pool, 'SELECT * FROM users WHERE apple_id = ?', [appleId]);
-  }
-
-  static async findByMicrosoftId(microsoftId: string): Promise<User | null> {
-    return queryOne<User>(pool, 'SELECT * FROM users WHERE microsoft_id = ?', [microsoftId]);
-  }
 
   static async create(data: CreateUserData): Promise<User> {
     let passwordHash = null;
@@ -67,8 +53,8 @@ export class UserModel {
 
     await execute(
       pool,
-      `INSERT INTO users (name, email, password_hash, role, location, land_size, soil_type, google_id, apple_id, microsoft_id, picture_url)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO users (name, email, password_hash, role, location, land_size, soil_type, picture_url)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         data.name, 
         data.email, 
@@ -77,9 +63,6 @@ export class UserModel {
         data.location || null, 
         data.land_size || 0, 
         data.soil_type || null, 
-        data.google_id || null,
-        data.apple_id || null,
-        data.microsoft_id || null,
         data.picture_url || null
       ]
     );
@@ -118,18 +101,6 @@ export class UserModel {
     if (updates.picture_url !== undefined) {
       fields.push(`picture_url = ?`);
       values.push(updates.picture_url);
-    }
-    if (updates.google_id !== undefined) {
-      fields.push(`google_id = ?`);
-      values.push(updates.google_id);
-    }
-    if (updates.apple_id !== undefined) {
-      fields.push(`apple_id = ?`);
-      values.push(updates.apple_id);
-    }
-    if (updates.microsoft_id !== undefined) {
-      fields.push(`microsoft_id = ?`);
-      values.push(updates.microsoft_id);
     }
 
     fields.push(`updated_at = CURRENT_TIMESTAMP`);
