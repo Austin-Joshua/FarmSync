@@ -40,7 +40,8 @@ export class UserModel {
   }
 
   static async findById(id: string): Promise<User | null> {
-    return queryOne<User>(pool, 'SELECT id, name, email, role, is_onboarded, location, land_size, soil_type, picture_url, two_factor_enabled, created_at FROM users WHERE id = ?', [id]);
+    // Use SELECT * to get all columns, handling missing columns gracefully
+    return queryOne<User>(pool, 'SELECT * FROM users WHERE id = ?', [id]);
   }
 
   static async findByIdWithPassword(id: string): Promise<User | null> {
@@ -58,26 +59,50 @@ export class UserModel {
       passwordHash = await bcrypt.hash(data.password, 10);
     }
 
-    await execute(
-      pool,
-      `INSERT INTO users (name, email, password_hash, role, location, land_size, soil_type, picture_url)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        data.name, 
-        data.email, 
-        passwordHash, 
-        data.role, 
-        data.location || null, 
-        data.land_size || 0, 
-        data.soil_type || null, 
-        data.picture_url || null
-      ]
-    );
+    try {
+      // Insert user with all required fields
+      const insertResult = await execute(
+        pool,
+        `INSERT INTO users (name, email, password_hash, role, location, land_size, soil_type, picture_url)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          data.name, 
+          data.email, 
+          passwordHash, 
+          data.role, 
+          data.location || null, 
+          data.land_size || 0, 
+          data.soil_type || null, 
+          data.picture_url || null
+        ]
+      );
 
-    // MySQL doesn't support RETURNING, so fetch the created user
-    const user = await queryOne<User>(pool, 'SELECT id, name, email, role, is_onboarded, location, land_size, soil_type, picture_url, created_at FROM users WHERE email = ?', [data.email]);
-    if (!user) throw new Error('Failed to create user');
-    return user;
+      // Check if insert was successful
+      if (!insertResult || (insertResult.insertId === undefined && insertResult.affectedRows !== 1)) {
+        console.error('Insert result:', insertResult);
+        throw new Error('Failed to insert user into database');
+      }
+
+      // MySQL doesn't support RETURNING, so fetch the created user
+      const user = await queryOne<User>(pool, 'SELECT * FROM users WHERE email = ?', [data.email]);
+      if (!user) {
+        console.error('User not found after insert. Email:', data.email);
+        throw new Error('Failed to retrieve created user from database');
+      }
+      
+      console.log('User created successfully:', user.email);
+      return user;
+    } catch (error: any) {
+      console.error('Error creating user:', error);
+      // Re-throw with more context
+      if (error.code === 'ER_DUP_ENTRY') {
+        throw new Error('User with this email already exists');
+      }
+      if (error.message.includes('timeout')) {
+        throw new Error('Database operation timed out. Please check database connection.');
+      }
+      throw new Error(`Failed to create user: ${error.message}`);
+    }
   }
 
   static async verifyPassword(user: User, password: string): Promise<boolean> {
@@ -135,8 +160,8 @@ export class UserModel {
       values
     );
 
-    // Fetch updated user
-    const user = await queryOne<User>(pool, 'SELECT id, name, email, role, location, land_size, soil_type, picture_url, two_factor_enabled, created_at FROM users WHERE id = ?', [id]);
+    // Fetch updated user - use SELECT * to handle missing columns
+    const user = await queryOne<User>(pool, 'SELECT * FROM users WHERE id = ?', [id]);
     if (!user) throw new Error('User not found');
     return user;
   }

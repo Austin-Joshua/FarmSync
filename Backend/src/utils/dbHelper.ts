@@ -50,13 +50,22 @@ export async function execute(
   params?: any[]
 ): Promise<any> {
   try {
-    const [result] = await withTimeout(pool.execute(sql, params), 7000);
+    console.log('Executing SQL:', sql.substring(0, 100) + '...');
+    console.log('Params:', params ? params.map(p => p === null ? 'NULL' : (typeof p === 'string' ? p.substring(0, 20) : p)) : 'none');
+    const [result] = await withTimeout(pool.execute(sql, params), 10000);
+    console.log('Execute result:', {
+      affectedRows: (result as any)?.affectedRows,
+      insertId: (result as any)?.insertId,
+    });
     return result as any;
   } catch (error: any) {
     console.error('Database execute error:', error);
+    console.error('SQL:', sql);
+    console.error('Params:', params);
     if (error.message.includes('timeout')) {
       throw new Error('Database operation timed out. Please check database connection.');
     }
+    // Re-throw with original error for better debugging
     throw error;
   }
 }

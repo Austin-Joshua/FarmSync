@@ -16,6 +16,8 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
   try {
     const { name, email, password, role, location } = req.body;
 
+    console.log('Registration request received:', { name, email, role, hasPassword: !!password });
+
     if (!name || !email || !password || !role) {
       throw new AppError('Name, email, password, and role are required', 400);
     }
@@ -30,13 +32,16 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
       throw new AppError(`Password validation failed: ${passwordValidation.errors.join(', ')}`, 400);
     }
 
-    // Add timeout to registration process
+    console.log('Calling AuthService.register...');
+    // Call registration service (increased timeout to 15 seconds)
     const registrationPromise = AuthService.register(name, email, password, role, location);
     const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Registration timeout: Database operation took too long')), 8000)
+      setTimeout(() => reject(new Error('Registration timeout: Database operation took too long')), 15000)
     );
 
     const result = await Promise.race([registrationPromise, timeoutPromise]) as Awaited<ReturnType<typeof AuthService.register>>;
+
+    console.log('Registration successful, user ID:', result.user.id);
 
     // Send welcome email (don't block registration if email fails)
     EmailService.sendWelcomeEmail(email, name, role).catch((emailError) => {
@@ -49,6 +54,7 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
       ...result,
     });
   } catch (error: any) {
+    console.error('Registration error in controller:', error);
     // Provide more specific error messages
     if (error.message.includes('timeout')) {
       throw new AppError('Registration timed out. Please check database connection and try again.', 500);
@@ -56,7 +62,10 @@ export const register = async (req: AuthRequest, res: Response): Promise<void> =
     if (error.message.includes('ECONNREFUSED') || error.message.includes('connect')) {
       throw new AppError('Database connection failed. Please check database server.', 500);
     }
-    throw new AppError(error.message, error.statusCode || 400);
+    if (error.message.includes('already exists') || error.code === 'ER_DUP_ENTRY') {
+      throw new AppError('User with this email already exists', 400);
+    }
+    throw new AppError(error.message || 'Registration failed', error.statusCode || 400);
   }
 };
 
@@ -159,17 +168,23 @@ export const getProfile = async (req: AuthRequest, res: Response): Promise<void>
       throw new AppError('User not found', 404);
     }
 
+    // Build user object - handle missing columns gracefully
+    const userResponse: any = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    };
+
+    // Add optional fields only if they exist in the database
+    if ('location' in user) userResponse.location = user.location || null;
+    if ('land_size' in user) userResponse.land_size = user.land_size || null;
+    if ('soil_type' in user) userResponse.soil_type = user.soil_type || null;
+    if ('picture_url' in user) userResponse.picture_url = user.picture_url || null;
+    if ('is_onboarded' in user) userResponse.is_onboarded = user.is_onboarded || false;
+
     res.json({
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        location: user.location || null,
-        land_size: user.land_size || null,
-        soil_type: user.soil_type || null,
-        picture_url: user.picture_url,
-      },
+      user: userResponse,
     });
   } catch (error: any) {
     throw new AppError(error.message, error.statusCode || 500);
