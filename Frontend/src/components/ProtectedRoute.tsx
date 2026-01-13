@@ -56,11 +56,9 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  // Check if user needs onboarding (only for dashboard and other main routes, not settings)
-  // Don't redirect if already on onboarding page
-  if (needsOnboarding(user) && location.pathname !== '/onboarding' && location.pathname !== '/settings') {
-    return <Navigate to="/onboarding" replace />;
-  }
+  // Allow users to access dashboard and other pages without forcing onboarding
+  // Users can complete profile details later in Settings if needed
+  // Onboarding is now optional, not required
 
   return <>{children}</>;
 };

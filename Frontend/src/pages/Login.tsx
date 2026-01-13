@@ -34,7 +34,7 @@ const Login = () => {
           if (userData.role === 'admin') {
             navigate('/admin', { replace: true });
           } else {
-            // Always redirect to dashboard (main page) after login
+            // Redirect to dashboard - user can complete onboarding later if needed
             navigate('/dashboard', { replace: true });
           }
         }, 1000);

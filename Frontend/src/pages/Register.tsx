@@ -91,7 +91,7 @@ const Register = () => {
           if (role === 'admin') {
             navigate('/admin', { replace: true });
           } else {
-            // Redirect to dashboard (main page) instead of onboarding
+            // Redirect to dashboard - user can complete profile details later
             navigate('/dashboard', { replace: true });
           }
         }, 1000);
