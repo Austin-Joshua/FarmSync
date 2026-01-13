@@ -1,4 +1,5 @@
 import { pool } from '../config/database';
+import { query, queryOne, execute } from '../utils/dbHelper';
 
 export interface StockItem {
   id: string;
@@ -6,6 +7,7 @@ export interface StockItem {
   item_name: string;
   item_type: 'seeds' | 'fertilizer' | 'pesticide';
   quantity: number;
+  threshold?: number;
   unit: string;
   created_at?: Date;
   updated_at?: Date;
@@ -16,6 +18,7 @@ export interface CreateStockItemData {
   item_name: string;
   item_type: 'seeds' | 'fertilizer' | 'pesticide';
   quantity: number;
+  threshold?: number;
   unit: string;
 }
 
@@ -47,89 +50,119 @@ export interface CreateMonthlyStockUsageData {
 
 export class StockModel {
   static async findByUserId(userId: string): Promise<StockItem[]> {
-    const result = await pool.query(
-      'SELECT * FROM stock_items WHERE user_id = $1 ORDER BY item_type, item_name',
+    return query<StockItem>(
+      pool,
+      'SELECT * FROM stock_items WHERE user_id = ? ORDER BY item_type, item_name',
       [userId]
     );
-    return result.rows;
   }
 
   static async findById(id: string): Promise<StockItem | null> {
-    const result = await pool.query('SELECT * FROM stock_items WHERE id = $1', [id]);
-    return result.rows[0] || null;
+    return queryOne<StockItem>(pool, 'SELECT * FROM stock_items WHERE id = ?', [id]);
+  }
+
+  static async findLowStockItems(userId: string): Promise<StockItem[]> {
+    return query<StockItem>(
+      pool,
+      `SELECT * FROM stock_items 
+       WHERE user_id = ? 
+       AND (threshold IS NULL OR quantity <= threshold)
+       ORDER BY item_type, item_name`,
+      [userId]
+    );
   }
 
   static async create(data: CreateStockItemData): Promise<StockItem> {
-    const result = await pool.query(
-      `INSERT INTO stock_items (user_id, item_name, item_type, quantity, unit)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING *`,
-      [data.user_id, data.item_name, data.item_type, data.quantity, data.unit]
+    await execute(
+      pool,
+      `INSERT INTO stock_items (user_id, item_name, item_type, quantity, threshold, unit)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        data.user_id,
+        data.item_name,
+        data.item_type,
+        data.quantity,
+        data.threshold || 10.0,
+        data.unit,
+      ]
     );
-    return result.rows[0];
+
+    // MySQL doesn't support RETURNING, so fetch the created item
+    const item = await queryOne<StockItem>(
+      pool,
+      'SELECT * FROM stock_items WHERE user_id = ? AND item_name = ? AND item_type = ? ORDER BY created_at DESC LIMIT 1',
+      [data.user_id, data.item_name, data.item_type]
+    );
+    if (!item) throw new Error('Failed to create stock item');
+    return item;
   }
 
   static async update(id: string, updates: Partial<CreateStockItemData>): Promise<StockItem> {
     const fields: string[] = [];
     const values: any[] = [];
-    let paramCount = 1;
 
     if (updates.item_name) {
-      fields.push(`item_name = $${paramCount++}`);
+      fields.push(`item_name = ?`);
       values.push(updates.item_name);
     }
     if (updates.item_type) {
-      fields.push(`item_type = $${paramCount++}`);
+      fields.push(`item_type = ?`);
       values.push(updates.item_type);
     }
     if (updates.quantity !== undefined) {
-      fields.push(`quantity = $${paramCount++}`);
+      fields.push(`quantity = ?`);
       values.push(updates.quantity);
     }
+    if (updates.threshold !== undefined) {
+      fields.push(`threshold = ?`);
+      values.push(updates.threshold);
+    }
     if (updates.unit) {
-      fields.push(`unit = $${paramCount++}`);
+      fields.push(`unit = ?`);
       values.push(updates.unit);
     }
 
     fields.push(`updated_at = CURRENT_TIMESTAMP`);
     values.push(id);
 
-    const result = await pool.query(
-      `UPDATE stock_items SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`,
+    await execute(
+      pool,
+      `UPDATE stock_items SET ${fields.join(', ')} WHERE id = ?`,
       values
     );
 
-    return result.rows[0];
+    const item = await queryOne<StockItem>(pool, 'SELECT * FROM stock_items WHERE id = ?', [id]);
+    if (!item) throw new Error('Stock item not found');
+    return item;
   }
 
   static async delete(id: string): Promise<void> {
-    await pool.query('DELETE FROM stock_items WHERE id = $1', [id]);
+    await execute(pool, 'DELETE FROM stock_items WHERE id = ?', [id]);
   }
 
   // Monthly Stock Usage History
   static async getMonthlyStockUsage(userId: string, month?: number, year?: number): Promise<MonthlyStockUsage[]> {
-    let query = 'SELECT * FROM monthly_stock_usage WHERE user_id = $1';
+    let sql = 'SELECT * FROM monthly_stock_usage WHERE user_id = ?';
     const params: any[] = [userId];
 
     if (month && year) {
-      query += ' AND month = $2 AND year = $3';
+      sql += ' AND month = ? AND year = ?';
       params.push(month, year);
     } else if (year) {
-      query += ' AND year = $2';
+      sql += ' AND year = ?';
       params.push(year);
     }
 
-    query += ' ORDER BY year DESC, month DESC, date_recorded DESC';
+    sql += ' ORDER BY year DESC, month DESC, date_recorded DESC';
 
-    const result = await pool.query(query, params);
-    return result.rows;
+    return query<MonthlyStockUsage>(pool, sql, params);
   }
 
   static async createMonthlyStockUsage(data: CreateMonthlyStockUsageData): Promise<MonthlyStockUsage> {
-    const result = await pool.query(
+    await execute(
+      pool,
       `INSERT INTO monthly_stock_usage (user_id, item_name, item_type, quantity_used, remaining_stock, unit, month, year, date_recorded)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-       RETURNING *`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         data.user_id,
         data.item_name,
@@ -142,6 +175,13 @@ export class StockModel {
         data.date_recorded,
       ]
     );
-    return result.rows[0];
+
+    const usage = await queryOne<MonthlyStockUsage>(
+      pool,
+      'SELECT * FROM monthly_stock_usage WHERE user_id = ? AND item_name = ? AND month = ? AND year = ? ORDER BY created_at DESC LIMIT 1',
+      [data.user_id, data.item_name, data.month, data.year]
+    );
+    if (!usage) throw new Error('Failed to create monthly stock usage');
+    return usage;
   }
 }

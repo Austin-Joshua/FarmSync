@@ -5,6 +5,7 @@ import {
   createStockItem,
   updateStockItem,
   deleteStockItem,
+  getLowStockItems,
   getMonthlyStockUsage,
   createMonthlyStockUsage,
   stockValidation,
@@ -17,6 +18,7 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/', getStockItems);
+router.get('/low-stock', getLowStockItems);
 router.get('/:id', getStockItem);
 router.post('/', validate(stockValidation), createStockItem);
 router.put('/:id', updateStockItem);

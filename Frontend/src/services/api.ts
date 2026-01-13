@@ -84,17 +84,58 @@ class ApiService {
     role: 'farmer' | 'admin',
     location?: string
   ) {
-    const response = await this.request<{ token: string; user: any }>('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ name, email, password, role, location }),
-    });
+    try {
+      const response = await this.request<{ token: string; user: any; message?: string }>('/auth/register', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, password, role, location }),
+      });
 
-    if (response.token && response.user) {
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
+      // Check if registration was successful
+      if (response.token && response.user) {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        return response;
+      } else {
+        throw new Error(response.message || 'Registration failed. Please try again.');
+      }
+    } catch (error: any) {
+      console.error('Registration API error:', error);
+      throw error;
     }
+  }
 
-    return response;
+  async forgotPassword(email: string) {
+    return this.request<{ message: string }>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    });
+  }
+
+  async resetPassword(token: string, password: string) {
+    return this.request<{ message: string }>('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, password }),
+    });
+  }
+
+  async getActiveSessions() {
+    return this.request<{ sessions: Array<{
+      id: string;
+      isCurrent: boolean;
+      device: string;
+      browser: string;
+      ipAddress: string;
+      lastActivity: string;
+      createdAt: string;
+    }> }>('/auth/sessions', {
+      method: 'GET',
+    });
+  }
+
+  async logoutAllDevices() {
+    return this.request<{ message: string }>('/auth/logout-all', {
+      method: 'POST',
+    });
   }
 
   async login(email: string, password: string) {
@@ -304,6 +345,88 @@ class ApiService {
   // Stock
   async getStockItems() {
     return this.request('/stock');
+  }
+
+  async getLowStockItems() {
+    return this.request('/stock/low-stock');
+  }
+
+  // Calendar
+  async getCalendarEvents(startDate?: string, endDate?: string) {
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    return this.request(`/calendar/events${params.toString() ? '?' + params.toString() : ''}`);
+  }
+
+  async getUpcomingEvents(days?: number) {
+    const params = days ? `?days=${days}` : '';
+    return this.request(`/calendar/upcoming${params}`);
+  }
+
+  async createCalendarEvent(data: any) {
+    return this.request('/calendar/events', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateCalendarEvent(id: string, data: any) {
+    return this.request(`/calendar/events/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteCalendarEvent(id: string) {
+    return this.request(`/calendar/events/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Weather Alerts
+  async getWeatherAlerts(activeOnly: boolean = true) {
+    return this.request(`/weather/alerts?activeOnly=${activeOnly}`);
+  }
+
+  async getUnreadAlerts() {
+    return this.request('/weather/alerts/unread');
+  }
+
+  async markAlertAsRead(id: string) {
+    return this.request(`/weather/alerts/${id}/read`, {
+      method: 'POST',
+    });
+  }
+
+  async markAllAlertsAsRead() {
+    return this.request('/weather/alerts/read-all', {
+      method: 'POST',
+    });
+  }
+
+  // Reports
+  async getSummaryReport(startDate?: string, endDate?: string) {
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    return this.request(`/reports/summary${params.toString() ? '?' + params.toString() : ''}`);
+  }
+
+  async getCustomReport(filters: {
+    startDate?: string;
+    endDate?: string;
+    categories?: string[];
+    cropIds?: string[];
+    reportType: 'financial' | 'crop' | 'expense' | 'yield';
+  }) {
+    const params = new URLSearchParams();
+    if (filters.startDate) params.append('startDate', filters.startDate);
+    if (filters.endDate) params.append('endDate', filters.endDate);
+    if (filters.categories) params.append('categories', filters.categories.join(','));
+    if (filters.cropIds) params.append('cropIds', filters.cropIds.join(','));
+    params.append('reportType', filters.reportType);
+    return this.request(`/reports/custom?${params.toString()}`);
   }
 
   async getStockItem(id: string) {
@@ -556,6 +679,108 @@ class ApiService {
 
   async getDatabaseStatus() {
     return this.request('/user/db-status');
+  }
+
+  // Two-Factor Authentication
+  async setup2FA() {
+    return this.request('/auth/2fa/setup');
+  }
+
+  async verifyAndEnable2FA(secret: string, token: string) {
+    return this.request('/auth/2fa/verify-setup', {
+      method: 'POST',
+      body: JSON.stringify({ secret, token }),
+    });
+  }
+
+  async verify2FAToken(token: string) {
+    return this.request('/auth/2fa/verify', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
+  }
+
+  async disable2FA(password: string) {
+    return this.request('/auth/2fa/disable', {
+      method: 'POST',
+      body: JSON.stringify({ password }),
+    });
+  }
+
+  async regenerateBackupCodes() {
+    return this.request('/auth/2fa/backup-codes');
+  }
+
+  // WhatsApp
+  async sendWhatsAppMessage(to: string, message: string, type: 'text' | 'template' = 'text') {
+    return this.request('/whatsapp/send', {
+      method: 'POST',
+      body: JSON.stringify({ to, message, type }),
+    });
+  }
+
+  // SMS
+  async sendSMS(to: string, message: string) {
+    return this.request('/sms/send', {
+      method: 'POST',
+      body: JSON.stringify({ to, message }),
+    });
+  }
+
+  async sendTestSMS() {
+    return this.request('/sms/test', {
+      method: 'POST',
+    });
+  }
+
+  // Market Prices
+  async getCurrentPrice(crop: string, market?: string) {
+    const params = market ? `?market=${market}` : '';
+    return this.request(`/market-prices/${crop}${params}`);
+  }
+
+  async getPriceHistory(crop: string, days: number = 30) {
+    return this.request(`/market-prices/${crop}/history?days=${days}`);
+  }
+
+  async getBestTimeToSell(crop: string) {
+    return this.request(`/market-prices/${crop}/best-time`);
+  }
+
+  async setPriceAlert(crop: string, targetPrice: number, condition: 'above' | 'below') {
+    return this.request(`/market-prices/${crop}/alert`, {
+      method: 'POST',
+      body: JSON.stringify({ targetPrice, condition }),
+    });
+  }
+
+  // Fields
+  async getFields() {
+    return this.request('/fields');
+  }
+
+  async getFieldsByFarm(farmId: string) {
+    return this.request(`/fields/farm/${farmId}`);
+  }
+
+  async createField(data: any) {
+    return this.request('/fields', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateField(id: string, data: any) {
+    return this.request(`/fields/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteField(id: string) {
+    return this.request(`/fields/${id}`, {
+      method: 'DELETE',
+    });
   }
 }
 

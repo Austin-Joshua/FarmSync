@@ -84,18 +84,17 @@ const Register = () => {
 
       if (successResult) {
         setSuccess(t('auth.registerSuccess') || 'Registration successful! Redirecting...');
-        // Clear error state if any
         setError('');
-        // Redirect immediately after success
+        setLoading(false);
+        // Redirect to dashboard after successful registration
         setTimeout(() => {
-          // Redirect based on role - new farmers need onboarding
           if (role === 'admin') {
             navigate('/admin', { replace: true });
           } else {
-            // New farmer users need onboarding
-            navigate('/onboarding', { replace: true });
+            // Redirect to dashboard (main page) instead of onboarding
+            navigate('/dashboard', { replace: true });
           }
-        }, 500);
+        }, 1000);
       } else {
         setError(t('auth.registerError') || 'Registration failed. Please try again.');
         setLoading(false);
@@ -105,12 +104,18 @@ const Register = () => {
       let errorMessage = t('auth.registerError') || 'Registration failed. Please try again.';
       
       if (err?.message) {
-        if (err.message.includes('Failed to connect') || err.message.includes('fetch') || err.message.includes('timed out')) {
+        if (err.message.includes('Failed to connect') || 
+            err.message.includes('fetch') || 
+            err.message.includes('timed out') ||
+            err.message.includes('NetworkError') ||
+            err.message.includes('Network request failed')) {
           errorMessage = 'Cannot connect to server. Please make sure the backend server is running on http://localhost:5000';
-        } else if (err.message.includes('already exists')) {
+        } else if (err.message.includes('already exists') || err.message.includes('duplicate')) {
           errorMessage = 'An account with this email already exists. Please use a different email or log in.';
-        } else {
+        } else if (err.message.includes('validation') || err.message.includes('Password')) {
           errorMessage = err.message;
+        } else {
+          errorMessage = err.message || 'Registration failed. Please try again.';
         }
       } else if (err?.response?.data?.error) {
         errorMessage = err.response.data.error;
@@ -119,6 +124,9 @@ const Register = () => {
       }
       
       setError(errorMessage);
+      setLoading(false);
+    } finally {
+      // Always reset loading state
       setLoading(false);
     }
   };

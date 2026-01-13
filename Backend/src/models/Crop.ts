@@ -1,4 +1,5 @@
 import { pool } from '../config/database';
+import { query, queryOne, execute } from '../utils/dbHelper';
 
 export interface Crop {
   id: string;
@@ -50,46 +51,46 @@ export interface CreateCropTypeData {
 
 export class CropModel {
   static async findByFarmId(farmId: string): Promise<Crop[]> {
-    const result = await pool.query(
+    return query<Crop>(
+      pool,
       `SELECT c.*, ct.name as crop_type_name
        FROM crops c
        LEFT JOIN crop_types ct ON c.crop_type_id = ct.id
-       WHERE c.farm_id = $1
+       WHERE c.farm_id = ?
        ORDER BY c.sowing_date DESC`,
       [farmId]
     );
-    return result.rows;
   }
 
   static async findByFarmerId(farmerId: string): Promise<Crop[]> {
-    const result = await pool.query(
+    return query<Crop>(
+      pool,
       `SELECT c.*, ct.name as crop_type_name
        FROM crops c
        LEFT JOIN crop_types ct ON c.crop_type_id = ct.id
        JOIN farms f ON c.farm_id = f.id
-       WHERE f.farmer_id = $1
+       WHERE f.farmer_id = ?
        ORDER BY c.sowing_date DESC`,
       [farmerId]
     );
-    return result.rows;
   }
 
   static async findById(id: string): Promise<Crop | null> {
-    const result = await pool.query(
+    return queryOne<Crop>(
+      pool,
       `SELECT c.*, ct.name as crop_type_name
        FROM crops c
        LEFT JOIN crop_types ct ON c.crop_type_id = ct.id
-       WHERE c.id = $1`,
+       WHERE c.id = ?`,
       [id]
     );
-    return result.rows[0] || null;
   }
 
   static async create(data: CreateCropData): Promise<Crop> {
-    const result = await pool.query(
+    await execute(
+      pool,
       `INSERT INTO crops (name, crop_type_id, season, sowing_date, harvest_date, status, farm_id)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING *`,
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         data.name,
         data.crop_type_id || null,
@@ -100,75 +101,87 @@ export class CropModel {
         data.farm_id,
       ]
     );
-    return result.rows[0];
+
+    const crop = await queryOne<Crop>(
+      pool,
+      `SELECT c.*, ct.name as crop_type_name
+       FROM crops c
+       LEFT JOIN crop_types ct ON c.crop_type_id = ct.id
+       WHERE c.farm_id = ? AND c.name = ? AND c.sowing_date = ?
+       ORDER BY c.created_at DESC
+       LIMIT 1`,
+      [data.farm_id, data.name, data.sowing_date]
+    );
+    if (!crop) throw new Error('Failed to create crop');
+    return crop;
   }
 
   static async update(id: string, updates: Partial<CreateCropData>): Promise<Crop> {
     const fields: string[] = [];
     const values: any[] = [];
-    let paramCount = 1;
 
     if (updates.name) {
-      fields.push(`name = $${paramCount++}`);
+      fields.push(`name = ?`);
       values.push(updates.name);
     }
     if (updates.crop_type_id !== undefined) {
-      fields.push(`crop_type_id = $${paramCount++}`);
+      fields.push(`crop_type_id = ?`);
       values.push(updates.crop_type_id);
     }
     if (updates.season !== undefined) {
-      fields.push(`season = $${paramCount++}`);
+      fields.push(`season = ?`);
       values.push(updates.season);
     }
     if (updates.sowing_date) {
-      fields.push(`sowing_date = $${paramCount++}`);
+      fields.push(`sowing_date = ?`);
       values.push(updates.sowing_date);
     }
     if (updates.harvest_date !== undefined) {
-      fields.push(`harvest_date = $${paramCount++}`);
+      fields.push(`harvest_date = ?`);
       values.push(updates.harvest_date);
     }
     if (updates.status) {
-      fields.push(`status = $${paramCount++}`);
+      fields.push(`status = ?`);
       values.push(updates.status);
     }
 
     fields.push(`updated_at = CURRENT_TIMESTAMP`);
     values.push(id);
 
-    const result = await pool.query(
-      `UPDATE crops SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`,
+    await execute(
+      pool,
+      `UPDATE crops SET ${fields.join(', ')} WHERE id = ?`,
       values
     );
 
-    return result.rows[0];
+    const crop = await this.findById(id);
+    if (!crop) throw new Error('Crop not found');
+    return crop;
   }
 
   static async delete(id: string): Promise<void> {
-    await pool.query('DELETE FROM crops WHERE id = $1', [id]);
+    await execute(pool, 'DELETE FROM crops WHERE id = ?', [id]);
   }
 
   // Crop Types (Master Data - Admin only)
   static async getAllCropTypes(): Promise<CropType[]> {
-    const result = await pool.query('SELECT * FROM crop_types ORDER BY name');
-    return result.rows;
+    return query<CropType>(pool, 'SELECT * FROM crop_types ORDER BY name', []);
   }
 
   static async getCropTypeById(id: string): Promise<CropType | null> {
-    const result = await pool.query('SELECT * FROM crop_types WHERE id = $1', [id]);
-    return result.rows[0] || null;
+    return queryOne<CropType>(pool, 'SELECT * FROM crop_types WHERE id = ?', [id]);
   }
 
   static async createCropType(data: CreateCropTypeData): Promise<CropType> {
-    const result = await pool.query(
+    await execute(
+      pool,
       `INSERT INTO crop_types (name, category, season, suitable_soil_types, average_yield, growth_period, water_requirement, description, created_by)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-       RETURNING *`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         data.name,
         data.category,
         data.season,
-        data.suitable_soil_types || [],
+        JSON.stringify(data.suitable_soil_types || []),
         data.average_yield || null,
         data.growth_period || null,
         data.water_requirement || null,
@@ -176,59 +189,80 @@ export class CropModel {
         data.created_by,
       ]
     );
-    return result.rows[0];
+
+    const cropType = await queryOne<CropType>(
+      pool,
+      'SELECT * FROM crop_types WHERE name = ? AND created_by = ? ORDER BY created_at DESC LIMIT 1',
+      [data.name, data.created_by]
+    );
+    if (!cropType) throw new Error('Failed to create crop type');
+    
+    // Parse JSON fields
+    if (typeof cropType.suitable_soil_types === 'string') {
+      cropType.suitable_soil_types = JSON.parse(cropType.suitable_soil_types);
+    }
+    
+    return cropType;
   }
 
   static async updateCropType(id: string, updates: Partial<CreateCropTypeData>): Promise<CropType> {
     const fields: string[] = [];
     const values: any[] = [];
-    let paramCount = 1;
 
     if (updates.name) {
-      fields.push(`name = $${paramCount++}`);
+      fields.push(`name = ?`);
       values.push(updates.name);
     }
     if (updates.category) {
-      fields.push(`category = $${paramCount++}`);
+      fields.push(`category = ?`);
       values.push(updates.category);
     }
     if (updates.season) {
-      fields.push(`season = $${paramCount++}`);
+      fields.push(`season = ?`);
       values.push(updates.season);
     }
     if (updates.suitable_soil_types !== undefined) {
-      fields.push(`suitable_soil_types = $${paramCount++}`);
-      values.push(updates.suitable_soil_types);
+      fields.push(`suitable_soil_types = ?`);
+      values.push(JSON.stringify(updates.suitable_soil_types));
     }
     if (updates.average_yield !== undefined) {
-      fields.push(`average_yield = $${paramCount++}`);
+      fields.push(`average_yield = ?`);
       values.push(updates.average_yield);
     }
     if (updates.growth_period !== undefined) {
-      fields.push(`growth_period = $${paramCount++}`);
+      fields.push(`growth_period = ?`);
       values.push(updates.growth_period);
     }
     if (updates.water_requirement) {
-      fields.push(`water_requirement = $${paramCount++}`);
+      fields.push(`water_requirement = ?`);
       values.push(updates.water_requirement);
     }
     if (updates.description !== undefined) {
-      fields.push(`description = $${paramCount++}`);
+      fields.push(`description = ?`);
       values.push(updates.description);
     }
 
     fields.push(`updated_at = CURRENT_TIMESTAMP`);
     values.push(id);
 
-    const result = await pool.query(
-      `UPDATE crop_types SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`,
+    await execute(
+      pool,
+      `UPDATE crop_types SET ${fields.join(', ')} WHERE id = ?`,
       values
     );
 
-    return result.rows[0];
+    const cropType = await this.getCropTypeById(id);
+    if (!cropType) throw new Error('Crop type not found');
+    
+    // Parse JSON fields
+    if (typeof cropType.suitable_soil_types === 'string') {
+      cropType.suitable_soil_types = JSON.parse(cropType.suitable_soil_types);
+    }
+    
+    return cropType;
   }
 
   static async deleteCropType(id: string): Promise<void> {
-    await pool.query('DELETE FROM crop_types WHERE id = $1', [id]);
+    await execute(pool, 'DELETE FROM crop_types WHERE id = ?', [id]);
   }
 }

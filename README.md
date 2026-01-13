@@ -166,8 +166,9 @@ FarmSync is a modern, multilingual farm management system that helps farmers:
 - ✅ **User Authentication & Authorization**
   - JWT-based authentication
   - Role-based access (Admin/Farmer)
-  - Google OAuth support (optional)
+  - Email/password authentication
   - Secure password hashing
+  - User onboarding flow
 
 - ✅ **Farm Management**
   - Multiple farm profiles

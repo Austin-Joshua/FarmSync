@@ -22,6 +22,11 @@ import {
   X,
   ExternalLink,
   Eye,
+  AlertTriangle,
+  ArrowRight,
+  CloudRain,
+  Wind,
+  Thermometer,
 } from 'lucide-react';
 import { translateFertilizer } from '../utils/translations';
 import {
@@ -52,6 +57,7 @@ import DetailModal from '../components/DetailModal';
 import { mockCrops } from '../data/mockData';
 import { translateCrop, translateDistrict } from '../utils/translations';
 import { getCropIcon } from '../utils/cropIcons';
+import api from '../services/api';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -62,6 +68,9 @@ const Dashboard = () => {
     type: 'totalFields' | 'activeCrops' | 'totalYield' | 'netProfit' | null;
     data?: any;
   }>({ type: null });
+  const [lowStockItems, setLowStockItems] = useState<StockItem[]>([]);
+  const [weatherAlerts, setWeatherAlerts] = useState<any[]>([]);
+  const [loadingLowStock, setLoadingLowStock] = useState(false);
 
   // Redirect admin users to admin dashboard
   useEffect(() => {
@@ -69,6 +78,41 @@ const Dashboard = () => {
       navigate('/admin', { replace: true });
     }
   }, [user, navigate]);
+
+  // Load low stock items
+  useEffect(() => {
+    const loadLowStockItems = async () => {
+      if (!user) return;
+      setLoadingLowStock(true);
+      try {
+        const response = await api.getLowStockItems();
+        if (response.data) {
+          setLowStockItems(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to load low stock items:', error);
+      } finally {
+        setLoadingLowStock(false);
+      }
+    };
+    loadLowStockItems();
+  }, [user]);
+
+  // Load weather alerts
+  useEffect(() => {
+    const loadWeatherAlerts = async () => {
+      if (!user) return;
+      try {
+        const response = await api.getUnreadAlerts();
+        if (response.data) {
+          setWeatherAlerts(response.data.slice(0, 3)); // Show top 3 alerts
+        }
+      } catch (error) {
+        console.error('Failed to load weather alerts:', error);
+      }
+    };
+    loadWeatherAlerts();
+  }, [user]);
 
   // Ensure default values (0) for new accounts
   const totalLandArea = mockLandProperties.length > 0 
@@ -157,6 +201,153 @@ const Dashboard = () => {
         </div>
         <div>
           <WeatherCard />
+
+          {/* Low Stock Alert Widget */}
+          {lowStockItems.length > 0 && (
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mt-4">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="text-amber-600 dark:text-amber-400" size={20} />
+                  <h3 className="font-semibold text-amber-900 dark:text-amber-100">
+                    Low Stock Alert
+                  </h3>
+                </div>
+                <button
+                  onClick={() => navigate('/stock')}
+                  className="text-amber-700 dark:text-amber-300 hover:text-amber-900 dark:hover:text-amber-100 text-sm font-medium flex items-center gap-1"
+                >
+                  View All
+                  <ArrowRight size={14} />
+                </button>
+              </div>
+              <p className="text-sm text-amber-800 dark:text-amber-200 mb-3">
+                {lowStockItems.length} item{lowStockItems.length !== 1 ? 's' : ''} running low
+              </p>
+              <div className="space-y-2">
+                {lowStockItems.slice(0, 3).map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between bg-white dark:bg-gray-800 rounded p-2 text-sm"
+                  >
+                    <span className="font-medium text-gray-900 dark:text-gray-100">
+                      {item.item_name}
+                    </span>
+                    <span className="text-amber-700 dark:text-amber-300 font-semibold">
+                      {item.quantity} {item.unit}
+                    </span>
+                  </div>
+                ))}
+                {lowStockItems.length > 3 && (
+                  <p className="text-xs text-amber-700 dark:text-amber-300 text-center">
+                    +{lowStockItems.length - 3} more items
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Weather Alerts Widget */}
+          {weatherAlerts.length > 0 && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-4">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <CloudRain className="text-red-600 dark:text-red-400" size={20} />
+                  <h3 className="font-semibold text-red-900 dark:text-red-100">
+                    Weather Alerts
+                  </h3>
+                </div>
+                <button
+                  onClick={async () => {
+                    try {
+                      await api.markAllAlertsAsRead();
+                      const response = await api.getUnreadAlerts();
+                      if (response.data) {
+                        setWeatherAlerts(response.data.slice(0, 3));
+                      }
+                    } catch (error) {
+                      console.error('Failed to mark alerts as read:', error);
+                    }
+                  }}
+                  className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 text-sm font-medium"
+                >
+                  Mark All Read
+                </button>
+              </div>
+              <div className="space-y-3">
+                {weatherAlerts.map((alert) => {
+                  const getAlertIcon = () => {
+                    switch (alert.alert_type) {
+                      case 'heavy_rain':
+                      case 'flood':
+                        return CloudRain;
+                      case 'storm':
+                        return Wind;
+                      case 'extreme_heat':
+                      case 'frost':
+                        return Thermometer;
+                      default:
+                        return AlertTriangle;
+                    }
+                  };
+                  const Icon = getAlertIcon();
+                  const getSeverityColor = () => {
+                    switch (alert.severity) {
+                      case 'critical':
+                        return 'bg-red-600 text-white';
+                      case 'high':
+                        return 'bg-orange-600 text-white';
+                      case 'medium':
+                        return 'bg-yellow-600 text-white';
+                      default:
+                        return 'bg-blue-600 text-white';
+                    }
+                  };
+                  return (
+                    <div
+                      key={alert.id}
+                      className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-red-200 dark:border-red-800"
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Icon size={16} className="text-red-600 dark:text-red-400" />
+                          <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
+                            {alert.title}
+                          </span>
+                        </div>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${getSeverityColor()}`}>
+                          {alert.severity}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+                        {alert.message}
+                      </p>
+                      {alert.recommendation && (
+                        <p className="text-xs text-gray-600 dark:text-gray-400 italic">
+                          💡 {alert.recommendation}
+                        </p>
+                      )}
+                      <button
+                        onClick={async () => {
+                          try {
+                            await api.markAlertAsRead(alert.id);
+                            const response = await api.getUnreadAlerts();
+                            if (response.data) {
+                              setWeatherAlerts(response.data.slice(0, 3));
+                            }
+                          } catch (error) {
+                            console.error('Failed to mark alert as read:', error);
+                          }
+                        }}
+                        className="mt-2 text-xs text-red-600 dark:text-red-400 hover:underline"
+                      >
+                        Mark as read
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

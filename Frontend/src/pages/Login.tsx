@@ -33,9 +33,8 @@ const Login = () => {
         setTimeout(() => {
           if (userData.role === 'admin') {
             navigate('/admin', { replace: true });
-          } else if (needsOnboarding) {
-            navigate('/onboarding', { replace: true });
           } else {
+            // Always redirect to dashboard (main page) after login
             navigate('/dashboard', { replace: true });
           }
         }, 1000);
@@ -150,6 +149,15 @@ const Login = () => {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300"
+              >
+                Forgot password?
+              </Link>
             </div>
 
             <button

@@ -1,4 +1,5 @@
-// Utility functions for exporting data to CSV and PDF formats
+// Utility functions for exporting data to CSV, PDF, and Excel formats
+import * as XLSX from 'xlsx';
 
 /**
  * Export data to CSV format
@@ -165,4 +166,102 @@ export const formatDate = (date: Date | string): string => {
     month: 'long',
     day: 'numeric'
   });
+};
+
+/**
+ * Export data to Excel format (.xlsx)
+ */
+export const exportToExcel = (data: any[], filename: string, sheetName: string = 'Sheet1', headers?: string[]): void => {
+  if (!data || data.length === 0) {
+    alert('No data to export');
+    return;
+  }
+
+  // Get headers from first object if not provided
+  const excelHeaders = headers || Object.keys(data[0]);
+  
+  // Prepare data for Excel
+  const worksheetData = [
+    excelHeaders, // Header row
+    ...data.map(row =>
+      excelHeaders.map(header => {
+        const value = row[header] || '';
+        // Format dates
+        if (value instanceof Date) {
+          return value.toLocaleDateString('en-IN');
+        }
+        return value;
+      })
+    ),
+  ];
+
+  // Create workbook and worksheet
+  const workbook = XLSX.utils.book_new();
+  const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+  // Set column widths
+  const columnWidths = excelHeaders.map((header, index) => {
+    const maxLength = Math.max(
+      header.length,
+      ...data.map(row => {
+        const value = row[header] || '';
+        return String(value).length;
+      })
+    );
+    return { wch: Math.min(maxLength + 2, 50) }; // Max width 50
+  });
+  worksheet['!cols'] = columnWidths;
+
+  // Add worksheet to workbook
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+
+  // Generate Excel file and download
+  XLSX.writeFile(workbook, `${filename}.xlsx`);
+};
+
+/**
+ * Export report data with multiple sheets (for complex reports)
+ */
+export const exportToExcelMultiSheet = (
+  sheets: Array<{ name: string; data: any[]; headers?: string[] }>,
+  filename: string
+): void => {
+  const workbook = XLSX.utils.book_new();
+
+  sheets.forEach(({ name, data, headers }) => {
+    if (!data || data.length === 0) return;
+
+    const excelHeaders = headers || Object.keys(data[0]);
+    const worksheetData = [
+      excelHeaders,
+      ...data.map(row =>
+        excelHeaders.map(header => {
+          const value = row[header] || '';
+          if (value instanceof Date) {
+            return value.toLocaleDateString('en-IN');
+          }
+          return value;
+        })
+      ),
+    ];
+
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+    
+    // Set column widths
+    const columnWidths = excelHeaders.map((header) => {
+      const maxLength = Math.max(
+        header.length,
+        ...data.map(row => {
+          const value = row[header] || '';
+          return String(value).length;
+        })
+      );
+      return { wch: Math.min(maxLength + 2, 50) };
+    });
+    worksheet['!cols'] = columnWidths;
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, name);
+  });
+
+  XLSX.writeFile(workbook, `${filename}.xlsx`);
 };

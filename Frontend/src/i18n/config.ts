@@ -5,6 +5,8 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import enTranslations from './locales/en.json';
 import taTranslations from './locales/ta.json';
 import hiTranslations from './locales/hi.json';
+import teTranslations from './locales/te.json';
+import knTranslations from './locales/kn.json';
 
 i18n
   .use(LanguageDetector)
@@ -19,6 +21,12 @@ i18n
       },
       hi: {
         translation: hiTranslations,
+      },
+      te: {
+        translation: teTranslations,
+      },
+      kn: {
+        translation: knTranslations,
       },
     },
     fallbackLng: 'en',

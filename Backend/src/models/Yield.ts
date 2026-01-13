@@ -1,4 +1,5 @@
 import { pool } from '../config/database';
+import { query, queryOne, execute } from '../utils/dbHelper';
 
 export interface Yield {
   id: string;
@@ -18,85 +19,94 @@ export interface CreateYieldData {
 
 export class YieldModel {
   static async findByCropId(cropId: string): Promise<Yield[]> {
-    const result = await pool.query(
-      'SELECT * FROM yields WHERE crop_id = $1 ORDER BY date DESC',
+    return query<Yield>(
+      pool,
+      'SELECT * FROM yields WHERE crop_id = ? ORDER BY date DESC',
       [cropId]
     );
-    return result.rows;
   }
 
   static async findByFarmerId(farmerId: string): Promise<Yield[]> {
-    const result = await pool.query(
+    return query<Yield>(
+      pool,
       `SELECT y.* FROM yields y
        JOIN crops c ON y.crop_id = c.id
        JOIN farms f ON c.farm_id = f.id
-       WHERE f.farmer_id = $1
+       WHERE f.farmer_id = ?
        ORDER BY y.date DESC`,
       [farmerId]
     );
-    return result.rows;
   }
 
   static async findById(id: string): Promise<Yield | null> {
-    const result = await pool.query('SELECT * FROM yields WHERE id = $1', [id]);
-    return result.rows[0] || null;
+    return queryOne<Yield>(pool, 'SELECT * FROM yields WHERE id = ?', [id]);
   }
 
   static async create(data: CreateYieldData): Promise<Yield> {
-    const result = await pool.query(
+    await execute(
+      pool,
       `INSERT INTO yields (crop_id, quantity, date, quality)
-       VALUES ($1, $2, $3, $4)
-       RETURNING *`,
+       VALUES (?, ?, ?, ?)`,
       [data.crop_id, data.quantity, data.date, data.quality]
     );
-    return result.rows[0];
+
+    const yield_ = await queryOne<Yield>(
+      pool,
+      'SELECT * FROM yields WHERE crop_id = ? AND date = ? ORDER BY created_at DESC LIMIT 1',
+      [data.crop_id, data.date]
+    );
+    if (!yield_) throw new Error('Failed to create yield');
+    return yield_;
   }
 
   static async update(id: string, updates: Partial<CreateYieldData>): Promise<Yield> {
     const fields: string[] = [];
     const values: any[] = [];
-    let paramCount = 1;
 
     if (updates.crop_id) {
-      fields.push(`crop_id = $${paramCount++}`);
+      fields.push(`crop_id = ?`);
       values.push(updates.crop_id);
     }
     if (updates.quantity !== undefined) {
-      fields.push(`quantity = $${paramCount++}`);
+      fields.push(`quantity = ?`);
       values.push(updates.quantity);
     }
     if (updates.date) {
-      fields.push(`date = $${paramCount++}`);
+      fields.push(`date = ?`);
       values.push(updates.date);
     }
     if (updates.quality) {
-      fields.push(`quality = $${paramCount++}`);
+      fields.push(`quality = ?`);
       values.push(updates.quality);
     }
 
     values.push(id);
 
-    const result = await pool.query(
-      `UPDATE yields SET ${fields.join(', ')} WHERE id = $${paramCount} RETURNING *`,
+    await execute(
+      pool,
+      `UPDATE yields SET ${fields.join(', ')} WHERE id = ?`,
       values
     );
 
-    return result.rows[0];
+    const yield_ = await queryOne<Yield>(pool, 'SELECT * FROM yields WHERE id = ?', [id]);
+    if (!yield_) throw new Error('Yield not found');
+    return yield_;
   }
 
   static async delete(id: string): Promise<void> {
-    await pool.query('DELETE FROM yields WHERE id = $1', [id]);
+    await execute(pool, 'DELETE FROM yields WHERE id = ?', [id]);
   }
 
   static async getTotalYield(farmerId: string): Promise<number> {
-    const result = await pool.query(
+    const result = await queryOne<{ total: string }>(
+      pool,
       `SELECT COALESCE(SUM(y.quantity), 0) as total
        FROM yields y
        JOIN crops c ON y.crop_id = c.id
        JOIN farms f ON c.farm_id = f.id
-       WHERE f.farmer_id = $1`,
+       WHERE f.farmer_id = ?`,
       [farmerId]
     );
-    return parseFloat(result.rows[0].total);
+    return parseFloat(result?.total || '0');
   }
 }

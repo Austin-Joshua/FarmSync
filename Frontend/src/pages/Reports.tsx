@@ -5,7 +5,7 @@ import { mockCrops, mockExpenses, getMonthlyExpenses, getTotalYield } from '../d
 import { Download, FileText, TrendingUp, IndianRupee, Sprout, Eye } from 'lucide-react';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { translateCrop, translateCategory } from '../utils/translations';
-import { exportToCSV, exportToPDF } from '../utils/exportUtils';
+import { exportToCSV, exportToPDF, exportToExcel } from '../utils/exportUtils';
 import DetailModal from '../components/DetailModal';
 
 const Reports = () => {
@@ -44,7 +44,7 @@ const Reports = () => {
 
   const COLORS = ['#16a34a', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
 
-  const handleDownload = (reportType: 'monthly' | 'seasonal' | 'financial', format: 'csv' | 'pdf' = 'csv') => {
+  const handleDownload = (reportType: 'monthly' | 'seasonal' | 'financial', format: 'csv' | 'pdf' | 'excel' = 'csv') => {
     // Prepare report data based on report type
     let reportData: any[] = [];
     let title = '';
@@ -97,6 +97,8 @@ const Reports = () => {
 
     if (format === 'csv') {
       exportToCSV(reportData, filename);
+    } else if (format === 'excel') {
+      exportToExcel(reportData, filename, reportType);
     } else {
       exportToPDF(reportData, filename, title);
     }
@@ -120,6 +122,13 @@ const Reports = () => {
           >
             <Download size={20} />
             {t('reports.downloadCSV')}
+          </button>
+          <button
+            onClick={() => handleDownload('monthly', 'excel')}
+            className="btn-secondary flex items-center gap-2 border border-gray-300"
+          >
+            <FileText size={20} />
+            Excel
           </button>
           <button
             onClick={() => handleDownload('monthly', 'pdf')}
@@ -267,6 +276,9 @@ const Reports = () => {
               <button onClick={() => handleDownload('monthly', 'csv')} className="btn-primary flex-1">
                 {t('reports.downloadCSV')}
               </button>
+              <button onClick={() => handleDownload('monthly', 'excel')} className="btn-secondary flex-1 border border-gray-300">
+                Excel
+              </button>
               <button onClick={() => handleDownload('monthly', 'pdf')} className="btn-secondary flex-1 border border-gray-300">
                 {t('reports.downloadPDF')}
               </button>
@@ -282,6 +294,9 @@ const Reports = () => {
               <button onClick={() => handleDownload('seasonal', 'csv')} className="btn-primary flex-1">
                 {t('reports.downloadCSV')}
               </button>
+              <button onClick={() => handleDownload('seasonal', 'excel')} className="btn-secondary flex-1 border border-gray-300">
+                Excel
+              </button>
               <button onClick={() => handleDownload('seasonal', 'pdf')} className="btn-secondary flex-1 border border-gray-300">
                 {t('reports.downloadPDF')}
               </button>
@@ -296,6 +311,9 @@ const Reports = () => {
             <div className="flex gap-2">
               <button onClick={() => handleDownload('financial', 'csv')} className="btn-primary flex-1">
                 {t('reports.downloadCSV')}
+              </button>
+              <button onClick={() => handleDownload('financial', 'excel')} className="btn-secondary flex-1 border border-gray-300">
+                Excel
               </button>
               <button onClick={() => handleDownload('financial', 'pdf')} className="btn-secondary flex-1 border border-gray-300">
                 {t('reports.downloadPDF')}

@@ -16,6 +16,9 @@ export interface User {
   apple_id?: string;
   microsoft_id?: string;
   picture_url?: string;
+  two_factor_enabled?: boolean;
+  two_factor_secret?: string;
+  two_factor_backup_codes?: string;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -37,11 +40,15 @@ export class UserModel {
   }
 
   static async findById(id: string): Promise<User | null> {
-    return queryOne<User>(pool, 'SELECT id, name, email, role, is_onboarded, location, land_size, soil_type, picture_url, created_at FROM users WHERE id = ?', [id]);
+    return queryOne<User>(pool, 'SELECT id, name, email, role, is_onboarded, location, land_size, soil_type, picture_url, two_factor_enabled, created_at FROM users WHERE id = ?', [id]);
   }
 
   static async findByIdWithPassword(id: string): Promise<User | null> {
     return queryOne<User>(pool, 'SELECT * FROM users WHERE id = ?', [id]);
+  }
+
+  static async findByIdWith2FA(id: string): Promise<User | null> {
+    return queryOne<User>(pool, 'SELECT id, name, email, role, two_factor_enabled, two_factor_secret, two_factor_backup_codes FROM users WHERE id = ?', [id]);
   }
 
 
@@ -78,7 +85,11 @@ export class UserModel {
     return bcrypt.compare(password, user.password_hash);
   }
 
-  static async update(id: string, updates: Partial<CreateUserData>): Promise<User> {
+  static async update(id: string, updates: Partial<CreateUserData & {
+    two_factor_enabled?: boolean;
+    two_factor_secret?: string | null;
+    two_factor_backup_codes?: string | null;
+  }>): Promise<User> {
     const fields: string[] = [];
     const values: any[] = [];
 
@@ -102,6 +113,18 @@ export class UserModel {
       fields.push(`picture_url = ?`);
       values.push(updates.picture_url);
     }
+    if (updates.two_factor_enabled !== undefined) {
+      fields.push(`two_factor_enabled = ?`);
+      values.push(updates.two_factor_enabled);
+    }
+    if (updates.two_factor_secret !== undefined) {
+      fields.push(`two_factor_secret = ?`);
+      values.push(updates.two_factor_secret);
+    }
+    if (updates.two_factor_backup_codes !== undefined) {
+      fields.push(`two_factor_backup_codes = ?`);
+      values.push(updates.two_factor_backup_codes);
+    }
 
     fields.push(`updated_at = CURRENT_TIMESTAMP`);
     values.push(id);
@@ -113,7 +136,7 @@ export class UserModel {
     );
 
     // Fetch updated user
-    const user = await queryOne<User>(pool, 'SELECT id, name, email, role, location, land_size, soil_type, picture_url, created_at FROM users WHERE id = ?', [id]);
+    const user = await queryOne<User>(pool, 'SELECT id, name, email, role, location, land_size, soil_type, picture_url, two_factor_enabled, created_at FROM users WHERE id = ?', [id]);
     if (!user) throw new Error('User not found');
     return user;
   }

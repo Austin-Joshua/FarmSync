@@ -49,7 +49,7 @@ export const createStockItem = async (req: AuthRequest, res: Response): Promise<
       throw new AppError('User not authenticated', 401);
     }
 
-    const { item_name, item_type, quantity, unit } = req.body;
+    const { item_name, item_type, quantity, unit, threshold } = req.body;
 
     if (!item_name || !item_type || !quantity || !unit) {
       throw new AppError('All fields are required', 400);
@@ -61,7 +61,11 @@ export const createStockItem = async (req: AuthRequest, res: Response): Promise<
       item_type,
       quantity: parseFloat(quantity),
       unit,
+      threshold: threshold !== undefined ? parseFloat(threshold) : undefined,
     });
+
+    // Check if stock is low and send alert
+    await checkAndSendLowStockAlert(req.user.id, stockItem);
 
     res.status(201).json({
       message: 'Stock item created successfully',
@@ -89,9 +93,15 @@ export const updateStockItem = async (req: AuthRequest, res: Response): Promise<
     if (req.body.item_name) updates.item_name = req.body.item_name;
     if (req.body.item_type) updates.item_type = req.body.item_type;
     if (req.body.quantity !== undefined) updates.quantity = parseFloat(req.body.quantity);
+    if (req.body.threshold !== undefined) updates.threshold = parseFloat(req.body.threshold);
     if (req.body.unit) updates.unit = req.body.unit;
 
     const updatedStockItem = await StockModel.update(id, updates);
+
+    // Check if stock is low and send alert
+    if (req.user) {
+      await checkAndSendLowStockAlert(req.user.id, updatedStockItem);
+    }
 
     res.json({
       message: 'Stock item updated successfully',
@@ -101,6 +111,58 @@ export const updateStockItem = async (req: AuthRequest, res: Response): Promise<
     throw new AppError(error.message, error.statusCode || 500);
   }
 };
+
+/**
+ * Get low stock items for current user
+ * GET /api/stock/low-stock
+ */
+export const getLowStockItems = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      throw new AppError('User not authenticated', 401);
+    }
+
+    const lowStockItems = await StockModel.findLowStockItems(req.user.id);
+
+    res.json({
+      message: 'Low stock items retrieved successfully',
+      data: lowStockItems,
+      count: lowStockItems.length,
+    });
+  } catch (error: any) {
+    throw new AppError(error.message, error.statusCode || 500);
+  }
+};
+
+/**
+ * Helper function to check and send low stock alerts
+ */
+async function checkAndSendLowStockAlert(userId: string, stockItem: any): Promise<void> {
+  try {
+    const threshold = stockItem.threshold || 10.0;
+    if (stockItem.quantity <= threshold) {
+      // Get user email
+      const { UserModel } = await import('../models/User');
+      const user = await UserModel.findById(userId);
+      
+      if (user && user.email) {
+        const { EmailService } = await import('../services/emailService');
+        await EmailService.sendLowStockAlert(user.email, {
+          name: stockItem.item_name,
+          category: stockItem.item_type,
+          quantity: stockItem.quantity,
+          unit: stockItem.unit,
+          threshold: threshold,
+        }).catch((err) => {
+          console.error('Failed to send low stock alert email:', err);
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error checking low stock alert:', error);
+    // Don't throw - this shouldn't break the main flow
+  }
+}
 
 export const deleteStockItem = async (req: AuthRequest, res: Response): Promise<void> => {
   try {

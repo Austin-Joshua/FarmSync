@@ -28,6 +28,14 @@ import auditLogRoutes from './routes/auditLogRoutes';
 import notificationRoutes from './routes/notificationRoutes';
 import adminRoutes from './routes/adminRoutes';
 import userRoutes from './routes/userRoutes';
+import calendarRoutes from './routes/calendarRoutes';
+import weatherAlertRoutes from './routes/weatherAlertRoutes';
+import reportsRoutes from './routes/reportsRoutes';
+import twoFactorRoutes from './routes/twoFactorRoutes';
+import whatsappRoutes from './routes/whatsappRoutes';
+import smsRoutes from './routes/smsRoutes';
+import marketPriceRoutes from './routes/marketPriceRoutes';
+import fieldRoutes from './routes/fieldRoutes';
 
 const app: Express = express();
 
@@ -136,6 +144,14 @@ app.use('/api/audit-logs', auditLogRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/calendar', calendarRoutes);
+app.use('/api/weather', weatherAlertRoutes);
+app.use('/api/reports', reportsRoutes);
+app.use('/api/auth/2fa', twoFactorRoutes);
+app.use('/api/whatsapp', whatsappRoutes);
+app.use('/api/sms', smsRoutes);
+app.use('/api/market-prices', marketPriceRoutes);
+app.use('/api/fields', fieldRoutes);
 
 // 404 handler
 app.use(notFoundHandler);

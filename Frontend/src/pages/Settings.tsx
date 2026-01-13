@@ -41,11 +41,15 @@ import {
   AlertTriangle,
   TrendingUp,
   Camera,
+  Monitor,
+  Smartphone,
+  Tablet,
 } from 'lucide-react';
 import { mockFarms } from '../data/mockData';
 import type { Farm } from '../types';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import PushNotificationSetup from '../components/PushNotificationSetup';
+import TwoFactorAuthSetup from '../components/TwoFactorAuthSetup';
 import { translateSoilType } from '../utils/translations';
 import { useTheme } from '../context/ThemeContext';
 
@@ -54,7 +58,18 @@ const Settings = () => {
   const { location: gpsLocation, requestLocation } = useLocation();
   const { t, i18n: i18nInstance } = useTranslation();
   const { theme: currentTheme, toggleTheme } = useTheme();
-  const [activeTab, setActiveTab] = useState<'profile' | 'preferences'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'preferences' | 'security'>('profile');
+  const [sessions, setSessions] = useState<Array<{
+    id: string;
+    isCurrent: boolean;
+    device: string;
+    browser: string;
+    ipAddress: string;
+    lastActivity: string;
+    createdAt: string;
+  }>>([]);
+  const [loadingSessions, setLoadingSessions] = useState(false);
+  const [user2FAEnabled, setUser2FAEnabled] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [farms, setFarms] = useState([...mockFarms]);
@@ -135,6 +150,69 @@ const Settings = () => {
       localStorage.setItem('userSettings', JSON.stringify({ ...settings, language: currentLang }));
     }
   }, [i18n.language]);
+
+  // Load active sessions when security tab is active
+  useEffect(() => {
+    if (activeTab === 'security') {
+      loadSessions();
+      load2FAStatus();
+    }
+  }, [activeTab]);
+
+  const load2FAStatus = async () => {
+    if (!user) return;
+    try {
+      // Check if user has 2FA enabled by checking user profile
+      // This would typically come from the user object or a separate API call
+      // For now, we'll check localStorage or make an API call
+      const userProfile = await api.getUserProfile();
+      if (userProfile.data?.two_factor_enabled) {
+        setUser2FAEnabled(true);
+      }
+    } catch (error) {
+      console.error('Failed to load 2FA status:', error);
+    }
+  };
+
+  const loadSessions = async () => {
+    setLoadingSessions(true);
+    try {
+      const response = await api.getActiveSessions();
+      if (response.sessions) {
+        setSessions(response.sessions);
+      }
+    } catch (error) {
+      console.error('Failed to load sessions:', error);
+    } finally {
+      setLoadingSessions(false);
+    }
+  };
+
+  const handleLogoutAll = async () => {
+    if (confirm('Are you sure you want to logout from all other devices? You will remain logged in on this device.')) {
+      try {
+        await api.logoutAllDevices();
+        await loadSessions();
+        alert('Successfully logged out from all other devices');
+      } catch (error: any) {
+        alert(error?.message || 'Failed to logout from all devices');
+      }
+    }
+  };
+
+  const getDeviceIcon = (device: string) => {
+    if (device.toLowerCase().includes('mobile')) {
+      return <Smartphone size={20} className="text-gray-500" />;
+    } else if (device.toLowerCase().includes('tablet')) {
+      return <Tablet size={20} className="text-gray-500" />;
+    }
+    return <Monitor size={20} className="text-gray-500" />;
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString();
+  };
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -849,20 +927,58 @@ const Settings = () => {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Email Notification Preferences</h3>
               <div className="space-y-3">
                 <label className="flex items-center gap-3">
-                  <input type="checkbox" defaultChecked className="rounded border-gray-300 text-primary-600" />
+                  <input
+                    type="checkbox"
+                    checked={settings.climateWarnings !== false}
+                    onChange={(e) => updateSetting('climateWarnings', e.target.checked)}
+                    className="rounded border-gray-300 text-primary-600"
+                  />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Climate warnings (temperature, rainfall, drought)</span>
                 </label>
                 <label className="flex items-center gap-3">
-                  <input type="checkbox" defaultChecked className="rounded border-gray-300 text-primary-600" />
+                  <input
+                    type="checkbox"
+                    checked={settings.lowStockAlert !== false}
+                    onChange={(e) => updateSetting('lowStockAlert', e.target.checked)}
+                    className="rounded border-gray-300 text-primary-600"
+                  />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Low stock alerts</span>
                 </label>
                 <label className="flex items-center gap-3">
-                  <input type="checkbox" defaultChecked className="rounded border-gray-300 text-primary-600" />
+                  <input
+                    type="checkbox"
+                    checked={settings.harvestReminders !== false}
+                    onChange={(e) => updateSetting('harvestReminders', e.target.checked)}
+                    className="rounded border-gray-300 text-primary-600"
+                  />
                   <span className="text-sm text-gray-700 dark:text-gray-300">Harvest reminders</span>
                 </label>
                 <label className="flex items-center gap-3">
-                  <input type="checkbox" defaultChecked className="rounded border-gray-300 text-primary-600" />
+                  <input
+                    type="checkbox"
+                    checked={settings.systemUpdates !== false}
+                    onChange={(e) => updateSetting('systemUpdates', e.target.checked)}
+                    className="rounded border-gray-300 text-primary-600"
+                  />
                   <span className="text-sm text-gray-700 dark:text-gray-300">System updates and announcements</span>
+                </label>
+                <label className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={settings.irrigationReminders !== false}
+                    onChange={(e) => updateSetting('irrigationReminders', e.target.checked)}
+                    className="rounded border-gray-300 text-primary-600"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Irrigation reminders</span>
+                </label>
+                <label className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    checked={settings.cropRecommendations !== false}
+                    onChange={(e) => updateSetting('cropRecommendations', e.target.checked)}
+                    className="rounded border-gray-300 text-primary-600"
+                  />
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Crop recommendations</span>
                 </label>
               </div>
             </div>
@@ -1404,12 +1520,7 @@ const Settings = () => {
                 </div>
               </div>
               <button
-                onClick={() => {
-                  if (confirm(t('settings.confirmLogoutAll') || 'Are you sure you want to logout from all devices?')) {
-                    // TODO: Implement logout all devices
-                    alert(t('settings.logoutAllDevices') || 'Logout from all devices functionality will be implemented');
-                  }
-                }}
+                onClick={handleLogoutAll}
                 className="flex items-center gap-2 px-4 py-2 border border-amber-300 dark:border-amber-600 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors text-amber-700 dark:text-amber-400"
               >
                 <LogOut size={16} />
@@ -1499,6 +1610,129 @@ const Settings = () => {
               <Save size={20} />
               {t('settings.savePreferences')}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Security Tab */}
+      {activeTab === 'security' && (
+        <div className="space-y-6">
+          {/* Two-Factor Authentication */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+              <Shield size={20} className="text-primary-600 dark:text-primary-400" />
+              Two-Factor Authentication
+            </h2>
+            <TwoFactorAuthSetup
+              user2FAEnabled={user2FAEnabled}
+              on2FAEnabled={() => setUser2FAEnabled(true)}
+              on2FADisabled={() => setUser2FAEnabled(false)}
+            />
+          </div>
+
+          {/* Active Sessions */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                <Shield size={20} className="text-primary-600 dark:text-primary-400" />
+                Active Sessions
+              </h2>
+              <button
+                onClick={loadSessions}
+                disabled={loadingSessions}
+                className="flex items-center gap-2 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+              >
+                <RefreshCw size={16} className={loadingSessions ? 'animate-spin' : ''} />
+                Refresh
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              Manage your active sessions across devices. You can see where you're logged in and logout from other devices.
+            </p>
+
+            {loadingSessions ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader className="animate-spin text-primary-600" size={24} />
+              </div>
+            ) : sessions.length === 0 ? (
+              <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                No active sessions found
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {sessions.map((session) => (
+                  <div
+                    key={session.id}
+                    className={`p-4 rounded-lg border ${
+                      session.isCurrent
+                        ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800'
+                        : 'bg-gray-50 dark:bg-gray-700/50 border-gray-200 dark:border-gray-600'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-3 flex-1">
+                        <div className="mt-1">
+                          {getDeviceIcon(session.device)}
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <p className="font-medium text-gray-900 dark:text-gray-100">
+                              {session.device}
+                            </p>
+                            {session.isCurrent && (
+                              <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs rounded-full font-medium">
+                                Current Session
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {session.browser} • {session.ipAddress}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                            Last active: {formatDate(session.lastActivity)}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-500">
+                            Created: {formatDate(session.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {sessions.length > 1 && (
+              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <button
+                  onClick={handleLogoutAll}
+                  className="flex items-center gap-2 px-4 py-2 border border-amber-300 dark:border-amber-600 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors text-amber-700 dark:text-amber-400 w-full justify-center"
+                >
+                  <LogOut size={16} />
+                  Logout from All Other Devices
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Password Reset */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
+              <Key size={20} className="text-primary-600 dark:text-primary-400" />
+              Password Management
+            </h2>
+            <div className="space-y-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Forgot your password? You can reset it using the forgot password feature.
+              </p>
+              <a
+                href="/forgot-password"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300"
+              >
+                <Key size={16} />
+                Reset Password
+              </a>
+            </div>
           </div>
         </div>
       )}

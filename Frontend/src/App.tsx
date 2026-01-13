@@ -8,6 +8,8 @@ import Layout from './components/Layout';
 // Pages
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import CropManagement from './pages/CropManagement';
@@ -19,8 +21,12 @@ import Reports from './pages/Reports';
 import History from './pages/History';
 import Settings from './pages/Settings';
 import UserPage from './pages/UserPage';
+import CropCalendar from './pages/CropCalendar';
+import MarketPrices from './pages/MarketPrices';
+import Fields from './pages/Fields';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
+import SessionTimeoutWarning from './components/SessionTimeoutWarning';
 import { useEffect } from 'react';
 import { initializeServiceWorker } from './utils/serviceWorkerRegistration';
 
@@ -38,6 +44,8 @@ const AppContent = () => {
       {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
 
       {/* Protected Routes */}
       <Route
@@ -148,6 +156,36 @@ const AppContent = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/calendar"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <CropCalendar />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/market-prices"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <MarketPrices />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/fields"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Fields />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
       {/* Admin Only Routes */}
       <Route
         path="/admin"
@@ -183,6 +221,7 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <AppContent />
+          <SessionTimeoutWarning />
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>

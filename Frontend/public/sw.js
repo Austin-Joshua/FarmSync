@@ -41,17 +41,51 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request);
-      })
-      .catch(() => {
-        // If fetch fails, return offline page if available
-        if (event.request.destination === 'document') {
-          return caches.match('/');
+        // Return cached version if available
+        if (response) {
+          return response;
         }
+
+        // Fetch from network
+        return fetch(event.request)
+          .then((response) => {
+            // Don't cache if not a valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // Clone the response
+            const responseToCache = response.clone();
+
+            // Cache the response
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+
+            return response;
+          })
+          .catch(() => {
+            // If fetch fails and it's a document request, return cached homepage
+            if (event.request.destination === 'document') {
+              return caches.match('/');
+            }
+            // For other requests, return a basic offline response
+            return new Response('Offline', {
+              status: 503,
+              statusText: 'Service Unavailable',
+              headers: new Headers({
+                'Content-Type': 'text/plain',
+              }),
+            });
+          });
       })
   );
 });
