@@ -6,31 +6,363 @@ A comprehensive full-stack web application for managing farm operations, trackin
 
 ---
 
-## 📋 Table of Contents
+## 📋 Quick Navigation
 
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Quick Start](#quick-start)
-- [Configuration](#configuration)
-- [API Documentation](#api-documentation)
-- [ML Model](#ml-model)
-- [Contributing](#contributing)
+- **[Quick Start Guide](#-quick-start)** - Get running in minutes
+- **[Features](#-features)** - What FarmSync can do
+- **[Tech Stack](#-tech-stack)** - Technology details
+- **[Project Structure](#-project-structure)** - Folder organization
+- **[Development](#-development)** - Setup & troubleshooting
+- **[Documentation](#-documentation)** - Additional resources
 
 ---
 
 ## 🎯 Overview
 
 FarmSync is a modern, multilingual farm management system that helps farmers:
-- Track crops, expenses, and yields
-- Get AI-powered crop recommendations based on soil conditions
-- Monitor real-time weather and climate alerts
-- Manage fertilizers, pesticides, and irrigation
-- Generate comprehensive reports and analytics
-- Track financial history and stock usage
-- Support for multiple languages (English, Tamil, Hindi)
+
+### Core Capabilities
+- ✅ **Crop Management** - Track crops, varieties, and planting dates
+- ✅ **Expense Tracking** - Monitor costs for fertilizers, seeds, labor
+- ✅ **Yield Tracking** - Record harvest data and productivity metrics
+- ✅ **AI Recommendations** - Get crop suggestions based on soil & weather
+- ✅ **Weather Monitoring** - Real-time weather alerts and forecasts
+- ✅ **Irrigation Management** - Optimize water usage
+- ✅ **Pest & Disease Detection** - Image-based disease scanning
+- ✅ **Reports & Analytics** - Generate data-driven insights
+- ✅ **Multi-language Support** - English, Tamil, Hindi
+- ✅ **Mobile Responsive** - Works on all devices
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- MySQL 8.0+
+- Python 3.7+ (for ML features)
+
+### Installation (3 steps)
+
+**1. Clone & Install Dependencies**
+```bash
+git clone https://github.com/Austin-Joshua/FarmSync.git
+cd FarmSync
+cd Backend && npm install && cd ..
+cd Frontend && npm install && cd ..
+```
+
+**2. Setup Database**
+```bash
+cd Backend
+npm run setup-db      # Create database & tables
+npm run seed         # Populate sample data (optional)
+```
+
+**3. Start the Application**
+
+**Terminal 1 - Backend (Port 5000):**
+```bash
+cd Backend
+npm run dev
+# Output: ✅ Backend server is running on http://localhost:5000
+```
+
+**Terminal 2 - Frontend (Port 5174):**
+```bash
+cd Frontend
+npm run dev
+# Output: ➜ Local: http://localhost:5174/
+```
+
+### 🎉 You're Ready!
+Open your browser to **http://localhost:5174** and register with your email.
+
+---
+
+## 📚 Features
+
+### Authentication & Security
+- Email/password registration and login
+- JWT token-based authentication
+- Two-factor authentication (2FA)
+- Password strength validation
+- Session management
+- Role-based access control (Farmer/Admin)
+
+### Farm Management
+- Create and manage multiple farms
+- Field mapping with geolocation
+- Soil type and condition tracking
+- Land size and crop allocation
+
+### Crop Management
+- Crop planning and scheduling
+- Planting and harvest tracking
+- Crop calendar with milestones
+- Variety and seed information
+- Crop rotation management
+
+### Financial Management
+- Expense tracking by category
+- Cost per crop analysis
+- Income tracking
+- Profit/loss calculations
+- Historical financial reports
+
+### Yield & Productivity
+- Harvest data recording
+- Yield per acre/hectare
+- Productivity trends
+- Comparative analysis
+
+### Weather & Alerts
+- Real-time weather data
+- Weather alerts and warnings
+- Temperature and rainfall forecasting
+- Alerts customization
+
+### AI & Recommendations
+- Machine Learning-based crop recommendations
+- Soil condition analysis
+- Pest and disease detection via image scanning
+- Weather-based optimization suggestions
+
+### Reporting & Analytics
+- Generate PDF reports
+- Data export (CSV, Excel)
+- Dashboard analytics
+- Performance metrics
+- Charts and visualizations
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **React 18.3** - Modern UI framework
+- **TypeScript** - Type-safe development
+- **Vite 5.4** - Lightning-fast build tool
+- **Tailwind CSS** - Beautiful, responsive styling
+- **React Router 7.12** - Client-side routing
+- **Recharts 3.6** - Data visualization
+- **Leaflet & React-Leaflet** - Interactive maps
+- **i18next 25.7** - Multi-language support
+
+### Backend
+- **Node.js 18+** - JavaScript runtime
+- **Express 4.18** - Web framework
+- **TypeScript 5.3** - Type safety
+- **MySQL 8.0** - Relational database
+- **JWT** - Secure authentication
+- **Bcryptjs** - Password encryption
+- **Winston** - Logging
+- **Helmet** - Security headers
+- **CORS** - Cross-origin support
+
+### Machine Learning
+- **Python 3.7+**
+- **Scikit-learn** - ML algorithms
+- **Pandas** - Data processing
+- **NumPy** - Numerical computing
+
+---
+
+## 📁 Project Structure
+
+```
+FarmSync/
+├── Frontend/                    # React.js web application
+│   ├── src/
+│   │   ├── components/         # Reusable UI components
+│   │   ├── pages/              # Page components
+│   │   ├── services/           # API service layer
+│   │   ├── context/            # React Context (Auth, Theme)
+│   │   ├── hooks/              # Custom React hooks
+│   │   ├── utils/              # Utility functions
+│   │   ├── i18n/               # Internationalization files
+│   │   └── types/              # TypeScript type definitions
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── Backend/                     # Node.js/Express API
+│   ├── src/
+│   │   ├── controllers/        # Request handlers
+│   │   ├── services/           # Business logic
+│   │   ├── models/             # Database models
+│   │   ├── routes/             # API routes
+│   │   ├── middleware/         # Express middleware
+│   │   ├── config/             # Configuration files
+│   │   ├── database/           # Database setup & migrations
+│   │   ├── utils/              # Helper utilities
+│   │   └── server.ts           # Main server file
+│   ├── ml/                      # Machine Learning models
+│   │   ├── train_model.py     # ML model training script
+│   │   └── predict.py          # ML predictions
+│   ├── Dataset/                # Training & reference data
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── docs/                        # Documentation
+│   ├── DATABASE_STRUCTURE.md   # Schema documentation
+│   ├── API_DOCUMENTATION.md    # Endpoint reference
+│   └── SETUP_GUIDE.md          # Detailed setup instructions
+│
+└── README.md                    # This file
+```
+
+---
+
+## 🔧 Development
+
+### Running in Development Mode
+
+**Backend Server:**
+```bash
+cd Backend
+npm run dev        # Starts with hot-reload on http://localhost:5000
+```
+
+**Frontend Development:**
+```bash
+cd Frontend
+npm run dev        # Starts on http://localhost:5174
+```
+
+### Building for Production
+
+**Backend:**
+```bash
+cd Backend
+npm run build      # Compiles TypeScript to JavaScript
+npm start          # Runs compiled backend
+```
+
+**Frontend:**
+```bash
+cd Frontend
+npm run build      # Creates optimized production build
+npm run preview    # Preview production build locally
+```
+
+### Available Scripts
+
+**Backend Commands:**
+```bash
+npm run dev          # Development server with auto-reload
+npm run build        # Build TypeScript
+npm run start        # Run production build
+npm run setup-db     # Initialize database
+npm run migrate      # Run database migrations
+npm run seed         # Populate sample data
+npm run lint         # Check code quality
+npm run typecheck    # Check TypeScript types
+```
+
+**Frontend Commands:**
+```bash
+npm run dev          # Development server
+npm run build        # Production build
+npm run preview      # Preview build
+npm run lint         # Lint code
+npm run typecheck    # Type checking
+```
+
+### Database Setup
+
+```bash
+cd Backend
+npm run setup-db     # Creates database & all tables
+```
+
+The database includes tables for:
+- Users & authentication
+- Farms & fields
+- Crops & crop calendars
+- Expenses & income
+- Yields & harvests
+- Stock & fertilizers
+- Weather alerts
+- Audit logs
+- And more...
+
+---
+
+## 📖 Documentation
+
+### Available Resources
+
+1. **[docs/DATABASE_STRUCTURE.md](docs/DATABASE_STRUCTURE.md)** - Complete database schema
+2. **[docs/DBMS_SETUP_GUIDE.md](docs/DBMS_SETUP_GUIDE.md)** - Database setup instructions
+3. **[docs/KEEP_BACKEND_RUNNING.md](docs/KEEP_BACKEND_RUNNING.md)** - Production deployment guide
+4. **[Backend/README.md](Backend/README.md)** - Backend-specific documentation
+5. **[Backend/ml/README.md](Backend/ml/README.md)** - ML model documentation
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**Port Already in Use:**
+```bash
+# Kill process on port 5000
+Get-Process -Id (Get-NetTCPConnection -LocalPort 5000).OwningProcess | Stop-Process
+```
+
+**Database Connection Error:**
+- Ensure MySQL is running
+- Check credentials in `Backend/src/config/env.ts`
+- Verify database exists: `npm run setup-db`
+
+**Frontend Can't Connect to Backend:**
+- Verify backend is running on port 5000
+- Check CORS configuration in `Backend/src/server.ts`
+- Clear browser cache and reload
+
+**Port 5173/5174 in Use:**
+- Frontend will auto-switch to next available port
+- Check console for actual port being used
+
+---
+
+## 🤝 Contributing
+
+1. Create a feature branch: `git checkout -b feature/your-feature`
+2. Commit changes: `git commit -m "Add your feature"`
+3. Push to branch: `git push origin feature/your-feature`
+4. Open a Pull Request
+
+---
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+---
+
+## 👨‍💻 Author
+
+**Austin Joshua** - Full Stack Developer
+
+GitHub: [@Austin-Joshua](https://github.com/Austin-Joshua)
+
+---
+
+## 📞 Support
+
+For issues, questions, or suggestions:
+1. Check the [Documentation](#-documentation) section
+2. Review existing [GitHub Issues](https://github.com/Austin-Joshua/FarmSync/issues)
+3. Create a new issue with detailed description
+
+---
+
+## 🎉 Thank You!
+
+Thank you for using FarmSync! We hope it helps you manage your farm more effectively.
+
+**Happy Farming! 🌾**
 
 ---
 
