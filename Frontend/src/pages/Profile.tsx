@@ -210,6 +210,8 @@ const Profile = () => {
                   accept="image/*"
                   className="hidden"
                   onChange={handlePictureChange}
+                  title="Upload profile picture"
+                  aria-label="Profile picture"
                 />
               </label>
             </div>

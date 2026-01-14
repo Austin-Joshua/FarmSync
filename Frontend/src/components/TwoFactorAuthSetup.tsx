@@ -179,6 +179,7 @@ const TwoFactorAuthSetup: React.FC<TwoFactorAuthSetupProps> = ({
                   alert('Secret copied to clipboard!');
                 }}
                 className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                title="Copy secret to clipboard"
               >
                 <Copy size={16} />
               </button>

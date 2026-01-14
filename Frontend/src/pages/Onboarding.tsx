@@ -306,6 +306,8 @@ const Onboarding = () => {
                 value={formData.soil_type}
                 onChange={(e) => handleInputChange('soil_type', e.target.value)}
                 className="input-field"
+                title="Select soil type"
+                aria-label="Soil type"
                 required
               >
                 <option value="">Select soil type</option>
@@ -568,9 +570,9 @@ const Onboarding = () => {
               <span>Step {step} of {totalSteps}</span>
               <span>{Math.round((step / totalSteps) * 100)}%</span>
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 progress-bar">
               <div
-                className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                className="bg-primary-600 h-2 rounded-full transition-all duration-300 progress-fill"
                 style={{ width: `${(step / totalSteps) * 100}%` }}
               />
             </div>
