@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TrendingUp, TrendingDown, Minus, Bell, Calendar, DollarSign, BarChart3, AlertCircle } from 'lucide-react';
 import { api } from '../services/api';
@@ -66,9 +66,9 @@ const MarketPrices = () => {
         api.getBestTimeToSell(selectedCrop),
       ]);
 
-      setCurrentPrice(priceData.data);
-      setPriceHistory(historyData.data);
-      setBestTimeToSell(bestTimeData.data);
+      setCurrentPrice(priceData.data as PriceData);
+      setPriceHistory(historyData.data as PriceHistory[]);
+      setBestTimeToSell(bestTimeData.data as BestTimeToSell);
     } catch (err: any) {
       setError(err.message || 'Failed to load market price data');
     } finally {
@@ -128,10 +128,10 @@ const MarketPrices = () => {
 
         {/* Crop Selection */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <label htmlFor="crop-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
             {t('marketPrices.selectCrop', 'Select Crop')}
           </label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3" role="group" aria-labelledby="crop-select">
             {crops.map((crop) => (
               <button
                 key={crop}
@@ -190,6 +190,7 @@ const MarketPrices = () => {
                       className="input-field"
                     />
                     <select
+                      aria-label="Price alert condition"
                       value={alertCondition}
                       onChange={(e) => setAlertCondition(e.target.value as 'above' | 'below')}
                       className="input-field"

@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
 interface OAuthLoginProps {
@@ -52,9 +52,7 @@ export const GoogleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) 
   );
 };
 
-export const MicrosoftSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) => {
-  const { login } = useAuth();
-
+export const MicrosoftSignIn: React.FC<OAuthLoginProps> = () => {
   const handleMicrosoftLogin = useCallback(() => {
     // Redirect to Microsoft OAuth endpoint
     const clientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID;

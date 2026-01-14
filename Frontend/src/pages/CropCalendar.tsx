@@ -159,6 +159,8 @@ const CropCalendar = () => {
           <button
             onClick={() => setCurrentDate(subMonths(currentDate, 1))}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            title="Previous month"
+            aria-label="Previous month"
           >
             <ChevronLeft size={20} />
           </button>
@@ -168,6 +170,8 @@ const CropCalendar = () => {
           <button
             onClick={() => setCurrentDate(addMonths(currentDate, 1))}
             className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            title="Next month"
+            aria-label="Next month"
           >
             <ChevronRight size={20} />
           </button>
@@ -272,6 +276,8 @@ const CropCalendar = () => {
               <button
                 onClick={() => setShowEventModal(false)}
                 className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                title="Close modal"
+                aria-label="Close event details modal"
               >
                 <X size={20} />
               </button>
@@ -341,16 +347,19 @@ const CropCalendar = () => {
               <button
                 onClick={() => setShowAddModal(false)}
                 className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                title="Close modal"
+                aria-label="Close add event modal"
               >
                 <X size={20} />
               </button>
             </div>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="event_type" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Event Type
                 </label>
                 <select
+                  id="event_type"
                   value={newEvent.event_type}
                   onChange={(e) => setNewEvent({ ...newEvent, event_type: e.target.value as CalendarEvent['event_type'] })}
                   className="w-full input-field"
@@ -364,10 +373,11 @@ const CropCalendar = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="event_title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Title *
                 </label>
                 <input
+                  id="event_title"
                   type="text"
                   value={newEvent.title}
                   onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
@@ -377,10 +387,11 @@ const CropCalendar = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Date *
+                <label htmlFor="event_date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Event Date *
                 </label>
                 <input
+                  id="event_date"
                   type="date"
                   value={newEvent.event_date}
                   onChange={(e) => setNewEvent({ ...newEvent, event_date: e.target.value })}
@@ -401,16 +412,18 @@ const CropCalendar = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label htmlFor="reminder_days" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Reminder Days Before Event
                 </label>
                 <input
+                  id="reminder_days"
                   type="number"
                   value={newEvent.reminder_days}
                   onChange={(e) => setNewEvent({ ...newEvent, reminder_days: parseInt(e.target.value) || 7 })}
                   className="w-full input-field"
                   min="0"
                   max="365"
+                  placeholder="7"
                 />
               </div>
               <div className="flex items-center gap-3 pt-4">

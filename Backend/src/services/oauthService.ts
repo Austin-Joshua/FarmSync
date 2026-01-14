@@ -14,7 +14,7 @@ export const initializeOAuth = () => {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
         callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5000/api/auth/google/callback',
       },
-      async (accessToken, refreshToken, profile, done) => {
+      async (_accessToken: string, _refreshToken: string, profile: any, done: (err: any, user?: any) => void): Promise<void> => {
         try {
           const { id, emails, displayName, photos } = profile;
           const email = emails?.[0]?.value;
@@ -70,8 +70,8 @@ export const initializeOAuth = () => {
         clientID: process.env.AZURE_CLIENT_ID || '',
         clientSecret: process.env.AZURE_CLIENT_SECRET || '',
         callbackURL: process.env.AZURE_CALLBACK_URL || 'http://localhost:5000/api/auth/microsoft/callback',
-      },
-      async (profile: any, done) => {
+      } as any,
+      async (profile: any, done: (err: any, user?: any) => void): Promise<void> => {
         try {
           const { oid, upn, givenName, familyName, picture } = profile;
           const email = upn || profile.email;
@@ -118,12 +118,12 @@ export const initializeOAuth = () => {
   );
 
   // Serialize user
-  passport.serializeUser((user: any, done) => {
+  passport.serializeUser((user: any, done: (err: any, id?: number) => void): void => {
     done(null, user.id);
   });
 
   // Deserialize user
-  passport.deserializeUser(async (id: number, done) => {
+  passport.deserializeUser(async (id: number, done: (err: any, user?: any) => void): Promise<void> => {
     try {
       const [user] = await db.query(
         'SELECT * FROM users WHERE id = ?',
@@ -162,13 +162,17 @@ export const verifyAppleToken = async (token: string): Promise<any> => {
 };
 
 // Handle Apple Sign-In
-export const handleAppleSignIn = async (appleUser: any) => {
+export const handleAppleSignIn = async (appleData: { 
+  user: any; 
+  identityToken: string;
+}): Promise<any> => {
   try {
-    const { user, identityToken } = appleUser;
+    const { user, identityToken } = appleData;
     if (!user) return null;
 
     const { email, name } = user;
-    const { sub: appleId } = jwt.decode(identityToken) as any;
+    const decoded = jwt.decode(identityToken) as { sub?: string } | null;
+    const appleId = decoded?.sub || '';
 
     // Check if user exists
     const [existingUser] = await db.query(
@@ -177,7 +181,7 @@ export const handleAppleSignIn = async (appleUser: any) => {
     );
 
     if (Array.isArray(existingUser) && existingUser.length > 0) {
-      const dbUser = existingUser[0] as any;
+      const dbUser = existingUser[0] as { apple_id?: string; id: number; email: string; name: string };
       if (!dbUser.apple_id) {
         await db.query(
           'UPDATE users SET apple_id = ? WHERE email = ?',
@@ -189,13 +193,14 @@ export const handleAppleSignIn = async (appleUser: any) => {
 
     // Create new user
     const displayName = `${name?.firstName || ''} ${name?.lastName || ''}`.trim();
-    const result = await db.query(
+    const [queryResult] = await db.query(
       'INSERT INTO users (name, email, apple_id, is_verified) VALUES (?, ?, ?, ?)',
       [displayName || email, email, appleId, true]
     );
+    const result = queryResult as any;
 
     const newUser = {
-      id: (result as any).insertId,
+      id: result.insertId,
       name: displayName || email,
       email,
       apple_id: appleId,

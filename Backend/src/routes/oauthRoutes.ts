@@ -15,8 +15,8 @@ router.get(
 router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
-  (req: Request, res: Response) => {
-    const user = req.user as any;
+  (req: Request, res: Response): void => {
+    const user = req.user as { id: number; email: string };
     const token = generateToken(user.id, user.email);
     
     // Redirect to frontend with token
@@ -35,8 +35,8 @@ router.get(
 router.get(
   '/microsoft/callback',
   passport.authenticate('azure-ad', { failureRedirect: '/login' }),
-  (req: Request, res: Response) => {
-    const user = req.user as any;
+  (req: Request, res: Response): void => {
+    const user = req.user as { id: number; email: string };
     const token = generateToken(user.id, user.email);
     
     res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/dashboard?token=${token}`);
@@ -44,9 +44,12 @@ router.get(
 );
 
 // Apple Sign-In Route
-router.post('/apple', async (req: Request, res: Response) => {
+router.post('/apple', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { user: appleUser, identityToken } = req.body;
+    const { user: appleUser, identityToken } = req.body as { 
+      user: any; 
+      identityToken: string;
+    };
 
     const user = await handleAppleSignIn({
       user: appleUser,
@@ -54,7 +57,8 @@ router.post('/apple', async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: 'Apple sign-in failed' });
+      res.status(400).json({ message: 'Apple sign-in failed' });
+      return;
     }
 
     const token = generateToken(user.id, user.email);
