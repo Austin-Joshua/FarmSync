@@ -13,8 +13,11 @@ const LanguageSwitcher = ({ variant = 'desktop' }: LanguageSwitcherProps) => {
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇬🇧' },
+    { code: 'ml', name: 'മലയാളം (Malayalam)', flag: '🇮🇳' },
     { code: 'ta', name: 'தமிழ் (Tamil)', flag: '🇮🇳' },
     { code: 'hi', name: 'हिन्दी (Hindi)', flag: '🇮🇳' },
+    { code: 'te', name: 'తెలుగు (Telugu)', flag: '🇮🇳' },
+    { code: 'kn', name: 'ಕನ್ನಡ (Kannada)', flag: '🇮🇳' },
   ];
 
   const currentLanguage = languages.find((lang) => lang.code === i18n.language) || languages[0];

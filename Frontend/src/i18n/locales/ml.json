@@ -292,9 +292,12 @@
     "selectField": "കൃഷിപ്പുരയ്ക് തിരഞ്ഞെടുക്കുക"
   },
   "navigation": {
+    "home": "വീട്",
     "dashboard": "ഡാഷ്‌ബോർഡ്",
+    "farmManagement": "കൃഷിയിടം ന്യായവ്യവസ്ഥ",
     "farms": "കൃഷിയിടങ്ങൾ",
     "fields": "കൃഷിപ്പുരയ്ക്കൾ",
+    "cropManagement": "വിള ന്യായവ്യവസ്ഥ",
     "crops": "വിളകൾ",
     "weather": "കാലാവസ്ഥ",
     "irrigation": "ജലസേചനം",
@@ -303,11 +306,14 @@
     "pesticides": "കീടനാശിനികൾ",
     "diseases": "രോഗങ്ങൾ",
     "expenses": "ചെലവുകൾ",
+    "yieldTracking": "വിളവ് ട്രാക്കിങ്ങ്",
     "reports": "റിപ്പോർട്ടുകൾ",
     "marketPrices": "വിപണി വില",
     "calendar": "കാലെന്ദരം",
     "settings": "ക്രമീകരണങ്ങൾ",
+    "history": "ചരിത്രം",
     "profile": "പ്രൊഫൈൽ",
+    "adminDashboard": "അഡ്മിൻ ഡാഷ്ബോർഡ്",
     "help": "സഹായം"
   }
 }
