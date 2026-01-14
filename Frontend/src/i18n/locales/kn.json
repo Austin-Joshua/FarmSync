@@ -82,7 +82,7 @@
     "registerButton": "ಖಾತೆ ರಚಿಸಿ",
     "passwordMismatch": "ಪಾಸ್‌ವರ್ಡ್‌ಗಳು ಹೊಂದಿಕೆಯಾಗುವುದಿಲ್ಲ",
     "passwordTooShort": "ಪಾಸ್‌ವರ್ಡ್ ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳು ಹೊಂದಿರಬೇಕು",
-    "demoHint": "ನೀವು ಲಾಗಿನ್/ನೋಂದಾಯನದ ಮೊ ಯಾವುದೇ ಇಮೇಲ್ ಫಾರ್ಮ್ಯಾಟ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರನ್ನು ಬಳಸಬಹುದು",
+    "demoHint": "ನೀವು ಲಾಗಿನ್/ನೋಂದಾಯನದ ಮೋ ಯಾವುದೇ ಇಮೇಲ್ ಫಾರ್ಮ್ಯಾಟ್ ಅಥವಾ ಬಳಕೆದಾರ ಹೆಸರನ್ನು ಬಳಸಬಹುದು",
     "googleLoginSuccess": "Google ಲಾಗಿನ್ ಯಶಸ್ವಿ",
     "googleLoginError": "Google ಲಾಗಿನ್ ವಿಫಲವಾಗಿದೆ",
     "signUpGoogle": "Google ನೊಂದಿಗೆ ಸೈನ್ ಅಪ್ ಆಗಿ",
@@ -308,5 +308,53 @@
     "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
     "profile": "ಪ್ರೋಫೈಲ್",
     "help": "ಸಹಾಯ"
+  },
+  "auth": {
+    "login": "ಲಾಗಿನ್",
+    "register": "ನೋಂದಣಿ",
+    "email": "ಇಮೇಲ್",
+    "password": "ಪಾಸ್ವರ್ಡ್",
+    "forgotPassword": "ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರುವಿರಾ?",
+    "resetPassword": "ಪಾಸ್ವರ್ಡ್ ಮರುಹೊಂದಿಸಿ"
+  },
+  "dashboard": {
+    "title": "ಡ್ಯಾಶ್ಬೋರ್ಡ್",
+    "subtitle": "ನಿಮ್ಮ ಫಾರ್ಮ್ ಸಾರಾಂಶ",
+    "totalFields": "ಒಟ್ಟು ಕ್ಷೇತ್ರಗಳು",
+    "activeCrops": "ಸಕ್ರಿಯ ಬೆಳೆಗಳು",
+    "totalYield": "ಒಟ್ಟು ಉತ್ಪಾದನೆ",
+    "netProfit": "ನಿವ್ವಳ ಲಾಭ"
+  },
+  "crops": {
+    "title": "ಬೆಳೆ ನಿರ್ವಹಣೆ",
+    "addCrop": "ಬೆಳೆ ಸೇರಿಸಿ",
+    "active": "ಸಕ್ರಿಯ",
+    "harvested": "ಕೊಯ್ಲು",
+    "planned": "ಯೋಜಿಸಲಾಗಿದೆ"
+  },
+  "expenses": {
+    "title": "ಖರ್ಚು ನಿರ್ವಹಣೆ",
+    "addExpense": "ಖರ್ಚು ಸೇರಿಸಿ",
+    "seeds": "ಬೀಜಗಳು",
+    "labor": "ಕಾರ್ಮಿಕ",
+    "fertilizers": "ಎರುವೆಗಳು",
+    "pesticides": "ಕೀಟನಾಶಕಗಳು",
+    "irrigation": "ನೀರಾವರಿ",
+    "other": "ಇತರೆ"
+  },
+  "reports": {
+    "title": "ವರದಿಗಳು",
+    "monthlyReport": "ಮಾಸಿಕ ವರದಿ",
+    "seasonalReport": "ಋತುವಾರು ವರದಿ",
+    "financialReport": "ಆರ್ಥಿಕ ವರದಿ"
+  },
+  "settings": {
+    "title": "ಸೆಟ್ಟಿಂಗ್ಗಳು",
+    "profile": "ಪ್ರೊಫೈಲ್",
+    "preferences": "ಆದ್ಯತೆಗಳು",
+    "security": "ಭದ್ರತೆ",
+    "notifications": "ಅಧಿಸೂಚನೆಗಳು",
+    "language": "ಭಾಷೆ",
+    "theme": "ಥೀಮ್"
   }
 }

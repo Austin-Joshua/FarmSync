@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapPin, Plus, Edit, Trash2, Map, Navigation, TestTube } from 'lucide-react';
-import { api } from '../services/api';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 interface Field {
@@ -185,7 +185,7 @@ const Fields = () => {
               {t('fields.subtitle', 'Manage your farm fields with GPS tracking')}
             </p>
           </div>
-          <button onClick={() => { setShowForm(true); resetForm(); }} className="btn-primary flex items-center gap-2">
+          <button onClick={() => { setShowForm(true); resetForm(); }} className="btn-primary flex items-center gap-2" title="Add a new field">
             <Plus size={20} />
             {t('fields.addField', 'Add Field')}
           </button>
@@ -214,6 +214,8 @@ const Fields = () => {
                       value={formData.farm_id}
                       onChange={(e) => setFormData(prev => ({ ...prev, farm_id: e.target.value }))}
                       className="input-field"
+                      title="Select a farm"
+                      aria-label="Farm"
                       required
                     >
                       <option value="">{t('fields.selectFarm', 'Select Farm')}</option>
@@ -232,6 +234,8 @@ const Fields = () => {
                       value={formData.name}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                       className="input-field"
+                      title="Enter field name"
+                      aria-label="Field name"
                       required
                     />
                   </div>
@@ -246,6 +250,8 @@ const Fields = () => {
                       value={formData.area}
                       onChange={(e) => setFormData(prev => ({ ...prev, area: e.target.value }))}
                       className="input-field"
+                      title="Enter area in acres"
+                      aria-label="Area in acres"
                       required
                     />
                   </div>
@@ -262,6 +268,8 @@ const Fields = () => {
                           value={formData.latitude}
                           onChange={(e) => setFormData(prev => ({ ...prev, latitude: e.target.value }))}
                           className="input-field"
+                          title="Enter latitude"
+                          aria-label="Latitude"
                         />
                         <button
                           type="button"
@@ -284,6 +292,8 @@ const Fields = () => {
                         value={formData.longitude}
                         onChange={(e) => setFormData(prev => ({ ...prev, longitude: e.target.value }))}
                         className="input-field"
+                        title="Enter longitude"
+                        aria-label="Longitude"
                       />
                     </div>
                   </div>
@@ -297,17 +307,20 @@ const Fields = () => {
                       value={formData.soil_test_date}
                       onChange={(e) => setFormData(prev => ({ ...prev, soil_test_date: e.target.value }))}
                       className="input-field"
+                      title="Select soil test date"
+                      aria-label="Soil test date"
                     />
                   </div>
 
                   <div className="flex gap-3 pt-4">
-                    <button type="submit" className="btn-primary flex-1">
+                    <button type="submit" className="btn-primary flex-1" title="Submit the form">
                       {editingField ? t('common.save', 'Save') : t('fields.addField', 'Add Field')}
                     </button>
                     <button
                       type="button"
                       onClick={() => { setShowForm(false); setEditingField(null); resetForm(); }}
                       className="btn-secondary"
+                      title="Cancel and close the form"
                     >
                       {t('common.cancel', 'Cancel')}
                     </button>
@@ -331,7 +344,7 @@ const Fields = () => {
             <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">
               {t('fields.noFields', 'No fields added yet')}
             </p>
-            <button onClick={() => { setShowForm(true); resetForm(); }} className="btn-primary">
+            <button onClick={() => { setShowForm(true); resetForm(); }} className="btn-primary" title="Add your first field">
               {t('fields.addFirstField', 'Add Your First Field')}
             </button>
           </div>
@@ -354,12 +367,16 @@ const Fields = () => {
                     <button
                       onClick={() => handleEdit(field)}
                       className="p-2 text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg"
+                      title="Edit this field"
+                      aria-label={`Edit ${field.name}`}
                     >
                       <Edit size={18} />
                     </button>
                     <button
                       onClick={() => handleDelete(field.id)}
                       className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
+                      title="Delete this field"
+                      aria-label={`Delete ${field.name}`}
                     >
                       <Trash2 size={18} />
                     </button>
