@@ -33,10 +33,10 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const location = useLocation();
 
   useEffect(() => {
-    // Give auto-login a moment to complete
+    // Give auth context a moment to initialize and restore user from localStorage
     const timer = setTimeout(() => {
       setIsChecking(false);
-    }, 500); // Reduced from 1000ms to 500ms
+    }, 1000); // Allow full initialization time
 
     return () => clearTimeout(timer);
   }, []);
