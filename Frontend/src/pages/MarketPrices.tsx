@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TrendingUp, TrendingDown, Minus, Bell, Calendar, DollarSign, BarChart3, AlertCircle } from 'lucide-react';
-import { api } from '../services/api';
+import api from '../services/api';
 
 interface PriceData {
   crop: string;

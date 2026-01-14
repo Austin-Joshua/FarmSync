@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Calendar, ChevronLeft, ChevronRight, Plus, Edit2, Trash2, Check, X, Sprout, Droplets, Bug, Droplet, Package } from 'lucide-react';
 import api from '../services/api';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
+import { Crop } from '../types';
 
 interface CalendarEvent {
   id: string;
@@ -21,6 +22,7 @@ const CropCalendar = () => {
   const { t } = useTranslation();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [crops, setCrops] = useState<Crop[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -35,6 +37,7 @@ const CropCalendar = () => {
 
   useEffect(() => {
     loadEvents();
+    loadCrops();
   }, [currentDate, user]);
 
   const loadEvents = async () => {
@@ -54,6 +57,28 @@ const CropCalendar = () => {
       console.error('Failed to load calendar events:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCrops = async () => {
+    if (!user) return;
+    try {
+      const response = await api.getCrops();
+      if (response.data) {
+        // Transform backend crop data to frontend format
+        const transformedCrops = response.data.map((crop: any) => ({
+          id: crop.id,
+          name: crop.name,
+          season: crop.season || '',
+          sowingDate: crop.sowing_date ? format(new Date(crop.sowing_date), 'yyyy-MM-dd') : '',
+          harvestDate: crop.harvest_date ? format(new Date(crop.harvest_date), 'yyyy-MM-dd') : '',
+          status: crop.status,
+          farmId: crop.farm_id,
+        }));
+        setCrops(transformedCrops);
+      }
+    } catch (error) {
+      console.error('Failed to load crops:', error);
     }
   };
 
@@ -101,6 +126,13 @@ const CropCalendar = () => {
 
   const getEventsForDate = (date: Date): CalendarEvent[] => {
     return events.filter(event => isSameDay(new Date(event.event_date), date));
+  };
+
+  const getCropDatesForDate = (date: Date): { sowing: Crop[]; harvest: Crop[] } => {
+    const dateStr = format(date, 'yyyy-MM-dd');
+    const sowingCrops = crops.filter(crop => crop.sowingDate === dateStr);
+    const harvestCrops = crops.filter(crop => crop.harvestDate === dateStr);
+    return { sowing: sowingCrops, harvest: harvestCrops };
   };
 
   const getEventIcon = (type: CalendarEvent['event_type']) => {
@@ -194,8 +226,10 @@ const CropCalendar = () => {
           {/* Calendar Days */}
           {daysInMonth.map((day) => {
             const dayEvents = getEventsForDate(day);
+            const cropDates = getCropDatesForDate(day);
             const isCurrentDay = isToday(day);
             const isCurrentMonth = isSameMonth(day, currentDate);
+            const hasFarmingActivity = cropDates.sowing.length > 0 || cropDates.harvest.length > 0;
 
             return (
               <div
@@ -203,6 +237,8 @@ const CropCalendar = () => {
                 className={`h-24 border rounded-lg p-1 overflow-y-auto ${
                   isCurrentDay
                     ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                    : hasFarmingActivity
+                    ? 'border-green-400 bg-green-50 dark:bg-green-900/20'
                     : 'border-gray-200 dark:border-gray-700'
                 } ${!isCurrentMonth ? 'opacity-50' : ''}`}
                 onClick={() => {
@@ -216,6 +252,32 @@ const CropCalendar = () => {
                   {format(day, 'd')}
                 </div>
                 <div className="space-y-1">
+                  {/* Show farming dates (sowing/harvest) */}
+                  {cropDates.sowing.map((crop) => (
+                    <div
+                      key={`sowing-${crop.id}`}
+                      className="text-xs px-1 py-0.5 rounded bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 cursor-pointer"
+                      title={`Sowing: ${crop.name}`}
+                    >
+                      <div className="flex items-center gap-1">
+                        <Sprout size={10} />
+                        <span className="truncate">Sow: {crop.name}</span>
+                      </div>
+                    </div>
+                  ))}
+                  {cropDates.harvest.map((crop) => (
+                    <div
+                      key={`harvest-${crop.id}`}
+                      className="text-xs px-1 py-0.5 rounded bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 cursor-pointer"
+                      title={`Harvest: ${crop.name}`}
+                    >
+                      <div className="flex items-center gap-1">
+                        <Package size={10} />
+                        <span className="truncate">Harvest: {crop.name}</span>
+                      </div>
+                    </div>
+                  ))}
+                  {/* Show calendar events */}
                   {dayEvents.slice(0, 2).map((event) => {
                     const Icon = getEventIcon(event.event_type);
                     return (
@@ -237,9 +299,9 @@ const CropCalendar = () => {
                       </div>
                     );
                   })}
-                  {dayEvents.length > 2 && (
+                  {(dayEvents.length > 2 || (cropDates.sowing.length + cropDates.harvest.length) > 0) && (
                     <div className="text-xs text-gray-500 dark:text-gray-400 px-1">
-                      +{dayEvents.length - 2} more
+                      +{dayEvents.length - 2 + cropDates.sowing.length + cropDates.harvest.length} more
                     </div>
                   )}
                 </div>
