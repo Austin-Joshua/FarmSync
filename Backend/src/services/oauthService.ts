@@ -218,5 +218,3 @@ export const handleAppleSignIn = async (appleData: {
     throw new Error('Apple sign-in failed');
   }
 };
-
-};
