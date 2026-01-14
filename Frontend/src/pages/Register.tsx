@@ -109,7 +109,7 @@ const Register = () => {
             err.message.includes('timed out') ||
             err.message.includes('NetworkError') ||
             err.message.includes('Network request failed')) {
-          errorMessage = 'Cannot connect to server. Please make sure the backend server is running on http://localhost:5000';
+          errorMessage = 'Cannot connect to server. Please make sure the backend server is running on http://localhost:5174';
         } else if (err.message.includes('already exists') || err.message.includes('duplicate')) {
           errorMessage = 'An account with this email already exists. Please use a different email or log in.';
         } else if (err.message.includes('validation') || err.message.includes('Password')) {

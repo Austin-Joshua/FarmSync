@@ -51,7 +51,7 @@ const Login = () => {
             err.message.includes('NetworkError') ||
             err.message.includes('Network request failed') ||
             err.message.includes('timed out')) {
-          errorMessage = 'Cannot connect to server. Please make sure the backend server is running on http://localhost:5000';
+          errorMessage = 'Cannot connect to server. Please make sure the backend server is running on http://localhost:5174';
         } 
         // Check for authentication errors
         else if (err.message.includes('Invalid email or password') ||

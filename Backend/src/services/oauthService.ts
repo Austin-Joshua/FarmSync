@@ -6,14 +6,16 @@ import db from '../config/database';
 
 // OAuth Configuration
 export const initializeOAuth = () => {
-  // Google OAuth Configuration
-  passport.use(
-    new GoogleStrategy(
-      {
-        clientID: process.env.GOOGLE_CLIENT_ID || '',
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-        callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5000/api/auth/google/callback',
-      },
+  // Google OAuth Configuration - Only initialize if credentials are provided
+  const googleClientId = process.env.GOOGLE_CLIENT_ID;
+  if (googleClientId) {
+    passport.use(
+      new GoogleStrategy(
+        {
+          clientID: googleClientId,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+          callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5174/api/auth/google/callback',
+        },
       async (_accessToken: string, _refreshToken: string, profile: any, done: (err: any, user?: any) => void): Promise<void> => {
         try {
           const { id, emails, displayName, photos } = profile;
@@ -211,4 +213,6 @@ export const handleAppleSignIn = async (appleData: {
   } catch (error) {
     throw new Error('Apple sign-in failed');
   }
+};
+
 };

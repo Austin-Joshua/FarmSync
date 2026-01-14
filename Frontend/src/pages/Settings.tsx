@@ -359,7 +359,7 @@ const Settings = () => {
       if (user.picture_url.startsWith('http')) {
         return user.picture_url;
       }
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5174/api';
       const baseUrl = apiBaseUrl.replace('/api', '');
       return `${baseUrl}${user.picture_url}`;
     }
