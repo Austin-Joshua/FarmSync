@@ -3,12 +3,16 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
+import passport from 'passport';
+import session from 'express-session';
 import { config } from './config/env';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import logger from './utils/logger';
+import { initializeOAuth } from './services/oauthService';
 
 // Import routes
 import authRoutes from './routes/authRoutes';
+import oauthRoutes from './routes/oauthRoutes';
 import dashboardRoutes from './routes/dashboardRoutes';
 import farmRoutes from './routes/farmRoutes';
 import cropRoutes from './routes/cropRoutes';
@@ -79,6 +83,20 @@ const limiter = rateLimit({
 
 app.use('/api/', limiter);
 
+// Passport middleware
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Initialize OAuth strategies
+initializeOAuth();
+
 // Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -127,6 +145,7 @@ app.get('/health/db', async (_, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
+app.use('/api/auth/oauth', oauthRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/farms', farmRoutes);
 app.use('/api/crops', cropRoutes);

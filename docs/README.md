@@ -15,10 +15,14 @@ Complete documentation for FarmSync project - the Digital Farm Record Management
 - **[DATABASE_STRUCTURE.md](DATABASE_STRUCTURE.md)** - Complete database schema documentation
 - **[DATABASE_AUTHENTICATION.md](DATABASE_AUTHENTICATION.md)** - Database user setup and permissions
 - **[KEEP_BACKEND_RUNNING.md](KEEP_BACKEND_RUNNING.md)** - Production deployment guide
+- **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - 🆕 Complete hosting guide (AWS, DigitalOcean, Mobile app conversion)
+- **[OAUTH_SETUP.md](OAUTH_SETUP.md)** - 🆕 OAuth authentication setup (Google, Microsoft, Apple)
+- **[PHASE1_QUICKSTART.md](PHASE1_QUICKSTART.md)** - 🆕 Phase 1 implementation quick start (SMS, WhatsApp)
 
 ### 📋 Features & Usage
 - **[FEATURES_GUIDE.md](FEATURES_GUIDE.md)** - Complete guide to all FarmSync features (50+ features)
 - **[ROADMAP.md](ROADMAP.md)** - Development roadmap and future enhancements
+- **[FEATURE_STATUS_ANALYSIS.md](FEATURE_STATUS_ANALYSIS.md)** - Current feature status and implementation roadmap
 
 ---
 
@@ -201,7 +205,16 @@ A: Check [ROADMAP.md](ROADMAP.md) for detailed phases and timelines.
 A: Check [../TROUBLESHOOTING.md](../TROUBLESHOOTING.md) for solutions.
 
 **Q: How do I deploy to production?**  
-A: Follow [KEEP_BACKEND_RUNNING.md](KEEP_BACKEND_RUNNING.md).
+A: Follow [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for complete hosting instructions (AWS, DigitalOcean, Vercel, etc.)
+
+**Q: How do I set up OAuth (Google, Microsoft, Apple)?**  
+A: Follow [OAUTH_SETUP.md](OAUTH_SETUP.md) for step-by-step configuration.
+
+**Q: How do I convert the web app to mobile?**  
+A: Follow [APP_CONVERSION_GUIDE.md](APP_CONVERSION_GUIDE.md) for PWA, Capacitor, React Native, and Flutter options.
+
+**Q: How do I implement Phase 1 features?**  
+A: Follow [PHASE1_QUICKSTART.md](PHASE1_QUICKSTART.md) for SMS, WhatsApp, and OAuth integration.
 
 **Q: Where's the API documentation?**  
 A: API endpoints are documented in [../Backend/README.md](../Backend/README.md).
