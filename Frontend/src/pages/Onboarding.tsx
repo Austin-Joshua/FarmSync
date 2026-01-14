@@ -573,7 +573,7 @@ const Onboarding = () => {
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 progress-bar">
               <div
                 className="bg-primary-600 h-2 rounded-full transition-all duration-300 progress-fill"
-                style={{ width: `${(step / totalSteps) * 100}%` }}
+                style={{ width: `${(step / totalSteps) * 100}%` } as React.CSSProperties}
               />
             </div>
           </div>
