@@ -61,20 +61,17 @@ export const initializeOAuth = () => {
         }
       }
     )
-    );
-  }
+  );
 
-  // Azure AD / Microsoft OAuth Configuration - Only initialize if credentials are provided
-  const azureClientId = process.env.AZURE_CLIENT_ID;
-  if (azureClientId) {
-    passport.use(
-      'azure-ad',
-      new BearerStrategy(
-        {
-          identityMetadata: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/v2.0/.well-known/openid-configuration`,
-          clientID: azureClientId,
-          clientSecret: process.env.AZURE_CLIENT_SECRET || '',
-          callbackURL: process.env.AZURE_CALLBACK_URL || 'http://localhost:5174/api/auth/microsoft/callback',
+  // Azure AD / Microsoft OAuth Configuration
+  passport.use(
+    'azure-ad',
+    new BearerStrategy(
+      {
+        identityMetadata: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/v2.0/.well-known/openid-configuration`,
+        clientID: process.env.AZURE_CLIENT_ID || '',
+        clientSecret: process.env.AZURE_CLIENT_SECRET || '',
+        callbackURL: process.env.AZURE_CALLBACK_URL || 'http://localhost:5000/api/auth/microsoft/callback',
       } as any,
       async (profile: any, done: (err: any, user?: any) => void): Promise<void> => {
         try {
@@ -119,9 +116,8 @@ export const initializeOAuth = () => {
           return done(error);
         }
       }
-      )
-    );
-  }
+    )
+  );
 
   // Serialize user
   passport.serializeUser((user: any, done: (err: any, id?: number) => void): void => {

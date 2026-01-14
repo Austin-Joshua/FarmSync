@@ -203,18 +203,13 @@
     "monthly": "నెలకు"
   },
   "expenses": {
-    "title": "ఖర్చులు",
+    "title": "ఖర్చు నిర్వహణ",
     "addExpense": "ఖర్చు జోడించండి",
-    "category": "వర్గం",
-    "amount": "మొత్తం",
-    "date": "తేదీ",
-    "description": "వివరణ",
-    "totalExpense": "మొత్తం ఖర్చు",
-    "monthlyExpense": "నెలవారీ ఖర్చు",
-    "seeds": "విత్నలు",
-    "labor": "కార్మిక",
-    "equipment": "పరికరాలు",
-    "maintenance": "నిర్వహణ",
+    "seeds": "విత్తనాలు",
+    "labor": "శ్రమ",
+    "fertilizers": "ఎరువులు",
+    "pesticides": "కీటకనాశకాలు",
+    "irrigation": "నీటిపారుదల",
     "other": "ఇతర"
   },
   "marketPrices": {
@@ -278,17 +273,10 @@
     "ongoing": "కొనసాగుతున్న"
   },
   "reports": {
-    "title": "నివేదనలు",
-    "generateReport": "నివేదన రూపొందించండి",
-    "yieldReport": "ఫలం నివేదన",
-    "expenseReport": "ఖర్చు నివేదన",
-    "soilReport": "నేల నివేదన",
-    "fromDate": "నుండి తేదీ",
-    "toDate": "దీనికి తేదీ",
-    "downloadPDF": "PDF డౌన్‌లోడ్ చేయండి",
-    "exportCSV": "CSV ఎక్‌స్‌పోర్ట్ చేయండి",
-    "selectFarm": "ఫార్మ్ ఎంచుకోండి",
-    "selectField": "ఫీల్డ్ ఎంచుకోండి"
+    "title": "రిపోర్టులు",
+    "monthlyReport": "నెలవారీ రిపోర్ట్",
+    "seasonalReport": "రుతువు రిపోర్ట్",
+    "financialReport": "ఆర్థిక రిపోర్ట్"
   },
   "navigation": {
     "dashboard": "డాష్‌బోర్డ్",
@@ -310,22 +298,6 @@
     "help": "సహాయం",
     "harvested": "కోత",
     "planned": "ప్లాన్ చేసిన"
-  },
-  "expenses": {
-    "title": "ఖర్చు నిర్వహణ",
-    "addExpense": "ఖర్చు జోడించండి",
-    "seeds": "విత్తనాలు",
-    "labor": "శ్రమ",
-    "fertilizers": "ఎరువులు",
-    "pesticides": "కీటకనాశకాలు",
-    "irrigation": "నీటిపారుదల",
-    "other": "ఇతర"
-  },
-  "reports": {
-    "title": "రిపోర్టులు",
-    "monthlyReport": "నెలవారీ రిపోర్ట్",
-    "seasonalReport": "రుతువు రిపోర్ట్",
-    "financialReport": "ఆర్థిక రిపోర్ట్"
   },
   "settings": {
     "title": "సెట్టింగ్స్",
