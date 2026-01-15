@@ -378,7 +378,7 @@
     "title": "കൃഷി കലണ്ടർ",
     "subtitle": "നിങ്ങളുടെ കർഷണ പ്രവർത്തനങ്ങൾ ആസൂത്രണം ചെയ്യുക നമ്മുടെ കൃഷി കലണ്ടർ ഉപയോഗിച്ച്",
     "sowingDate": "വിതരണ തീയതി",
-    "harvestDate": "വിളവ് തീയതി",
+    "harvestDate": "വിളവെടുപ്പ് തീയതി",
     "cropName": "വിളയുടെ പേര്",
     "noEventsScheduled": "നിർഘണ്ടനിരിക്കിയ പ്രവർത്തനങ്ങൾ ഇല്ല",
     "monthNames": {
@@ -432,7 +432,7 @@
     "pastEvents": "കഴിഞ്ഞ പ്രവർത്തനങ്ങൾ",
     "todayEvents": "ഇന്നത്തെ പ്രവർത്തനങ്ങൾ",
     "sowingSchedule": "വിതരണ നിർഘണ്ടം",
-    "harvestSchedule": "വിളവ് നിർഘണ്ടം",
+    "harvestSchedule": "വിളവെടുപ്പ് നിർഘണ്ടം",
     "irrigationSchedule": "ജലസേചന നിർഘണ്ടം",
     "fertilizerSchedule": "വളം നിർഘണ്ടം",
     "pesticideSchedule": "കീടനാശിനി നിർഘണ്ടം",
@@ -453,7 +453,8 @@
     "viewDay": "ദിവസം കാണുക",
     "viewWeek": "ആഴ്ച കാണുക",
     "viewMonth": "മാസം കാണുക",
-    "previousMonth": "മുൻ മാസം",
+    "previousMonth": "മുൻ മാസം"
+  },
     "nextMonth": "അടുത്ത മാസം"
   },
   "fertilizers": {
