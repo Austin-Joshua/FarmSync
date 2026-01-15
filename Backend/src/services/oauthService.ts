@@ -64,61 +64,64 @@ export const initializeOAuth = () => {
     );
   }
 
-  // Azure AD / Microsoft OAuth Configuration
-  passport.use(
-    'azure-ad',
-    new BearerStrategy(
-      {
-        identityMetadata: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/v2.0/.well-known/openid-configuration`,
-        clientID: process.env.AZURE_CLIENT_ID || '',
-        clientSecret: process.env.AZURE_CLIENT_SECRET || '',
-        callbackURL: process.env.AZURE_CALLBACK_URL || 'http://localhost:5000/api/auth/microsoft/callback',
-      } as any,
-      async (profile: any, done: (err: any, user?: any) => void): Promise<void> => {
-        try {
-          const { oid, upn, givenName, familyName, picture } = profile;
-          const email = upn || profile.email;
+  // Azure AD / Microsoft OAuth Configuration - Only initialize if credentials are provided
+  const azureClientId = process.env.AZURE_CLIENT_ID;
+  if (azureClientId) {
+    passport.use(
+      'azure-ad',
+      new BearerStrategy(
+        {
+          identityMetadata: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/v2.0/.well-known/openid-configuration`,
+          clientID: azureClientId,
+          clientSecret: process.env.AZURE_CLIENT_SECRET || '',
+          callbackURL: process.env.AZURE_CALLBACK_URL || 'http://localhost:5000/api/auth/microsoft/callback',
+        } as any,
+        async (profile: any, done: (err: any, user?: any) => void): Promise<void> => {
+          try {
+            const { oid, upn, givenName, familyName, picture } = profile;
+            const email = upn || profile.email;
 
-          // Check if user exists
-          const [existingUser] = await db.query(
-            'SELECT * FROM users WHERE email = ?',
-            [email]
-          );
+            // Check if user exists
+            const [existingUser] = await db.query(
+              'SELECT * FROM users WHERE email = ?',
+              [email]
+            );
 
-          if (Array.isArray(existingUser) && existingUser.length > 0) {
-            const user = existingUser[0] as any;
-            if (!user.microsoft_id) {
-              await db.query(
-                'UPDATE users SET microsoft_id = ? WHERE email = ?',
-                [oid, email]
-              );
+            if (Array.isArray(existingUser) && existingUser.length > 0) {
+              const user = existingUser[0] as any;
+              if (!user.microsoft_id) {
+                await db.query(
+                  'UPDATE users SET microsoft_id = ? WHERE email = ?',
+                  [oid, email]
+                );
+              }
+              return done(null, user);
             }
-            return done(null, user);
+
+            // Create new user
+            const displayName = `${givenName || ''} ${familyName || ''}`.trim();
+            const result = await db.query(
+              'INSERT INTO users (name, email, microsoft_id, photo_url, is_verified) VALUES (?, ?, ?, ?, ?)',
+              [displayName, email, oid, picture, true]
+            );
+
+            const newUser = {
+              id: (result as any).insertId,
+              name: displayName,
+              email,
+              microsoft_id: oid,
+              photo_url: picture,
+              is_verified: true,
+            };
+
+            return done(null, newUser);
+          } catch (error) {
+            return done(error);
           }
-
-          // Create new user
-          const displayName = `${givenName || ''} ${familyName || ''}`.trim();
-          const result = await db.query(
-            'INSERT INTO users (name, email, microsoft_id, photo_url, is_verified) VALUES (?, ?, ?, ?, ?)',
-            [displayName, email, oid, picture, true]
-          );
-
-          const newUser = {
-            id: (result as any).insertId,
-            name: displayName,
-            email,
-            microsoft_id: oid,
-            photo_url: picture,
-            is_verified: true,
-          };
-
-          return done(null, newUser);
-        } catch (error) {
-          return done(error);
         }
-      }
-    )
-  );
+      )
+    );
+  }
 
   // Serialize user
   passport.serializeUser((user: any, done: (err: any, id?: number) => void): void => {
