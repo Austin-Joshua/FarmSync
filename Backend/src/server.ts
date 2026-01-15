@@ -40,6 +40,7 @@ import whatsappRoutes from './routes/whatsappRoutes';
 import smsRoutes from './routes/smsRoutes';
 import marketPriceRoutes from './routes/marketPriceRoutes';
 import fieldRoutes from './routes/fieldRoutes';
+import healthRoutes from './routes/healthRoutes';
 
 const app: Express = express();
 
@@ -173,6 +174,7 @@ app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/sms', smsRoutes);
 app.use('/api/market-prices', marketPriceRoutes);
 app.use('/api/fields', fieldRoutes);
+app.use('/api/health', healthRoutes);
 
 // 404 handler
 app.use(notFoundHandler);
