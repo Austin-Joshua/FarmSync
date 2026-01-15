@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, Check, X, Sprout, Droplets, Bug, Droplet, Package } from 'lucide-react';
 import api from '../services/api';
@@ -46,8 +46,8 @@ const CropCalendar = () => {
         format(start, 'yyyy-MM-dd'),
         format(end, 'yyyy-MM-dd')
       );
-      if (response.data) {
-        setEvents(response.data);
+      if (response.data && Array.isArray(response.data)) {
+        setEvents(response.data as CalendarEvent[]);
       }
     } catch (error) {
       console.error('Failed to load calendar events:', error);
@@ -58,9 +58,9 @@ const CropCalendar = () => {
     if (!user) return;
     try {
       const response = await api.getCrops();
-      if (response.data) {
+      if (response.data && Array.isArray(response.data)) {
         // Transform backend crop data to frontend format
-        const transformedCrops = response.data.map((crop: any) => ({
+        const transformedCrops = (response.data as any[]).map((crop: any) => ({
           id: crop.id,
           name: crop.name,
           season: crop.season || '',
