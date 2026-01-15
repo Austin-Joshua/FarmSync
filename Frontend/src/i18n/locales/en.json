@@ -325,10 +325,12 @@
     "adjustSearch": "Try adjusting your search or filter criteria",
     "addFirstCrop": "Add Your First Crop",
     "activeCrops": "Active Crops",
+    "harvestedCrops": "Harvested Crops",
     "totalCrops": "Total Crops",
     "viewingDetails": "Viewing details for",
     "cropName": "Crop Name",
     "selectCrop": "Select Crop",
+    "selectCropToViewMarketPrices": "Please select a crop to view market prices",
     "category": "Category",
     "season": "Season",
     "status": "Status",
@@ -358,7 +360,15 @@
     "cropAdded": "Crop added successfully!",
     "nameAndSowingDateRequired": "Crop name and sowing date are required",
     "allCategories": "All Categories",
-    "allSeasons": "All Seasons"
+    "allSeasons": "All Seasons",
+    "rice": "Rice",
+    "wheat": "Wheat",
+    "maize": "Maize",
+    "tomato": "Tomato",
+    "potato": "Potato",
+    "onion": "Onion",
+    "cotton": "Cotton",
+    "sugarcane": "Sugarcane"
   },
   "weather": {
     "title": "Weather & Location",
@@ -412,6 +422,7 @@
     "title": "Irrigation Management",
     "subtitle": "Schedule and track irrigation activities",
     "scheduleIrrigation": "Schedule Irrigation",
+    "scheduleNewIrrigation": "Schedule New Irrigation",
     "editIrrigation": "Edit Irrigation",
     "filterByMethod": "Filter by Method:",
     "allMethods": "All Methods",
@@ -581,7 +592,46 @@
     "userNotAuthenticated": "User not authenticated",
     "fillProfileDetails": "Please fill in your profile details to personalize your experience"
   },
-  "adminDashboard": {
+  "marketPrices": {
+    "title": "Market Prices",
+    "subtitle": "Track real-time crop prices and get selling recommendations",
+    "selectCropViewPrices": "Please select a crop to view market prices",
+    "currentPrice": "Current Price",
+    "recommendedSellingPrice": "Recommended Selling Price",
+    "priceHistory": "Price History",
+    "noCropSelected": "No crop selected",
+    "noMarketData": "No market data available for this crop",
+    "pricePerUnit": "Price per unit (₹/kg)",
+    "market": "Market",
+    "date": "Date",
+    "selectCrop": "Select Crop",
+    "noPriceData": "No price data available",
+    "selectCropPlaceholder": "Choose a crop to see market prices"
+  },
+  "calendar": {
+    "title": "Crop Calendar",
+    "subtitle": "Plan your farming activities with our crop calendar",
+    "sowingDate": "Sowing Date",
+    "harvestDate": "Harvest Date",
+    "cropName": "Crop Name",
+    "noEventsScheduled": "No events scheduled"
+  },
+  "fields": {
+    "title": "Fields",
+    "subtitle": "Manage your farm fields and plots",
+    "addNewField": "Add New Field",
+    "editField": "Edit Field",
+    "fieldName": "Field Name",
+    "fieldSize": "Field Size (acres)",
+    "soilType": "Soil Type",
+    "location": "Location",
+    "fieldDeleted": "Field deleted successfully!",
+    "fieldUpdated": "Field updated successfully!",
+    "fieldAdded": "Field added successfully!",
+    "noFields": "No fields added yet",
+    "confirmDelete": "Are you sure you want to delete this field?"
+  },
+  "admin Dashboard": {
     "title": "Admin Dashboard",
     "subtitle": "System-wide statistics and management",
     "tabs": {
