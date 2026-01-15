@@ -534,7 +534,19 @@
     "noYields": "No yield records yet",
     "harvestDate": "Harvest Date",
     "yieldTrackingRecords": "Yield Tracking Records",
-    "yieldTrackingByCrop": "Yield Tracking by Crop"
+    "yieldTrackingByCrop": "Yield Tracking by Crop",
+    "yieldRecord": "Yield Record",
+    "yieldRecords": "Yield Records",
+    "harvestedQuantity": "Harvested Quantity",
+    "qualityRating": "Quality Rating",
+    "kg": "kg",
+    "kgPerAcre": "kg/acre",
+    "excellentQuality": "⭐ Excellent",
+    "goodQuality": "👍 Good",
+    "averageQuality": "➡️ Average",
+    "recordDate": "Record Date",
+    "recordedBy": "Recorded By",
+    "noYieldRecords": "No yield records available"
   },
   "reports": {
     "title": "Reports & Analytics",
