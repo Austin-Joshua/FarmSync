@@ -6,7 +6,6 @@ import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import {
   Home,
-  User,
   Sprout,
   Droplets,
   IndianRupee,
@@ -20,8 +19,6 @@ import {
   Shield,
   Moon,
   Sun,
-  Languages,
-  Check,
   DollarSign,
   MapPin,
   Calendar,
@@ -43,16 +40,9 @@ const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [mobileLangOpen, setMobileLangOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const mobileProfileMenuRef = useRef<HTMLDivElement>(null);
-
-  const languages = [
-    { code: 'en', name: 'English', flag: '🇬🇧' },
-    { code: 'ta', name: 'தமிழ் (Tamil)', flag: '🇮🇳' },
-    { code: 'hi', name: 'हिन्दी (Hindi)', flag: '🇮🇳' },
-  ];
 
   const menuItems = [
     { path: '/dashboard', label: t('navigation.home'), icon: Home },

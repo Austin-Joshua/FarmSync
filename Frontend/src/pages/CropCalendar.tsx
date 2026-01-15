@@ -18,14 +18,12 @@ interface CalendarEvent {
 
 const CropCalendar = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [crops, setCrops] = useState<Crop[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [newEvent, setNewEvent] = useState({
     event_type: 'planting' as CalendarEvent['event_type'],
     title: '',
@@ -41,7 +39,6 @@ const CropCalendar = () => {
 
   const loadEvents = async () => {
     if (!user) return;
-    setLoading(true);
     try {
       const start = startOfMonth(currentDate);
       const end = endOfMonth(currentDate);
@@ -54,8 +51,6 @@ const CropCalendar = () => {
       }
     } catch (error) {
       console.error('Failed to load calendar events:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
