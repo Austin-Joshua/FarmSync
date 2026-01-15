@@ -5,26 +5,24 @@ import { setupOfflineSync } from './offlineStorage';
 /**
  * Register service worker on app initialization
  * This should be called once when the app starts
+ * DISABLED: Service workers cause caching issues in development
  */
 export const initializeServiceWorker = async (): Promise<void> => {
   if ('serviceWorker' in navigator) {
     try {
-      // Don't register service worker in development to avoid caching issues
-      if (import.meta.env.DEV) {
-        console.log('Service Worker disabled in development mode');
-        // Unregister any existing service workers
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        for (const registration of registrations) {
-          await registration.unregister();
-        }
-        return;
+      // Unregister any existing service workers to prevent caching issues
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const registration of registrations) {
+        await registration.unregister();
       }
-
-      await registerServiceWorker();
-      await setupOfflineSync();
-      console.log('Service Worker initialized successfully');
+      
+      // Clear all caches
+      const cacheNames = await caches.keys();
+      await Promise.all(cacheNames.map(name => caches.delete(name)));
+      
+      console.log('All service workers unregistered and caches cleared');
     } catch (error) {
-      console.error('Service Worker initialization failed:', error);
+      console.error('Service Worker cleanup failed:', error);
     }
   }
 };

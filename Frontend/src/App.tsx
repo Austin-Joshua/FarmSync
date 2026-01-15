@@ -5,6 +5,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
+import { cleanupAllCaches } from './utils/cacheCleanup';
 
 // Pages
 import Login from './pages/Login';
@@ -207,6 +208,13 @@ const AppContent = () => {
 };
 
 function App() {
+  // Cleanup caches and service workers on app load
+  useEffect(() => {
+    cleanupAllCaches().catch((error) => {
+      console.warn('Cache cleanup failed:', error);
+    });
+  }, []);
+
   // Register service worker on app load (don't block if it fails)
   useEffect(() => {
     try {
