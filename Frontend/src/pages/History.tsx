@@ -183,10 +183,10 @@ const History = () => {
           },
         ];
 
-        // LIFO: Sort by month (newest first) - December to January
+        // Sort by month in chronological order (January to December)
         const sortedIncome = [...mockIncome].sort((a, b) => {
-          if (a.year !== b.year) return b.year - a.year;
-          return b.month - a.month; // Descending order (newest first)
+          if (a.year !== b.year) return a.year - b.year;
+          return a.month - b.month; // Ascending order (Jan to Dec)
         });
         
         setMonthlyIncome(sortedIncome);
@@ -202,13 +202,21 @@ const History = () => {
   }, [selectedMonth, user?.id]);
 
   const getMonthName = (monthIndex: number): string => {
-    const monthNames = {
-      en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      ta: ['ஜன', 'பிப்', 'மார்', 'ஏப்', 'மே', 'ஜூன்', 'ஜூலை', 'ஆக', 'செப்', 'அக்', 'நவ', 'டிச'],
-      hi: ['जन', 'फर', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अग', 'सितं', 'अक्टू', 'नवं', 'दिसं']
+    const monthMap: { [key: number]: string } = {
+      0: t('reports.jan'),
+      1: t('reports.feb'),
+      2: t('reports.mar'),
+      3: t('reports.apr'),
+      4: t('reports.may'),
+      5: t('reports.jun'),
+      6: t('reports.jul'),
+      7: t('reports.aug'),
+      8: t('reports.sep'),
+      9: t('reports.oct'),
+      10: t('reports.nov'),
+      11: t('reports.dec')
     };
-    const lang = (i18n.language || 'en') as 'en' | 'ta' | 'hi';
-    return monthNames[lang]?.[monthIndex] || monthNames.en[monthIndex];
+    return monthMap[monthIndex] || 'Month';
   };
 
   const selectedMonthData = selectedMonth ? monthlyIncome.find(m => m.month === selectedMonth) : null;
