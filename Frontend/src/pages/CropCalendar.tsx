@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useTranslation } from 'react-i18next';
-import { Calendar, ChevronLeft, ChevronRight, Plus, Edit2, Trash2, Check, X, Sprout, Droplets, Bug, Droplet, Package } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, Check, X, Sprout, Droplets, Bug, Droplet, Package } from 'lucide-react';
 import api from '../services/api';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
 import { Crop } from '../types';
