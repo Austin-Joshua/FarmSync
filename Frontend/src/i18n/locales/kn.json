@@ -209,12 +209,9 @@
     "financialReport": "ಆರ್ಥಿಕ ವರದಿ"
   },
   "navigation": {
-    "home": "ಮನೆ",
     "dashboard": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
-    "farmManagement": "ಫಾರ್ಮ್ ನಿರ್ವಹಣೆ",
     "farms": "ಫಾರ್ಮ್‌ಗಳು",
     "fields": "ಕ್ಷೇತ್ರಗಳು",
-    "cropManagement": "ಬೆಳೆ ನಿರ್ವಹಣೆ",
     "crops": "ಬೆಳೆಗಳು",
     "weather": "ಹವಾಮಾನ",
     "irrigation": "ನೀರಾವರಿ",
@@ -223,14 +220,11 @@
     "pesticides": "ಕೀಟನಾಶಕಗಳು",
     "diseases": "ರೋಗಗಳು",
     "expenses": "ಖರ್ಚುಗಳು",
-    "yieldTracking": "ಇಳುವರಿ ಟ್ರ್যಾಕಿಂಗ್",
     "reports": "ವರದಿಗಳು",
     "marketPrices": "ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು",
     "calendar": "ಕ್ಯಾಲೆಂಡರ್",
     "settings": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
-    "history": "ಇತಿಹಾಸ",
     "profile": "ಪ್ರೋಫೈಲ್",
-    "adminDashboard": "ಆಡ್ಮಿನ್ ಡ್ಯಾಶ್ಬೋರ್ಡ್",
     "help": "ಸಹಾಯ"
   },
   "settings": {

@@ -279,12 +279,9 @@
     "financialReport": "ఆర్థిక రిపోర్ట్"
   },
   "navigation": {
-    "home": "హోమ్",
     "dashboard": "డాష్‌బోర్డ్",
-    "farmManagement": "ఫార్మ్ నిర్వహణ",
     "farms": "ఫార్మ్‌లు",
     "fields": "ఫీల్డ్‌లు",
-    "cropManagement": "పంట నిర్వహణ",
     "crops": "పంటలు",
     "weather": "వాతావరణం",
     "irrigation": "నీటిపారుదల",
@@ -293,14 +290,11 @@
     "pesticides": "కీటకనాశకాలు",
     "diseases": "వ్యాధులు",
     "expenses": "ఖర్చులు",
-    "yieldTracking": "ఫలితం ట్రాకింగ్",
     "reports": "నివేదనలు",
     "marketPrices": "బాజార ధరలు",
     "calendar": "క్యాలెండర్",
     "settings": "సెట్టింగ్‌లు",
-    "history": "చరిత్ర",
     "profile": "ప్రొఫైల్",
-    "adminDashboard": "అడ్మిన్ డాష్‌బోర్డ్",
     "help": "సహాయం",
     "harvested": "కోత",
     "planned": "ప్లాన్ చేసిన"
