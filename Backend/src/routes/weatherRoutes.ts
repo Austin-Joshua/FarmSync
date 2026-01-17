@@ -3,12 +3,28 @@ import {
   getCurrentWeather,
   getClimateAlerts,
   getCurrentLocation,
+  getWeatherByCity,
 } from '../controllers/weatherController';
 import { authenticate } from '../middleware/auth';
-import { body } from 'express-validator';
+import { body, query } from 'express-validator';
 import { validate } from '../middleware/validation';
 
 const router = Router();
+
+// Public route - Get weather by city name (no auth required)
+router.get(
+  '/',
+  [
+    query('city')
+      .trim()
+      .notEmpty()
+      .withMessage('City name is required')
+      .isLength({ min: 2, max: 100 })
+      .withMessage('City name must be between 2 and 100 characters'),
+  ],
+  validate(query('city')),
+  getWeatherByCity
+);
 
 router.use(authenticate);
 
