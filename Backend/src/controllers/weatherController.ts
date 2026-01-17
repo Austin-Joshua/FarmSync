@@ -2,7 +2,6 @@ import { Response, Request } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 import weatherService from '../services/weatherService';
-import axios from 'axios';
 
 /**
  * Get current weather data for user's location
@@ -112,9 +111,10 @@ export const getCurrentLocation = async (req: AuthRequest, res: Response): Promi
 };
 
 /**
- * Get weather by city name using OpenWeather API
+ * Get weather by city name using mock data
  * GET /api/weather?city=cityname
  * Query: city (string, required)
+ * NOTE: Uses mock data - no external API key required
  */
 export const getWeatherByCity = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -125,71 +125,208 @@ export const getWeatherByCity = async (req: Request, res: Response): Promise<voi
       throw new AppError('City parameter is required and must be a string', 400);
     }
 
-    // Check for API key
-    const apiKey = process.env.OPENWEATHER_API_KEY;
-    if (!apiKey) {
-      throw new AppError('OpenWeather API key is not configured', 500);
+    const cityName = city.trim().toLowerCase();
+
+    // Mock weather data for different cities
+    const mockWeatherData: Record<string, any> = {
+      'london': {
+        name: 'London',
+        country: 'GB',
+        latitude: 51.5074,
+        longitude: -0.1278,
+        temperature: 15,
+        feelsLike: 14,
+        min: 12,
+        max: 18,
+        humidity: 72,
+        pressure: 1013,
+        visibility: 10000,
+        windSpeed: 4.5,
+        windDegree: 230,
+        cloudiness: 45,
+        main: 'Clouds',
+        description: 'overcast clouds',
+        icon: '04d',
+      },
+      'new york': {
+        name: 'New York',
+        country: 'US',
+        latitude: 40.7128,
+        longitude: -74.0060,
+        temperature: 8,
+        feelsLike: 5,
+        min: 5,
+        max: 12,
+        humidity: 65,
+        pressure: 1015,
+        visibility: 10000,
+        windSpeed: 6.2,
+        windDegree: 280,
+        cloudiness: 60,
+        main: 'Clouds',
+        description: 'scattered clouds',
+        icon: '03d',
+      },
+      'bangalore': {
+        name: 'Bangalore',
+        country: 'IN',
+        latitude: 12.9716,
+        longitude: 77.5946,
+        temperature: 28,
+        feelsLike: 30,
+        min: 22,
+        max: 32,
+        humidity: 65,
+        pressure: 1010,
+        visibility: 8000,
+        windSpeed: 3.5,
+        windDegree: 180,
+        cloudiness: 40,
+        main: 'Partly Cloudy',
+        description: 'partly cloudy',
+        icon: '02d',
+      },
+      'mumbai': {
+        name: 'Mumbai',
+        country: 'IN',
+        latitude: 19.0760,
+        longitude: 72.8777,
+        temperature: 32,
+        feelsLike: 35,
+        min: 26,
+        max: 36,
+        humidity: 75,
+        pressure: 1008,
+        visibility: 7000,
+        windSpeed: 5.1,
+        windDegree: 200,
+        cloudiness: 50,
+        main: 'Humid',
+        description: 'humid and warm',
+        icon: '04d',
+      },
+      'delhi': {
+        name: 'Delhi',
+        country: 'IN',
+        latitude: 28.7041,
+        longitude: 77.1025,
+        temperature: 20,
+        feelsLike: 18,
+        min: 12,
+        max: 28,
+        humidity: 55,
+        pressure: 1012,
+        visibility: 6000,
+        windSpeed: 4.0,
+        windDegree: 270,
+        cloudiness: 30,
+        main: 'Clear',
+        description: 'clear sky',
+        icon: '01d',
+      },
+      'tokyo': {
+        name: 'Tokyo',
+        country: 'JP',
+        latitude: 35.6762,
+        longitude: 139.6503,
+        temperature: 10,
+        feelsLike: 8,
+        min: 6,
+        max: 14,
+        humidity: 60,
+        pressure: 1018,
+        visibility: 10000,
+        windSpeed: 3.5,
+        windDegree: 90,
+        cloudiness: 20,
+        main: 'Clear',
+        description: 'clear sky',
+        icon: '01d',
+      },
+      'sydney': {
+        name: 'Sydney',
+        country: 'AU',
+        latitude: -33.8688,
+        longitude: 151.2093,
+        temperature: 25,
+        feelsLike: 24,
+        min: 18,
+        max: 28,
+        humidity: 55,
+        pressure: 1020,
+        visibility: 10000,
+        windSpeed: 8.2,
+        windDegree: 45,
+        cloudiness: 15,
+        main: 'Sunny',
+        description: 'clear sky',
+        icon: '01d',
+      },
+    };
+
+    // Get mock data for the city, or return default mock data
+    let data = mockWeatherData[cityName];
+    
+    // If city not found in mock data, return a generic response with random variation
+    if (!data) {
+      data = {
+        name: city.trim(),
+        country: 'Unknown',
+        latitude: 20 + Math.random() * 30,
+        longitude: 70 + Math.random() * 30,
+        temperature: 15 + Math.random() * 15,
+        feelsLike: 14 + Math.random() * 15,
+        min: 10 + Math.random() * 10,
+        max: 25 + Math.random() * 15,
+        humidity: 50 + Math.random() * 30,
+        pressure: 1010 + Math.random() * 10,
+        visibility: 8000 + Math.random() * 2000,
+        windSpeed: 2 + Math.random() * 8,
+        windDegree: Math.random() * 360,
+        cloudiness: Math.random() * 100,
+        main: 'Partly Cloudy',
+        description: 'weather data from mock service',
+        icon: '02d',
+      };
     }
 
-    // Fetch weather data from OpenWeather API
-    const response = await axios.get('https://api.openweathermap.org/data/2.5/weather', {
-      params: {
-        q: city.trim(),
-        appid: apiKey,
-        units: 'metric', // Use Celsius
-      },
-      timeout: 10000, // 10 second timeout
-    });
+    const now = new Date();
+    const sunrise = new Date(now.getTime() - 6 * 60 * 60 * 1000);
+    const sunset = new Date(now.getTime() + 12 * 60 * 60 * 1000);
 
-    const weatherData = response.data;
-
-    // Transform and return weather data
+    // Return mock weather data
     res.json({
-      message: 'Weather data retrieved successfully',
+      message: 'Weather data retrieved successfully (Mock Data)',
       data: {
-        city: weatherData.name,
-        country: weatherData.sys?.country,
+        city: data.name,
+        country: data.country,
         coordinates: {
-          latitude: weatherData.coord.lat,
-          longitude: weatherData.coord.lon,
+          latitude: data.latitude,
+          longitude: data.longitude,
         },
         temperature: {
-          current: weatherData.main.temp,
-          feelsLike: weatherData.main.feels_like,
-          min: weatherData.main.temp_min,
-          max: weatherData.main.temp_max,
+          current: Math.round(data.temperature * 10) / 10,
+          feelsLike: Math.round(data.feelsLike * 10) / 10,
+          min: Math.round(data.min * 10) / 10,
+          max: Math.round(data.max * 10) / 10,
         },
-        humidity: weatherData.main.humidity,
-        pressure: weatherData.main.pressure,
-        visibility: weatherData.visibility,
-        windSpeed: weatherData.wind.speed,
-        windDegree: weatherData.wind.deg,
-        cloudiness: weatherData.clouds.all,
+        humidity: Math.round(data.humidity),
+        pressure: Math.round(data.pressure),
+        visibility: Math.round(data.visibility),
+        windSpeed: Math.round(data.windSpeed * 10) / 10,
+        windDegree: Math.round(data.windDegree),
+        cloudiness: Math.round(data.cloudiness),
         weather: {
-          main: weatherData.weather[0].main,
-          description: weatherData.weather[0].description,
-          icon: weatherData.weather[0].icon,
+          main: data.main,
+          description: data.description,
+          icon: data.icon,
         },
-        sunrise: new Date(weatherData.sys.sunrise * 1000).toISOString(),
-        sunset: new Date(weatherData.sys.sunset * 1000).toISOString(),
-        timestamp: new Date(weatherData.dt * 1000).toISOString(),
+        sunrise: sunrise.toISOString(),
+        sunset: sunset.toISOString(),
+        timestamp: now.toISOString(),
       },
     });
   } catch (error: any) {
-    // Handle specific axios errors
-    if (error.response?.status === 404) {
-      throw new AppError(`City "${error.config?.params?.q}" not found`, 404);
-    }
-    if (error.response?.status === 401) {
-      throw new AppError('Invalid OpenWeather API key', 401);
-    }
-    if (error.code === 'ECONNABORTED') {
-      throw new AppError('Request to OpenWeather API timed out', 504);
-    }
-    if (error.message.includes('Network')) {
-      throw new AppError('Failed to connect to OpenWeather API', 503);
-    }
-
     // Generic error handling
     throw new AppError(error.message || 'Failed to fetch weather data', error.response?.status || 500);
   }
