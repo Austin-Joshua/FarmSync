@@ -16,10 +16,6 @@ const poolConfig = {
   keepAliveInitialDelay: 0,
   // Connection timeout (valid MySQL2 option)
   connectTimeout: 10000, // 10 seconds
-  // SSL configuration for Railway and cloud databases
-  ssl: {
-    rejectUnauthorized: false,
-  },
 };
 
 export const pool = mysql.createPool(poolConfig);

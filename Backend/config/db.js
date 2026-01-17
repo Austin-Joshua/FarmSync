@@ -12,10 +12,6 @@ const pool = mysql.createPool({
   queueLimit: 0,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
-  // SSL configuration
-  ssl: {
-    rejectUnauthorized: false,
-  },
 });
 
 // Export the pool for use in other modules
