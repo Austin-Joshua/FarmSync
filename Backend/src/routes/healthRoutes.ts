@@ -1,7 +1,7 @@
 import express, { Router, Request, Response } from 'express';
 import { pool } from '../config/database';
 import logger from '../utils/logger';
-import { auth } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 
 const router = Router();
 
@@ -88,7 +88,7 @@ router.get('/tables', async (req: Request, res: Response) => {
  * GET /health/stats
  * Get database statistics
  */
-router.get('/stats', auth, async (req: Request, res: Response) => {
+router.get('/stats', authenticate, async (req: Request, res: Response) => {
   try {
     const connection = await pool.getConnection();
     
@@ -164,7 +164,7 @@ router.get('/frontend-connection', async (req: Request, res: Response) => {
  * POST /health/test-query
  * Execute a test query
  */
-router.post('/test-query', auth, async (req: Request, res: Response) => {
+router.post('/test-query', authenticate, async (req: Request, res: Response) => {
   try {
     const connection = await pool.getConnection();
     

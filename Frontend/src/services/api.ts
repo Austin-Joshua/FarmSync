@@ -1,5 +1,5 @@
 // API service for making HTTP requests to the backend
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5174/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export interface ApiResponse<T> {
   message?: string;
@@ -64,11 +64,11 @@ class ApiService {
     } catch (error: any) {
       // Handle timeout/abort errors (these are actual connection issues)
       if (error.name === 'AbortError') {
-        throw new Error('Request timed out. Please check if the backend server is running on http://localhost:5174');
+        throw new Error('Request timed out. Please check if the backend server is running on http://localhost:5000');
       }
       // Handle network/fetch errors (these are actual connection issues)
       if (error.name === 'TypeError' && (error.message.includes('fetch') || error.message.includes('Failed') || error.message.includes('NetworkError'))) {
-        throw new Error('Failed to connect to server. Please make sure the backend server is running on http://localhost:5174');
+        throw new Error('Failed to connect to server. Please make sure the backend server is running on http://localhost:5000');
       }
       // For other errors (like 401, 400, etc.), preserve the original error message
       // These are NOT connection errors - they're authentication/validation errors
