@@ -56,9 +56,12 @@ SMTP_FROM_EMAIL=noreply@farmsync.com
 TOTP_WINDOW=1
 
 # ===========================
-# Weather API
+# Weather API (OPTIONAL)
 # ===========================
-WEATHER_API_KEY=your-weather-api-key
+# NOTE: Weather API is NO LONGER REQUIRED!
+# The weather endpoint uses mock data by default
+# Uncomment below only if you want to use real OpenWeather API
+# OPENWEATHER_API_KEY=your-openweather-api-key
 
 # ===========================
 # Notification Services
