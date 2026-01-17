@@ -45,6 +45,7 @@ import smsRoutes from './routes/smsRoutes';
 import marketPriceRoutes from './routes/marketPriceRoutes';
 import fieldRoutes from './routes/fieldRoutes';
 import healthRoutes from './routes/healthRoutes';
+import dbTestRoutes from './routes/dbTestRoutes';
 
 const app: Express = express();
 
@@ -160,6 +161,7 @@ app.use('/api/sms', smsRoutes);
 app.use('/api/market-prices', marketPriceRoutes);
 app.use('/api/fields', fieldRoutes);
 app.use('/api/health', healthRoutes);
+app.use('/api/db-test', dbTestRoutes);
 
 // 404 handler
 app.use(notFoundHandler);
