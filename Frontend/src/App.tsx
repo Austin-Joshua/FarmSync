@@ -36,9 +36,9 @@ import { initializeServiceWorker } from './utils/serviceWorkerRegistration';
 const AppContent = () => {
   const location = useLocation();
 
-  // Set document title to Navigation on every route change
+  // Set document title to FarmSync on every route change
   useEffect(() => {
-    document.title = 'Navigation';
+    document.title = 'FarmSync';
   }, [location.pathname]);
 
   return (
@@ -226,9 +226,9 @@ function App() {
     }
   }, []);
 
-  // Set initial document title to Navigation
+  // Set initial document title to FarmSync
   useEffect(() => {
-    document.title = 'Navigation';
+    document.title = 'FarmSync';
   }, []);
 
   return (
