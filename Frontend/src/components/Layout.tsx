@@ -51,7 +51,7 @@ const Layout = ({ children }: LayoutProps) => {
     { path: '/irrigation', label: t('navigation.irrigation'), icon: Droplets },
     { path: '/expenses', label: t('navigation.expenses'), icon: IndianRupee },
     { path: '/yield', label: t('navigation.yieldTracking'), icon: TrendingUp },
-    { path: '/calendar', label: t('navigation.calendar', 'Calendar'), icon: Calendar },
+    { path: '/calendar', label: 'Calendar', icon: Calendar },
     { path: '/market-prices', label: t('navigation.marketPrices', 'Market Prices'), icon: DollarSign },
     { path: '/fields', label: t('navigation.fields', 'Fields'), icon: MapPin },
     { path: '/reports', label: t('navigation.reports'), icon: FileText },

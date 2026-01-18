@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS user_settings (
 );
 
 -- Indexes for better query performance
-CREATE INDEX idx_users_email ON users(email);
+-- idx_users_email is automatically created from UNIQUE constraint, skip it
 CREATE INDEX idx_users_role ON users(role);
 CREATE INDEX idx_farms_farmer_id ON farms(farmer_id);
 CREATE INDEX idx_crops_farm_id ON crops(farm_id);
@@ -248,11 +248,11 @@ CREATE INDEX idx_crop_recommendations_created_at ON crop_recommendations(created
 
 -- Audit Logs table (for tracking system activity)
 CREATE TABLE IF NOT EXISTS audit_logs (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    user_id VARCHAR(36) NOT NULL,
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    user_id CHAR(36) NOT NULL,
     action ENUM('login', 'logout', 'create', 'update', 'delete', 'view', 'export', 'admin_action') NOT NULL,
     resource_type VARCHAR(50) NOT NULL,
-    resource_id VARCHAR(36),
+    resource_id CHAR(36),
     details TEXT,
     ip_address VARCHAR(45),
     user_agent TEXT,
@@ -266,8 +266,8 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 
 -- Push Subscriptions table (for push notifications)
 CREATE TABLE IF NOT EXISTS push_subscriptions (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    user_id VARCHAR(36) NOT NULL,
+    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    user_id CHAR(36) NOT NULL,
     endpoint TEXT NOT NULL,
     p256dh_key TEXT NOT NULL,
     auth_key TEXT NOT NULL,

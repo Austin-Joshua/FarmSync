@@ -24,14 +24,14 @@ export class AuthService {
         email: user.email,
         role: user.role,
       },
-      config.jwt.secret,
-      { expiresIn: config.jwt.expiresIn }
+      config.jwt.secret as string,
+      { expiresIn: config.jwt.expiresIn as string } as any
     );
   }
 
   static verifyToken(token: string): any {
     try {
-      return jwt.verify(token, config.jwt.secret);
+      return jwt.verify(token, config.jwt.secret as string);
     } catch (error) {
       throw new Error('Invalid or expired token');
     }
