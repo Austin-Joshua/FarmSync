@@ -8,6 +8,7 @@ import { Plus, TrendingUp, Award, ExternalLink, Eye } from 'lucide-react';
 import { Yield } from '../types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import DetailModal from '../components/DetailModal';
+import { formatDateDisplay } from '../utils/dateFormatter';
 
 const YieldTracking = () => {
   const { t } = useTranslation();
@@ -141,7 +142,7 @@ const YieldTracking = () => {
                         {translateCrop(getCropName(yield_.cropId))}
                       </h3>
                       <p className="text-sm text-gray-600">
-                        {t('yield.harvestDate')}: {new Date(yield_.date).toLocaleDateString()}
+                        {t('yield.harvestDate')}: {formatDateDisplay(yield_.date)}
                       </p>
                     </div>
                   </div>
@@ -243,7 +244,7 @@ const YieldTracking = () => {
                           {translateCrop(getCropName(yield_.cropId))}
                         </h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {t('yield.harvestDate')}: {new Date(yield_.date).toLocaleDateString()}
+                          {t('yield.harvestDate')}: {formatDateDisplay(yield_.date)}
                         </p>
                       </div>
                     </div>

@@ -7,6 +7,7 @@ import { Plus, Droplets, Bug, Edit2, Trash2, Eye } from 'lucide-react';
 import { Fertilizer, Pesticide } from '../types';
 import FertilizerPesticideFormModal from '../components/FertilizerPesticideFormModal';
 import DetailModal from '../components/DetailModal';
+import { formatDateDisplay } from '../utils/dateFormatter';
 
 const FertilizerPesticide = () => {
   const { t } = useTranslation();
@@ -165,7 +166,7 @@ const FertilizerPesticide = () => {
                     </td>
                     <td className="py-4 px-4 text-gray-600">{fertilizer.quantity} {t('common.kg')}</td>
                     <td className="py-4 px-4 text-gray-600">
-                      {new Date(fertilizer.dateOfUsage).toLocaleDateString()}
+                      {formatDateDisplay(fertilizer.dateOfUsage)}
                     </td>
                     <td className="py-4 px-4 text-gray-600">{getCropName(fertilizer.cropId)}</td>
                     <td className="py-4 px-4">
@@ -225,7 +226,7 @@ const FertilizerPesticide = () => {
                   </td>
                   <td className="py-4 px-4 text-gray-600">{pesticide.quantity} {t('common.l')}</td>
                   <td className="py-4 px-4 text-gray-600">
-                    {new Date(pesticide.dateOfUsage).toLocaleDateString()}
+                    {formatDateDisplay(pesticide.dateOfUsage)}
                   </td>
                   <td className="py-4 px-4 text-gray-600">{getCropName(pesticide.cropId)}</td>
                   <td className="py-4 px-4">

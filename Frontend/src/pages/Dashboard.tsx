@@ -58,6 +58,8 @@ import { mockCrops } from '../data/mockData';
 import { translateCrop, translateDistrict } from '../utils/translations';
 import { getCropIcon } from '../utils/cropIcons';
 import api from '../services/api';
+import { DataCache } from '../utils/dataCache';
+import { formatDateDisplay } from '../utils/dateFormatter';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -83,11 +85,21 @@ const Dashboard = () => {
   useEffect(() => {
     const loadLowStockItems = async () => {
       if (!user) return;
+      
+      // Check cache first
+      const cacheKey = 'low_stock_items';
+      const cachedData = DataCache.get(cacheKey);
+      if (cachedData) {
+        setLowStockItems(cachedData);
+        return;
+      }
+
       setLoadingLowStock(true);
       try {
         const response = await api.getLowStockItems();
         if (response.data) {
           setLowStockItems(response.data);
+          DataCache.set(cacheKey, response.data);
         }
       } catch (error) {
         console.error('Failed to load low stock items:', error);
@@ -102,10 +114,21 @@ const Dashboard = () => {
   useEffect(() => {
     const loadWeatherAlerts = async () => {
       if (!user) return;
+      
+      // Check cache first
+      const cacheKey = 'weather_alerts';
+      const cachedData = DataCache.get(cacheKey);
+      if (cachedData) {
+        setWeatherAlerts(cachedData);
+        return;
+      }
+
       try {
         const response = await api.getUnreadAlerts();
         if (response.data) {
-          setWeatherAlerts(response.data.slice(0, 3)); // Show top 3 alerts
+          const alerts = response.data.slice(0, 3); // Show top 3 alerts
+          setWeatherAlerts(alerts);
+          DataCache.set(cacheKey, alerts);
         }
       } catch (error) {
         console.error('Failed to load weather alerts:', error);
@@ -691,10 +714,10 @@ const Dashboard = () => {
                     {t('crops.season')}: {crop.season}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                    {t('crops.sowingDate')}: {new Date(crop.sowingDate).toLocaleDateString()}
+                    {t('crops.sowingDate')}: {formatDateDisplay(crop.sowingDate)}
                   </p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {t('crops.harvestDate')}: {new Date(crop.harvestDate).toLocaleDateString()}
+                    {t('crops.harvestDate')}: {formatDateDisplay(crop.harvestDate)}
                   </p>
                 </div>
               ))}
@@ -735,7 +758,7 @@ const Dashboard = () => {
                         {t('crops.averageYield')}: {crop.averageYield?.toLocaleString() || 'N/A'} {t('common.kg')}
                       </p>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                        {t('yield.harvestDate')}: {new Date(yield_.date).toLocaleDateString()}
+                        {t('yield.harvestDate')}: {formatDateDisplay(yield_.date)}
                       </p>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                         {t('yield.quality')}: {yield_.quality === 'excellent' ? t('yield.excellent') : yield_.quality === 'good' ? t('yield.good') : t('yield.average')}

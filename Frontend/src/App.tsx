@@ -21,6 +21,7 @@ import ExpenseManagement from './pages/ExpenseManagement';
 import YieldTracking from './pages/YieldTracking';
 import Reports from './pages/Reports';
 import History from './pages/History';
+import AboutUs from './pages/AboutUs';
 import Settings from './pages/Settings';
 import UserPage from './pages/UserPage';
 import CropCalendar from './pages/CropCalendar';
@@ -132,6 +133,16 @@ const AppContent = () => {
           <ProtectedRoute>
             <Layout>
               <History />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/about"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <AboutUs />
             </Layout>
           </ProtectedRoute>
         }

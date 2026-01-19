@@ -8,6 +8,7 @@ import IrrigationModal from '../components/IrrigationModal';
 import { Irrigation as IrrigationType } from '../types';
 import { Plus, Droplets, Calendar, Edit2, Trash2, Eye } from 'lucide-react';
 import DetailModal from '../components/DetailModal';
+import { formatDateDisplay, formatDateWithWeekday } from '../utils/dateFormatter';
 
 const Irrigation = () => {
   const { t } = useTranslation();
@@ -195,12 +196,7 @@ const Irrigation = () => {
                       <div className="flex items-center gap-2 text-gray-600">
                         <Calendar size={16} />
                         <span className="font-medium">
-                          {new Date(irrigation.date).toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
+                          {formatDateWithWeekday(irrigation.date)}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-600">
@@ -326,7 +322,7 @@ const Irrigation = () => {
                           {translateCrop(getCropName(irrigation.cropId))}
                         </h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {t('irrigation.date')}: {new Date(irrigation.date).toLocaleDateString()}
+                          {t('irrigation.date')}: {formatDateDisplay(irrigation.date)}
                         </p>
                       </div>
                     </div>
@@ -376,7 +372,7 @@ const Irrigation = () => {
                           {translateCrop(getCropName(irrigation.cropId))}
                         </h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {t('irrigation.date')}: {new Date(irrigation.date).toLocaleDateString()}
+                          {t('irrigation.date')}: {formatDateDisplay(irrigation.date)}
                         </p>
                       </div>
                     </div>
@@ -426,7 +422,7 @@ const Irrigation = () => {
                           {translateCrop(getCropName(irrigation.cropId))}
                         </h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {t('irrigation.date')}: {new Date(irrigation.date).toLocaleDateString()}
+                          {t('irrigation.date')}: {formatDateDisplay(irrigation.date)}
                         </p>
                       </div>
                     </div>

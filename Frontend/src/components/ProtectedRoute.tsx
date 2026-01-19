@@ -29,30 +29,10 @@ const needsOnboarding = (user: any): boolean => {
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   // useAuth now returns a default context instead of throwing
   const { isAuthenticated, user } = useAuth();
-  const [isChecking, setIsChecking] = useState(true);
   const location = useLocation();
 
-  useEffect(() => {
-    // Give auth context a moment to initialize and restore user from localStorage
-    const timer = setTimeout(() => {
-      setIsChecking(false);
-    }, 1000); // Allow full initialization time
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Show loading while checking authentication
-  if (isChecking) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
+  // Check authentication immediately - no artificial delay
+  // AuthContext initializes synchronously from localStorage
   if (!isAuthenticated) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }

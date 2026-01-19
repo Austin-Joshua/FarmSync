@@ -10,6 +10,7 @@ import { Plus, Search, Filter, Edit2, Trash2, Eye } from 'lucide-react';
 import { getCropIcon } from '../utils/cropIcons';
 import { translateCrop } from '../utils/translations';
 import DetailModal from '../components/DetailModal';
+import { formatDateDisplay } from '../utils/dateFormatter';
 
 const CropManagement = () => {
   const { t } = useTranslation();
@@ -307,7 +308,7 @@ const CropManagement = () => {
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.category')}: {crop.category}</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.season')}: {crop.season}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.sowingDate')}: {new Date(crop.sowingDate).toLocaleDateString()}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.sowingDate')}: {formatDateDisplay(crop.sowingDate)}</p>
                 </div>
               ))}
             </div>
@@ -343,7 +344,7 @@ const CropManagement = () => {
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.category')}: {crop.category}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.season')}: {crop.season}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.harvestDate')}: {new Date(crop.harvestDate).toLocaleDateString()}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.harvestDate')}: {formatDateDisplay(crop.harvestDate)}</p>
                 </div>
               ))}
             </div>

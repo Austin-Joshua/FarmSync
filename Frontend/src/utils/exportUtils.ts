@@ -157,15 +157,16 @@ export const formatCurrency = (amount: number): string => {
 };
 
 /**
- * Format date for export
+ * Format date for export - "DD MMMM YYYY" format
  */
 export const formatDate = (date: Date | string): string => {
   const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('en-IN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  const day = d.getDate();
+  const month = d.toLocaleDateString('en-IN', {
+    month: 'long'
   });
+  const year = d.getFullYear();
+  return `${day} ${month} ${year}`;
 };
 
 /**

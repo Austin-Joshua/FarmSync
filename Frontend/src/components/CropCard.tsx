@@ -4,6 +4,7 @@ import { Crop } from '../types';
 import { Calendar, Droplet, Thermometer, CloudRain, Leaf } from 'lucide-react';
 import { translateCrop, translateCategory, translateSeason } from '../utils/translations';
 import { getCropIcon } from '../utils/cropIcons';
+import { formatDateDisplay } from '../utils/dateFormatter';
 
 interface CropCardProps {
   crop: Crop;
@@ -70,13 +71,13 @@ const CropCard = ({ crop, onView }: CropCardProps) => {
         <div className="flex items-center gap-2">
           <Calendar size={16} className="text-primary-600" />
           <span>
-            <strong>{t('crops.sowing')}:</strong> {new Date(crop.sowingDate).toLocaleDateString()}
+            <strong>{t('crops.sowing')}:</strong> {formatDateDisplay(crop.sowingDate)}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <Calendar size={16} className="text-primary-600" />
           <span>
-            <strong>{t('crops.harvest')}:</strong> {new Date(crop.harvestDate).toLocaleDateString()}
+            <strong>{t('crops.harvest')}:</strong> {formatDateDisplay(crop.harvestDate)}
           </span>
         </div>
         {crop.growthPeriod && (

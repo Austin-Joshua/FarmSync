@@ -138,7 +138,12 @@ const AdminDashboard = () => {
   }));
 
   const recentLoginsData = statistics.recentLogins.map(item => ({
-    date: new Date(item.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    date: (() => {
+      const d = new Date(item.date);
+      const day = d.getDate();
+      const month = d.toLocaleDateString('en-US', { month: 'short' });
+      return `${day} ${month}`;
+    })(),
     logins: item.loginCount,
   }));
 
@@ -158,7 +163,14 @@ const AdminDashboard = () => {
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
             <Calendar size={18} />
-            <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            <span>{(() => {
+              const d = new Date();
+              const day = d.getDate();
+              const month = d.toLocaleDateString('en-US', { month: 'long' });
+              const year = d.getFullYear();
+              const weekday = d.toLocaleDateString('en-US', { weekday: 'long' });
+              return `${day} ${month} ${year}, ${weekday}`;
+            })()}</span>
           </div>
         </div>
       </div>
