@@ -34,7 +34,7 @@ const AdminProtectedRoute = ({ children }: AdminProtectedRouteProps) => {
 
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   // Redirect to dashboard if not admin

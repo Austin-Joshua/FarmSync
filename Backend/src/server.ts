@@ -103,8 +103,13 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 // Root endpoint
 app.get('/', (_, res) => res.send('Backend is running'));
 
-// Health check endpoint
+// Health check endpoint - respond immediately without database check
 app.get('/health', (_, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Health check endpoint with timeout protection
+app.get('/health/quick', (_, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 

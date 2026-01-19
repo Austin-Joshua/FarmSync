@@ -96,8 +96,11 @@ export class AuthService {
   }
 
   static async login(email: string, password: string): Promise<AuthTokens> {
+    console.log('🟢 AuthService.login called for email:', email);
     // Find user by email (includes password_hash for verification)
+    console.log('🟢 Calling UserModel.findByEmail...');
     const user = await UserModel.findByEmail(email);
+    console.log('🟢 UserModel.findByEmail completed, user found:', !!user);
     if (!user) {
       // Don't reveal if email exists - security best practice
       throw new Error('Invalid email or password');

@@ -48,12 +48,19 @@ async function setupDatabase() {
     connection = await mysql.createConnection(dbConfig);
     console.log(`Connected to ${dbName}...`);
 
+    // Disable foreign key checks
+    await connection.query('SET FOREIGN_KEY_CHECKS = 0');
+
     // Read and execute schema
     const schemaPath = path.join(__dirname, 'schema.sql');
     const schema = fs.readFileSync(schemaPath, 'utf-8');
     
     console.log('Creating tables...');
     await connection.query(schema);
+    
+    // Re-enable foreign key checks
+    await connection.query('SET FOREIGN_KEY_CHECKS = 1');
+    
     console.log('Tables created successfully!');
 
     await connection.end();

@@ -1,6 +1,9 @@
 import { pool } from '../config/database';
 import bcrypt from 'bcryptjs';
 import { query, queryOne, execute } from '../utils/dbHelper';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export interface User {
   id: string;
@@ -36,12 +39,55 @@ export interface CreateUserData {
 
 export class UserModel {
   static async findByEmail(email: string): Promise<User | null> {
-    return queryOne<User>(pool, 'SELECT * FROM users WHERE email = ?', [email]);
+    // Use direct connection instead of pool to avoid hanging
+    const mysql = await import('mysql2/promise');
+    let connection;
+    try {
+      connection = await mysql.createConnection({
+        host: process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.DB_PORT || '3306'),
+        database: process.env.DB_NAME || 'farmsync_db',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '123456',
+        connectTimeout: 3000,
+      });
+      
+      const [rows] = await connection.query('SELECT * FROM users WHERE email = ?', [email]);
+      return (rows as User[])[0] || null;
+    } catch (error: any) {
+      console.error('UserModel.findByEmail error:', error.message);
+      throw error;
+    } finally {
+      if (connection) {
+        await connection.end();
+      }
+    }
   }
 
   static async findById(id: string): Promise<User | null> {
-    // Use SELECT * to get all columns, handling missing columns gracefully
-    return queryOne<User>(pool, 'SELECT * FROM users WHERE id = ?', [id]);
+    // Use direct connection instead of pool
+    const mysql = await import('mysql2/promise');
+    let connection;
+    try {
+      connection = await mysql.createConnection({
+        host: process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.DB_PORT || '3306'),
+        database: process.env.DB_NAME || 'farmsync_db',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '123456',
+        connectTimeout: 3000,
+      });
+      
+      const [rows] = await connection.query('SELECT * FROM users WHERE id = ?', [id]);
+      return (rows as User[])[0] || null;
+    } catch (error: any) {
+      console.error('UserModel.findById error:', error.message);
+      throw error;
+    } finally {
+      if (connection) {
+        await connection.end();
+      }
+    }
   }
 
   static async findByIdWithPassword(id: string): Promise<User | null> {
@@ -59,12 +105,32 @@ export class UserModel {
       passwordHash = await bcrypt.hash(data.password, 10);
     }
 
+    // Use direct connection with timeout protection
+    const mysql = await import('mysql2/promise');
+    let connection;
     try {
-      // Insert user with all required fields
-      const insertResult = await execute(
-        pool,
-        `INSERT INTO users (name, email, password_hash, role, location, land_size, soil_type, picture_url)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      // Create connection with timeout
+      const connectionPromise = mysql.createConnection({
+        host: process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.DB_PORT || '3306'),
+        database: process.env.DB_NAME || 'farmsync_db',
+        user: process.env.DB_USER || 'root',
+        password: process.env.DB_PASSWORD || '123456',
+        connectTimeout: 5000, // Increased to 5 seconds
+      });
+      
+      // Add timeout wrapper
+      connection = await Promise.race([
+        connectionPromise,
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Database connection timeout')), 5000)
+        )
+      ]) as any;
+
+      // Insert user with all required fields (with timeout)
+      const insertPromise = connection.execute(
+        `INSERT INTO users (id, name, email, password_hash, role, location, land_size, soil_type, picture_url)
+         VALUES (UUID(), ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           data.name, 
           data.email, 
@@ -76,6 +142,13 @@ export class UserModel {
           data.picture_url || null
         ]
       );
+      
+      const [insertResult] = await Promise.race([
+        insertPromise,
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Database insert timeout')), 10000)
+        )
+      ]) as any;
 
       // Check if insert was successful
       if (!insertResult || (insertResult.insertId === undefined && insertResult.affectedRows !== 1)) {
@@ -83,8 +156,15 @@ export class UserModel {
         throw new Error('Failed to insert user into database');
       }
 
-      // MySQL doesn't support RETURNING, so fetch the created user
-      const user = await queryOne<User>(pool, 'SELECT * FROM users WHERE email = ?', [data.email]);
+      // Fetch the created user (with timeout)
+      const queryPromise = connection.query('SELECT * FROM users WHERE email = ?', [data.email]);
+      const [rows] = await Promise.race([
+        queryPromise,
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Database query timeout')), 5000)
+        )
+      ]) as any;
+      const user = (rows as User[])[0];
       if (!user) {
         console.error('User not found after insert. Email:', data.email);
         throw new Error('Failed to retrieve created user from database');
@@ -102,6 +182,10 @@ export class UserModel {
         throw new Error('Database operation timed out. Please check database connection.');
       }
       throw new Error(`Failed to create user: ${error.message}`);
+    } finally {
+      if (connection) {
+        await connection.end();
+      }
     }
   }
 

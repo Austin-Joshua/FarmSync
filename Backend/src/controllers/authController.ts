@@ -103,13 +103,16 @@ function parseUserAgent(userAgent: string | undefined): { device: string; browse
 
 export const login = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
+    console.log('🔵 Login request received:', { email: req.body?.email, hasPassword: !!req.body?.password });
     const { email, password } = req.body;
 
     if (!email || !password) {
       throw new AppError('Email and password are required', 400);
     }
 
+    console.log('🔵 Calling AuthService.login...');
     const result = await AuthService.login(email, password);
+    console.log('🔵 AuthService.login completed, user ID:', result.user.id);
 
     // Track session
     const userAgent = req.headers['user-agent'] || '';

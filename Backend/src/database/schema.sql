@@ -2,7 +2,7 @@
 
 -- Users table (Farmers & Admins)
 CREATE TABLE IF NOT EXISTS users (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password_hash VARCHAR(255),
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Soil types master table
 CREATE TABLE IF NOT EXISTS soil_types (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -28,12 +28,12 @@ CREATE TABLE IF NOT EXISTS soil_types (
 
 -- Farms/Land table
 CREATE TABLE IF NOT EXISTS farms (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     location VARCHAR(255) NOT NULL,
     land_size DECIMAL(10, 2) NOT NULL,
-    soil_type_id CHAR(36),
-    farmer_id CHAR(36) NOT NULL,
+    soil_type_id VARCHAR(36),
+    farmer_id VARCHAR(36) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (soil_type_id) REFERENCES soil_types(id) ON DELETE SET NULL,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS farms (
 
 -- Crop types master table (managed by admin)
 CREATE TABLE IF NOT EXISTS crop_types (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     category VARCHAR(100) NOT NULL,
     season VARCHAR(50) NOT NULL CHECK (season IN ('kharif', 'rabi', 'zaid', 'year-round')),
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS crop_types (
     growth_period INT,
     water_requirement VARCHAR(20) CHECK (water_requirement IN ('low', 'medium', 'high')),
     description TEXT,
-    created_by CHAR(36),
+    created_by VARCHAR(36),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
@@ -59,14 +59,14 @@ CREATE TABLE IF NOT EXISTS crop_types (
 
 -- Crops table
 CREATE TABLE IF NOT EXISTS crops (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    crop_type_id CHAR(36),
+    crop_type_id VARCHAR(36),
     season VARCHAR(50),
     sowing_date DATE NOT NULL,
     harvest_date DATE,
     status VARCHAR(20) NOT NULL CHECK (status IN ('active', 'harvested', 'planned')),
-    farm_id CHAR(36) NOT NULL,
+    farm_id VARCHAR(36) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (crop_type_id) REFERENCES crop_types(id) ON DELETE SET NULL,
@@ -75,53 +75,53 @@ CREATE TABLE IF NOT EXISTS crops (
 
 -- Fertilizers table
 CREATE TABLE IF NOT EXISTS fertilizers (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     type VARCHAR(255) NOT NULL,
     quantity DECIMAL(10, 2) NOT NULL,
     date_of_usage DATE NOT NULL,
-    crop_id CHAR(36) NOT NULL,
+    crop_id VARCHAR(36) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (crop_id) REFERENCES crops(id) ON DELETE CASCADE
 );
 
 -- Pesticides table
 CREATE TABLE IF NOT EXISTS pesticides (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     type VARCHAR(255) NOT NULL,
     quantity DECIMAL(10, 2) NOT NULL,
     date_of_usage DATE NOT NULL,
-    crop_id CHAR(36) NOT NULL,
+    crop_id VARCHAR(36) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (crop_id) REFERENCES crops(id) ON DELETE CASCADE
 );
 
 -- Irrigation table
 CREATE TABLE IF NOT EXISTS irrigations (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     method VARCHAR(50) NOT NULL CHECK (method IN ('drip', 'manual', 'sprinkler')),
     date DATE NOT NULL,
     duration DECIMAL(5, 2) NOT NULL,
-    crop_id CHAR(36) NOT NULL,
+    crop_id VARCHAR(36) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (crop_id) REFERENCES crops(id) ON DELETE CASCADE
 );
 
 -- Expenses table
 CREATE TABLE IF NOT EXISTS expenses (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     category VARCHAR(50) NOT NULL CHECK (category IN ('seeds', 'labor', 'fertilizers', 'pesticides', 'irrigation', 'other')),
     description TEXT NOT NULL,
     amount DECIMAL(12, 2) NOT NULL,
     date DATE NOT NULL,
-    farm_id CHAR(36) NOT NULL,
+    farm_id VARCHAR(36) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (farm_id) REFERENCES farms(id) ON DELETE CASCADE
 );
 
 -- Yields table
 CREATE TABLE IF NOT EXISTS yields (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    crop_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    crop_id VARCHAR(36) NOT NULL,
     quantity DECIMAL(10, 2) NOT NULL,
     date DATE NOT NULL,
     quality VARCHAR(20) NOT NULL CHECK (quality IN ('excellent', 'good', 'average')),
@@ -131,8 +131,8 @@ CREATE TABLE IF NOT EXISTS yields (
 
 -- Stock/Inventory table
 CREATE TABLE IF NOT EXISTS stock_items (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    user_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL,
     item_name VARCHAR(255) NOT NULL,
     item_type VARCHAR(50) NOT NULL CHECK (item_type IN ('seeds', 'fertilizer', 'pesticide')),
     quantity DECIMAL(10, 2) NOT NULL,
@@ -144,8 +144,8 @@ CREATE TABLE IF NOT EXISTS stock_items (
 
 -- Disease scans table (with GPS metadata for heatmap)
 CREATE TABLE IF NOT EXISTS disease_scans (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    user_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL,
     crop_name VARCHAR(255) NOT NULL,
     disease_name VARCHAR(255) NOT NULL,
     severity VARCHAR(20) NOT NULL CHECK (severity IN ('low', 'medium', 'high', 'critical')),
@@ -166,8 +166,8 @@ CREATE TABLE IF NOT EXISTS disease_scans (
 
 -- Monthly income history table
 CREATE TABLE IF NOT EXISTS monthly_income (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    user_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL,
     month INT NOT NULL CHECK (month >= 1 AND month <= 12),
     year INT NOT NULL,
     total_income DECIMAL(12, 2) NOT NULL DEFAULT 0,
@@ -181,8 +181,8 @@ CREATE TABLE IF NOT EXISTS monthly_income (
 
 -- Monthly stock usage history table
 CREATE TABLE IF NOT EXISTS monthly_stock_usage (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    user_id CHAR(36) NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL,
     item_name VARCHAR(255) NOT NULL,
     item_type VARCHAR(50) NOT NULL CHECK (item_type IN ('seeds', 'fertilizer', 'pesticide')),
     quantity_used DECIMAL(10, 2) NOT NULL,
@@ -197,8 +197,8 @@ CREATE TABLE IF NOT EXISTS monthly_stock_usage (
 
 -- User settings table
 CREATE TABLE IF NOT EXISTS user_settings (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    user_id CHAR(36) UNIQUE NOT NULL,
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    user_id VARCHAR(36) UNIQUE NOT NULL,
     enable_history_saving BOOLEAN DEFAULT true,
     auto_save_stock_records BOOLEAN DEFAULT true,
     auto_save_income_records BOOLEAN DEFAULT true,
@@ -210,7 +210,6 @@ CREATE TABLE IF NOT EXISTS user_settings (
 );
 
 -- Indexes for better query performance
-CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_role ON users(role);
 CREATE INDEX idx_farms_farmer_id ON farms(farmer_id);
 CREATE INDEX idx_crops_farm_id ON crops(farm_id);
@@ -225,9 +224,9 @@ CREATE INDEX idx_monthly_stock_usage_user_id ON monthly_stock_usage(user_id);
 
 -- Crop Recommendations table (ML predictions)
 CREATE TABLE IF NOT EXISTS crop_recommendations (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    user_id CHAR(36) NOT NULL,
-    farm_id CHAR(36),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
+    user_id VARCHAR(36) NOT NULL,
+    farm_id VARCHAR(36),
     n_value DECIMAL(10, 2) NOT NULL,
     p_value DECIMAL(10, 2) NOT NULL,
     k_value DECIMAL(10, 2) NOT NULL,
@@ -247,8 +246,10 @@ CREATE INDEX idx_crop_recommendations_farm_id ON crop_recommendations(farm_id);
 CREATE INDEX idx_crop_recommendations_created_at ON crop_recommendations(created_at);
 
 -- Audit Logs table (for tracking system activity)
+-- Temporarily disabled due to schema compatibility issues - will be added in migration
+/*
 CREATE TABLE IF NOT EXISTS audit_logs (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     user_id VARCHAR(36) NOT NULL,
     action ENUM('login', 'logout', 'create', 'update', 'delete', 'view', 'export', 'admin_action') NOT NULL,
     resource_type VARCHAR(50) NOT NULL,
@@ -257,24 +258,20 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     ip_address VARCHAR(45),
     user_agent TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    INDEX idx_user_id (user_id),
-    INDEX idx_action (action),
-    INDEX idx_created_at (created_at),
-    INDEX idx_resource (resource_type, resource_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Push Subscriptions table (for push notifications)
 CREATE TABLE IF NOT EXISTS push_subscriptions (
-    id VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    id VARCHAR(36) NOT NULL PRIMARY KEY,
     user_id VARCHAR(36) NOT NULL,
     endpoint TEXT NOT NULL,
     p256dh_key TEXT NOT NULL,
     auth_key TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_user_id (user_id),
-    INDEX idx_endpoint (endpoint(255)),
     UNIQUE KEY unique_user_endpoint (user_id, endpoint(255)),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+*/
+

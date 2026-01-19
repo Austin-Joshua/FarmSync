@@ -61,11 +61,9 @@ const AppContent = () => {
       <Route
         path="/dashboard"
         element={
-          <ProtectedRoute>
-            <Layout>
-              <Dashboard />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <Dashboard />
+          </Layout>
         }
       />
       <Route
@@ -200,7 +198,7 @@ const AppContent = () => {
         }
       />
 
-      {/* Default redirect - redirect to login if not authenticated */}
+      {/* Default redirect - redirect to login */}
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>

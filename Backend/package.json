@@ -16,6 +16,7 @@
     "add-onboarded-field": "tsx src/database/addIsOnboardedField.ts",
     "verify-db": "tsx src/database/verifyAuthDB.ts",
     "view-users": "tsx src/scripts/viewUsers.ts",
+    "create-test-user": "tsx src/scripts/createTestUser.ts",
     "train-ml": "cd ml && python train_model.py",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit"

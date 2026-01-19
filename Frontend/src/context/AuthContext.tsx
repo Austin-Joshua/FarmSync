@@ -87,10 +87,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     name: string,
     email: string,
     password: string,
-    role: UserRole
+    role: UserRole,
+    location?: string
   ): Promise<boolean> => {
     try {
-      const response = await api.register(name, email, password, role);
+      const response = await api.register(name, email, password, role, location);
       if (response.user) {
         const userData: User = {
           id: response.user.id,
@@ -113,6 +114,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     } catch (error: any) {
       console.error('Registration error:', error);
+      // Re-throw with better error message if needed
+      if (error.message) {
+        throw new Error(error.message);
+      }
       throw error;
     }
   };
@@ -173,6 +178,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    // Clear remember me flag on logout (user must login again)
+    localStorage.removeItem('rememberMe');
   };
 
   return (
