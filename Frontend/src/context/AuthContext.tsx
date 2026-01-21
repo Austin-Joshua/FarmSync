@@ -51,6 +51,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error) {
       console.error('Error in AuthProvider initialization:', error);
+    } finally {
+      setHasTriedAutoLogin(true);
     }
   }, []);
 

@@ -226,9 +226,9 @@ function App() {
     }
   }, []);
 
-  // Set initial document title to Navigation
+  // Set initial document title to FarmSync
   useEffect(() => {
-    document.title = 'Navigation';
+    document.title = 'FarmSync';
   }, []);
 
   return (
