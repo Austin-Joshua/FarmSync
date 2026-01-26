@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import { formatDateDisplay } from '../utils/dateFormatter';
 import { 
   User, 
   Database, 
@@ -196,7 +197,7 @@ const UserPage = () => {
 
             {dbStatus?.timestamp && (
               <div className="text-xs text-gray-500 dark:text-gray-500">
-                Last checked: {new Date(dbStatus.timestamp).toLocaleString()}
+                Last checked: {formatDateDisplay(dbStatus.timestamp)}
               </div>
             )}
           </div>
@@ -258,7 +259,7 @@ const UserPage = () => {
                     Member Since
                   </label>
                   <p className="text-gray-900 dark:text-gray-100 mt-1">
-                    {new Date(userProfile.created_at).toLocaleDateString()}
+                    {formatDateDisplay(userProfile.created_at)}
                   </p>
                 </div>
               )}

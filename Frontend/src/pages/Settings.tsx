@@ -211,7 +211,14 @@ const Settings = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleString();
+    const day = date.getDate();
+    const month = date.toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
+      month: 'long'
+    });
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day} ${month} ${year}, ${hours}:${minutes}`;
   };
 
   // Load settings from localStorage on mount
@@ -1515,7 +1522,17 @@ const Settings = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="font-medium text-gray-900 dark:text-gray-100">Current Session</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">This device • {new Date().toLocaleString()}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">This device • {(() => {
+                        const d = new Date();
+                        const day = d.getDate();
+                        const month = d.toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
+                          month: 'long'
+                        });
+                        const year = d.getFullYear();
+                        const hours = String(d.getHours()).padStart(2, '0');
+                        const minutes = String(d.getMinutes()).padStart(2, '0');
+                        return `${day} ${month} ${year}, ${hours}:${minutes}`;
+                      })()}</p>
                     </div>
                     <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs rounded-full font-medium">Active</span>
                   </div>

@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { MapPin, Plus, Edit, Trash2, Map, Navigation, TestTube } from 'lucide-react';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { DataCache } from '../utils/dataCache';
+import { formatDateDisplay } from '../utils/dateFormatter';
 
 interface Field {
   id: string;
@@ -40,7 +42,7 @@ const Fields = () => {
     latitude: '',
     longitude: '',
     soil_type_id: '',
-    soil_test_date: '',
+    soil_test_date: new Date().toISOString().split('T')[0],
   });
 
   useEffect(() => {
@@ -49,11 +51,24 @@ const Fields = () => {
   }, []);
 
   const loadFarms = async () => {
+    // Check cache first
+    const cacheKey = 'farms';
+    const cachedData = DataCache.get(cacheKey);
+    if (cachedData) {
+      setFarms(cachedData);
+      if (cachedData.length > 0) {
+        setFormData(prev => ({ ...prev, farm_id: cachedData[0].id }));
+      }
+      return;
+    }
+
     try {
       const response = await api.getFarms();
-      setFarms(response.data || []);
-      if (response.data && response.data.length > 0) {
-        setFormData(prev => ({ ...prev, farm_id: response.data[0].id }));
+      const farmsData = response.data || [];
+      setFarms(farmsData);
+      DataCache.set(cacheKey, farmsData);
+      if (farmsData.length > 0) {
+        setFormData(prev => ({ ...prev, farm_id: farmsData[0].id }));
       }
     } catch (err: any) {
       console.error('Failed to load farms:', err);
@@ -61,11 +76,21 @@ const Fields = () => {
   };
 
   const loadFields = async () => {
+    // Check cache first
+    const cacheKey = 'fields';
+    const cachedData = DataCache.get<Field[]>(cacheKey);
+    if (cachedData) {
+      setFields(cachedData);
+      return;
+    }
+
     setLoading(true);
     setError('');
     try {
       const response = await api.getFields();
-      setFields(response.data || []);
+      const fieldsData = response.data || [];
+      setFields(fieldsData);
+      DataCache.set(cacheKey, fieldsData);
     } catch (err: any) {
       setError(err.message || 'Failed to load fields');
     } finally {
@@ -111,6 +136,7 @@ const Fields = () => {
       setShowForm(false);
       setEditingField(null);
       resetForm();
+      DataCache.clear('fields'); // Clear cache to force refresh
       loadFields();
     } catch (err: any) {
       setError(err.message || 'Failed to save field');
@@ -136,6 +162,7 @@ const Fields = () => {
 
     try {
       await api.deleteField(id);
+      DataCache.clear('fields'); // Clear cache to force refresh
       loadFields();
     } catch (err: any) {
       setError(err.message || 'Failed to delete field');
@@ -150,7 +177,7 @@ const Fields = () => {
       latitude: '',
       longitude: '',
       soil_type_id: '',
-      soil_test_date: '',
+      soil_test_date: new Date().toISOString().split('T')[0],
     });
   };
 
@@ -407,7 +434,7 @@ const Fields = () => {
 
                   {field.soil_test_date && (
                     <div className="text-xs text-gray-500">
-                      {t('fields.soilTestDate', 'Soil Test')}: {new Date(field.soil_test_date).toLocaleDateString()}
+                      {t('fields.soilTestDate', 'Soil Test')}: {formatDateDisplay(field.soil_test_date)}
                     </div>
                   )}
                 </div>

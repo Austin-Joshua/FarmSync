@@ -71,7 +71,7 @@ const ResetPassword = () => {
       await api.resetPassword(token, password);
       setSuccess(true);
       setTimeout(() => {
-        navigate('/login', { replace: true });
+        navigate('/dashboard', { replace: true });
       }, 3000);
     } catch (err: any) {
       setError(err?.message || 'Failed to reset password. Please try again or request a new reset link.');

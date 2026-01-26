@@ -44,11 +44,11 @@ class ErrorBoundary extends Component<Props, State> {
             <button
               onClick={() => {
                 this.setState({ hasError: false, error: null });
-                window.location.href = '/login';
+                window.location.href = '/dashboard';
               }}
               className="btn-primary"
             >
-              Go to Login
+              Go to Dashboard
             </button>
           </div>
         </div>

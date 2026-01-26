@@ -7,6 +7,7 @@ import { Expense } from '../types';
 import ExpenseFormModal from '../components/ExpenseFormModal';
 import DetailModal from '../components/DetailModal';
 import ProgressBar from '../components/ProgressBar';
+import { formatDateDisplay } from '../utils/dateFormatter';
 
 const ExpenseManagement = () => {
   const { t } = useTranslation();
@@ -242,7 +243,7 @@ const ExpenseManagement = () => {
                       </div>
                       <p className="text-sm text-gray-600 flex items-center gap-1">
                         <Calendar size={14} />
-                        {new Date(expense.date).toLocaleDateString()}
+                        {formatDateDisplay(expense.date)}
                       </p>
                     </div>
                   </div>
@@ -358,7 +359,7 @@ const ExpenseManagement = () => {
                         </div>
                         <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
                           <Calendar size={14} />
-                          {new Date(expense.date).toLocaleDateString()}
+                          {formatDateDisplay(expense.date)}
                           {expense.relatedCropId && (
                             <span className="ml-2 text-xs">• {t('expenses.relatedCrop')}</span>
                           )}

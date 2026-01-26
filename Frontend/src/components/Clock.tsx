@@ -27,19 +27,25 @@ const Clock = () => {
   };
 
   const formatDate = (date: Date): string => {
-    return date.toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    const day = date.getDate();
+    const month = date.toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
+      month: 'long'
     });
+    const year = date.getFullYear();
+    const weekday = date.toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
+      weekday: 'long'
+    });
+    return `${day} ${month} ${year}, ${weekday}`;
   };
 
-  const shortDate = currentTime.toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
+  const shortDate = (() => {
+    const day = currentTime.getDate();
+    const month = currentTime.toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
+      month: 'short'
+    });
+    const year = currentTime.getFullYear();
+    return `${day} ${month} ${year}`;
+  })();
 
   return (
     <div className="relative">

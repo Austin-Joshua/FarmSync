@@ -22,6 +22,7 @@ import {
   DollarSign,
   MapPin,
   Calendar,
+  Info,
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import Logo from './Logo';
@@ -56,6 +57,7 @@ const Layout = ({ children }: LayoutProps) => {
     { path: '/fields', label: t('navigation.fields', 'Fields'), icon: MapPin },
     { path: '/reports', label: t('navigation.reports'), icon: FileText },
     { path: '/history', label: t('navigation.history'), icon: History },
+    { path: '/about', label: t('navigation.aboutUs', 'About Us'), icon: Info },
     { path: '/settings', label: t('navigation.settings'), icon: Settings },
     ...(user?.role === 'admin' ? [{ path: '/admin', label: t('navigation.adminDashboard'), icon: Shield }] : []),
   ];

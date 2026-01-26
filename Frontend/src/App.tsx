@@ -21,6 +21,7 @@ import ExpenseManagement from './pages/ExpenseManagement';
 import YieldTracking from './pages/YieldTracking';
 import Reports from './pages/Reports';
 import History from './pages/History';
+import AboutUs from './pages/AboutUs';
 import Settings from './pages/Settings';
 import UserPage from './pages/UserPage';
 import CropCalendar from './pages/CropCalendar';
@@ -61,11 +62,9 @@ const AppContent = () => {
       <Route
         path="/dashboard"
         element={
-          <ProtectedRoute>
-            <Layout>
-              <Dashboard />
-            </Layout>
-          </ProtectedRoute>
+          <Layout>
+            <Dashboard />
+          </Layout>
         }
       />
       <Route
@@ -139,6 +138,16 @@ const AppContent = () => {
         }
       />
       <Route
+        path="/about"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <AboutUs />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/settings"
         element={
           <ProtectedRoute>
@@ -200,7 +209,7 @@ const AppContent = () => {
         }
       />
 
-      {/* Default redirect - redirect to login if not authenticated */}
+      {/* Default redirect - redirect to login */}
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>

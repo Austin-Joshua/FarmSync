@@ -39,15 +39,26 @@ const CropCalendar = () => {
 
   const loadEvents = async () => {
     if (!user) return;
+    const start = startOfMonth(currentDate);
+    const end = endOfMonth(currentDate);
+    const cacheKey = `calendar_events_${format(start, 'yyyy-MM-dd')}_${format(end, 'yyyy-MM-dd')}`;
+    
+    // Check cache first
+    const cachedData = DataCache.get<CalendarEvent[]>(cacheKey);
+    if (cachedData) {
+      setEvents(cachedData);
+      return;
+    }
+
     try {
-      const start = startOfMonth(currentDate);
-      const end = endOfMonth(currentDate);
       const response = await api.getCalendarEvents(
         format(start, 'yyyy-MM-dd'),
         format(end, 'yyyy-MM-dd')
       );
       if (response.data && Array.isArray(response.data)) {
-        setEvents(response.data as CalendarEvent[]);
+        const eventsData = response.data as CalendarEvent[];
+        setEvents(eventsData);
+        DataCache.set(cacheKey, eventsData);
       }
     } catch (error) {
       console.error('Failed to load calendar events:', error);
@@ -56,6 +67,15 @@ const CropCalendar = () => {
 
   const loadCrops = async () => {
     if (!user) return;
+    const cacheKey = 'crops';
+    
+    // Check cache first
+    const cachedData = DataCache.get(cacheKey);
+    if (cachedData) {
+      setCrops(cachedData);
+      return;
+    }
+
     try {
       const response = await api.getCrops();
       if (response.data && Array.isArray(response.data)) {
@@ -70,6 +90,7 @@ const CropCalendar = () => {
           farmId: crop.farm_id,
         }));
         setCrops(transformedCrops);
+        DataCache.set(cacheKey, transformedCrops);
       }
     } catch (error) {
       console.error('Failed to load crops:', error);
@@ -84,6 +105,10 @@ const CropCalendar = () => {
 
     try {
       await api.createCalendarEvent(newEvent);
+      // Clear cache to force refresh
+      const start = startOfMonth(currentDate);
+      const end = endOfMonth(currentDate);
+      DataCache.clear(`calendar_events_${format(start, 'yyyy-MM-dd')}_${format(end, 'yyyy-MM-dd')}`);
       await loadEvents();
       setShowAddModal(false);
       setNewEvent({
@@ -101,6 +126,10 @@ const CropCalendar = () => {
   const handleToggleComplete = async (event: CalendarEvent) => {
     try {
       await api.updateCalendarEvent(event.id, { is_completed: !event.is_completed });
+      // Clear cache to force refresh
+      const start = startOfMonth(currentDate);
+      const end = endOfMonth(currentDate);
+      DataCache.clear(`calendar_events_${format(start, 'yyyy-MM-dd')}_${format(end, 'yyyy-MM-dd')}`);
       await loadEvents();
     } catch (error: any) {
       alert(error?.message || 'Failed to update event');
@@ -111,6 +140,10 @@ const CropCalendar = () => {
     if (!confirm('Are you sure you want to delete this event?')) return;
     try {
       await api.deleteCalendarEvent(id);
+      // Clear cache to force refresh
+      const start = startOfMonth(currentDate);
+      const end = endOfMonth(currentDate);
+      DataCache.clear(`calendar_events_${format(start, 'yyyy-MM-dd')}_${format(end, 'yyyy-MM-dd')}`);
       await loadEvents();
       setShowEventModal(false);
     } catch (error: any) {
@@ -191,7 +224,13 @@ const CropCalendar = () => {
             <ChevronLeft size={20} />
           </button>
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-            {format(currentDate, 'MMMM yyyy')}
+            {(() => {
+              const month = currentDate.toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
+                month: 'long'
+              });
+              const year = currentDate.getFullYear();
+              return `${month} ${year}`;
+            })()}
           </h2>
           <button
             onClick={() => setCurrentDate(addMonths(currentDate, 1))}
@@ -360,7 +399,15 @@ const CropCalendar = () => {
               <div>
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
                 <p className="text-gray-900 dark:text-gray-100">
-                  {format(new Date(selectedEvent.event_date), 'MMMM d, yyyy')}
+                  {(() => {
+                    const d = new Date(selectedEvent.event_date);
+                    const day = d.getDate();
+                    const month = d.toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
+                      month: 'long'
+                    });
+                    const year = d.getFullYear();
+                    return `${day} ${month} ${year}`;
+                  })()}
                 </p>
               </div>
               {selectedEvent.description && (

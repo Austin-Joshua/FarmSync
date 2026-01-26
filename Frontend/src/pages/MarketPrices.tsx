@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TrendingUp, TrendingDown, Minus, Bell, Calendar, DollarSign, BarChart3, AlertCircle } from 'lucide-react';
 import api from '../services/api';
+import { formatDateDisplay, formatDateShort } from '../utils/dateFormatter';
 
 interface PriceData {
   crop: string;
@@ -235,7 +236,7 @@ const MarketPrices = () => {
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
                     {t('marketPrices.lastUpdated', 'Last updated')}:{' '}
-                    {new Date(currentPrice.lastUpdated).toLocaleString()}
+                    {formatDateDisplay(currentPrice.lastUpdated)}
                   </p>
                 </div>
 
@@ -270,7 +271,7 @@ const MarketPrices = () => {
                     <p className="text-gray-700 dark:text-gray-300 mb-2">
                       {t('marketPrices.recommendedDate', 'Recommended Date')}:{' '}
                       <span className="font-semibold">
-                        {new Date(bestTimeToSell.recommendedDate).toLocaleDateString()}
+                        {formatDateDisplay(bestTimeToSell.recommendedDate)}
                       </span>
                     </p>
                     <p className="text-gray-700 dark:text-gray-300 mb-2">
@@ -313,7 +314,7 @@ const MarketPrices = () => {
                           key={index}
                           className="grid grid-cols-7 gap-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg text-sm"
                         >
-                          <div>{new Date(item.date).toLocaleDateString()}</div>
+                          <div>{formatDateShort(item.date)}</div>
                           <div className="font-semibold">₹{item.price.toFixed(2)}</div>
                           <div className={item.change && item.change > 0 ? 'text-green-600' : item.change && item.change < 0 ? 'text-red-600' : ''}>
                             {item.change ? `${item.change > 0 ? '+' : ''}${item.change.toFixed(2)}%` : '-'}

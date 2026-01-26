@@ -26,6 +26,7 @@ const IrrigationModal = ({ isOpen, onClose, onSave, irrigation = null, mode = 'a
 
   useEffect(() => {
     if (irrigation) {
+      // Editing existing irrigation - use its date
       setFormData({
         cropId: irrigation.cropId || '',
         method: irrigation.method || 'drip',
@@ -35,8 +36,19 @@ const IrrigationModal = ({ isOpen, onClose, onSave, irrigation = null, mode = 'a
       if (irrigation.date) {
         setSelectedDate(new Date(irrigation.date));
       }
+    } else {
+      // Adding new irrigation - reset to current date
+      const currentDate = new Date();
+      const currentDateString = currentDate.toISOString().split('T')[0];
+      setFormData({
+        cropId: '',
+        method: 'drip',
+        date: currentDateString,
+        duration: 2,
+      });
+      setSelectedDate(currentDate);
     }
-  }, [irrigation]);
+  }, [irrigation, isOpen]);
 
 
   const handleSubmit = (e: React.FormEvent) => {

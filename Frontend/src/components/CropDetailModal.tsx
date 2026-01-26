@@ -31,15 +31,18 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(
+    const d = new Date(dateString);
+    const day = d.getDate();
+    const month = d.toLocaleDateString(
       i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US',
-      {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }
+      { month: 'long' }
     );
+    const year = d.getFullYear();
+    const weekday = d.toLocaleDateString(
+      i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US',
+      { weekday: 'long' }
+    );
+    return `${day} ${month} ${year}, ${weekday}`;
   };
 
   return (
