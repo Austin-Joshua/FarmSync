@@ -152,9 +152,9 @@ PORT=5001
 - Or change port in `Frontend/vite.config.ts`
 
 **Error: "Cannot connect to backend"**
-- Make sure backend is running on port 5001
-- Check `Frontend/.env` or use default: `VITE_API_URL=http://localhost:5001/api`
-- Restart frontend after changing .env
+- Start the **Backend first** (Terminal 1: `cd Backend` then `npm run dev`), then start the Frontend (Terminal 2: `cd Frontend` then `npm run dev`).
+- In dev, the frontend proxies `/api` to http://localhost:5001—no Frontend `.env` needed. Backend must be on port 5001.
+- If your backend uses a different port, set `VITE_API_URL=http://localhost:YOUR_PORT/api` in `Frontend/.env` and restart the frontend.
 
 ### Database Issues
 
@@ -203,7 +203,7 @@ Before using the app, verify:
 
 ### Frontend
 - **Port:** 5173 (auto-assigned if busy)
-- **API URL:** http://localhost:5001/api (set VITE_API_URL in .env to override)
+- **API:** In dev, requests to `/api` are proxied to Backend (http://localhost:5001). Set `VITE_API_URL` in `.env` only if the backend runs elsewhere.
 
 ---
 
