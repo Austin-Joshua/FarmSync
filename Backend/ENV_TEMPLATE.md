@@ -6,7 +6,7 @@
 
 # Environment
 NODE_ENV=development
-PORT=5174
+PORT=5001
 
 # Frontend Configuration
 FRONTEND_URL=http://localhost:5173
@@ -31,15 +31,15 @@ JWT_EXPIRY=7d
 # ===========================
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_CALLBACK_URL=http://localhost:5174/api/auth/google/callback
+GOOGLE_CALLBACK_URL=http://localhost:5001/api/auth/google/callback
 
 APPLE_CLIENT_ID=your-apple-client-id
 APPLE_CLIENT_SECRET=your-apple-client-secret
-APPLE_CALLBACK_URL=http://localhost:5174/api/auth/apple/callback
+APPLE_CALLBACK_URL=http://localhost:5001/api/auth/apple/callback
 
 MICROSOFT_CLIENT_ID=your-microsoft-client-id
 MICROSOFT_CLIENT_SECRET=your-microsoft-client-secret
-MICROSOFT_CALLBACK_URL=http://localhost:5174/api/auth/microsoft/callback
+MICROSOFT_CALLBACK_URL=http://localhost:5001/api/auth/microsoft/callback
 
 # ===========================
 # Email Configuration

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { UserSettings } from '../types';
 import { useLocation } from '../hooks/useLocation';
 import { api } from '../services/api';
+import { BACKEND_ORIGIN } from '../config/api';
 import { useTranslation } from 'react-i18next';
 import i18n from '../i18n/config';
 import {
@@ -366,9 +367,7 @@ const Settings = () => {
       if (user.picture_url.startsWith('http')) {
         return user.picture_url;
       }
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5174/api';
-      const baseUrl = apiBaseUrl.replace('/api', '');
-      return `${baseUrl}${user.picture_url}`;
+      return `${BACKEND_ORIGIN}${user.picture_url}`;
     }
     return null;
   };

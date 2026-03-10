@@ -42,7 +42,7 @@ FarmSync V1.0 is your **all-in-one digital farming assistant** - the **base vers
 14. **📱 Mobile & Desktop** - Works on phone, tablet, computer with responsive design
 15. **👨‍💼 Admin Features** - User management, system reports, activity logs, data management
 
-**See [Complete Documentation](DOCUMENTATION.md) for detailed feature descriptions.**
+**See [QUICK_START.md](QUICK_START.md) to run the app and get started.**
 
 ---
 
@@ -1084,12 +1084,12 @@ npm run typecheck    # Type check
 
 ## 📝 Documentation
 
-- **[DOCUMENTATION.md](DOCUMENTATION.md)** - Complete comprehensive guide (start here!)
+- **[QUICK_START.md](QUICK_START.md)** - How to run the app (start here!)
 - `Backend/README.md` - Backend-specific documentation
 - `Backend/ml/README.md` - ML model documentation
 - `Backend/ENV_TEMPLATE.md` - Environment variables template
 
-**For complete feature list and customer-friendly guide, see [DOCUMENTATION.md](DOCUMENTATION.md)**
+**For setup and running the app, see [QUICK_START.md](QUICK_START.md)**
 
 ---
 

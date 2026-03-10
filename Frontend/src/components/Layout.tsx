@@ -1,5 +1,6 @@
 // Main Layout component with sidebar and header
 import { ReactNode } from 'react';
+import { BACKEND_ORIGIN } from '../config/api';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -80,9 +81,7 @@ const Layout = ({ children }: LayoutProps) => {
       if (user.picture_url.startsWith('http')) {
         return user.picture_url;
       }
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-      const baseUrl = apiBaseUrl.replace('/api', '');
-      return `${baseUrl}${user.picture_url}`;
+      return `${BACKEND_ORIGIN}${user.picture_url}`;
     }
     return null;
   };

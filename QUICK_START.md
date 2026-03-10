@@ -29,7 +29,7 @@
 - **Scikit-learn** - ML algorithms
 - **99.55% Accuracy** - Crop recommendations
 
-**See [TECH_STACK.md](TECH_STACK.md) for complete details.**
+**See [README.md](README.md) for project overview.**
 
 ---
 
@@ -46,7 +46,7 @@ npm run dev
 
 **Expected Output:**
 ```
-✅ Backend server is running on http://localhost:5174
+✅ Backend server is running on http://localhost:5001
 ✅ Frontend URL: http://localhost:5173
 Database connected successfully
 ```
@@ -132,16 +132,16 @@ cd Backend
 npm run setup-db
 ```
 
-**Error: "Port 5174 already in use"**
+**Error: "Port 5001 already in use"**
 ```powershell
 # Find process using port
-netstat -ano | findstr :5174
+netstat -ano | findstr :5001
 
 # Kill the process (replace <PID> with actual number)
 taskkill /PID <PID> /F
 
-# Or change port in Backend/.env
-PORT=5000
+# Or change port in Backend/.env (and set Frontend VITE_API_URL to match)
+PORT=5001
 ```
 
 ### Frontend Won't Start
@@ -152,8 +152,8 @@ PORT=5000
 - Or change port in `Frontend/vite.config.ts`
 
 **Error: "Cannot connect to backend"**
-- Make sure backend is running on port 5174
-- Check `Frontend/.env` has: `VITE_API_URL=http://localhost:5174/api`
+- Make sure backend is running on port 5001
+- Check `Frontend/.env` or use default: `VITE_API_URL=http://localhost:5001/api`
 - Restart frontend after changing .env
 
 ### Database Issues
@@ -185,7 +185,7 @@ Before using the app, verify:
 
 - [ ] MySQL is running
 - [ ] Database `farmsync_db` exists
-- [ ] Backend server running on http://localhost:5174
+- [ ] Backend server running on http://localhost:5001
 - [ ] Frontend server running on http://localhost:5173
 - [ ] Can access http://localhost:5173 in browser
 - [ ] Can register a new account
@@ -196,14 +196,14 @@ Before using the app, verify:
 ## 📊 Default Configuration
 
 ### Backend
-- **Port:** 5174 (or from .env)
+- **Port:** 5001 (or from .env)
 - **Database:** farmsync_db
 - **Database User:** root
 - **Database Password:** 123456 (change in production!)
 
 ### Frontend
 - **Port:** 5173 (auto-assigned if busy)
-- **API URL:** http://localhost:5174/api
+- **API URL:** http://localhost:5001/api (set VITE_API_URL in .env to override)
 
 ---
 
@@ -221,8 +221,7 @@ Once both servers are running:
 
 ## 📚 Next Steps
 
-- Read [DOCUMENTATION.md](DOCUMENTATION.md) for complete guide
-- See [TECH_STACK.md](TECH_STACK.md) for technology details
+- Read [README.md](README.md) for project overview
 - Check features in the app dashboard
 
 ---

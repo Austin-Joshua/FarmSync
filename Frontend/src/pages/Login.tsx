@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { LogIn, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import Logo from '../components/Logo';
+import { BACKEND_ORIGIN } from '../config/api';
 
 const Login = () => {
   const { t } = useTranslation();
@@ -51,7 +52,7 @@ const Login = () => {
             err.message.includes('NetworkError') ||
             err.message.includes('Network request failed') ||
             err.message.includes('timed out')) {
-          errorMessage = 'Cannot connect to server. Please make sure the backend server is running on http://localhost:5000';
+          errorMessage = `Cannot connect to server. Start the backend first: in a terminal run "cd Backend && npm run dev" (backend should be at ${BACKEND_ORIGIN}).`;
         } 
         // Check for authentication errors
         else if (err.message.includes('Invalid email or password') ||

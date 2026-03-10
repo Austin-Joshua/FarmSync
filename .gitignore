@@ -1,7 +1,11 @@
-﻿# Logs
+# Logs
 *.log
 logs/
 *.log.*
+combined.log
+
+# Editor / tool artifacts
+.bolt/
 
 # Node modules
 node_modules/

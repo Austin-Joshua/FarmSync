@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { User, MapPin, Ruler, Droplets, Edit2, Save, X, Phone, Mail, Home, Hash, Camera, Loader } from 'lucide-react';
 import { translateSoilType } from '../utils/translations';
+import { BACKEND_ORIGIN } from '../config/api';
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -148,9 +149,7 @@ const Profile = () => {
       if (user.picture_url.startsWith('http')) {
         return user.picture_url;
       }
-      const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5174/api';
-      const baseUrl = apiBaseUrl.replace('/api', '');
-      return `${baseUrl}${user.picture_url}`;
+      return `${BACKEND_ORIGIN}${user.picture_url}`;
     }
     return null;
   };

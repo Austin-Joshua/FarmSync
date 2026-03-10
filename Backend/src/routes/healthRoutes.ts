@@ -140,7 +140,7 @@ router.get('/frontend-connection', async (req: Request, res: Response) => {
       res.json({
         status: '✅ Frontend-Backend Connection OK',
         frontend: req.get('origin') || 'Unknown',
-        backend: `http://localhost:${process.env.PORT || 5174}`,
+        backend: `http://localhost:${process.env.PORT || 5001}`,
         database: '✅ Connected',
         apiVersion: 'v1',
         timestamp: new Date().toISOString()
@@ -153,7 +153,7 @@ router.get('/frontend-connection', async (req: Request, res: Response) => {
       status: '❌ Connection Failed',
       error: error.message,
       frontend: req.get('origin') || 'Unknown',
-      backend: `http://localhost:${process.env.PORT || 5174}`,
+      backend: `http://localhost:${process.env.PORT || 5001}`,
       database: '❌ Not Connected',
       timestamp: new Date().toISOString()
     });

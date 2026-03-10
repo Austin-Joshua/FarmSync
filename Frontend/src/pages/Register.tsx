@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import { Mail, Lock, Eye, EyeOff, User, MapPin, UserPlus } from 'lucide-react';
 import Logo from '../components/Logo';
+import { BACKEND_ORIGIN } from '../config/api';
 
 const Register = () => {
   const { t } = useTranslation();
@@ -79,16 +80,16 @@ const Register = () => {
             err.message.includes('Request timed out') ||
             err.message.includes('NetworkError') ||
             err.message.includes('Network request failed')) {
-          errorMessage = 'Cannot connect to server. Please make sure the backend server is running on http://localhost:5174';
+          errorMessage = `Cannot connect to server. Start the backend first: in a terminal run "cd Backend && npm run dev" (backend should be at ${BACKEND_ORIGIN}).`;
         } else if (err.message.includes('already exists') || 
                    err.message.includes('duplicate') ||
                    err.message.includes('ER_DUP_ENTRY') ||
-                   err.status === 400 && err.message.includes('email')) {
+                   (err?.status === 400 && err.message.includes('email'))) {
           errorMessage = 'An account with this email already exists. Please use a different email or try logging in.';
         } else if (err.message.includes('Password validation') || 
                    err.message.includes('validation')) {
           errorMessage = err.message;
-        } else if (err.status === 400) {
+        } else if (err?.status === 400) {
           errorMessage = err.message || 'Please check all fields and try again.';
         } else {
           errorMessage = err.message || 'Registration failed. Please try again.';
@@ -190,7 +191,7 @@ const Register = () => {
             </div>
 
             {/* Email Field */}
-            <div className="animate-fade-in" style={{ animationDelay: '0.15s' }}>
+            <div className="animate-fade-in [animation-delay:0.15s]">
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-200">
                 Email Address
               </label>
@@ -211,7 +212,7 @@ const Register = () => {
             </div>
 
             {/* Password Field */}
-            <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <div className="animate-fade-in [animation-delay:0.2s]">
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-200">
                 Password
               </label>
@@ -240,7 +241,7 @@ const Register = () => {
             </div>
 
             {/* Confirm Password Field */}
-            <div className="animate-fade-in" style={{ animationDelay: '0.25s' }}>
+            <div className="animate-fade-in [animation-delay:0.25s]">
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-200">
                 Confirm Password
               </label>
@@ -269,7 +270,7 @@ const Register = () => {
             </div>
 
             {/* Role Selection */}
-            <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <div className="animate-fade-in [animation-delay:0.3s]">
               <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-200">
                 Account Type
               </label>
@@ -300,7 +301,7 @@ const Register = () => {
             </div>
 
             {/* Location Field (Optional) */}
-            <div className="animate-fade-in" style={{ animationDelay: '0.35s' }}>
+            <div className="animate-fade-in [animation-delay:0.35s]">
               <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-200">
                 Location <span className="text-gray-500 font-normal">(Optional)</span>
               </label>
@@ -320,7 +321,7 @@ const Register = () => {
             </div>
 
             {/* Remember Me */}
-            <div className="flex items-center group cursor-pointer animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <div className="flex items-center group cursor-pointer animate-fade-in [animation-delay:0.4s]">
               <input
                 id="remember-me"
                 type="checkbox"
@@ -337,8 +338,7 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-lg shadow-md text-base font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] animate-fade-in"
-              style={{ animationDelay: '0.45s' }}
+              className="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-lg shadow-md text-base font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] animate-fade-in [animation-delay:0.45s]"
             >
               {loading ? (
                 <>
@@ -355,7 +355,7 @@ const Register = () => {
             </form>
 
             {/* Sign In Link */}
-            <div className="mt-6 text-center animate-fade-in" style={{ animationDelay: '0.5s' }}>
+            <div className="mt-6 text-center animate-fade-in [animation-delay:0.5s]">
             <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200">
               Already have an account?{' '}
               <Link

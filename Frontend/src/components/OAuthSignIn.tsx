@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import { API_BASE_URL } from '../config/api';
 
 interface OAuthLoginProps {
   onSuccess?: () => void;
@@ -17,7 +18,7 @@ export const GoogleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) 
         const { credential } = credentialResponse;
 
         // Send token to backend
-        const response = await axios.post('/api/auth/google-verify', {
+        const response = await axios.post(`${API_BASE_URL}/auth/google-verify`, {
           token: credential,
         });
 
@@ -112,7 +113,7 @@ export const AppleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) =
       const response: AppleSignInResponse = await (window as any).AppleID.auth.signIn();
 
       if (response.authorization) {
-        const backendResponse = await axios.post('/api/auth/apple', {
+        const backendResponse = await axios.post(`${API_BASE_URL}/auth/apple`, {
           user: response.user,
           identityToken: response.authorization.id_token,
         });
