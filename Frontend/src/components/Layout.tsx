@@ -20,12 +20,14 @@ import {
   Shield,
   Moon,
   Sun,
+  Bell,
   DollarSign,
   MapPin,
   Calendar,
   Info,
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import api from '../services/api';
 import Logo from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
 import Clock from './Clock';
@@ -45,6 +47,26 @@ const Layout = ({ children }: LayoutProps) => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const mobileProfileMenuRef = useRef<HTMLDivElement>(null);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
+
+  const loadNotifications = async () => {
+    try {
+      setNotificationsLoading(true);
+      const response = await api.getUnreadAlerts();
+      if (response.data && Array.isArray(response.data)) {
+        setNotifications(response.data);
+      } else {
+        setNotifications([]);
+      }
+    } catch (error) {
+      console.error('Failed to load notifications:', error);
+      setNotifications([]);
+    } finally {
+      setNotificationsLoading(false);
+    }
+  };
 
   const menuItems = [
     { path: '/dashboard', label: t('navigation.home'), icon: Home },
@@ -58,9 +80,11 @@ const Layout = ({ children }: LayoutProps) => {
     { path: '/fields', label: t('navigation.fields', 'Fields'), icon: MapPin },
     { path: '/reports', label: t('navigation.reports'), icon: FileText },
     { path: '/history', label: t('navigation.history'), icon: History },
+    ...(user?.role === 'admin'
+      ? [{ path: '/admin', label: t('navigation.adminDashboard'), icon: Shield }]
+      : []),
     { path: '/about', label: t('navigation.aboutUs', 'About Us'), icon: Info },
     { path: '/settings', label: t('navigation.settings'), icon: Settings },
-    ...(user?.role === 'admin' ? [{ path: '/admin', label: t('navigation.adminDashboard'), icon: Shield }] : []),
   ];
 
   const handleLogout = () => {
@@ -190,6 +214,96 @@ const Layout = ({ children }: LayoutProps) => {
         <div className="flex items-center gap-3">
           <Clock />
           <LanguageSwitcher variant="desktop" />
+          {/* Notifications icon (always visible) */}
+          <button
+            type="button"
+            className="relative p-2 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors dark:text-gray-300 dark:hover:text-primary-400 dark:hover:bg-gray-700"
+            title={t('navigation.notifications', 'Notifications')}
+            onClick={() => {
+              const next = !notificationsOpen;
+              setNotificationsOpen(next);
+              if (next) {
+                void loadNotifications();
+              }
+            }}
+          >
+            <Bell size={20} className="flex-shrink-0" />
+            {/* Badge with unread count */}
+            {notifications.length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white bg-red-500 rounded-full">
+                {notifications.length > 9 ? '9+' : notifications.length}
+              </span>
+            )}
+          </button>
+          {/* Notifications dropdown panel */}
+          {notificationsOpen && (
+            <div className="absolute right-32 top-16 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-40">
+              <div className="px-4 pb-2 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+                <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                  {t('navigation.notifications', 'Notifications')}
+                </span>
+                <button
+                  type="button"
+                  className="text-xs text-primary-600 dark:text-primary-400 hover:underline disabled:opacity-50"
+                  disabled={notificationsLoading || notifications.length === 0}
+                  onClick={async () => {
+                    try {
+                      await api.markAllAlertsAsRead();
+                      setNotifications([]);
+                    } catch (err) {
+                      console.error('Failed to mark all notifications as read:', err);
+                    }
+                  }}
+                >
+                  {t('common.markAllRead', 'Mark all read')}
+                </button>
+              </div>
+              <div className="max-h-80 overflow-y-auto">
+                {notificationsLoading && (
+                  <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                    {t('common.loading', 'Loading notifications...')}
+                  </div>
+                )}
+                {!notificationsLoading && notifications.length === 0 && (
+                  <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                    {t('common.noNotifications', 'No new notifications')}
+                  </div>
+                )}
+                {!notificationsLoading &&
+                  notifications.map((alert: any) => (
+                    <button
+                      key={alert.id}
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await api.markAlertAsRead(alert.id);
+                          // Remove from local list so it appears as read
+                          setNotifications((prev) => prev.filter((a) => a.id !== alert.id));
+                        } catch (err) {
+                          console.error('Failed to mark notification as read:', err);
+                        }
+                      }}
+                      className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                    >
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+                        {alert.title || 'Alert'}
+                      </p>
+                      {alert.message && (
+                        <p className="mt-1 text-xs text-gray-600 dark:text-gray-300 line-clamp-3">
+                          {alert.message}
+                        </p>
+                      )}
+                      {alert.created_at && (
+                        <p className="mt-1 text-[11px] text-gray-400">
+                          {new Date(alert.created_at).toLocaleString()}
+                        </p>
+                      )}
+                    </button>
+                  ))}
+              </div>
+            </div>
+          )}
+
           <button
             onClick={toggleTheme}
             className="p-2 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors dark:text-gray-300 dark:hover:text-primary-400 dark:hover:bg-gray-700"

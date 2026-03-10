@@ -20,9 +20,12 @@ class ApiService {
   ): Promise<ApiResponse<T>> {
     const token = this.getAuthToken();
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
       ...(options.headers as Record<string, string>),
     };
+    // Default to JSON only if caller didn't set a specific Content-Type
+    if (!headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json';
+    }
 
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
@@ -139,9 +142,14 @@ class ApiService {
   }
 
   async login(email: string, password: string) {
+    // Use form-encoded body so backend's urlencoded parser can handle it
+    const formBody = new URLSearchParams({ email, password }).toString();
     const response = await this.request<{ token: string; user: any }>('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formBody as any,
     });
 
     if (response.token && response.user) {

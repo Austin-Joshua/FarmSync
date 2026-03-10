@@ -4,6 +4,7 @@ import { Calendar, ChevronLeft, ChevronRight, Plus, Trash2, Check, X, Sprout, Dr
 import api from '../services/api';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
 import { Crop } from '../types';
+import i18n from '../i18n/config';
 
 interface CalendarEvent {
   id: string;

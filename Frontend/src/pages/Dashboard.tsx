@@ -74,12 +74,7 @@ const Dashboard = () => {
   const [weatherAlerts, setWeatherAlerts] = useState<any[]>([]);
   const [loadingLowStock, setLoadingLowStock] = useState(false);
 
-  // Redirect admin users to admin dashboard
-  useEffect(() => {
-    if (user?.role === 'admin') {
-      navigate('/admin', { replace: true });
-    }
-  }, [user, navigate]);
+  // NOTE: we no longer auto-redirect admins away from the Home (Dashboard) page.
 
   // Load low stock items
   useEffect(() => {

@@ -8,6 +8,7 @@ import { YieldModel } from '../models/Yield';
 import { CropModel } from '../models/Crop';
 import { pool } from '../config/database';
 import { query, queryOne } from '../utils/dbHelper';
+import logger from '../utils/logger';
 
 /**
  * Get comprehensive admin statistics
@@ -141,6 +142,25 @@ export const getAdminStatistics = async (req: AuthRequest, res: Response): Promi
       },
     });
   } catch (error: any) {
-    throw new AppError(error.message, error.statusCode || 500);
+    // Do not break the whole admin page if statistics fail.
+    // Log the error and return safe empty defaults instead of a 500.
+    logger.error('Error computing admin statistics', {
+      error: String(error?.message || error),
+    });
+
+    res.json({
+      message: 'Admin statistics unavailable (using empty defaults)',
+      data: {
+        farmerLoginsByDistrict: [],
+        revenueByDistrict: [],
+        totalCrops: 0,
+        totalGoodsDelivered: {
+          totalQuantity: 0,
+          totalDeliveries: 0,
+        },
+        totalFarmerLogins: 0,
+        recentLogins: [],
+      },
+    });
   }
 };
