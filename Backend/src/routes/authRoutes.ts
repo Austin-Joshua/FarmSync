@@ -9,6 +9,7 @@ import {
   resetPassword,
   getActiveSessions,
   logoutAllDevices,
+  googleVerify,
   registerValidation,
   loginValidation,
   forgotPasswordValidation,
@@ -23,6 +24,7 @@ const router = Router();
 // Public routes
 router.post('/register', validate(registerValidation), register);
 router.post('/login', validate(loginValidation), login);
+router.post('/google-verify', googleVerify);
 router.post('/forgot-password', validate(forgotPasswordValidation), forgotPassword);
 router.post('/reset-password', validate(resetPasswordValidation), resetPassword);
 

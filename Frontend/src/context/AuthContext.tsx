@@ -10,6 +10,7 @@ interface AuthContextType {
   updateUser: (updates: { name?: string; location?: string; land_size?: number; soil_type?: string; picture_url?: string }) => Promise<boolean>;
   uploadProfilePicture: (file: File) => Promise<boolean>;
   logout: () => void;
+  applyTokenFromUrl: (token: string) => Promise<boolean>;
   isAuthenticated: boolean;
 }
 
@@ -58,25 +59,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      // Temporary: bypass backend login to avoid Internal Server Error
-      const userData: User = {
-        id: 'local-admin',
-        name: 'System Admin',
-        email,
-        role: email === 'admin@farmsync.com' ? 'admin' : 'farmer',
-        location: 'Local',
-        land_size: undefined,
-        soil_type: undefined,
-        picture_url: undefined,
-        is_onboarded: true,
-      };
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-      // Store a placeholder token so existing code paths that read it continue to work
-      localStorage.setItem('token', 'local-demo-token');
-      return true;
+      const response = await api.login(email, password);
+      if (response?.user) {
+        const userData: User = {
+          id: String(response.user.id),
+          name: response.user.name,
+          email: response.user.email,
+          role: response.user.role as UserRole,
+          location: response.user.location,
+          land_size: response.user.land_size,
+          soil_type: response.user.soil_type,
+          picture_url: response.user.picture_url,
+          is_onboarded: response.user.is_onboarded ?? false,
+        };
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+        return true;
+      }
+      return false;
     } catch (error: any) {
-      console.error('Login error (local fallback):', error);
+      console.error('Login error:', error);
       throw error;
     }
   };
@@ -180,6 +182,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem('rememberMe');
   };
 
+  const applyTokenFromUrl = async (token: string): Promise<boolean> => {
+    try {
+      localStorage.setItem('token', token);
+      const response = await api.getProfile() as { user?: any };
+      if (response?.user) {
+        const u = response.user;
+        const userData: User = {
+          id: String(u.id),
+          name: u.name,
+          email: u.email,
+          role: u.role as UserRole,
+          location: u.location,
+          land_size: u.land_size,
+          soil_type: u.soil_type,
+          picture_url: u.picture_url,
+          is_onboarded: u.is_onboarded ?? false,
+        };
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+        return true;
+      }
+      return false;
+    } catch {
+      localStorage.removeItem('token');
+      return false;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -189,6 +219,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         updateUser,
         uploadProfilePicture,
         logout,
+        applyTokenFromUrl,
         isAuthenticated: !!user,
       }}
     >
@@ -209,6 +240,7 @@ export const useAuth = () => {
       updateUser: async () => false,
       uploadProfilePicture: async () => false,
       logout: () => {},
+      applyTokenFromUrl: async () => false,
       isAuthenticated: false,
     };
   }

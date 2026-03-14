@@ -6,6 +6,7 @@ import db from '../config/database';
 
 // OAuth Configuration
 export const initializeOAuth = () => {
+  const port = process.env.PORT || '5003';
   // Google OAuth Configuration - Only initialize if credentials are provided
   const googleClientId = process.env.GOOGLE_CLIENT_ID;
   if (googleClientId) {
@@ -14,7 +15,7 @@ export const initializeOAuth = () => {
         {
           clientID: googleClientId,
           clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-          callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5001/api/auth/google/callback',
+          callbackURL: process.env.GOOGLE_CALLBACK_URL || `http://localhost:${port}/api/auth/oauth/google/callback`,
         },
         async (_accessToken: string, _refreshToken: string, profile: any, done: (err: any, user?: any) => void): Promise<void> => {
           try {
@@ -74,7 +75,7 @@ export const initializeOAuth = () => {
           identityMetadata: `https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/v2.0/.well-known/openid-configuration`,
           clientID: azureClientId,
           clientSecret: process.env.AZURE_CLIENT_SECRET || '',
-          callbackURL: process.env.AZURE_CALLBACK_URL || 'http://localhost:5001/api/auth/microsoft/callback',
+          callbackURL: process.env.AZURE_CALLBACK_URL || `http://localhost:${port}/api/auth/oauth/microsoft/callback`,
         } as any,
         async (profile: any, done: (err: any, user?: any) => void): Promise<void> => {
           try {

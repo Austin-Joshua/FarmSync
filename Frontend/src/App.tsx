@@ -31,18 +31,20 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 import SessionTimeoutWarning from './components/SessionTimeoutWarning';
 import ErrorBoundary from './components/ErrorBoundary';
+import OAuthTokenHandler from './components/OAuthTokenHandler';
 import { initializeServiceWorker } from './utils/serviceWorkerRegistration';
 
 // Component to handle document title updates
 const AppContent = () => {
   const location = useLocation();
 
-  // Set document title to Navigation on every route change
+  // Set document title to FarmSync on every route change
   useEffect(() => {
-    document.title = 'Navigation';
+    document.title = 'FarmSync';
   }, [location.pathname]);
 
   return (
+    <OAuthTokenHandler>
     <Routes>
       {/* Public Routes */}
       <Route path="/login" element={<Login />} />
@@ -213,6 +215,7 @@ const AppContent = () => {
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
+    </OAuthTokenHandler>
   );
 };
 

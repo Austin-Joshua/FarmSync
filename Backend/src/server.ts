@@ -40,6 +40,7 @@ import whatsappRoutes from './routes/whatsappRoutes';
 import smsRoutes from './routes/smsRoutes';
 import marketPriceRoutes from './routes/marketPriceRoutes';
 import fieldRoutes from './routes/fieldRoutes';
+import healthRoutes from './routes/healthRoutes';
 
 console.log('[SERVER] Starting app initialization...');
 const app: Express = express();
@@ -158,6 +159,11 @@ app.get('/health/db', async (_, res) => {
     });
   }
 });
+
+// Health router endpoints (includes /frontend-connection, /database, etc.)
+try {
+  app.use('/api/health', healthRoutes);
+} catch (e) { console.error('Health routes error:', e); }
 
 // API routes - wrap in try-catch to prevent one bad route from breaking everything
 try {

@@ -719,6 +719,12 @@ class ApiService {
     return this.request('/auth/2fa/backup-codes');
   }
 
+  // Health / connectivity
+  async getConnectionStatus() {
+    // Uses /health/frontend-connection (no auth required)
+    return this.request('/health/frontend-connection');
+  }
+
   // WhatsApp
   async sendWhatsAppMessage(to: string, message: string, type: 'text' | 'template' = 'text') {
     return this.request('/whatsapp/send', {

@@ -21,20 +21,21 @@ import {
   Moon,
   Sun,
   Bell,
-  DollarSign,
   MapPin,
   Calendar,
   Info,
+  Search,
 } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 import Logo from './Logo';
 import LanguageSwitcher from './LanguageSwitcher';
-import Clock from './Clock';
 
 interface LayoutProps {
   children: ReactNode;
 }
+
+const LG_BREAKPOINT = 1024;
 
 const Layout = ({ children }: LayoutProps) => {
   const { user, logout } = useAuth();
@@ -42,14 +43,29 @@ const Layout = ({ children }: LayoutProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth >= LG_BREAKPOINT : false
+  );
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // RIT-style: desktop = sidebar open, mobile = sidebar closed; sync on resize
+  useEffect(() => {
+    const onResize = () => {
+      const isDesktop = window.innerWidth >= LG_BREAKPOINT;
+      setSidebarOpen(isDesktop);
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const mobileProfileMenuRef = useRef<HTMLDivElement>(null);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
+  const [sidebarSearch, setSidebarSearch] = useState('');
+
+  const isAdmin = user?.role === 'admin';
 
   const loadNotifications = async () => {
     try {
@@ -69,20 +85,21 @@ const Layout = ({ children }: LayoutProps) => {
   };
 
   const menuItems = [
-    { path: '/dashboard', label: t('navigation.home'), icon: Home },
+    // Admin: only Admin Dashboard + admin views (no separate Home/Calendar entry)
+    ...(isAdmin ? [{ path: '/admin', label: t('navigation.adminDashboard'), icon: Shield }] : []),
+    // Non-admin: Home entry
+    ...(!isAdmin ? [{ path: '/dashboard', label: t('navigation.home'), icon: Home }] : []),
     { path: '/crops', label: t('navigation.cropManagement'), icon: Sprout },
     { path: '/fertilizers', label: t('navigation.fertilizers'), icon: Droplets },
     { path: '/irrigation', label: t('navigation.irrigation'), icon: Droplets },
     { path: '/expenses', label: t('navigation.expenses'), icon: IndianRupee },
     { path: '/yield', label: t('navigation.yieldTracking'), icon: TrendingUp },
-    { path: '/calendar', label: 'Calendar', icon: Calendar },
-    { path: '/market-prices', label: t('navigation.marketPrices', 'Market Prices'), icon: DollarSign },
+    // Calendar visible only for non-admin users
+    ...(!isAdmin ? [{ path: '/calendar', label: 'Calendar', icon: Calendar }] : []),
+    { path: '/market-prices', label: t('navigation.marketPrices', 'Market Prices'), icon: IndianRupee },
     { path: '/fields', label: t('navigation.fields', 'Fields'), icon: MapPin },
     { path: '/reports', label: t('navigation.reports'), icon: FileText },
     { path: '/history', label: t('navigation.history'), icon: History },
-    ...(user?.role === 'admin'
-      ? [{ path: '/admin', label: t('navigation.adminDashboard'), icon: Shield }]
-      : []),
     { path: '/about', label: t('navigation.aboutUs', 'About Us'), icon: Info },
     { path: '/settings', label: t('navigation.settings'), icon: Settings },
   ];
@@ -137,12 +154,50 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-      {/* Mobile header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-primary-700 text-white p-4 flex items-center justify-between">
-        <Logo size="small" />
-        <div className="flex items-center gap-2">
-          <Clock />
+      {/* Mobile header: not shown when sidebar is open (RIT-style — no top bar/logo when sidebar maximised) */}
+      <div className={`lg:hidden fixed top-0 left-0 right-0 z-[60] bg-primary-700 text-white px-3 py-2 flex items-center justify-between ${sidebarOpen ? '!hidden' : ''}`}>
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 hover:bg-primary-600 rounded-lg transition-colors"
+            aria-label={sidebarOpen ? t('navigation.closeMenu', 'Close menu') : t('navigation.openMenu', 'Open menu')}
+          >
+            {sidebarOpen ? <X size={20} className="flex-shrink-0" /> : <Menu size={20} className="flex-shrink-0" />}
+          </button>
+          <Logo size="small" />
+        </div>
+        <div className="flex items-center gap-1.5">
           <LanguageSwitcher variant="mobile" />
+
+          {/* Notifications icon - mobile */}
+          <button
+            type="button"
+            className="relative p-1.5 rounded-lg hover:bg-primary-600 transition-colors"
+            title={t('navigation.notifications', 'Notifications')}
+            onClick={() => {
+              const next = !notificationsOpen;
+              setNotificationsOpen(next);
+              if (next) {
+                void loadNotifications();
+              }
+            }}
+          >
+            <Bell size={18} className="flex-shrink-0" />
+            {notifications.length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center px-1 py-0.5 text-[9px] font-semibold leading-none text-white bg-red-500 rounded-full">
+                {notifications.length > 9 ? '9+' : notifications.length}
+              </span>
+            )}
+          </button>
+
+          {/* Theme toggle - mobile */}
+          <button
+            onClick={toggleTheme}
+            className="p-1.5 rounded-lg hover:bg-primary-600 transition-colors"
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          >
+            {theme === 'light' ? <Moon size={18} className="flex-shrink-0" /> : <Sun size={18} className="flex-shrink-0" />}
+          </button>
           {/* Profile Menu for Mobile */}
           <div className="relative" ref={mobileProfileMenuRef}>
             <button
@@ -185,19 +240,81 @@ const Layout = ({ children }: LayoutProps) => {
               </div>
             )}
           </div>
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-primary-600 rounded-lg transition-colors"
-          >
-            {sidebarOpen ? <X size={20} className="flex-shrink-0" /> : <Menu size={20} className="flex-shrink-0" />}
-          </button>
         </div>
       </div>
 
-      {/* Desktop header */}
-      <div className={`hidden lg:flex fixed top-0 left-0 right-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 items-center justify-between transition-all duration-300 ${
-        sidebarCollapsed ? 'lg:pl-[5rem] lg:pr-6' : 'lg:pl-[17rem] lg:pr-6'
-      }`}>
+      {/* Mobile notifications dropdown */}
+      {notificationsOpen && (
+        <div className="lg:hidden fixed top-14 left-0 right-0 z-40 px-3 mt-1">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2">
+            <div className="px-4 pb-2 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+              <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                {t('navigation.notifications', 'Notifications')}
+              </span>
+              <button
+                type="button"
+                className="text-xs text-primary-600 dark:text-primary-400 hover:underline disabled:opacity-50"
+                disabled={notificationsLoading || notifications.length === 0}
+                onClick={async () => {
+                  try {
+                    await api.markAllAlertsAsRead();
+                    setNotifications([]);
+                  } catch (err) {
+                    console.error('Failed to mark all notifications as read:', err);
+                  }
+                }}
+              >
+                {t('common.markAllRead', 'Mark all read')}
+              </button>
+            </div>
+            <div className="max-h-80 overflow-y-auto">
+              {notificationsLoading && (
+                <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                  {t('common.loading', 'Loading notifications...')}
+                </div>
+              )}
+              {!notificationsLoading && notifications.length === 0 && (
+                <div className="px-4 py-3 text-sm text-gray-500 dark:text-gray-400">
+                  {t('common.noNotifications', 'No new notifications')}
+                </div>
+              )}
+              {!notificationsLoading &&
+                notifications.map((alert: any) => (
+                  <button
+                    key={alert.id}
+                    type="button"
+                    onClick={async () => {
+                      try {
+                        await api.markAlertAsRead(alert.id);
+                        setNotifications((prev) => prev.filter((a) => a.id !== alert.id));
+                      } catch (err) {
+                        console.error('Failed to mark notification as read:', err);
+                      }
+                    }}
+                    className="w-full text-left px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                  >
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
+                      {alert.title || 'Alert'}
+                    </p>
+                    {alert.message && (
+                      <p className="mt-1 text-xs text-gray-600 dark:text-gray-300 line-clamp-3">
+                        {alert.message}
+                      </p>
+                    )}
+                    {alert.created_at && (
+                      <p className="mt-1 text-[11px] text-gray-400">
+                        {new Date(alert.created_at).toLocaleString()}
+                      </p>
+                    )}
+                  </button>
+                ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop header (main bar: lives in main area right of sidebar, RIT-style) */}
+      <div className="hidden lg:flex fixed top-0 left-0 right-0 z-30 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-3 items-center justify-between transition-all duration-300 lg:pl-[246px] lg:pr-6">
         {/* FarmSync Title on the left */}
         <div className="flex items-center">
           <button
@@ -212,7 +329,6 @@ const Layout = ({ children }: LayoutProps) => {
         
         {/* Right side controls */}
         <div className="flex items-center gap-3">
-          <Clock />
           <LanguageSwitcher variant="desktop" />
           {/* Notifications icon (always visible) */}
           <button
@@ -356,153 +472,89 @@ const Layout = ({ children }: LayoutProps) => {
         </div>
       </div>
 
-      {/* Sidebar */}
+      {/* Sidebar: RIT-style structure, FarmSync green/gold palette */}
       <aside
-        className={`fixed top-0 left-0 h-full bg-primary-800 text-white transform transition-all duration-300 z-40 ${
-          sidebarOpen ? 'translate-x-0 w-64' : '-translate-x-full w-64'
-        } lg:translate-x-0 ${
-          sidebarCollapsed ? 'lg:w-16' : 'lg:w-64'
-        }`}
+        className={`fixed top-0 left-0 h-full flex flex-col w-[280px] lg:w-[230px] transition-transform duration-300 ease-out z-50 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:translate-x-0 lg:z-40 bg-primary-800 text-white overflow-y-auto`}
       >
-        <div className={`border-b border-primary-700 ${sidebarCollapsed ? 'lg:p-2 lg:py-3' : 'p-6'}`}>
-          <div className={`flex items-center ${sidebarCollapsed ? 'lg:flex-col lg:gap-2 lg:justify-center' : 'justify-between gap-3'}`}>
-            {!sidebarCollapsed ? (
-              <>
-                {/* Expanded state - Full logo with title */}
-                <div className="flex-1">
-                  <button
-                    onClick={() => navigate('/dashboard')}
-                    className="flex items-center gap-3 font-bold text-2xl hover:opacity-80 transition-opacity cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-800 rounded-lg p-1"
-                    title={t('navigation.home')}
-                    aria-label={t('navigation.home')}
-                  >
-                    <div className="relative flex-shrink-0">
-                      <div className="flex items-center justify-center w-10 h-10 bg-white rounded-lg shadow-sm relative">
-                        {/* Professional Farm icon with sync symbol */}
-                        <svg 
-                          className="text-primary-600 w-7 h-7"
-                          viewBox="0 0 24 24" 
-                          fill="currentColor" 
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          {/* Farm/Field layers */}
-                          <path d="M12 2L4 6L12 10L20 6L12 2Z" fill="currentColor" opacity="0.9"/>
-                          <path d="M4 6L12 10L20 6L12 2L4 6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                          {/* Growing plant */}
-                          <path d="M12 10V18M9 14L12 10L15 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                          <path d="M10 16L12 18L14 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                        </svg>
-                        {/* Sync symbol overlay */}
-                        <div className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary-500 rounded-full flex items-center justify-center shadow-md">
-                          <svg className="text-white w-2.5 h-2.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M9 3L11 1L9 -1"/>
-                            <path d="M11 1C10 4 8 6 5 6C2 6 1 4 1 1"/>
-                            <path d="M3 9L1 11L3 13"/>
-                            <path d="M1 11C2 8 4 6 7 6C10 6 11 8 11 11"/>
-                          </svg>
-                        </div>
-                      </div>
-                    </div>
-                    <span className="text-white tracking-tight">FarmSync</span>
-                  </button>
-                </div>
-                <button
-                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                  className="hidden lg:flex p-2 text-primary-200 hover:bg-primary-700 hover:text-white rounded-lg transition-all duration-200"
-                  title="Collapse Sidebar"
-                >
-                  <Menu size={20} className="flex-shrink-0" />
-                </button>
-              </>
-            ) : (
-              <>
-                {/* Collapsed state - Only icon, no popout title */}
-                <button
-                  onClick={() => navigate('/dashboard')}
-                  className="flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-800 rounded-lg p-1"
-                  title={t('navigation.home')}
-                  aria-label={t('navigation.home')}
-                >
-                  <div className="relative">
-                    <div className="flex items-center justify-center w-8 h-8 bg-white rounded-lg shadow-sm relative">
-                      {/* Professional Farm icon with sync symbol - smaller version */}
-                      <svg 
-                        className="text-primary-600 w-5 h-5"
-                        viewBox="0 0 24 24" 
-                        fill="currentColor" 
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M12 2L4 6L12 10L20 6L12 2Z" fill="currentColor" opacity="0.9"/>
-                        <path d="M4 6L12 10L20 6L12 2L4 6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                        <path d="M12 10V18M9 14L12 10L15 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                        <path d="M10 16L12 18L14 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                      </svg>
-                      {/* Sync symbol overlay - smaller */}
-                      <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-primary-500 rounded-full flex items-center justify-center shadow-md">
-                        <svg className="text-white w-1.5 h-1.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M9 3L11 1L9 -1"/>
-                          <path d="M11 1C10 4 8 6 5 6C2 6 1 4 1 1"/>
-                          <path d="M3 9L1 11L3 13"/>
-                          <path d="M1 11C2 8 4 6 7 6C10 6 11 8 11 11"/>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </button>
-                <button
-                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                  className="p-2 text-primary-200 hover:bg-primary-700 hover:text-white rounded-lg transition-all duration-200 mt-2"
-                  title="Expand Sidebar"
-                >
-                  <Menu size={20} className="flex-shrink-0" />
-                </button>
-              </>
-            )}
+        {/* White header block — FarmSync logo and name */}
+        <div className="flex-shrink-0 bg-white border-b border-gray-200 min-h-[80px] flex items-center justify-between px-3 py-2.5">
+          <Logo size="small" variant="light" onAfterClick={() => setSidebarOpen(false)} />
+          <button
+            type="button"
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-600 shrink-0"
+            aria-label={t('navigation.closeMenu', 'Close menu')}
+          >
+            <X size={22} className="flex-shrink-0" />
+          </button>
+        </div>
+
+        {/* Search bar (RIT-style) */}
+        <div className="flex-shrink-0 px-2.5 py-2.5">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <input
+              type="search"
+              value={sidebarSearch}
+              onChange={(e) => setSidebarSearch(e.target.value)}
+              placeholder="Search FarmSync..."
+              className="w-full pl-9 pr-3 py-2 rounded bg-white/10 border border-transparent text-white placeholder-slate-400 text-[13px] focus:bg-white/15 focus:border-amber-400/50 focus:outline-none transition-colors"
+            />
           </div>
         </div>
 
-        <nav className={`p-4 space-y-2 overflow-y-auto h-[calc(100vh-180px)] ${sidebarCollapsed ? 'lg:px-2 lg:space-y-2' : ''}`}>
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.path}
-                onClick={() => {
-                  navigate(item.path);
-                  setSidebarOpen(false);
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-150 ease-in-out hover:scale-[1.02] active:scale-[0.98] ${
-                  sidebarCollapsed ? 'lg:px-2 lg:py-3 lg:justify-center lg:gap-0' : ''
-                } ${
-                  isActive(item.path)
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-primary-200 hover:bg-primary-700 hover:text-white hover:shadow-md'
-                }`}
-                title={sidebarCollapsed ? item.label : ''}
-              >
-                <Icon size={20} className="flex-shrink-0" />
-                <span className={`font-medium whitespace-nowrap ${sidebarCollapsed ? 'lg:hidden' : ''} ${sidebarCollapsed ? '' : 'text-base'}`}>
-                  {item.label}
-                </span>
-              </button>
-            );
-          })}
+        {/* Nav — RIT-style: border-left gold for active, darker green hover/active */}
+        <nav className="flex-1 overflow-y-auto py-1">
+          {(() => {
+            const filtered = sidebarSearch.trim()
+              ? menuItems.filter((item) => item.label.toLowerCase().includes(sidebarSearch.toLowerCase()))
+              : menuItems;
+            if (filtered.length === 0) {
+              return (
+                <div className="px-4 py-6 text-center text-slate-400 text-sm">
+                  No matches for &quot;{sidebarSearch}&quot;
+                </div>
+              );
+            }
+            return filtered.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.path);
+              return (
+                <button
+                  key={item.path}
+                  onClick={() => { navigate(item.path); setSidebarOpen(false); }}
+                  className={`w-full flex items-center gap-3 py-3.5 px-4 text-left text-sm border-l-[3px] transition-all duration-200 ${
+                    active
+                      ? 'bg-primary-700 text-white border-l-[#D4AF37]'
+                      : 'border-l-transparent text-primary-100 hover:bg-primary-700 hover:text-white'
+                  }`}
+                  title={item.label}
+                >
+                  <Icon size={20} className="flex-shrink-0 opacity-90" strokeWidth={1.8} />
+                  <span className="font-medium whitespace-nowrap">{item.label}</span>
+                </button>
+              );
+            });
+          })()}
         </nav>
       </aside>
 
-      {/* Overlay for mobile */}
+      {/* Mobile backdrop: full screen when sidebar open; tap to close (RIT-style) */}
       {sidebarOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          className="lg:hidden fixed inset-0 bg-black/50 z-40 transition-opacity"
           onClick={() => setSidebarOpen(false)}
+          aria-hidden
         />
       )}
 
-      {/* Main content */}
-      <main className={`pt-16 lg:pt-20 transition-all duration-300 ${
-        sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'
-      }`}>
-        <div className="p-4 lg:p-8">{children}</div>
+      {/* Main content: behind sidebar on mobile; desktop margin matches RIT sidebar 230px. Full-width at sm+; packed center column only on mobile. */}
+      <main className="relative z-0 pt-16 lg:pt-20 lg:ml-[230px] transition-all duration-300">
+        <div className="w-full px-3 pt-4 pb-24 sm:px-4 sm:max-w-none max-w-md mx-auto sm:mx-0 lg:px-6 xl:px-8 2xl:px-10 space-y-3 sm:space-y-4 lg:space-y-6">
+          {children}
+        </div>
       </main>
 
     </div>

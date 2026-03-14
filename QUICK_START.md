@@ -141,7 +141,7 @@ netstat -ano | findstr :5001
 taskkill /PID <PID> /F
 
 # Or change port in Backend/.env (and set Frontend VITE_API_URL to match)
-PORT=5001
+PORT=5003
 ```
 
 ### Frontend Won't Start
@@ -153,8 +153,8 @@ PORT=5001
 
 **Error: "Cannot connect to backend"**
 - Start the **Backend first** (Terminal 1: `cd Backend` then `npm run dev`), then start the Frontend (Terminal 2: `cd Frontend` then `npm run dev`).
-- In dev, the frontend proxies `/api` to http://localhost:5001—no Frontend `.env` needed. Backend must be on port 5001.
-- If your backend uses a different port, set `VITE_API_URL=http://localhost:YOUR_PORT/api` in `Frontend/.env` and restart the frontend.
+- In dev, the frontend proxies `/api` to http://localhost:5003—no Frontend `.env` needed. Backend must be on port 5003 (or update `Frontend/vite.config.ts` proxy target).
+- If your backend uses a different port, set `VITE_API_URL=http://localhost:YOUR_PORT/api` in `Frontend/.env` and restart the frontend (or update the proxy target).
 
 ### Database Issues
 
@@ -185,7 +185,7 @@ Before using the app, verify:
 
 - [ ] MySQL is running
 - [ ] Database `farmsync_db` exists
-- [ ] Backend server running on http://localhost:5001
+- [ ] Backend server running on http://localhost:5003
 - [ ] Frontend server running on http://localhost:5173
 - [ ] Can access http://localhost:5173 in browser
 - [ ] Can register a new account
@@ -196,14 +196,14 @@ Before using the app, verify:
 ## 📊 Default Configuration
 
 ### Backend
-- **Port:** 5001 (or from .env)
+- **Port:** 5003 (or from .env)
 - **Database:** farmsync_db
 - **Database User:** root
 - **Database Password:** 123456 (change in production!)
 
 ### Frontend
 - **Port:** 5173 (auto-assigned if busy)
-- **API:** In dev, requests to `/api` are proxied to Backend (http://localhost:5001). Set `VITE_API_URL` in `.env` only if the backend runs elsewhere.
+- **API:** In dev, requests to `/api` are proxied to Backend (http://localhost:5003). Set `VITE_API_URL` in `.env` only if the backend runs elsewhere.
 
 ---
 

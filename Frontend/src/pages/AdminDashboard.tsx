@@ -7,7 +7,6 @@ import {
   TrendingUp,
   Package,
   LogIn,
-  DollarSign,
   MapPin,
   BarChart3,
   Activity,
@@ -153,16 +152,16 @@ const AdminDashboard = () => {
   const totalYield = statistics.revenueByDistrict.reduce((sum, item) => sum + item.totalYield, 0);
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-3 sm:space-y-4 lg:space-y-6 p-3 sm:p-4 lg:p-6 min-h-[calc(100vh-6rem)] w-full">
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div className="flex items-center justify-between">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-5 lg:p-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Admin Dashboard</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">System-wide statistics and analytics</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Admin Dashboard</h1>
+            <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm sm:text-base">System-wide statistics and analytics</p>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-            <Calendar size={18} />
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400 shrink-0">
+            <Calendar size={18} className="flex-shrink-0" />
             <span>{(() => {
               const d = new Date();
               const day = d.getDate();
@@ -176,8 +175,8 @@ const AdminDashboard = () => {
       </div>
 
       {/* Key Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg shadow p-6 border border-blue-200 dark:border-blue-800">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg shadow p-4 sm:p-5 lg:p-6 border border-blue-200 dark:border-blue-800">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-blue-600 dark:text-blue-400 mb-1 font-medium">Total Farmer Logins</p>
@@ -186,11 +185,11 @@ const AdminDashboard = () => {
                 {statistics.farmerLoginsByDistrict.length} districts
               </p>
             </div>
-            <LogIn className="text-blue-600 dark:text-blue-400" size={40} />
+            <LogIn className="text-blue-600 dark:text-blue-400 flex-shrink-0" size={40} />
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg shadow p-6 border border-green-200 dark:border-green-800">
+        <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg shadow p-4 sm:p-5 lg:p-6 border border-green-200 dark:border-green-800">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-green-600 dark:text-green-400 mb-1 font-medium">Total Revenue</p>
@@ -201,22 +200,22 @@ const AdminDashboard = () => {
                 Net Profit: ₹{totalProfit.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </p>
             </div>
-            <DollarSign className="text-green-600 dark:text-green-400" size={40} />
+            <IndianRupee className="text-green-600 dark:text-green-400 flex-shrink-0" size={40} />
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg shadow p-6 border border-purple-200 dark:border-purple-800">
+        <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 rounded-lg shadow p-4 sm:p-5 lg:p-6 border border-purple-200 dark:border-purple-800">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-purple-600 dark:text-purple-400 mb-1 font-medium">Total Crops</p>
               <p className="text-3xl font-bold text-purple-900 dark:text-purple-100">{statistics.totalCrops.toLocaleString()}</p>
               <p className="text-xs text-purple-700 dark:text-purple-300 mt-1">Active across all farms</p>
             </div>
-            <Package className="text-purple-600 dark:text-purple-400" size={40} />
+            <Package className="text-purple-600 dark:text-purple-400 flex-shrink-0" size={40} />
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-lg shadow p-6 border border-orange-200 dark:border-orange-800">
+        <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 rounded-lg shadow p-4 sm:p-5 lg:p-6 border border-orange-200 dark:border-orange-800">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-orange-600 dark:text-orange-400 mb-1 font-medium">Goods Delivered</p>
@@ -227,20 +226,20 @@ const AdminDashboard = () => {
                 {statistics.totalGoodsDelivered.totalDeliveries} deliveries
               </p>
             </div>
-            <Truck className="text-orange-600 dark:text-orange-400" size={40} />
+            <Truck className="text-orange-600 dark:text-orange-400 flex-shrink-0" size={40} />
           </div>
         </div>
       </div>
 
       {/* Farmer Logins by District */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div className="flex items-center gap-2 mb-6">
-          <LogIn className="text-primary-600 dark:text-primary-400" size={24} />
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Farmer Logins by District</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-5 lg:p-6">
+        <div className="flex items-center gap-2 mb-4 sm:mb-6">
+          <LogIn className="text-primary-600 dark:text-primary-400 flex-shrink-0" size={24} />
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">Farmer Logins by District</h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div>
-            <ResponsiveContainer width="100%" height={400}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+          <div className="h-[260px] sm:h-[320px] lg:h-[400px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={loginChartData} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis type="number" />
@@ -252,8 +251,8 @@ const AdminDashboard = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div>
-            <ResponsiveContainer width="100%" height={400}>
+          <div className="h-[260px] sm:h-[320px] lg:h-[400px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={loginChartData}
@@ -275,7 +274,7 @@ const AdminDashboard = () => {
             </ResponsiveContainer>
           </div>
         </div>
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="mt-4 sm:mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {statistics.farmerLoginsByDistrict.map((item, index) => (
             <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
               <div className="flex items-center justify-between mb-2">
@@ -298,12 +297,12 @@ const AdminDashboard = () => {
       </div>
 
       {/* Revenue by District */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <div className="flex items-center gap-2 mb-6">
-          <DollarSign className="text-primary-600 dark:text-primary-400" size={24} />
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Revenue by District</h2>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-5 lg:p-6">
+        <div className="flex items-center gap-2 mb-4 sm:mb-6">
+          <IndianRupee className="text-primary-600 dark:text-primary-400 flex-shrink-0" size={24} />
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">Revenue by District</h2>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
           <div>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={revenueChartData}>
@@ -318,8 +317,8 @@ const AdminDashboard = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div>
-            <ResponsiveContainer width="100%" height={400}>
+          <div className="h-[260px] sm:h-[320px] lg:h-[400px] w-full">
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={revenueChartData}
@@ -341,7 +340,7 @@ const AdminDashboard = () => {
             </ResponsiveContainer>
           </div>
         </div>
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="mt-4 sm:mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {statistics.revenueByDistrict.map((item, index) => (
             <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
               <div className="flex items-center justify-between mb-2">
@@ -381,12 +380,13 @@ const AdminDashboard = () => {
 
       {/* Recent Login Activity */}
       {statistics.recentLogins.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <div className="flex items-center gap-2 mb-6">
-            <Activity className="text-primary-600 dark:text-primary-400" size={24} />
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Recent Login Activity (Last 30 Days)</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-5 lg:p-6">
+          <div className="flex items-center gap-2 mb-4 sm:mb-6">
+            <Activity className="text-primary-600 dark:text-primary-400 flex-shrink-0" size={24} />
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">Recent Login Activity (Last 30 Days)</h2>
           </div>
-          <ResponsiveContainer width="100%" height={300}>
+          <div className="h-[220px] sm:h-[260px] lg:h-[300px] w-full">
+          <ResponsiveContainer width="100%" height="100%">
             <LineChart data={recentLoginsData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
@@ -396,12 +396,13 @@ const AdminDashboard = () => {
               <Line type="monotone" dataKey="logins" stroke="#3b82f6" strokeWidth={2} name="Daily Logins" />
             </LineChart>
           </ResponsiveContainer>
+          </div>
         </div>
       )}
 
       {/* Summary Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-5 lg:p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Crop Statistics</h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
@@ -417,7 +418,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-5 lg:p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Delivery Statistics</h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
@@ -435,7 +436,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 sm:p-5 lg:p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Financial Summary</h3>
           <div className="space-y-3">
             <div className="flex justify-between items-center">

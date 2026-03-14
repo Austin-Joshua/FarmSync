@@ -2,11 +2,12 @@ import { useCallback, useEffect } from 'react';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import { API_BASE_URL } from '../config/api';
+import { API_BASE_URL, BACKEND_ORIGIN } from '../config/api';
 
 interface OAuthLoginProps {
   onSuccess?: () => void;
   onError?: (error: string) => void;
+  variant?: 'light' | 'dark';
 }
 
 export const GoogleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) => {
@@ -40,14 +41,16 @@ export const GoogleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) 
 
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || ''}>
-      <div className="flex justify-center">
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={handleGoogleError}
-          text="signin_with"
-          theme="outline"
-          size="large"
-        />
+      <div className="w-full">
+        <div className="mx-auto w-full max-w-[420px] h-12 min-h-[48px] flex items-center justify-center overflow-hidden [&_iframe]:block [&_iframe]:mx-auto [&_iframe]:max-w-full [&_iframe]:w-full [&_iframe]:!min-h-[48px]">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            text="signin_with"
+            theme="outline"
+            size="large"
+          />
+        </div>
       </div>
     </GoogleOAuthProvider>
   );
@@ -55,25 +58,22 @@ export const GoogleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) 
 
 export const MicrosoftSignIn: React.FC<OAuthLoginProps> = () => {
   const handleMicrosoftLogin = useCallback(() => {
-    // Redirect to Microsoft OAuth endpoint
-    const clientId = import.meta.env.VITE_MICROSOFT_CLIENT_ID;
-    const redirectUri = `${window.location.origin}/auth/microsoft/callback`;
-    const scopes = 'openid profile email';
-    
-    const authUrl = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scopes}`;
-    
-    window.location.href = authUrl;
+    // Use backend OAuth route: backend redirects to Microsoft then to backend callback, then to frontend with ?token=
+    window.location.href = `${BACKEND_ORIGIN}/api/auth/oauth/microsoft`;
   }, []);
 
   return (
     <button
       onClick={handleMicrosoftLogin}
-      className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium w-full"
+      type="button"
+      className="h-12 min-h-[48px] min-w-0 w-full px-4 py-3 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition font-semibold text-sm"
     >
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M2 2h6v6H2V2zm8 0h6v6h-6V2zM2 10h6v6H2v-6zm8 0h6v6h-6v-6z" />
-      </svg>
-      Sign in with Microsoft
+      <span className="w-full flex items-center justify-center gap-2 min-w-0 leading-none">
+        <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M2 2h6v6H2V2zm8 0h6v6h-6V2zM2 10h6v6H2v-6zm8 0h6v6h-6v-6z" />
+        </svg>
+        <span className="min-w-0 truncate text-center">Sign in with Microsoft</span>
+      </span>
     </button>
   );
 };
@@ -113,7 +113,7 @@ export const AppleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) =
       const response: AppleSignInResponse = await (window as any).AppleID.auth.signIn();
 
       if (response.authorization) {
-        const backendResponse = await axios.post(`${API_BASE_URL}/auth/apple`, {
+        const backendResponse = await axios.post(`${API_BASE_URL}/auth/oauth/apple`, {
           user: response.user,
           identityToken: response.authorization.id_token,
         });
@@ -131,24 +131,26 @@ export const AppleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) =
 
   return (
     <button
+      type="button"
       onClick={handleAppleSignIn}
-      className="flex items-center justify-center gap-2 px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-900 transition font-medium w-full"
+      className="h-12 min-h-[48px] min-w-0 w-full px-4 py-3 rounded-lg bg-black text-white hover:bg-gray-900 transition font-semibold text-sm"
     >
-      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M17.05 13.5c-.91 0-1.82.55-2.25 1.74.5.92 1.3 1.84 2.25 1.84 1.02 0 1.84-.82 1.84-1.84 0-1.02-.82-1.74-1.84-1.74m-4.7-2.5c-1.97 0-3.6 1.63-3.6 3.6s1.63 3.6 3.6 3.6 3.6-1.63 3.6-3.6-1.63-3.6-3.6-3.6m9.01 6.31c-.37.52-.77.91-1.71.91-.94 0-1.34-.39-1.71-.91l-2.05-2.92c-.37-.52-.77-.91-1.71-.91s-1.34.39-1.71.91l-2.05 2.92c-.37.52-.77.91-1.71.91s-1.34-.39-1.71-.91l-2.05-2.92c-.37-.52-.77-.91-1.71-.91-.94 0-1.34.39-1.71.91" />
-      </svg>
-      Sign in with Apple
+      <span className="w-full flex items-center justify-center gap-2 min-w-0 leading-none">
+        <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M17.05 13.5c-.91 0-1.82.55-2.25 1.74.5.92 1.3 1.84 2.25 1.84 1.02 0 1.84-.82 1.84-1.84 0-1.02-.82-1.74-1.84-1.74m-4.7-2.5c-1.97 0-3.6 1.63-3.6 3.6s1.63 3.6 3.6 3.6 3.6-1.63 3.6-3.6-1.63-3.6-3.6-3.6m9.01 6.31c-.37.52-.77.91-1.71.91-.94 0-1.34-.39-1.71-.91l-2.05-2.92c-.37-.52-.77-.91-1.71-.91s-1.34.39-1.71.91l-2.05 2.92c-.37.52-.77.91-1.71.91s-1.34-.39-1.71-.91l-2.05-2.92c-.37-.52-.77-.91-1.71-.91-.94 0-1.34.39-1.71.91\" />
+        </svg>
+        <span className="min-w-0 truncate text-center">Sign in with Apple</span>
+      </span>
     </button>
   );
 };
 
-export const OAuthSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) => {
+export const OAuthSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError, variant = 'light' }) => {
+  const isDark = variant === 'dark';
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-gray-700 mb-4">Sign in with:</h3>
+      <h3 className={`text-sm font-semibold mb-3 text-center ${isDark ? 'text-slate-300' : 'text-gray-700'}`}>Sign in with:</h3>
       <GoogleSignIn onSuccess={onSuccess} onError={onError} />
-      <MicrosoftSignIn onSuccess={onSuccess} onError={onError} />
-      <AppleSignIn onSuccess={onSuccess} onError={onError} />
     </div>
   );
 };

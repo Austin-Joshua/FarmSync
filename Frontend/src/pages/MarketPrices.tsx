@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TrendingUp, TrendingDown, Minus, Bell, Calendar, DollarSign, BarChart3, AlertCircle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, Bell, Calendar, IndianRupee, BarChart3, AlertCircle } from 'lucide-react';
 import api from '../services/api';
 import { formatDateDisplay, formatDateShort } from '../utils/dateFormatter';
 
@@ -212,7 +212,7 @@ const MarketPrices = () => {
                     {t('marketPrices.currentPrice', 'Current Price')}
                   </p>
                   <div className="flex items-center gap-2">
-                    <DollarSign className="text-primary-600" size={24} />
+                    <IndianRupee className="text-primary-600" size={24} />
                     <span className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                       ₹{currentPrice.currentPrice.toFixed(2)}
                     </span>

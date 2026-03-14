@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Save, MapPin, Ruler, Droplets, Wheat, Clock, DollarSign } from 'lucide-react';
+import { Save, MapPin, Ruler, Droplets, Wheat, Clock, IndianRupee } from 'lucide-react';
 import api from '../services/api';
+import ProgressBar from '../components/ProgressBar';
 
 interface OnboardingData {
   location: string;
@@ -513,7 +514,7 @@ const Onboarding = () => {
           <div className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                <DollarSign className="inline mr-2" size={18} />
+                <IndianRupee className="inline mr-2" size={18} />
                 Total Revenue Generated (₹)
               </label>
               <input
@@ -570,12 +571,12 @@ const Onboarding = () => {
               <span>Step {step} of {totalSteps}</span>
               <span>{Math.round((step / totalSteps) * 100)}%</span>
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 progress-bar">
-              <div
-                className="bg-primary-600 h-2 rounded-full transition-all duration-300 progress-fill"
-                style={{ width: `${(step / totalSteps) * 100}%` } as React.CSSProperties}
-              />
-            </div>
+            <ProgressBar
+              value={(step / totalSteps) * 100}
+              className="dark:bg-gray-700"
+              barClassName="bg-primary-600"
+              aria-label="Onboarding progress"
+            />
           </div>
 
           {/* Error Message */}

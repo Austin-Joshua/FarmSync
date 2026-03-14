@@ -8,6 +8,8 @@ import { uploadProfilePicture, getProfilePictureUrl } from '../middleware/upload
 import { EmailService } from '../services/emailService';
 import { pool } from '../config/database';
 import { query, queryOne, execute } from '../utils/dbHelper';
+import { generateToken } from '../services/oauthService';
+import axios from 'axios';
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
@@ -319,6 +321,89 @@ export const uploadProfilePictureHandler = async (req: AuthRequest, res: Respons
       }
     }
     throw new AppError(error.message, error.statusCode || 500);
+  }
+};
+
+/**
+ * Google OAuth - Verify ID token from frontend (e.g. Sign in with Google popup)
+ * POST /api/auth/google-verify
+ * Body: { token: string }
+ */
+export const googleVerify = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { token } = req.body as { token?: string };
+    if (!token) {
+      throw new AppError('Google token is required', 400);
+    }
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      throw new AppError('Google OAuth is not configured', 503);
+    }
+    const { data } = await axios.get<{ email?: string; name?: string; picture?: string; sub: string; error?: string }>(
+      `https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(token)}`,
+      { timeout: 5000 }
+    ).catch((err: any) => {
+      if (err.response?.status === 400) throw new AppError('Invalid Google token', 401);
+      throw new AppError('Failed to verify Google token', 401);
+    });
+    if (data.error || !data.email) {
+      throw new AppError('Invalid Google token', 401);
+    }
+    const email = data.email;
+    const name = data.name || email;
+    const picture = data.picture || null;
+    const googleId = data.sub;
+
+    const existing = await queryOne<{ id: number; name: string; email: string; role: string; google_id: string | null; picture_url: string | null; is_onboarded?: number }>(
+      pool,
+      'SELECT id, name, email, role, google_id, picture_url, is_onboarded FROM users WHERE email = ?',
+      [email]
+    );
+    if (existing) {
+      if (!existing.google_id) {
+        await execute(pool, 'UPDATE users SET google_id = ?, picture_url = COALESCE(picture_url, ?) WHERE id = ?', [googleId, picture, existing.id]);
+      }
+      const jwt = generateToken(existing.id, existing.email);
+      const userResponse = {
+        id: String(existing.id),
+        name: existing.name,
+        email: existing.email,
+        role: existing.role,
+        location: undefined as string | undefined,
+        land_size: undefined as number | undefined,
+        soil_type: undefined as string | undefined,
+        picture_url: existing.picture_url || undefined,
+        is_onboarded: !!existing.is_onboarded,
+      };
+      res.json({ token: jwt, user: userResponse });
+      return;
+    }
+
+    const role = 'farmer';
+    const insertResult = await execute(
+      pool,
+      'INSERT INTO users (name, email, google_id, picture_url, role) VALUES (?, ?, ?, ?, ?)',
+      [name, email, googleId, picture, role]
+    );
+    const insertId = (insertResult as any)?.insertId ?? 0;
+    const jwt = generateToken(insertId, email);
+    res.json({
+      token: jwt,
+      user: {
+        id: String(insertId),
+        name,
+        email,
+        role,
+        location: undefined,
+        land_size: undefined,
+        soil_type: undefined,
+        picture_url: picture || undefined,
+        is_onboarded: false,
+      },
+    });
+  } catch (error: any) {
+    if (error instanceof AppError) throw error;
+    throw new AppError(error.message || 'Google sign-in failed', error.statusCode || 500);
   }
 };
 

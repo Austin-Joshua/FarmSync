@@ -1,24 +1,25 @@
-// Register Page with Remember Me functionality
+// Register page — green + gold FarmSync UI
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import { Mail, Lock, Eye, EyeOff, User, MapPin, UserPlus } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, UserPlus, Moon, Sun } from 'lucide-react';
 import Logo from '../components/Logo';
-import { BACKEND_ORIGIN } from '../config/api';
 
 const Register = () => {
   const { t } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
   const { register } = useAuth();
   const navigate = useNavigate();
-  
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [inviteCode, setInviteCode] = useState('');
   const [role, setRole] = useState<'farmer' | 'admin'>('farmer');
   const [location, setLocation] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,259 +30,196 @@ const Register = () => {
     e.preventDefault();
     setError('');
     setSuccess('');
-
-    // Validation
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-
     if (password.length < 8) {
       setError('Password must be at least 8 characters long');
       return;
     }
-
     setLoading(true);
-
     try {
-      const success = await register(name, email, password, role, location);
-      if (success) {
+      const ok = await register(name, email, password, role, location);
+      if (ok) {
         setSuccess(t('auth.registerSuccess') || 'Registration successful! Redirecting...');
-        
-        // Handle remember me
-        if (rememberMe) {
-          localStorage.setItem('rememberedEmail', email);
-          localStorage.setItem('rememberMe', 'true');
-        } else {
-          localStorage.removeItem('rememberedEmail');
-          localStorage.removeItem('rememberMe');
-        }
-        
-        // Get user data
         const userData = JSON.parse(localStorage.getItem('user') || '{}');
-        
         setTimeout(() => {
-          if (userData.role === 'admin') {
-            navigate('/admin', { replace: true });
-          } else {
-            navigate('/dashboard', { replace: true });
-          }
+          navigate(userData.role === 'admin' ? '/admin' : '/dashboard', { replace: true });
         }, 1000);
       } else {
-        setError(t('auth.registerError') || 'Registration failed. Please try again.');
+        setError(t('auth.registerError') || 'Registration failed.');
       }
     } catch (err: any) {
-      let errorMessage = t('auth.registerError') || 'Registration failed';
-      
-      if (err?.message) {
-        if (err.message.includes('Failed to connect') || 
-            err.message.includes('fetch') || 
-            err.message.includes('timed out') ||
-            err.message.includes('Request timed out') ||
-            err.message.includes('NetworkError') ||
-            err.message.includes('Network request failed')) {
-          errorMessage = `Cannot connect to server. Start the backend first: in a terminal run "cd Backend && npm run dev" (backend should be at ${BACKEND_ORIGIN}).`;
-        } else if (err.message.includes('already exists') || 
-                   err.message.includes('duplicate') ||
-                   err.message.includes('ER_DUP_ENTRY') ||
-                   (err?.status === 400 && err.message.includes('email'))) {
-          errorMessage = 'An account with this email already exists. Please use a different email or try logging in.';
-        } else if (err.message.includes('Password validation') || 
-                   err.message.includes('validation')) {
-          errorMessage = err.message;
-        } else if (err?.status === 400) {
-          errorMessage = err.message || 'Please check all fields and try again.';
-        } else {
-          errorMessage = err.message || 'Registration failed. Please try again.';
-        }
-      }
-      
-      setError(errorMessage);
+      let msg = t('auth.registerError') || 'Registration failed';
+      if (err?.message?.includes('Failed to connect') || err?.message?.includes('fetch') || err?.message?.includes('Network')) {
+        msg = `Cannot connect to server. Start the backend (cd Backend && npm run dev).`;
+      } else if (err?.message?.includes('already exists') || err?.message?.includes('duplicate')) {
+        msg = 'An account with this email already exists. Please sign in or use a different email.';
+      } else if (err?.message) msg = err.message;
+      setError(msg);
     } finally {
       setLoading(false);
     }
   };
 
+  const isDark = theme === 'dark';
+
+  const inputBase = isDark
+    ? 'border-slate-600 bg-slate-700/50 text-white placeholder-slate-400 focus:ring-primary-400 focus:border-primary-400'
+    : 'border-gray-200 bg-emerald-50/80 text-gray-900 placeholder-gray-500 focus:ring-primary-500/30 focus:border-primary-500';
+  const labelClass = isDark ? 'text-slate-300' : 'text-gray-600';
+  const cardBg = isDark ? 'bg-slate-800 border-slate-600' : 'bg-white border-gray-100';
+  const pageBg = isDark ? 'bg-slate-900' : 'bg-gray-50';
+  const mutedText = isDark ? 'text-slate-400' : 'text-gray-600';
+  const iconClass = isDark ? 'text-slate-400' : 'text-gray-400';
+  const iconHover = isDark ? 'hover:text-slate-200' : 'hover:text-gray-600';
+  const roleInactive = isDark
+    ? 'border-slate-600 text-slate-400 hover:border-primary-400 bg-slate-700/50'
+    : 'border-gray-300 text-gray-600 hover:border-primary-400 bg-white';
+
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300">
-      {/* Green Header Section */}
-      <div className="bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-700 dark:to-emerald-700 w-full py-12 px-4 shadow-lg animate-fade-in">
-        <div className="max-w-md mx-auto text-center">
-          <div className="flex flex-col items-center justify-center space-y-4 animate-slide-down">
-            <div className="flex items-center gap-3 justify-center">
-              <div className="flex items-center justify-center w-12 h-12 bg-white rounded-lg shadow-md relative transform transition-all duration-300 hover:scale-110 hover:rotate-3 hover:shadow-xl">
-                <svg 
-                  className="text-green-600 w-8 h-8"
-                  viewBox="0 0 24 24" 
-                  fill="currentColor" 
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="M12 2L4 6L12 10L20 6L12 2Z" fill="currentColor" opacity="0.9"/>
-                  <path d="M4 6L12 10L20 6L12 2L4 6Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <path d="M12 10V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <path d="M9 14L12 10L15 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                  <path d="M10 16L12 18L14 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                </svg>
-                <div className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center shadow-md">
-                  <svg className="text-white w-2.5 h-2.5" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M9 3L11 1L9 -1" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M11 1C10 4 8 6 5 6C2 6 1 4 1 1" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M3 9L1 11L3 13" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M1 11C2 8 4 6 7 6C10 6 11 8 11 11" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </div>
-              <h1 className="text-4xl font-bold text-white transition-all duration-300 hover:scale-105">
-                FarmSync
-              </h1>
-            </div>
-          </div>
-        </div>
+    <div className={`min-h-screen transition-colors duration-300 ${pageBg} ${isDark ? 'text-white' : 'text-gray-900'}`}>
+      {/* Header — green FarmSync + theme toggle top right */}
+      <div className="bg-primary-700 text-white px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <Logo size="default" variant="light" />
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-[#D4AF37] transition-colors"
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {isDark ? <Sun size={22} /> : <Moon size={22} />}
+        </button>
       </div>
 
-      {/* White Content Section */}
-      <div className="flex-1 flex items-center justify-center px-4 py-12 animate-fade-in-up">
-        <div className="max-w-md w-full">
-          {/* Welcome Text */}
-          <div className="text-center mb-8 animate-slide-up">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2 transition-colors duration-300">
-              Create Account
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 transition-colors duration-300">
-              Join FarmSync and start managing your farm efficiently
-            </p>
-          </div>
+      {/* Central form card */}
+      <div className="flex justify-center px-4 py-8 sm:py-10">
+        <div className={`w-full max-w-md rounded-xl shadow-lg border transition-colors duration-300 ${cardBg} p-6 sm:p-8`}>
+          <h2 className="text-xl sm:text-2xl font-bold text-[#D4AF37] mb-1">Create Account</h2>
+          <p className={`text-sm mb-6 ${mutedText}`}>
+            Register for access to the FarmSync platform.
+          </p>
 
-          {/* Register Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-2xl hover:scale-[1.01]">
-            <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Error Message */}
-            {error && (
-              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-                <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
-              </div>
-            )}
+          {error && (
+            <div className={`mb-4 p-3 rounded-lg text-sm ${isDark ? 'bg-red-900/30 border-red-700 text-red-200' : 'bg-red-50 border border-red-200 text-red-700'}`}>
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className={`mb-4 p-3 rounded-lg text-sm ${isDark ? 'bg-green-900/30 border-green-700 text-green-200' : 'bg-green-50 border border-green-200 text-green-700'}`}>
+              {success}
+            </div>
+          )}
 
-            {/* Success Message */}
-            {success && (
-              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-                <p className="text-sm text-green-700 dark:text-green-400">{success}</p>
-              </div>
-            )}
-
-            {/* Name Field */}
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Full Name
+              <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${labelClass}`}>
+                Username
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-gray-400" />
-                </div>
+                <User className={`absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 ${iconClass}`} />
                 <input
-                  id="name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  placeholder="Preferred username"
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition"
-                  placeholder="Enter your name"
+                  className={`w-full pl-10 pr-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-colors ${inputBase}`}
                 />
               </div>
             </div>
-
-            {/* Email Field */}
-            <div className="animate-fade-in [animation-delay:0.15s]">
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-200">
+            <div>
+              <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${labelClass}`}>
                 Email Address
               </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-200 group-focus-within:text-green-500">
-                  <Mail className="h-5 w-5 text-gray-400 group-focus-within:text-green-500 transition-colors duration-200" />
-                </div>
+              <div className="relative">
+                <Mail className={`absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 ${iconClass}`} />
                 <input
-                  id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  placeholder="e.g., name@example.com"
                   required
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-sm"
-                  placeholder="Enter your email"
+                  className={`w-full pl-10 pr-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-colors ${inputBase}`}
                 />
               </div>
             </div>
-
-            {/* Password Field */}
-            <div className="animate-fade-in [animation-delay:0.2s]">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-200">
+            <div>
+              <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${labelClass}`}>
                 Password
               </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-200 group-focus-within:text-green-500">
-                  <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-green-500 transition-colors duration-200" />
-                </div>
+              <div className="relative">
+                <Lock className={`absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 ${iconClass}`} />
                 <input
-                  id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Secure password"
                   required
                   minLength={8}
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-sm"
-                  placeholder="Enter your password"
+                  className={`w-full pl-10 pr-12 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-colors ${inputBase}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-all duration-200 transform hover:scale-110 active:scale-95"
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 p-1 ${iconClass} ${iconHover}`}
+                  tabIndex={-1}
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
             </div>
-
-            {/* Confirm Password Field */}
-            <div className="animate-fade-in [animation-delay:0.25s]">
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-200">
+            <div>
+              <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${labelClass}`}>
                 Confirm Password
               </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-200 group-focus-within:text-green-500">
-                  <Lock className="h-5 w-5 text-gray-400 group-focus-within:text-green-500 transition-colors duration-200" />
-                </div>
+              <div className="relative">
+                <Lock className={`absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 ${iconClass}`} />
                 <input
-                  id="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm password"
                   required
                   minLength={8}
-                  className="block w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-sm"
-                  placeholder="Enter your password again"
+                  className={`w-full pl-10 pr-12 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-colors ${inputBase}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-all duration-200 transform hover:scale-110 active:scale-95"
+                  className={`absolute right-3 top-1/2 -translate-y-1/2 p-1 ${iconClass} ${iconHover}`}
+                  tabIndex={-1}
                 >
-                  {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
             </div>
-
-            {/* Role Selection */}
-            <div className="animate-fade-in [animation-delay:0.3s]">
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-200">
+            <div>
+              <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${labelClass}`}>
+                Invite Code <span className="font-normal normal-case opacity-75">(Optional)</span>
+              </label>
+              <input
+                type="text"
+                value={inviteCode}
+                onChange={(e) => setInviteCode(e.target.value)}
+                placeholder="Invitation code"
+                className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-colors ${inputBase}`}
+              />
+            </div>
+            <div>
+              <label className={`block text-xs font-semibold uppercase tracking-wider mb-2 ${labelClass}`}>
                 Account Type
               </label>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={() => setRole('farmer')}
-                  className={`px-4 py-3 rounded-lg border-2 transition-all duration-200 font-medium transform ${
+                  className={`flex-1 py-2.5 rounded-lg border-2 font-medium transition-colors ${
                     role === 'farmer'
-                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 shadow-md scale-105'
-                      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-green-300 hover:shadow-sm hover:scale-[1.02] active:scale-95'
+                      ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-[#D4AF37]'
+                      : roleInactive
                   }`}
                 >
                   Farmer
@@ -289,84 +227,46 @@ const Register = () => {
                 <button
                   type="button"
                   onClick={() => setRole('admin')}
-                  className={`px-4 py-3 rounded-lg border-2 transition-all duration-200 font-medium transform ${
+                  className={`flex-1 py-2.5 rounded-lg border-2 font-medium transition-colors ${
                     role === 'admin'
-                      ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 shadow-md scale-105'
-                      : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:border-green-300 hover:shadow-sm hover:scale-[1.02] active:scale-95'
+                      ? 'border-[#D4AF37] bg-[#D4AF37]/10 text-[#D4AF37]'
+                      : roleInactive
                   }`}
                 >
                   Admin
                 </button>
               </div>
             </div>
-
-            {/* Location Field (Optional) */}
-            <div className="animate-fade-in [animation-delay:0.35s]">
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-200">
-                Location <span className="text-gray-500 font-normal">(Optional)</span>
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-200 group-focus-within:text-green-500">
-                  <MapPin className="h-5 w-5 text-gray-400 group-focus-within:text-green-500 transition-colors duration-200" />
-                </div>
+            {role === 'farmer' && (
+              <div>
+                <label className={`block text-xs font-semibold uppercase tracking-wider mb-1.5 ${labelClass}`}>
+                  Location <span className="font-normal normal-case opacity-75">(Optional)</span>
+                </label>
                 <input
-                  id="location"
                   type="text"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-sm"
-                  placeholder="Enter your location"
+                  placeholder="e.g., Chennai"
+                  className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 transition-colors ${inputBase}`}
                 />
               </div>
-            </div>
-
-            {/* Remember Me */}
-            <div className="flex items-center group cursor-pointer animate-fade-in [animation-delay:0.4s]">
-              <input
-                id="remember-me"
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded cursor-pointer transition-all duration-200 hover:scale-110"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300 cursor-pointer transition-colors duration-200 group-hover:text-green-600 dark:group-hover:text-green-400">
-                Remember me
-              </label>
-            </div>
-
-            {/* Submit Button */}
+            )}
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-lg shadow-md text-base font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] animate-fade-in [animation-delay:0.45s]"
+              className="w-full py-3 rounded-lg bg-primary-600 hover:bg-primary-700 text-white font-semibold flex items-center justify-center gap-2 disabled:opacity-50 transition-colors"
             >
-              {loading ? (
-                <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Creating account...
-                </>
-              ) : (
-                <>
-                  <UserPlus className="h-5 w-5 mr-2" />
-                  Create Account
-                </>
-              )}
+              <UserPlus size={20} />
+              {loading ? 'Creating account...' : 'Create Account'}
             </button>
-            </form>
+          </form>
 
-            {/* Sign In Link */}
-            <div className="mt-6 text-center animate-fade-in [animation-delay:0.5s]">
-            <p className="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200">
-              Already have an account?{' '}
-              <Link
-                to="/login"
-                className="font-semibold text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition-all duration-200 hover:underline underline-offset-2 transform inline-block hover:scale-105"
-              >
-                Sign in
-              </Link>
-            </p>
-            </div>
-          </div>
+          <p className={`mt-6 text-center text-sm ${mutedText}`}>
+            Already have an account?{' '}
+            <Link to="/login" className="font-medium text-[#D4AF37] hover:text-[#e6b83d]">
+              Sign In
+            </Link>
+          </p>
         </div>
       </div>
     </div>

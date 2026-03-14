@@ -4,10 +4,12 @@ import { useTranslation } from 'react-i18next';
 
 const Logo = ({ 
   size = 'default',
-  variant = 'dark' // 'dark' for dark backgrounds, 'light' for light backgrounds
+  variant = 'dark', // 'dark' for dark backgrounds, 'light' for light backgrounds
+  onAfterClick,
 }: { 
   size?: 'small' | 'default' | 'large';
   variant?: 'dark' | 'light';
+  onAfterClick?: () => void;
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -22,6 +24,7 @@ const Logo = ({
 
   const handleLogoClick = () => {
     navigate('/dashboard');
+    onAfterClick?.();
   };
 
   return (
