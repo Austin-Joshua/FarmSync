@@ -1,5 +1,4 @@
 {
-  "$schema": "https://json.schemastore.org/package",
   "name": "farmsync",
   "version": "1.0.0",
   "private": true,
