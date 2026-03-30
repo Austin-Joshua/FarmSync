@@ -11,7 +11,7 @@ export default defineConfig({
     proxy: {
       // Forward /api to backend so frontend always uses same origin in dev (no CORS, no port config)
       '/api': {
-        target: 'http://localhost:5003',
+        target: 'http://localhost:9090',
         changeOrigin: true,
       },
     },
