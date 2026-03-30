@@ -1,0 +1,79 @@
+package com.farmsync.service;
+
+import com.farmsync.model.Yield;
+import com.farmsync.model.User;
+import com.farmsync.repository.YieldRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+public class YieldService {
+
+    @Autowired
+    private YieldRepository yieldRepository;
+
+    @Autowired
+    private CropService cropService;
+
+    public List<Yield> findByCropId(@org.springframework.lang.NonNull UUID cropId, User user) {
+        cropService.findById(cropId, user)
+                .orElseThrow(() -> new RuntimeException("Crop not found"));
+        
+        return yieldRepository.findByCropId(cropId);
+    }
+
+    public Optional<Yield> findById(@org.springframework.lang.NonNull UUID id, User user) {
+        Yield yield = yieldRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Yield not found"));
+        
+        // Security check
+        if (!yield.getCrop().getFarm().getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
+            throw new RuntimeException("Unauthorized access");
+        }
+        
+        return Optional.of(yield);
+    }
+
+    @Transactional
+    public Yield createYield(Yield yield, User user) {
+        cropService.findById(java.util.Objects.requireNonNull(yield.getCrop().getId()), user)
+                .orElseThrow(() -> new RuntimeException("Crop not found"));
+        
+        return yieldRepository.save(yield);
+    }
+
+    @Transactional
+    public Yield updateYield(@org.springframework.lang.NonNull UUID id, Yield yieldDetails, User user) {
+        Yield yield = yieldRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Yield not found"));
+
+        // Security check
+        if (!yield.getCrop().getFarm().getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
+            throw new RuntimeException("Unauthorized access");
+        }
+
+        if (yieldDetails.getQuantity() != null) yield.setQuantity(yieldDetails.getQuantity());
+        if (yieldDetails.getDate() != null) yield.setDate(yieldDetails.getDate());
+        if (yieldDetails.getQuality() != null) yield.setQuality(yieldDetails.getQuality());
+
+        return yieldRepository.save(yield);
+    }
+
+    @Transactional
+    public void deleteYield(@org.springframework.lang.NonNull UUID id, User user) {
+        Yield yield = yieldRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Yield not found"));
+
+        // Security check
+        if (!yield.getCrop().getFarm().getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
+            throw new RuntimeException("Unauthorized access");
+        }
+
+        yieldRepository.delete(yield);
+    }
+}
