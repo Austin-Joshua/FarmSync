@@ -12,6 +12,7 @@ com\farmsync\model\StockItem.class
 com\farmsync\config\SecurityConfig.class
 com\farmsync\repository\MonthlyIncomeRepository.class
 com\farmsync\dto\ExpenseResponse.class
+com\farmsync\security\OAuth2AuthenticationSuccessHandler.class
 com\farmsync\service\SoilTypeService.class
 com\farmsync\controller\FarmController.class
 com\farmsync\model\Crop.class
@@ -66,6 +67,7 @@ com\farmsync\model\AuditLog$AuditLogBuilder.class
 com\farmsync\model\UserSettings.class
 com\farmsync\model\MonthlyIncome$MonthlyIncomeBuilder.class
 com\farmsync\repository\FertilizerRepository.class
+com\farmsync\security\CustomOAuth2UserService.class
 com\farmsync\model\MonthlyStockUsage.class
 com\farmsync\model\AuditLog.class
 com\farmsync\model\Crop$CropBuilder.class

@@ -65,6 +65,7 @@
 
 @layer base {
   :root {
+    scroll-behavior: smooth;
     --color-dark-bg: #0f172a;
     --color-dark-surface: #1e293b;
     --color-dark-surface-elevated: #334155;
@@ -85,7 +86,6 @@
 
   body {
     @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
-    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Enhanced dark mode text color overrides for better readability */
@@ -118,14 +118,9 @@
     color: rgb(75 85 99); /* gray-600 */
   }
 
-  /* Smooth transitions for all color changes */
-  * {
+  /* Smooth transitions for key interactive elements only */
+  button, a, input, select, textarea {
     @apply transition-colors duration-200;
-  }
-
-  /* Prevent transitions on transform/opacity for performance */
-  *:not([class*="transition"]) {
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
   }
 }
 
@@ -184,13 +179,13 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--glass-border);
-    shadow: var(--glass-shadow);
+    box-shadow: var(--glass-shadow);
   }
 
   .dark .glass {
     background: var(--glass-dark-bg);
     border: 1px solid var(--glass-dark-border);
-    shadow: var(--glass-dark-shadow);
+    box-shadow: var(--glass-dark-shadow);
   }
 
   .glass-card {

@@ -1,3 +1,4 @@
+C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\security\OAuth2AuthenticationSuccessHandler.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\config\SecurityConfig.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\dto\YieldResponse.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\MonthlyStockUsageRepository.java
@@ -22,6 +23,7 @@ C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farm
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\CropRepository.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\service\UserService.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\PesticideRepository.java
+C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\security\CustomOAuth2UserService.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\model\AuditLog.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\StockItemRepository.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\dto\StockResponse.java

@@ -23,7 +23,11 @@ const Logo = ({
   const textColor = variant === 'dark' ? 'text-white' : 'text-gray-900';
 
   const handleLogoClick = () => {
-    navigate('/dashboard');
+    if (window.location.pathname === '/' || window.location.pathname === '/landing') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      navigate('/');
+    }
     onAfterClick?.();
   };
 
