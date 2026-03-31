@@ -1,17 +1,15 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { 
-  Leaf, ArrowRight, Sprout, TrendingUp, ShieldCheck, Sun, Moon, 
-  Map as MapIcon, Calendar, PieChart, Bell, Zap, Database, Globe
+  ArrowRight, TrendingUp, Sun, Moon, 
+  Calendar, PieChart, Zap, Database
 } from 'lucide-react';
 import { useThemeStore } from '../context/useThemeStore';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import { useTranslation } from 'react-i18next';
 
 const Landing = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useThemeStore();
-  const { t } = useTranslation();
 
   const features = [
     {
