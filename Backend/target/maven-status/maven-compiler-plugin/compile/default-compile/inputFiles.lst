@@ -6,6 +6,7 @@ C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farm
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\MonthlyIncomeRepository.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\model\Yield.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\dto\YieldRequest.java
+C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\service\AuthService.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\service\FarmService.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\service\DiseaseScanService.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\security\JwtAuthenticationFilter.java
@@ -14,6 +15,7 @@ C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farm
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\UserRepository.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\controller\DiseaseScanController.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\model\User.java
+C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\dto\LoginRequest.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\FarmSyncApplication.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\service\CropTypeService.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\SoilTypeRepository.java
@@ -24,9 +26,12 @@ C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farm
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\StockItemRepository.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\dto\StockResponse.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\DiseaseScanRepository.java
+C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\config\DataInitializer.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\dto\UserResponse.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\controller\CropController.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\dto\FarmResponse.java
+C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\dto\LoginResponse.java
+C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\controller\AuthController.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\CropTypeRepository.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\YieldRepository.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\model\DiseaseScan.java
@@ -47,6 +52,7 @@ C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farm
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\dto\CropRequest.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\model\CropType.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\FertilizerRepository.java
+C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\controller\HealthController.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\model\MonthlyIncome.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\repository\FarmRepository.java
 C:\Users\austi\OneDrive\Desktop\FarmSync\FarmSync\Backend\src\main\java\com\farmsync\model\StockItem.java

@@ -83,7 +83,7 @@ const Dashboard = () => {
       // Check cache first
       const cacheKey = 'low_stock_items';
       const cachedData = DataCache.get(cacheKey);
-      if (cachedData) {
+      if (cachedData && Array.isArray(cachedData)) {
         setLowStockItems(cachedData);
         return;
       }
@@ -112,7 +112,7 @@ const Dashboard = () => {
       // Check cache first
       const cacheKey = 'weather_alerts';
       const cachedData = DataCache.get(cacheKey);
-      if (cachedData) {
+      if (cachedData && Array.isArray(cachedData)) {
         setWeatherAlerts(cachedData);
         return;
       }
@@ -192,32 +192,38 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.title')}</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">{t('dashboard.subtitle')}</p>
+      {/* Header with animated subtle fade-in */}
+      <div className="mb-6 animate-in fade-in duration-700">
+        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">{t('dashboard.title')}</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-1 font-medium">{t('dashboard.subtitle')}</p>
       </div>
 
-      {/* Weather, Alerts & Map Section */}
+      {/* Weather, Alerts & Map Section with glassmorphism */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <ClimateAlert />
-          {/* Location Map */}
-          <div>
+          <div className="glass-card overflow-hidden">
+            <ClimateAlert />
+          </div>
+          {/* Location Map with glass container */}
+          <div className="glass-card p-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
               <MapPin size={24} className="text-primary-600 dark:text-primary-400" />
               {t('dashboard.farmLocation')}
             </h2>
-            <LocationMap
-              latitude={gpsLocation.latitude}
-              longitude={gpsLocation.longitude}
-              locationName={user?.location || gpsLocation.address || t('dashboard.locationNotSet')}
-              height="350px"
-            />
+            <div className="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700/50 shadow-inner">
+              <LocationMap
+                latitude={gpsLocation.latitude}
+                longitude={gpsLocation.longitude}
+                locationName={user?.location || gpsLocation.address || t('dashboard.locationNotSet')}
+                height="350px"
+              />
+            </div>
           </div>
         </div>
-        <div>
-          <WeatherCard />
+        <div className="space-y-6">
+          <div className="glass-card p-6 h-full">
+            <WeatherCard />
+          </div>
 
           {/* Low Stock Alert Widget */}
           {lowStockItems.length > 0 && (
@@ -376,8 +382,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 1. Land Properties Summary */}
-      <div className="card">
+      {/* 1. Land Properties Summary with glass effect */}
+      <div className="glass-card p-6">
         <div className="flex items-center gap-2 mb-4">
           <LandPlot className="text-primary-600 dark:text-primary-400" size={24} />
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.landPropertiesSummary')}</h2>
@@ -423,11 +429,13 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 2. Input Investment Overview */}
-      <div className="card cursor-pointer hover:shadow-lg dark:hover:shadow-dark-xl transition-shadow" onClick={() => navigate('/expenses')}>
-        <div className="flex items-center gap-2 mb-4">
-          <IndianRupee className="text-primary-600 dark:text-primary-400" size={24} />
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.investmentOverview')}</h2>
+      {/* 2. Input Investment Overview with interactive glass card */}
+      <div className="glass-card p-6 cursor-pointer hover:shadow-xl dark:hover:shadow-primary-900/10 transition-all duration-300" onClick={() => navigate('/expenses')}>
+        <div className="flex items-center gap-2 mb-6">
+          <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
+            <IndianRupee className="text-primary-600 dark:text-primary-400" size={24} />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">{t('dashboard.investmentOverview')}</h2>
           <ExternalLink size={18} className="text-gray-400 dark:text-gray-500 ml-auto" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -469,9 +477,9 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 3. Profit & Yield Summary */}
+      {/* 3. Profit & Yield Summary and Stock */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="card">
+        <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-4">
             <TrendingUp className="text-primary-600 dark:text-primary-400" size={24} />
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.profitSummary')}</h2>
@@ -500,7 +508,7 @@ const Dashboard = () => {
         </div>
 
         {/* 4. Stock & Materials Status */}
-        <div className="card">
+        <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-4">
             <Package className="text-primary-600 dark:text-primary-400" size={24} />
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.stockMaterialsStatus')}</h2>
@@ -575,7 +583,7 @@ const Dashboard = () => {
       </div>
 
       {/* 5. Farmer Registration Statistics */}
-      <div className="card">
+      <div className="glass-card p-6">
         <div className="flex items-center gap-2 mb-4">
           <Users className="text-primary-600 dark:text-primary-400" size={24} />
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.farmerRegistration')}</h2>
@@ -807,12 +815,12 @@ const Dashboard = () => {
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('dashboard.investmentByCategory')}</h3>
               <div className="space-y-2">
-                {Object.entries(
+                {(Object.entries(
                   detailModal.data.expenses.reduce((acc: Record<string, number>, exp: any) => {
                     acc[exp.category] = (acc[exp.category] || 0) + exp.amount;
                     return acc;
                   }, {} as Record<string, number>)
-                ).map(([category, amount]) => (
+                ) as [string, number][]).map(([category, amount]) => (
                   <div key={category} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <span className="font-medium text-gray-900 dark:text-white">
                       {t(`expenses.${category}`) || t(`dashboard.category${category.charAt(0).toUpperCase() + category.slice(1)}`) || category}

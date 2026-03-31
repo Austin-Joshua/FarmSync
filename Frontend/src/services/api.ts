@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { useAuthStore } from '../context/useAuthStore';
 
-// Determine the API base URL
-const API_BASE_URL = 'http://localhost:8080/api';
+import { API_BASE_URL } from '../config/api';
 
 // Create axios instance
 const api = axios.create({
@@ -43,8 +42,8 @@ api.interceptors.response.use(
 const ApiService = {
   // Auth
   login: (email: string, password: string) => api.post('/auth/login', { email, password }),
-  register: (name: string, email: string, password: string, role: string, location?: string) => 
-    api.post('/auth/register', { name, email, password, role, location }),
+  register: (name: string, email: string, password: string, role: string, metadata?: any) => 
+    api.post('/auth/register', { name, email, password, role, ...metadata }),
   forgotPassword: (email: string) => api.post('/auth/forgot-password', { email }),
   resetPassword: (token: string, password: string) => api.post('/auth/reset-password', { token, password }),
   logout: () => api.post('/auth/logout'),

@@ -4,7 +4,9 @@ import { useLocation } from '../hooks/useLocation';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, X, Info, AlertCircle, Wind, Droplet, Thermometer } from 'lucide-react';
 
-const ALERTS_API_URL = 'http://localhost:8080/api/alerts';
+import { API_BASE_URL as BASE_URL } from '../config/api';
+
+const ALERTS_API_URL = `${BASE_URL}/alerts`;
 
 const getClimateAlerts = async (lat: number, lon: number) => {
   return axios.get(ALERTS_API_URL, { params: { lat, lon } });

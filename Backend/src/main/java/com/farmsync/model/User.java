@@ -28,6 +28,9 @@ public class User {
     @Column(nullable = false)
     private String role; // 'farmer' or 'admin'
 
+    @Column(nullable = false)
+    private String password;
+
     private String location;
 
     @Column(name = "land_size")

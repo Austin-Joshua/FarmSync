@@ -1,6 +1,7 @@
 com\farmsync\controller\DiseaseScanController.class
 com\farmsync\model\CropType.class
 com\farmsync\dto\DiseaseScanRequest.class
+com\farmsync\config\DataInitializer.class
 com\farmsync\model\Expense.class
 com\farmsync\dto\CropRequest.class
 com\farmsync\repository\FarmRepository.class
@@ -40,6 +41,7 @@ com\farmsync\model\UserSettings$UserSettingsBuilder.class
 com\farmsync\model\StockItem$StockItemBuilder.class
 com\farmsync\service\CropTypeService.class
 com\farmsync\model\SoilType.class
+com\farmsync\controller\HealthController.class
 com\farmsync\controller\ExpenseController.class
 com\farmsync\model\Farm$FarmBuilder.class
 com\farmsync\service\FarmService.class
@@ -57,6 +59,7 @@ com\farmsync\dto\FarmResponse.class
 com\farmsync\repository\DiseaseScanRepository.class
 com\farmsync\repository\PesticideRepository.class
 com\farmsync\dto\UserResponse.class
+com\farmsync\dto\LoginRequest.class
 com\farmsync\controller\StockController.class
 com\farmsync\dto\CropResponse.class
 com\farmsync\model\AuditLog$AuditLogBuilder.class
@@ -75,9 +78,12 @@ com\farmsync\model\DiseaseScan$DiseaseScanBuilder.class
 com\farmsync\repository\MonthlyStockUsageRepository.class
 com\farmsync\service\DiseaseScanService.class
 com\farmsync\FarmSyncApplication.class
+com\farmsync\controller\AuthController.class
 com\farmsync\model\Irrigation$IrrigationBuilder.class
 com\farmsync\model\MonthlyStockUsage$MonthlyStockUsageBuilder.class
 com\farmsync\service\ExpenseService.class
 com\farmsync\security\JwtAuthenticationFilter.class
+com\farmsync\service\AuthService.class
+com\farmsync\dto\LoginResponse.class
 com\farmsync\repository\SoilTypeRepository.class
 com\farmsync\model\MonthlyIncome.class

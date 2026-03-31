@@ -16,7 +16,9 @@ import {
 const WEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY || '';
 const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5';
 const GEOCODING_API_URL = 'https://api.openweathermap.org/geo/1.0';
-const ALERTS_API_URL = 'http://localhost:8080/api/alerts';
+import { API_BASE_URL as BASE_URL } from '../config/api';
+
+const ALERTS_API_URL = `${BASE_URL}/alerts`;
 
 const getCurrentWeather = async (lat: number, lon: number) => {
   if (!WEATHER_API_KEY) {

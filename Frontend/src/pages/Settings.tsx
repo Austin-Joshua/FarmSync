@@ -213,7 +213,7 @@ const Settings = () => {
                      />
                    </div>
                    <div>
-                     <label className="label">{t('login.email')}</label>
+                     <label className="label">{t('auth.emailAddress')}</label>
                      <input className="input opacity-50 cursor-not-allowed" value={user?.email || ''} disabled />
                    </div>
                  </div>

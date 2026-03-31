@@ -20,7 +20,6 @@ const LanguageSwitcher = ({ variant = 'desktop' }: LanguageSwitcherProps) => {
     { code: 'kn', name: 'ಕನ್ನಡ (Kannada)', flag: '🇮🇳' },
   ];
 
-  const currentLanguage = languages.find((lang) => lang.code === i18n.language) || languages[0];
 
   const changeLanguage = (langCode: string) => {
     i18n.changeLanguage(langCode);
@@ -55,8 +54,6 @@ const LanguageSwitcher = ({ variant = 'desktop' }: LanguageSwitcherProps) => {
         title={t('settings.language')}
       >
         <Languages size={20} className="flex-shrink-0" />
-        <span className="hidden sm:inline text-sm font-medium">{currentLanguage.code.toUpperCase()}</span>
-        <span className="text-lg">{currentLanguage.flag}</span>
       </button>
 
       {isOpen && (

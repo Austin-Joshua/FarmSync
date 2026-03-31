@@ -7,6 +7,7 @@ import { cleanupAllCaches } from './utils/cacheCleanup';
 import { Toaster } from 'react-hot-toast';
 
 // Pages
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -33,6 +34,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import OAuthTokenHandler from './components/OAuthTokenHandler';
 import { initializeServiceWorker } from './utils/serviceWorkerRegistration';
 import { useThemeStore } from './context/useThemeStore';
+import { ThemeProvider } from './context/ThemeContext';
 
 // Component to handle document title updates
 const AppContent = () => {
@@ -213,9 +215,9 @@ const AppContent = () => {
         }
       />
 
-      {/* Default redirect - redirect to login */}
-      <Route path="/" element={<Navigate to="/login" replace />} />
-      <Route path="*" element={<Navigate to="/login" replace />} />
+      {/* Default redirect - redirect to landing */}
+      <Route path="/" element={<Landing />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
     </OAuthTokenHandler>
   );
@@ -257,22 +259,24 @@ function App() {
   }, []);
 
   return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <AppContent />
-        <SessionTimeoutWarning />
-        <Toaster 
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#333',
-              color: '#fff',
-            },
-          }}
-        />
-      </BrowserRouter>
-    </ErrorBoundary>
+    <ThemeProvider>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <AppContent />
+          <SessionTimeoutWarning />
+          <Toaster 
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#333',
+                color: '#fff',
+              },
+            }}
+          />
+        </BrowserRouter>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 }
 

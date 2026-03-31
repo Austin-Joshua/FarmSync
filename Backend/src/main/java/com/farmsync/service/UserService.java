@@ -15,6 +15,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
     public Optional<User> findById(@org.springframework.lang.NonNull UUID id) {
         return userRepository.findById(id);
     }
@@ -27,6 +30,9 @@ public class UserService {
     public User createUser(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("User with this email already exists");
+        }
+        if (user.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         return userRepository.save(java.util.Objects.requireNonNull(user));
     }

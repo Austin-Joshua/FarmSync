@@ -51,7 +51,8 @@ export const useAuthStore = create<AuthState>()(
       loginWithToken: async (token) => {
         try {
           localStorage.setItem('token', token);
-          const response = await fetch('http://localhost:8080/api/auth/profile', {
+          const { API_BASE_URL } = await import('../config/api');
+          const response = await fetch(`${API_BASE_URL}/auth/profile`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (response.ok) {

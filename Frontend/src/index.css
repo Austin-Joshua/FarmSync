@@ -65,14 +65,22 @@
 
 @layer base {
   :root {
-    --color-dark-bg: #111827;
-    --color-dark-surface: #1f2937;
-    --color-dark-surface-elevated: #374151;
-    --color-dark-text-primary: #f9fafb;
-    --color-dark-text-secondary: #d1d5db;
-    --color-dark-text-tertiary: #9ca3af;
-    --color-dark-border: #374151;
-    --color-dark-border-hover: #4b5563;
+    --color-dark-bg: #0f172a;
+    --color-dark-surface: #1e293b;
+    --color-dark-surface-elevated: #334155;
+    --color-dark-text-primary: #f8fafc;
+    --color-dark-text-secondary: #cbd5e1;
+    --color-dark-text-tertiary: #94a3b8;
+    --color-dark-border: #334155;
+    --color-dark-border-hover: #475569;
+    
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    
+    --glass-dark-bg: rgba(30, 41, 59, 0.7);
+    --glass-dark-border: rgba(255, 255, 255, 0.1);
+    --glass-dark-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
   }
 
   body {
@@ -169,6 +177,24 @@
 
   .dark-border-hover {
     @apply border-gray-300 dark:border-gray-600;
+  }
+
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    shadow: var(--glass-shadow);
+  }
+
+  .dark .glass {
+    background: var(--glass-dark-bg);
+    border: 1px solid var(--glass-dark-border);
+    shadow: var(--glass-dark-shadow);
+  }
+
+  .glass-card {
+    @apply glass rounded-2xl p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1;
   }
 }
 

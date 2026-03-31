@@ -1,40 +1,27 @@
-# Logs
-*.log
-logs/
-*.log.*
-combined.log
-
-# Editor / tool artifacts
-.bolt/
-
-# Node modules
-node_modules/
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# Build outputs
-dist/
-build/
-*.tsbuildinfo
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
+# General
 .DS_Store
-Thumbs.db
+.idea/
+.vscode/
 
-# Temporary files
-*.tmp
-*.temp
-*.bak
+# Backend (Spring Boot)
+Backend/target/
+Backend/*.jar
+Backend/*.war
+Backend/.mvn/wrapper/maven-wrapper.jar
+Backend/hs_err_pid*
 
-# Package lock (if not using npm ci)
-# package-lock.json
+# Frontend (React)
+Frontend/node_modules/
+Frontend/dist/
+Frontend/.env.local
+Frontend/.env.development.local
+Frontend/.env.test.local
+Frontend/.env.production.local
+Frontend/npm-debug.log*
+Frontend/yarn-debug.log*
+Frontend/yarn-error.log*
+
+# Other
+*.log
+.gemini/
+/tmp/
