@@ -124,16 +124,16 @@ const Login = () => {
             </div>
 
             {!isApiOnline && (
-              <div className="mb-6 p-4 bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30 rounded-xl flex items-center gap-3 text-red-600 dark:text-red-400 backdrop-blur-sm">
-                <AlertCircle size={20} />
-                <p className="text-sm">Server offline. Demo mode active.</p>
+              <div className="mb-4 p-2 bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30 rounded-lg flex items-center gap-2 text-red-600 dark:text-red-400 backdrop-blur-sm">
+                <AlertCircle size={16} className="shrink-0" />
+                <p className="text-[11px] font-bold uppercase tracking-wide">Server offline (Demo Mode)</p>
               </div>
             )}
 
             {error && (
-              <div className="mb-6 p-4 bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30 rounded-xl flex items-center gap-3 text-red-600 dark:text-red-400">
-                <AlertCircle size={20} />
-                <p className="text-sm">{error}</p>
+              <div className="mb-4 p-2 bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30 rounded-lg flex items-center gap-2 text-red-600 dark:text-red-400">
+                <AlertCircle size={16} className="shrink-0" />
+                <p className="text-[11px] font-bold uppercase tracking-wide">{error}</p>
               </div>
             )}
 
