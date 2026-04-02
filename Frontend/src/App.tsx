@@ -1,6 +1,7 @@
 // Main App component with routing
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import { cleanupAllCaches } from './utils/cacheCleanup';
@@ -15,226 +16,123 @@ import ResetPassword from './pages/ResetPassword';
 import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import CropManagement from './pages/CropManagement';
-import FertilizerPesticide from './pages/FertilizerPesticide';
-import Irrigation from './pages/Irrigation';
 import ExpenseManagement from './pages/ExpenseManagement';
-import YieldTracking from './pages/YieldTracking';
-import Reports from './pages/Reports';
-import History from './pages/History';
-import AboutUs from './pages/AboutUs';
 import Settings from './pages/Settings';
-import UserPage from './pages/UserPage';
-import CropCalendar from './pages/CropCalendar';
-import MarketPrices from './pages/MarketPrices';
 import Fields from './pages/Fields';
-import AdminDashboard from './pages/AdminDashboard';
-import AdminProtectedRoute from './components/AdminProtectedRoute';
+import DiseaseDetection from './pages/DiseaseDetection';
 import SessionTimeoutWarning from './components/SessionTimeoutWarning';
 import ErrorBoundary from './components/ErrorBoundary';
-import OAuthTokenHandler from './components/OAuthTokenHandler';
-import { initializeServiceWorker } from './utils/serviceWorkerRegistration';
-import { useThemeStore } from './context/useThemeStore';
+import { AuthProvider } from './context/AuthContext';
+import { NotificationProvider } from './context/NotificationContext';
+import AIAssistant from './components/AIAssistant';
 import { ThemeProvider } from './context/ThemeContext';
 
 // Component to handle document title updates
 const AppContent = () => {
   const location = useLocation();
+  const { t } = useTranslation();
 
-  // Set document title to FarmSync on every route change
+  // Set document title to localized app name on every route change
   useEffect(() => {
-    document.title = 'FarmSync';
-  }, [location.pathname]);
+    document.title = t('common.appName') || 'FarmSync';
+  }, [location.pathname, t]);
 
   return (
-    <OAuthTokenHandler>
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-600 dark:text-gray-400 font-medium animate-pulse">{t('common.loading')}</p>
+        </div>
+      </div>
+    }>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
-      {/* Protected Routes */}
-      <Route
-        path="/onboarding"
-        element={
-          <ProtectedRoute>
-            <Onboarding />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <Dashboard />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/crops"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <CropManagement />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/fertilizers"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <FertilizerPesticide />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/irrigation"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <Irrigation />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/expenses"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <ExpenseManagement />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/yield"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <YieldTracking />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/reports"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <Reports />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/history"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <History />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/about"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <AboutUs />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/settings"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <Settings />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/user"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <UserPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/calendar"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <CropCalendar />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/market-prices"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <MarketPrices />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/fields"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <Fields />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      {/* Admin Only Routes */}
-      <Route
-        path="/admin"
-        element={
-          <AdminProtectedRoute>
-            <Layout>
-              <AdminDashboard />
-            </Layout>
-          </AdminProtectedRoute>
-        }
-      />
-
-      {/* Default redirect - redirect to landing */}
-      <Route path="/" element={<Landing />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-    </OAuthTokenHandler>
+        {/* Protected Routes */}
+        <Route
+          path="/onboarding"
+          element={
+            <ProtectedRoute>
+              <Onboarding />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Dashboard />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/crops"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <CropManagement />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/fields"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Fields />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/expenses"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <ExpenseManagement />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Settings />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ai-detect"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <DiseaseDetection />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        
+        {/* Default redirect - redirect to landing */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      <SessionTimeoutWarning />
+    </Suspense>
   );
 };
 
 function App() {
-  const { theme } = useThemeStore();
-
-  // Apply theme on load
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
-
   // Cleanup caches and service workers on app load
   useEffect(() => {
     cleanupAllCaches().catch((error) => {
@@ -242,40 +140,28 @@ function App() {
     });
   }, []);
 
-  // Register service worker on app load (don't block if it fails)
-  useEffect(() => {
-    try {
-      initializeServiceWorker().catch((error) => {
-        console.warn('Service worker registration failed:', error);
-      });
-    } catch (error) {
-      console.warn('Service worker initialization error:', error);
-    }
-  }, []);
-
-  // Set initial document title to FarmSync
-  useEffect(() => {
-    document.title = 'FarmSync';
-  }, []);
-
   return (
     <ThemeProvider>
-      <ErrorBoundary>
-        <BrowserRouter>
-          <AppContent />
-          <SessionTimeoutWarning />
-          <Toaster 
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: '#333',
-                color: '#fff',
-              },
-            }}
-          />
-        </BrowserRouter>
-      </ErrorBoundary>
+      <AuthProvider>
+        <NotificationProvider>
+          <ErrorBoundary>
+            <BrowserRouter>
+              <AppContent />
+              <AIAssistant />
+              <Toaster 
+                position="top-right"
+                toastOptions={{
+                  duration: 4000,
+                  style: {
+                    background: '#333',
+                    color: '#fff',
+                  },
+                }}
+              />
+            </BrowserRouter>
+          </ErrorBoundary>
+        </NotificationProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

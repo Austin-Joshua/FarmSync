@@ -1,19 +1,13 @@
-// Settings Page - User preferences, profile management, and configuration
 import { useState, useEffect } from 'react';
-import { useAuthStore } from '../context/useAuthStore';
-import { useThemeStore } from '../context/useThemeStore';
-import { UserSettings } from '../types';
-import { useLocation } from '../hooks/useLocation';
+import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import i18n from '../i18n/config';
+import api from '../services/api';
 import {
   Save,
   Moon,
   Sun,
-  Check,
-  MapPin,
   Edit2,
-  X,
   Loader,
   Globe,
   Upload,
@@ -23,17 +17,13 @@ import LanguageSwitcher from '../components/LanguageSwitcher';
 import toast from 'react-hot-toast';
 
 const Settings = () => {
-  const { user, updateUser, uploadProfilePicture } = useAuthStore();
-  const { theme: currentTheme, toggleTheme } = useThemeStore();
-  const { location: gpsLocation, requestLocation } = useLocation();
+  const { user } = useAuth();
+  const { theme: currentTheme, toggleTheme } = useTheme();
   const { t } = useTranslation();
   
   const [activeTab, setActiveTab] = useState<'profile' | 'preferences' | 'security'>('profile');
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [farms, setFarms] = useState([...mockFarms]);
-  const [editingFarmId, setEditingFarmId] = useState<string | null>(null);
-  const [farmEditData, setFarmEditData] = useState<{ name: string; location: string; landSize: number; soilType: string } | null>(null);
 
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
@@ -43,38 +33,9 @@ const Settings = () => {
     soilType: user?.soil_type || '',
   });
 
-  const [settings, setSettings] = useState<UserSettings>(() => {
-    const savedSettings = localStorage.getItem('userSettings');
-    const currentLang = i18n.language || 'en';
-    if (savedSettings) {
-      const parsed = JSON.parse(savedSettings);
-      return { ...parsed, language: currentLang, theme: currentTheme };
-    }
-    return {
-      theme: currentTheme,
-      notifications: true,
-      language: currentLang,
-      currency: 'INR',
-      dataRetention: 365,
-      weatherAlerts: true,
-      stockAlertThreshold: 20,
-      autoRefresh: false,
-      refreshInterval: 30,
-      dateFormat: 'DD/MM/YYYY',
-      timeZone: 'IST',
-      units: 'metric',
-      emailNotifications: true,
-      smsNotifications: false,
-      pushNotifications: true,
-      cropRecommendations: true,
-      irrigationReminders: true,
-      lowStockAlert: true,
-      climateWarnings: true,
-      harvestReminders: true,
-      systemUpdates: true,
-      dashboardWidgets: ['weather', 'stock', 'map', 'alerts'],
-    };
-  });
+  // We can keep settings state if we plan to use it for preferences tab checkbox/inputs later
+  // For now it was marked as unused. I'll keep it but actually use it in the UI if possible or remove.
+  // Let's remove for now to clear lints.
 
   const [uploadingPicture, setUploadingPicture] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -85,17 +46,28 @@ const Settings = () => {
       setProfileData({
         name: user.name || '',
         email: user.email || '',
-        location: user.location || '',
-        landSize: user.land_size || 0,
-        soilType: user.soil_type || '',
+        location: (user as any).location || '',
+        landSize: (user as any).land_size || 0,
+        soilType: (user as any).soil_type || '',
       });
+      
+      const fetchFarms = async () => {
+        try {
+          await api.getFarms();
+          // We fetched but aren't displaying them currently in Settings.
+          // In a real app we might show farm names.
+        } catch (err) {
+          console.error('Failed to fetch farms:', err);
+        }
+      };
+      fetchFarms();
     }
   }, [user]);
 
   const handleSaveProfile = async () => {
     setSaving(true);
     try {
-      await updateUser({
+      await api.updateProfile({
         name: profileData.name,
         location: profileData.location || null,
         land_size: profileData.landSize || 0,
@@ -122,11 +94,12 @@ const Settings = () => {
 
     setUploadingPicture(true);
     try {
-      await uploadProfilePicture(file);
+      await api.uploadProfilePicture(file);
       setPreviewUrl(null);
       if (fileInput) fileInput.value = '';
       toast.success(t('profile.pictureUploaded') || 'Profile picture updated');
     } catch (error: any) {
+      console.error('Upload picture error:', error);
       toast.error(`${t('profile.failedToUploadPicture') || 'Upload failed'}: ${error.message}`);
       setPreviewUrl(null);
     } finally {

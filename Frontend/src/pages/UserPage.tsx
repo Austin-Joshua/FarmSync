@@ -1,7 +1,7 @@
 // User Page with Database Connectivity Status and Error Display
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '../context/useAuthStore';
+import { useAuth } from '../context/AuthContext';
 import { formatDateDisplay } from '../utils/dateFormatter';
 import { 
   User, 
@@ -28,7 +28,7 @@ interface DatabaseStatus {
 
 const UserPage = () => {
   const { t } = useTranslation();
-  const { user: authUser } = useAuthStore();
+  const { user: authUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [dbStatus, setDbStatus] = useState<DatabaseStatus | null>(null);

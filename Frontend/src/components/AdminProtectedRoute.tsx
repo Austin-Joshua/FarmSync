@@ -1,14 +1,14 @@
 // Admin Protected Route component - Only allows admin access
 import { Navigate } from 'react-router-dom';
 import { ReactNode } from 'react';
-import { useAuthStore } from '../context/useAuthStore';
+import { useAuth } from '../context/AuthContext';
 
 interface AdminProtectedRouteProps {
   children: ReactNode;
 }
 
 const AdminProtectedRoute = ({ children }: AdminProtectedRouteProps) => {
-  const { isAuthenticated, user } = useAuthStore();
+  const { isAuthenticated, user } = useAuth();
 
   // Redirect to login if not authenticated
   if (!isAuthenticated) {

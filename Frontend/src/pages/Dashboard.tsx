@@ -5,7 +5,7 @@ import StatCard from '../components/StatCard';
 import WeatherCard from '../components/WeatherCard';
 import ClimateAlert from '../components/ClimateAlert';
 import LocationMap from '../components/LocationMap';
-import { useAuthStore } from '../context/useAuthStore';
+import { useAuth } from '../context/AuthContext';
 import Skeleton from '../components/ui/Skeleton';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from '../hooks/useLocation';
@@ -27,16 +27,7 @@ import {
   Wind,
   Thermometer,
 } from 'lucide-react';
-import { translateFertilizer } from '../utils/translations';
 import {
-  mockFarms,
-  mockExpenses,
-  mockTransactions,
-  mockStockItems,
-  mockFarmerStats,
-  mockLandProperties,
-  mockYields,
-  getTotalYield,
   StockItem,
 } from '../data/mockData';
 import {
@@ -53,15 +44,14 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import DetailModal from '../components/DetailModal';
-import { mockCrops } from '../data/mockData';
-import { translateCrop, translateDistrict } from '../utils/translations';
+import { translateCrop, translateDistrict, translateCategory } from '../utils/translations';
 import { getCropIcon } from '../utils/cropIcons';
 import api from '../services/api';
 import { DataCache } from '../utils/dataCache';
 import { formatDateDisplay } from '../utils/dateFormatter';
 
 const Dashboard = () => {
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const { t } = useTranslation();
   const { location: gpsLocation } = useLocation();
   const navigate = useNavigate();
@@ -69,31 +59,96 @@ const Dashboard = () => {
     type: 'totalFields' | 'activeCrops' | 'totalYield' | 'netProfit' | null;
     data?: any;
   }>({ type: null });
+  
+  const [data, setData] = useState<{
+    farms: any[];
+    crops: any[];
+    expenses: any[];
+    yields: any[];
+    transactions: any[];
+    stockItems: any[];
+    farmerStats: any[];
+  }>({
+    farms: [],
+    crops: [],
+    expenses: [],
+    yields: [],
+    transactions: [],
+    stockItems: [],
+    farmerStats: [],
+  });
+
   const [lowStockItems, setLowStockItems] = useState<StockItem[]>([]);
   const [weatherAlerts, setWeatherAlerts] = useState<any[]>([]);
   const [loadingLowStock, setLoadingLowStock] = useState(false);
 
   // NOTE: we no longer auto-redirect admins away from the Home (Dashboard) page.
 
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
+
+  // Load all dashboard data
+  const fetchDashboardData = async (force = false) => {
+    if (!user) return;
+    
+    // Check cache first if not forced
+    if (!force) {
+      const cachedData = DataCache.get<any>('dashboard_data');
+      if (cachedData) {
+        setData(cachedData.data);
+        setLastUpdated(cachedData.timestamp);
+        return;
+      }
+    }
+
+    try {
+      const [
+        farmsRes,
+        cropsRes,
+        expensesRes,
+        yieldsRes,
+        stockRes,
+        farmerStatsRes
+      ] = await Promise.all([
+        api.getFarms(),
+        api.getCrops(),
+        api.getExpenses(),
+        api.getYields(),
+        api.getStockItems(),
+        user.role === 'admin' ? api.getAdminStatistics() : Promise.resolve({ data: { geographicStats: [] } })
+      ]);
+
+      const newData = {
+        farms: farmsRes.data || [],
+        crops: cropsRes.data || [],
+        expenses: expensesRes.data || [],
+        yields: yieldsRes.data || [],
+        transactions: [], 
+        stockItems: stockRes.data || [],
+        farmerStats: farmerStatsRes.data?.geographicStats || [],
+      };
+
+      const now = Date.now();
+      setData(newData);
+      setLastUpdated(now);
+      DataCache.set('dashboard_data', { data: newData, timestamp: now });
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [user]);
+
   // Load low stock items
   useEffect(() => {
     const loadLowStockItems = async () => {
       if (!user) return;
-      
-      // Check cache first
-      const cacheKey = 'low_stock_items';
-      const cachedData = DataCache.get(cacheKey);
-      if (cachedData && Array.isArray(cachedData)) {
-        setLowStockItems(cachedData);
-        return;
-      }
-
       setLoadingLowStock(true);
       try {
         const response = await api.getLowStockItems();
         if (response.data) {
           setLowStockItems(response.data);
-          DataCache.set(cacheKey, response.data);
         }
       } catch (error) {
         console.error('Failed to load low stock items:', error);
@@ -108,21 +163,10 @@ const Dashboard = () => {
   useEffect(() => {
     const loadWeatherAlerts = async () => {
       if (!user) return;
-      
-      // Check cache first
-      const cacheKey = 'weather_alerts';
-      const cachedData = DataCache.get(cacheKey);
-      if (cachedData && Array.isArray(cachedData)) {
-        setWeatherAlerts(cachedData);
-        return;
-      }
-
       try {
         const response = await api.getUnreadAlerts();
         if (response.data) {
-          const alerts = response.data.slice(0, 3); // Show top 3 alerts
-          setWeatherAlerts(alerts);
-          DataCache.set(cacheKey, alerts);
+          setWeatherAlerts(response.data.slice(0, 3));
         }
       } catch (error) {
         console.error('Failed to load weather alerts:', error);
@@ -131,59 +175,47 @@ const Dashboard = () => {
     loadWeatherAlerts();
   }, [user]);
 
-  // Ensure default values (0) for new accounts
-  const totalLandArea = mockLandProperties.length > 0 
-    ? mockLandProperties.reduce((sum, land) => sum + (land.area || 0), 0)
-    : 0;
-  const totalFields = mockLandProperties.length || 0;
-  const soilTypeDistribution = mockLandProperties.reduce((acc, land) => {
-    acc[land.soilType] = (acc[land.soilType] || 0) + land.area;
+  // Calculations from fetched data
+  const totalLandArea = data.farms.reduce((sum, farm) => sum + (farm.landSize || farm.area || 0), 0);
+  const totalFields = data.farms.length;
+  const soilTypeDistribution = data.farms.reduce((acc, farm) => {
+    const type = farm.soilType || 'Unknown';
+    acc[type] = (acc[type] || 0) + (farm.landSize || farm.area || 0);
     return acc;
   }, {} as Record<string, number>);
+  
   const soilTypeData = Object.entries(soilTypeDistribution).map(([name, value]) => ({
     name,
     area: value,
   }));
 
-  // Calculate Input Investment Overview (default to 0 for new accounts)
-  const totalInputInvestment = mockExpenses.length > 0
-    ? mockExpenses.reduce((sum, exp) => sum + (exp.amount || 0), 0)
-    : 0;
-  const investmentByCategory = mockExpenses.reduce((acc, exp) => {
+  const totalInputInvestment = data.expenses.reduce((sum, exp) => sum + (exp.amount || 0), 0);
+  const investmentByCategory = data.expenses.reduce((acc, exp) => {
     acc[exp.category] = (acc[exp.category] || 0) + exp.amount;
     return acc;
   }, {} as Record<string, number>);
+  
   const investmentChartData = Object.entries(investmentByCategory).map(([name, value]) => ({
-    name: t(`expenses.${name}`) || t(`dashboard.category${name.charAt(0).toUpperCase() + name.slice(1)}`) || name.charAt(0).toUpperCase() + name.slice(1),
+    name: translateCategory(name) || name,
     amount: value,
   }));
 
-  // Calculate Profit & Yield Summary (default to 0 for new accounts)
-  const totalIncome = mockTransactions.length > 0
-    ? mockTransactions
-        .filter((t) => t.paymentStatus === 'paid')
-        .reduce((sum, t) => sum + (t.amount || 0), 0)
-    : 0;
+  const totalIncome = data.transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
   const netProfit = totalIncome - totalInputInvestment;
-  const totalYield = mockTransactions.length > 0 ? getTotalYield() : 0;
+  const totalYield = data.yields.reduce((sum, y) => sum + (y.quantity || 0), 0);
 
-  // Stock & Materials Status
-  const stockByCategory = mockStockItems.reduce((acc, item) => {
+  const stockByCategory = data.stockItems.reduce((acc, item) => {
     if (!acc[item.category]) {
       acc[item.category] = { total: 0, items: [] };
     }
     acc[item.category].total += item.quantity;
     acc[item.category].items.push(item);
     return acc;
-  }, {} as Record<string, { total: number; items: StockItem[] }>);
+  }, {} as Record<string, { total: number; items: any[] }>);
 
-  // Farmer Registration Statistics (default to 0 for new accounts)
-  const totalFarmers = mockFarmerStats.length > 0
-    ? mockFarmerStats.reduce((sum, stat) => sum + (stat.count || 0), 0)
-    : 0;
-  const farmerChartData = mockFarmerStats.map((stat) => ({
+  const totalFarmers = data.farmerStats.reduce((sum, stat) => sum + (stat.count || 0), 0);
+  const farmerChartData = data.farmerStats.map((stat) => ({
     name: translateDistrict(stat.district),
-    district: stat.district, // Keep original for sorting
     farmers: stat.count,
   }));
 
@@ -193,9 +225,25 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       {/* Header with animated subtle fade-in */}
-      <div className="mb-6 animate-in fade-in duration-700">
-        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">{t('dashboard.title')}</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1 font-medium">{t('dashboard.subtitle')}</p>
+      <div className="mb-6 flex items-center justify-between animate-in fade-in duration-700">
+        <div>
+          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">{t('dashboard.title')}</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1 font-medium italic">
+            {t('dashboard.subtitle')}
+            {lastUpdated && (
+              <span className="ml-2 text-xs opacity-60">
+                • Last synced: {new Date(lastUpdated).toLocaleTimeString()}
+              </span>
+            )}
+          </p>
+        </div>
+        <button 
+          onClick={() => fetchDashboardData(true)}
+          className="p-3 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all"
+          title="Force Sync"
+        >
+          <TrendingUp size={20} className="text-primary-600" />
+        </button>
       </div>
 
       {/* Weather, Alerts & Map Section with glassmorphism */}
@@ -400,7 +448,7 @@ const Dashboard = () => {
           <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.averageFieldSize')}</p>
             <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-              {(totalLandArea / totalFields).toFixed(1)} {t('common.acres')}
+              {(totalLandArea / (totalFields || 1)).toFixed(1)} {t('common.acres')}
             </p>
           </div>
         </div>
@@ -453,7 +501,7 @@ const Dashboard = () => {
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t(`expenses.${category}`) || t(`dashboard.category${category.charAt(0).toUpperCase() + category.slice(1)}`) || category.charAt(0).toUpperCase() + category.slice(1)}
                   </span>
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">{t('common.currency')}{amount.toLocaleString()}</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">{t('common.currency')}{(amount as number).toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -514,70 +562,44 @@ const Dashboard = () => {
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.stockMaterialsStatus')}</h2>
           </div>
           <div className="space-y-4">
-            {Object.entries(stockByCategory).map(([category, data]) => {
-              const icons = {
-                seeds: Sprout,
-                fertilizers: Droplets,
-                pesticides: Bug,
-              };
-              const Icon = icons[category as keyof typeof icons] || Package;
-              return (
-                <div key={category} className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <Icon className="text-primary-600 dark:text-primary-400" size={20} />
-                      <span className="font-semibold text-gray-900 dark:text-gray-100">
-                        {t(`expenses.${category}`) || t(`dashboard.category${category.charAt(0).toUpperCase() + category.slice(1)}`) || category.charAt(0).toUpperCase() + category.slice(1)}
-                      </span>
-                    </div>
-                    <span className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                      {data.total} {data.items[0]?.unit || t('dashboard.units')}
-                    </span>
-                  </div>
-                  <div className="mt-2 space-y-1">
-                    {data.items.slice(0, 3).map((item) => {
-                      // Translate stock item names
-                      let translatedName = item.name;
-                      if (item.name === 'Rice Seeds (Basmati)') {
-                        translatedName = t('dashboard.stockItemRiceSeedsBasmati') || item.name;
-                      } else if (item.name === 'Wheat Seeds') {
-                        translatedName = t('dashboard.stockItemWheatSeeds') || item.name;
-                      } else if (item.name === 'Cotton Seeds') {
-                        translatedName = t('dashboard.stockItemCottonSeeds') || item.name;
-                      } else if (item.name === 'Urea') {
-                        translatedName = t('dashboard.stockItemUrea') || item.name;
-                      } else if (item.name === 'NPK (19:19:19)') {
-                        translatedName = t('dashboard.stockItemNPK191919') || item.name;
-                      } else if (item.name === 'DAP') {
-                        translatedName = t('dashboard.stockItemDAP') || item.name;
-                      } else if (item.name === 'Insecticide - Imidacloprid') {
-                        translatedName = t('dashboard.stockItemInsecticideImidacloprid') || item.name;
-                      } else if (item.name === 'Fungicide - Mancozeb') {
-                        translatedName = t('dashboard.stockItemFungicideMancozeb') || item.name;
-                      } else if (item.name === 'Herbicide - Glyphosate') {
-                        translatedName = t('dashboard.stockItemHerbicideGlyphosate') || item.name;
-                      } else {
-                        // Fallback to translateFertilizer for other items
-                        translatedName = translateFertilizer(item.name);
-                      }
+                    {Object.entries(stockByCategory).map(([category, catData]: [string, any]) => {
+                      const icons = {
+                        seeds: Sprout,
+                        fertilizers: Droplets,
+                        pesticides: Bug,
+                      };
+                      const Icon = (icons as any)[category] || Package;
                       return (
-                        <div key={item.id} className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                          <span>{translatedName}</span>
-                          <span className="font-medium">
-                            {item.quantity} {item.unit}
-                          </span>
+                        <div key={category} className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <Icon className="text-primary-600 dark:text-primary-400" size={20} />
+                              <span className="font-semibold text-gray-900 dark:text-gray-100">
+                                {t(`expenses.${category}`) || category.charAt(0).toUpperCase() + category.slice(1)}
+                              </span>
+                            </div>
+                            <span className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                              {catData.total} {catData.items[0]?.unit || t('dashboard.units')}
+                            </span>
+                          </div>
+                          <div className="mt-2 space-y-1">
+                            {catData.items.slice(0, 3).map((item: any) => (
+                              <div key={item.id} className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                                <span>{item.name}</span>
+                                <span className="font-medium">
+                                  {item.quantity} {item.unit}
+                                </span>
+                              </div>
+                            ))}
+                            {catData.items.length > 3 && (
+                              <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                                +{catData.items.length - 3} {t('common.moreItems')}
+                              </p>
+                            )}
+                          </div>
                         </div>
                       );
                     })}
-                    {data.items.length > 3 && (
-                      <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                        +{data.items.length - 3} {t('common.moreItems')}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
           </div>
         </div>
       </div>
@@ -595,7 +617,7 @@ const Dashboard = () => {
               <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{totalFarmers.toLocaleString()}</p>
             </div>
             <div className="space-y-2 max-h-64 overflow-y-auto">
-              {mockFarmerStats.map((stat) => (
+              {data.farmerStats.map((stat: any) => (
                 <div key={stat.district} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded border border-gray-200 dark:border-gray-600">
                   <div className="flex items-center gap-2">
                     <MapPin className="text-primary-600 dark:text-primary-400" size={16} />
@@ -629,31 +651,31 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard
           title={t('dashboard.totalFields')}
-          value={mockFarms.length}
+          value={data.farms.length}
           icon={LandPlot}
           color="green"
-          onClick={() => setDetailModal({ type: 'totalFields', data: mockFarms })}
+          onClick={() => setDetailModal({ type: 'totalFields', data: data.farms })}
         />
         <StatCard
           title={t('dashboard.activeCrops')}
-          value={mockCrops.filter((c) => c.status === 'active').length}
+          value={data.crops.filter((c) => c.status === 'active').length}
           icon={Sprout}
           color="blue"
-          onClick={() => setDetailModal({ type: 'activeCrops', data: mockCrops.filter((c) => c.status === 'active') })}
+          onClick={() => setDetailModal({ type: 'activeCrops', data: data.crops.filter((c) => c.status === 'active') })}
         />
         <StatCard
           title={t('dashboard.totalYield')}
           value={`${totalYield.toLocaleString()} kg`}
           icon={TrendingUp}
           color="purple"
-          onClick={() => setDetailModal({ type: 'totalYield', data: { totalYield, crops: mockCrops, yields: mockYields } })}
+          onClick={() => setDetailModal({ type: 'totalYield', data: { totalYield, crops: data.crops, yields: data.yields } })}
         />
         <StatCard
           title={t('dashboard.netProfit')}
           value={`₹${netProfit.toLocaleString()}`}
           icon={IndianRupee}
           color={netProfit >= 0 ? 'green' : 'orange'}
-          onClick={() => setDetailModal({ type: 'netProfit', data: { netProfit, totalIncome, totalInputInvestment, expenses: mockExpenses, transactions: mockTransactions } })}
+          onClick={() => setDetailModal({ type: 'netProfit', data: { netProfit, totalIncome, totalInputInvestment, expenses: data.expenses, transactions: data.transactions } })}
         />
       </div>
 
@@ -671,7 +693,7 @@ const Dashboard = () => {
               <p className="text-2xl font-bold text-green-600">{detailModal.data.length} {t('dashboard.totalFields')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {detailModal.data.map((farm: typeof mockFarms[0]) => (
+              {detailModal.data.map((farm: any) => (
                 <div
                   key={farm.id}
                   className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
@@ -708,7 +730,7 @@ const Dashboard = () => {
               <p className="text-2xl font-bold text-blue-600">{detailModal.data.length} {t('dashboard.activeCrops')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {detailModal.data.map((crop: typeof mockCrops[0]) => (
+              {detailModal.data.map((crop: any) => (
                 <div
                   key={crop.id}
                   className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
@@ -751,8 +773,8 @@ const Dashboard = () => {
             <div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('dashboard.cropProduction')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {detailModal.data.yields.map((yield_: typeof mockYields[0]) => {
-                  const crop = detailModal.data.crops.find((c: typeof mockCrops[0]) => c.id === yield_.cropId);
+                {detailModal.data.yields.map((yield_: any) => {
+                  const crop = detailModal.data.crops.find((c: any) => c.id === yield_.cropId);
                   if (!crop) return null;
                   return (
                     <div

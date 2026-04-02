@@ -1,6 +1,6 @@
 // Push Notification utilities
 
-export interface PushSubscription {
+export interface PushSubscriptionData {
   endpoint: string;
   keys: {
     p256dh: string;
@@ -54,7 +54,7 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
 /**
  * Subscribe to push notifications
  */
-export async function subscribeToPush(registration: ServiceWorkerRegistration): Promise<PushSubscription | null> {
+export async function subscribeToPush(registration: ServiceWorkerRegistration): Promise<PushSubscriptionData | null> {
   try {
     const permission = await requestNotificationPermission();
     if (permission !== 'granted') {
@@ -77,20 +77,23 @@ export async function subscribeToPush(registration: ServiceWorkerRegistration): 
 
       subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey) as any,
       });
     }
 
-    // Send subscription to server
-    await sendSubscriptionToServer(subscription);
-
-    return {
+    // Prepare data for server
+    const subscriptionData: PushSubscriptionData = {
       endpoint: subscription.endpoint,
       keys: {
         p256dh: arrayBufferToBase64(subscription.getKey('p256dh')!),
         auth: arrayBufferToBase64(subscription.getKey('auth')!),
       },
     };
+    
+    // Send subscription to server
+    await sendSubscriptionToServer(subscriptionData);
+
+    return subscriptionData;
   } catch (error) {
     console.error('Push subscription failed:', error);
     return null;
@@ -119,7 +122,7 @@ export async function unsubscribeFromPush(registration: ServiceWorkerRegistratio
 /**
  * Send subscription to server
  */
-async function sendSubscriptionToServer(subscription: PushSubscription): Promise<void> {
+async function sendSubscriptionToServer(subscription: PushSubscriptionData): Promise<void> {
   try {
     // Dynamic import to avoid circular dependencies
     const apiModule = await import('../services/api');

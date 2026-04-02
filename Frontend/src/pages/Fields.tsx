@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapPin, Plus, Edit, Trash2, Map, Navigation, TestTube, Loader, X, Save } from 'lucide-react';
 import api from '../services/api';
-import { useAuthStore } from '../context/useAuthStore';
+import { useAuth } from '../context/AuthContext';
 import { DataCache } from '../utils/dataCache';
 import { formatDateDisplay } from '../utils/dateFormatter';
 import toast from 'react-hot-toast';
@@ -27,6 +27,7 @@ interface Farm {
 
 const Fields = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [fields, setFields] = useState<Field[]>([]);
   const [farms, setFarms] = useState<Farm[]>([]);
   const [loading, setLoading] = useState(false);
@@ -45,9 +46,11 @@ const Fields = () => {
   });
 
   useEffect(() => {
-    loadFields();
-    loadFarms();
-  }, []);
+    if (user) {
+      loadFields();
+      loadFarms();
+    }
+  }, [user]);
 
   const loadFarms = async () => {
     const cacheKey = 'farms';
@@ -82,8 +85,7 @@ const Fields = () => {
       setFields(fieldsData);
       DataCache.set(cacheKey, fieldsData);
     } catch (err: any) {
-      setError(err.message || 'Failed to load fields');
-      toast.error('Failed to load fields');
+      toast.error(err.message || 'Failed to load fields');
     } finally {
       setLoading(false);
     }
@@ -171,7 +173,7 @@ const Fields = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setFormData(prev => ({
+          setFormData((prev: any) => ({
             ...prev,
             latitude: position.coords.latitude.toString(),
             longitude: position.coords.longitude.toString(),

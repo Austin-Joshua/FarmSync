@@ -1,0 +1,1 @@
+CRITICAL: Error initializing Firebase: firebase-service-account.json (The system cannot find the file specified)

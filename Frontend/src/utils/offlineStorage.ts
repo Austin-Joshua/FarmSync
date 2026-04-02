@@ -78,7 +78,7 @@ export interface FormQueueItem {
   formType: string;
   formData: any;
   timestamp: number;
-  synced: boolean;
+  synced: number; // 0 for unsynced, 1 for synced
 }
 
 // Queue an operation for offline sync
@@ -110,7 +110,7 @@ export const queueFormSubmission = async (formType: string, formData: any): Prom
     formType,
     formData,
     timestamp: Date.now(),
-    synced: false,
+    synced: 0,
   };
 
   await new Promise<void>((resolve, reject) => {
@@ -141,7 +141,7 @@ export const getUnsyncedForms = async (): Promise<FormQueueItem[]> => {
   const index = store.index('synced');
 
   return new Promise((resolve, reject) => {
-    const request = index.getAll(false);
+    const request = index.getAll(0);
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(new Error('Failed to get unsynced forms'));
   });
@@ -171,7 +171,7 @@ export const markFormSynced = async (id: number): Promise<void> => {
     getRequest.onsuccess = () => {
       const item = getRequest.result;
       if (item) {
-        item.synced = true;
+        item.synced = 1;
         const updateRequest = store.put(item);
         updateRequest.onsuccess = () => resolve();
         updateRequest.onerror = () => reject(new Error('Failed to mark form as synced'));

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../context/useAuthStore';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from '../context/AuthContext';
 import { Save, MapPin, Ruler, Droplets, Wheat, ChevronRight, ChevronLeft, Loader } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
@@ -20,7 +21,8 @@ interface OnboardingData {
 
 const Onboarding = () => {
   const navigate = useNavigate();
-  const { user, updateUser } = useAuthStore();
+  const { t } = useTranslation();
+  const { user, updateUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
   const totalSteps = 3;

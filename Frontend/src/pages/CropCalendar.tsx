@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuthStore } from '../context/useAuthStore';
+import { useAuth } from '../context/AuthContext';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, Trash2, Check, X, Sprout, Droplets, Bug, Droplet, Package, Loader, Save } from 'lucide-react';
 import api from '../services/api';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths, isToday } from 'date-fns';
@@ -18,14 +18,13 @@ interface CalendarEvent {
 }
 
 const CropCalendar = () => {
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [crops, setCrops] = useState<Crop[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   
   const [newEvent, setNewEvent] = useState({
@@ -42,7 +41,6 @@ const CropCalendar = () => {
 
   const loadData = async () => {
     if (!user) return;
-    setLoading(true);
     try {
       const start = startOfMonth(currentDate);
       const end = endOfMonth(currentDate);
@@ -58,7 +56,7 @@ const CropCalendar = () => {
       console.error('Failed to load calendar data:', error);
       toast.error('Failed to load calendar events');
     } finally {
-      setLoading(false);
+      // Data load complete
     }
   };
 

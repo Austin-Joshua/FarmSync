@@ -201,7 +201,7 @@ export const exportToExcel = (data: any[], filename: string, sheetName: string =
   const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
 
   // Set column widths
-  const columnWidths = excelHeaders.map((header, index) => {
+  const columnWidths = excelHeaders.map((header) => {
     const maxLength = Math.max(
       header.length,
       ...data.map(row => {

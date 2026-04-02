@@ -1,17 +1,20 @@
-// Expense Management page
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { mockExpenses, getMonthlyExpenses } from '../data/mockData';
-import { Plus, IndianRupee, TrendingDown, Calendar, Edit2, Trash2, Eye } from 'lucide-react';
+import { Plus, IndianRupee, TrendingDown, Calendar, Edit2, Trash2, Eye, Loader } from 'lucide-react';
 import { Expense } from '../types';
 import ExpenseFormModal from '../components/ExpenseFormModal';
 import DetailModal from '../components/DetailModal';
 import ProgressBar from '../components/ProgressBar';
 import { formatDateDisplay } from '../utils/dateFormatter';
+import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
+import toast from 'react-hot-toast';
 
 const ExpenseManagement = () => {
   const { t } = useTranslation();
-  const [expenses, setExpenses] = useState<Expense[]>(mockExpenses);
+  const { user } = useAuth();
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
@@ -19,15 +22,40 @@ const ExpenseManagement = () => {
     type: 'expenses' | 'category' | null;
     data?: any;
   }>({ type: null });
+
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      if (!user) return;
+      setLoading(true);
+      try {
+        const response = await api.getExpenses();
+        if (response.data) {
+          setExpenses(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch expenses:', error);
+        toast.error(t('expenses.errorFetching') || 'Failed to fetch expenses');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchExpenses();
+  }, [user, t]);
+
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
-  const monthlyExpense = getMonthlyExpenses(currentMonth, currentYear);
+  
+  // Calculate monthly total from fetched data
+  const monthlyTotal = expenses.filter(exp => {
+    const d = new Date(exp.date);
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  }).reduce((sum, exp) => sum + exp.amount, 0);
 
   // LIFO: Sort by date (newest first)
   const sortedExpenses = [...expenses].sort((a, b) => {
     const dateA = new Date(a.date).getTime();
     const dateB = new Date(b.date).getTime();
-    return dateB - dateA; // Descending order (newest first)
+    return dateB - dateA;
   });
 
   const filteredExpenses = sortedExpenses.filter(
@@ -44,41 +72,43 @@ const ExpenseManagement = () => {
     setIsFormModalOpen(true);
   };
 
-  const handleDeleteExpense = (expenseId: string) => {
+  const handleDeleteExpense = async (expenseId: string) => {
     if (confirm(t('expenses.confirmDelete') || 'Are you sure you want to delete this expense?')) {
-      setExpenses(expenses.filter(e => e.id !== expenseId));
-      alert(t('expenses.expenseDeleted') || 'Expense deleted successfully!');
+      try {
+        await api.deleteExpense(expenseId);
+        setExpenses(expenses.filter(e => e.id !== expenseId));
+        toast.success(t('expenses.expenseDeleted') || 'Expense deleted successfully!');
+      } catch (error) {
+        console.error('Failed to delete expense:', error);
+        toast.error(t('expenses.errorDeleting') || 'Failed to delete expense');
+      }
     }
   };
 
-  const handleSaveExpense = (expenseData: Expense | Omit<Expense, 'id'>) => {
-    if ('id' in expenseData && expenseData.id) {
-      // Editing existing expense - maintain LIFO order
-      const updated = expenses.map(e => e.id === expenseData.id ? expenseData as Expense : e);
-      const sorted = updated.sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
-        return dateB - dateA; // Descending order (newest first)
-      });
-      setExpenses(sorted);
-      alert(t('expenses.expenseUpdated') || 'Expense updated successfully!');
-    } else {
-      // Adding new expense (will be first due to LIFO - newest dates first)
-      const newExpense: Expense = {
-        ...expenseData as Omit<Expense, 'id'>,
-        id: Date.now().toString(),
-      };
-      // Insert at beginning, then sort to ensure proper LIFO order
-      const updated = [newExpense, ...expenses].sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
-        return dateB - dateA;
-      });
-      setExpenses(updated);
-      alert(t('expenses.expenseAdded') || 'Expense added successfully!');
+  const handleSaveExpense = async (expenseData: Expense | Omit<Expense, 'id'>) => {
+    try {
+      if ('id' in expenseData && expenseData.id) {
+        // Editing existing expense
+        const response = await api.updateExpense(expenseData.id, expenseData);
+        if (response.data) {
+          const updated = expenses.map(e => e.id === expenseData.id ? response.data : e);
+          setExpenses(updated);
+          toast.success(t('expenses.expenseUpdated') || 'Expense updated successfully!');
+        }
+      } else {
+        // Adding new expense
+        const response = await api.createExpense(expenseData);
+        if (response.data) {
+          setExpenses([response.data, ...expenses]);
+          toast.success(t('expenses.expenseAdded') || 'Expense added successfully!');
+        }
+      }
+      setEditingExpense(null);
+      setIsFormModalOpen(false);
+    } catch (error) {
+      console.error('Failed to save expense:', error);
+      toast.error(t('expenses.errorSaving') || 'Failed to save expense');
     }
-    setEditingExpense(null);
-    setIsFormModalOpen(false);
   };
 
   const getCategoryIcon = (category: string) => {
@@ -136,31 +166,31 @@ const ExpenseManagement = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card bg-red-50">
+        <div className="card bg-red-50 dark:bg-red-900/10">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Monthly Expenses</p>
-              <p className="text-3xl font-bold text-gray-900">₹{monthlyExpense.toLocaleString()}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Monthly Expenses</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">₹{monthlyTotal.toLocaleString()}</p>
             </div>
             <IndianRupee className="text-red-600" size={48} />
           </div>
         </div>
-        <div className="card bg-orange-50">
+        <div className="card bg-orange-50 dark:bg-orange-900/10">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">{t('expenses.totalExpenses')}</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('expenses.totalExpenses')}</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 ₹{expenses.reduce((sum, exp) => sum + exp.amount, 0).toLocaleString()}
               </p>
             </div>
             <TrendingDown className="text-orange-600" size={48} />
           </div>
         </div>
-        <div className="card bg-blue-50">
+        <div className="card bg-blue-50 dark:bg-blue-900/10">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">{t('expenses.averageExpense')}</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('expenses.averageExpense')}</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 ₹{Math.round(expenses.reduce((sum, exp) => sum + exp.amount, 0) / (expenses.length || 1)).toLocaleString()}
               </p>
             </div>
@@ -194,11 +224,16 @@ const ExpenseManagement = () => {
       {/* Expenses List */}
       <div className="card cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setDetailModal({ type: 'expenses', data: filteredExpenses })}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900">{t('expenses.expenseRecords')}</h2>
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('expenses.expenseRecords')}</h2>
           <Eye size={18} className="text-gray-400" />
         </div>
         <div className="space-y-3">
-          {filteredExpenses.length > 0 ? (
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20">
+              <Loader className="animate-spin h-10 w-10 text-primary-600 mb-2" />
+              <p className="text-gray-500 font-medium">Crunching the numbers...</p>
+            </div>
+          ) : filteredExpenses.length > 0 ? (
             filteredExpenses.map((expense, index) => {
               // Map index to delay class (0-350ms in 30ms increments)
               const getDelayClass = (idx: number) => {
@@ -226,7 +261,7 @@ const ExpenseManagement = () => {
                     <div className="text-3xl">{getCategoryIcon(expense.category)}</div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-bold text-gray-900">
+                        <h3 className="font-bold text-gray-900 dark:text-white">
                           {expense.description === 'Rice seeds (Basmati)' ? t('expenses.riceSeedsBasmati') :
                            expense.description === 'Wheat seeds' ? t('expenses.wheatSeeds') :
                            expense.description === 'Field preparation labor' ? t('expenses.fieldPreparationLabor') :
@@ -241,7 +276,7 @@ const ExpenseManagement = () => {
                           {t(`expenses.${expense.category}`)}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 flex items-center gap-1">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
                         <Calendar size={14} />
                         {formatDateDisplay(expense.date)}
                       </p>
@@ -249,7 +284,7 @@ const ExpenseManagement = () => {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-gray-900">₹{expense.amount.toLocaleString()}</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">₹{expense.amount.toLocaleString()}</p>
                     </div>
                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button

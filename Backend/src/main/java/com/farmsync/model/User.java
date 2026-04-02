@@ -42,6 +42,9 @@ public class User {
     @Column(name = "picture_url")
     private String pictureUrl;
 
+    @Column(name = "fcm_token")
+    private String fcmToken;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

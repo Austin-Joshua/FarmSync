@@ -18,7 +18,7 @@ interface ExpenseFormModalProps {
 const ExpenseFormModal = ({ isOpen, onClose, onSave, expense = null, mode = 'add' }: ExpenseFormModalProps) => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState({
-    category: expense?.category || 'seeds',
+    category: (expense?.category as any) || 'seeds',
     description: expense?.description || '',
     amount: expense?.amount || 0,
     date: expense?.date || new Date().toISOString().split('T')[0],

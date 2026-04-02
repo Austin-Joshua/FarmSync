@@ -4,12 +4,11 @@ import com.farmsync.dto.LoginRequest;
 import com.farmsync.dto.LoginResponse;
 import com.farmsync.model.User;
 import com.farmsync.service.AuthService;
-import com.farmsync.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -18,8 +17,6 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @Autowired
-    private UserService userService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -32,10 +29,11 @@ public class AuthController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<User> getCurrentUser(@RequestHeader("Authorization") String token) {
-        // This is a simplified version, ideally you'd get the user from the SecurityContext
-        // or validate the token and extract the user email/ID.
-        // For now, let's just return a successful response if the token is present.
-        return ResponseEntity.ok(new User()); 
+    public ResponseEntity<User> getCurrentUser() {
+        org.springframework.security.core.Authentication authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            return ResponseEntity.ok((User) authentication.getPrincipal());
+        }
+        return ResponseEntity.status(401).build();
     }
 }

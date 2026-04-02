@@ -1,14 +1,14 @@
 // Handles ?token= from OAuth redirects (Google/Microsoft backend callback)
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../context/useAuthStore';
+import { useAuth } from '../context/AuthContext';
 import { Loader } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function OAuthTokenHandler({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { loginWithToken } = useAuthStore();
+  const { loginWithToken } = useAuth();
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {

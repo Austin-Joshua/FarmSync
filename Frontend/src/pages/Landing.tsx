@@ -4,12 +4,12 @@ import {
   ArrowRight, TrendingUp, Sun, Moon, 
   Calendar, PieChart, Zap, Database, Check, PlayCircle
 } from 'lucide-react';
-import { useThemeStore } from '../context/useThemeStore';
+import { useTheme } from '../context/ThemeContext';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const Landing = () => {
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useThemeStore();
+  const { theme, toggleTheme } = useTheme();
 
   const features = [
     {

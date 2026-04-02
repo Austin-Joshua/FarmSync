@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { axiosInstance as axios } from '../services/api';
 import { useLocation } from '../hooks/useLocation';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, X, Info, AlertCircle, Wind, Droplet, Thermometer } from 'lucide-react';
 
-import { API_BASE_URL as BASE_URL } from '../config/api';
-
-const ALERTS_API_URL = `${BASE_URL}/alerts`;
-
 const getClimateAlerts = async (lat: number, lon: number) => {
-  return axios.get(ALERTS_API_URL, { params: { lat, lon } });
+  return axios.get('/alerts', { params: { lat, lon } });
 };
 
 export interface ClimateAlert {

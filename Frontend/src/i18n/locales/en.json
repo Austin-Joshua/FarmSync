@@ -43,7 +43,9 @@
     "selected": "Selected",
     "actions": "Actions",
     "myAccount": "My Account",
-    "user": "User"
+    "user": "User",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
   },
   "auth": {
     "login": "Login",
@@ -102,7 +104,17 @@
     "passwordRequirementNumber": "At least one number (0-9)",
     "passwordRequirementSpecial": "At least one special character (!@#$%^&*()_+-=[]{};':|,.<>/?~)",
     "appleSignInUnavailable": "Apple Sign-In requires additional configuration. Please use email login or Google Sign-In for now.",
-    "microsoftSignInUnavailable": "Microsoft Sign-In requires VITE_MICROSOFT_CLIENT_ID in .env file. Please use email login or Google Sign-In for now."
+    "microsoftSignInUnavailable": "Microsoft Sign-In requires VITE_MICROSOFT_CLIENT_ID in .env file. Please use email login or Google Sign-In for now.",
+    "fillAllFields": "Please fill in all fields",
+    "revolutionizing": "Revolutionizing",
+    "farmManagement": "Farm Management",
+    "withAi": "with AI",
+    "loginBrandingSub": "Join thousands of modern farmers optimizing their yields, maximizing profits, and building a sustainable future with our intelligent ecosystem.",
+    "serverOfflineDemo": "Server offline (Demo Mode)",
+    "startYour": "Start Your",
+    "digitalFarming": "Digital Farming",
+    "journey": "Journey",
+    "registerBrandingSub": "Create an account today and get access to real-time weather monitoring, crop disease detection, and detailed financial analytics tailored for your farm."
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -582,7 +594,11 @@
     "profileUpdated": "Profile updated successfully!",
     "failedToUpdate": "Failed to update profile:",
     "userNotAuthenticated": "User not authenticated",
-    "fillProfileDetails": "Please fill in your profile details to personalize your experience"
+    "fillProfileDetails": "Please fill in your profile details to personalize your experience",
+    "noFileSelected": "Please select an image file",
+    "pictureUploaded": "Profile picture updated",
+    "failedToUploadPicture": "Upload failed",
+    "uploadPicture": "Upload Picture"
   },
   "adminDashboard": {
     "title": "Admin Dashboard",

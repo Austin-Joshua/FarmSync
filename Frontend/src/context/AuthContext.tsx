@@ -1,229 +1,121 @@
-// Authentication Context for managing user state
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signInWithCustomToken,
+  signOut, 
+  updateProfile
+} from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../config/firebase';
 import { User, UserRole } from '../types';
-import api from '../services/api';
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
-  register: (name: string, email: string, password: string, role: UserRole) => Promise<boolean>;
-  updateUser: (updates: { name?: string; location?: string; land_size?: number; soil_type?: string; picture_url?: string }) => Promise<boolean>;
-  uploadProfilePicture: (file: File) => Promise<boolean>;
-  logout: () => void;
-  applyTokenFromUrl: (token: string) => Promise<boolean>;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  loginWithToken: (token: string) => Promise<void>;
+  register: (name: string, email: string, password: string, role: UserRole, metadata?: any) => Promise<void>;
+  logout: () => Promise<void>;
+  updateUser: (partialUser: Partial<User>) => Promise<void>;
   isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    // Check localStorage for persisted user
-    try {
-      const savedUser = localStorage.getItem('user');
-      return savedUser ? JSON.parse(savedUser) : null;
-    } catch (error) {
-      console.error('Error parsing saved user:', error);
-      localStorage.removeItem('user');
-      return null;
-    }
-  });
-  const [hasTriedAutoLogin, setHasTriedAutoLogin] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Check for existing saved user session on mount
   useEffect(() => {
-    // User should register/login with their own credentials
-    // No auto-login with test credentials - users must create accounts through registration
-    try {
-      const savedUser = localStorage.getItem('user');
-      const savedToken = localStorage.getItem('token');
-      
-      if (savedUser && savedToken) {
-        // User already has a session, restore it
-        try {
-          const userData = JSON.parse(savedUser);
-          setUser(userData);
-        } catch (error) {
-          // Invalid saved data, clear it
-          console.error('Error parsing saved user data:', error);
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        // Fetch additional user data from Firestore
+        const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+        if (userDoc.exists()) {
+          setUser({
+            id: firebaseUser.uid,
+            email: firebaseUser.email!,
+            ...userDoc.data()
+          } as User);
+        } else {
+          // Fallback if doc doesn't exist for some reason
+          setUser({
+            id: firebaseUser.uid,
+            email: firebaseUser.email!,
+            name: firebaseUser.displayName || 'User',
+            role: 'farmer'
+          });
         }
+      } else {
+        setUser(null);
       }
-    } catch (error) {
-      console.error('Error in AuthProvider initialization:', error);
-    } finally {
-      setHasTriedAutoLogin(true);
-    }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-      const response = await api.login(email, password);
-      if (response?.user) {
-        const userData: User = {
-          id: String(response.user.id),
-          name: response.user.name,
-          email: response.user.email,
-          role: response.user.role as UserRole,
-          location: response.user.location,
-          land_size: response.user.land_size,
-          soil_type: response.user.soil_type,
-          picture_url: response.user.picture_url,
-          is_onboarded: response.user.is_onboarded ?? false,
-        };
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        return true;
-      }
-      return false;
-    } catch (error: any) {
-      console.error('Login error:', error);
-      throw error;
-    }
+  const login = async (email: string, password: string) => {
+    await signInWithEmailAndPassword(auth, email, password);
   };
 
-  const register = async (
-    name: string,
-    email: string,
-    password: string,
-    role: UserRole,
-    location?: string
-  ): Promise<boolean> => {
-    try {
-      const response = await api.register(name, email, password, role, location);
-      if (response.user) {
-        const userData: User = {
-          id: response.user.id,
-          name: response.user.name,
-          email: response.user.email,
-          role: response.user.role,
-          location: response.user.location,
-          land_size: response.user.land_size,
-          soil_type: response.user.soil_type,
-          picture_url: response.user.picture_url,
-          is_onboarded: response.user.is_onboarded ?? false,
-        };
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        if (response.token) {
-          localStorage.setItem('token', response.token);
-        }
-        return true;
-      }
-      return false;
-    } catch (error: any) {
-      console.error('Registration error:', error);
-      // Re-throw with better error message if needed
-      if (error.message) {
-        throw new Error(error.message);
-      }
-      throw error;
-    }
+  const loginWithToken = async (token: string) => {
+    await signInWithCustomToken(auth, token);
   };
 
-  const updateUser = async (updates: { name?: string; location?: string; land_size?: number; soil_type?: string; picture_url?: string }): Promise<boolean> => {
-    try {
-      const response = await api.updateProfile(updates);
-      if (response.user) {
-        const userData: User = {
-          id: response.user.id,
-          name: response.user.name,
-          email: response.user.email,
-          role: response.user.role,
-          location: response.user.location || undefined,
-          land_size: response.user.land_size || undefined,
-          soil_type: response.user.soil_type || undefined,
-          picture_url: response.user.picture_url || undefined,
-          is_onboarded: response.user.is_onboarded ?? false,
-        };
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        return true;
-      }
-      return false;
-    } catch (error: any) {
-      console.error('Update profile error:', error);
-      throw error;
-    }
+  const register = async (name: string, email: string, password: string, role: UserRole, metadata: any = {}) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const firebaseUser = userCredential.user;
+
+    await updateProfile(firebaseUser, { displayName: name });
+
+    const userData = {
+      name,
+      email,
+      role,
+      is_onboarded: false,
+      createdAt: new Date().toISOString(),
+      ...metadata
+    };
+
+    await setDoc(doc(db, 'users', firebaseUser.uid), userData);
+    
+    setUser({
+      id: firebaseUser.uid,
+      ...userData
+    } as User);
   };
 
-  const uploadProfilePicture = async (file: File): Promise<boolean> => {
-    try {
-      const response = await api.uploadProfilePicture(file);
-      if (response.user) {
-        const userData: User = {
-          id: response.user.id,
-          name: response.user.name,
-          email: response.user.email,
-          role: response.user.role,
-          location: response.user.location || undefined,
-          land_size: response.user.land_size || undefined,
-          soil_type: response.user.soil_type || undefined,
-          picture_url: response.user.picture_url || undefined,
-          is_onboarded: response.user.is_onboarded ?? false,
-        };
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        return true;
-      }
-      return false;
-    } catch (error: any) {
-      console.error('Upload profile picture error:', error);
-      throw error;
-    }
+  const logout = async () => {
+    await signOut(auth);
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    // Clear remember me flag on logout (user must login again)
-    localStorage.removeItem('rememberMe');
-  };
-
-  const applyTokenFromUrl = async (token: string): Promise<boolean> => {
-    try {
-      localStorage.setItem('token', token);
-      const response = await api.getProfile() as { user?: any };
-      if (response?.user) {
-        const u = response.user;
-        const userData: User = {
-          id: String(u.id),
-          name: u.name,
-          email: u.email,
-          role: u.role as UserRole,
-          location: u.location,
-          land_size: u.land_size,
-          soil_type: u.soil_type,
-          picture_url: u.picture_url,
-          is_onboarded: u.is_onboarded ?? false,
-        };
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        return true;
-      }
-      return false;
-    } catch {
-      localStorage.removeItem('token');
-      return false;
-    }
+  const updateUser = async (partialUser: Partial<User>) => {
+    if (!user) return;
+    
+    const updatedUser = { ...user, ...partialUser };
+    const { id, ...updateData } = updatedUser;
+    
+    await setDoc(doc(db, 'users', id), updateData, { merge: true });
+    setUser(updatedUser);
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        loading,
         login,
+        loginWithToken,
         register,
-        updateUser,
-        uploadProfilePicture,
         logout,
-        applyTokenFromUrl,
+        updateUser,
         isAuthenticated: !!user,
       }}
     >
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
@@ -231,19 +123,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    // Return a default context instead of throwing to prevent crashes
-    console.warn('useAuth called outside AuthProvider, returning default context');
-    return {
-      user: null,
-      login: async () => false,
-      register: async () => false,
-      updateUser: async () => false,
-      uploadProfilePicture: async () => false,
-      logout: () => {},
-      applyTokenFromUrl: async () => false,
-      isAuthenticated: false,
-    };
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
-

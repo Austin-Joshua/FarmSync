@@ -9,7 +9,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,7 +26,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
-        String registrationId = oAuth2UserRequest.getClientRegistration().getRegistrationId();
         Map<String, Object> attributes = oAuth2User.getAttributes();
         
         String email = (String) attributes.get("email");
@@ -41,11 +39,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         Optional<User> userOptional = userRepository.findByEmail(email);
-        User user;
         if (userOptional.isPresent()) {
-            user = updateExistingUser(userOptional.get(), attributes);
+            updateExistingUser(userOptional.get(), attributes);
         } else {
-            user = registerNewUser(oAuth2UserRequest, attributes, email);
+            registerNewUser(oAuth2UserRequest, attributes, email);
         }
 
         return oAuth2User;

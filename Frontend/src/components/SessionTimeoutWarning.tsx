@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Clock, RefreshCw, LogOut } from 'lucide-react';
-import { useAuthStore } from '../context/useAuthStore';
+import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
 const SESSION_WARNING_TIME = 15 * 60 * 1000; // 15 minutes
 const CHECK_INTERVAL = 60 * 1000; // 1 minute
 
 const SessionTimeoutWarning: React.FC = () => {
-  const { user, logout } = useAuthStore();
+  const { user, logout } = useAuth();
   const [showWarning, setShowWarning] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(0);
 
@@ -46,7 +46,7 @@ const SessionTimeoutWarning: React.FC = () => {
     let countdown: NodeJS.Timeout;
     if (showWarning) {
       countdown = setInterval(() => {
-        setTimeRemaining(prev => {
+        setTimeRemaining((prev: number) => {
           if (prev <= 1) {
             logout();
             return 0;

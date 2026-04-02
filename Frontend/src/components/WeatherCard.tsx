@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { axiosInstance as api } from '../services/api';
 import { useLocation } from '../hooks/useLocation';
 import { useTranslation } from 'react-i18next';
 import {
@@ -16,9 +17,6 @@ import {
 const WEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY || '';
 const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5';
 const GEOCODING_API_URL = 'https://api.openweathermap.org/geo/1.0';
-import { API_BASE_URL as BASE_URL } from '../config/api';
-
-const ALERTS_API_URL = `${BASE_URL}/alerts`;
 
 const getCurrentWeather = async (lat: number, lon: number) => {
   if (!WEATHER_API_KEY) {
@@ -39,7 +37,7 @@ const getCurrentLocation = async (lat: number, lon: number) => {
 };
 
 const getClimateAlerts = async (lat: number, lon: number) => {
-  return axios.get(ALERTS_API_URL, { params: { lat, lon } });
+  return api.get('/alerts', { params: { lat, lon } });
 };
 
 export interface WeatherData {

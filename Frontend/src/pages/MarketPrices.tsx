@@ -84,7 +84,7 @@ const MarketPrices = () => {
     }
 
     try {
-      await api.setPriceAlert(selectedCrop, parseFloat(alertPrice), alertCondition);
+      await api.setPriceAlert({ crop: selectedCrop, price: parseFloat(alertPrice), condition: alertCondition });
       alert('Price alert set successfully!');
       setShowAlertForm(false);
       setAlertPrice('');

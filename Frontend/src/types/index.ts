@@ -8,8 +8,14 @@ export interface User {
   email: string;
   role: UserRole;
   location?: string;
+  district?: string;
+  state?: string;
+  pincode?: string;
   land_size?: number;
   soil_type?: string;
+  irrigation_type?: string;
+  farmer_id?: string;
+  phone?: string;
   picture_url?: string;
   is_onboarded?: boolean;
 }
@@ -49,6 +55,7 @@ export interface Fertilizer {
   id: string;
   type: string;
   quantity: number; // in kg
+  unit: string;
   dateOfUsage: string;
   cropId: string;
 }
@@ -57,6 +64,7 @@ export interface Pesticide {
   id: string;
   type: string;
   quantity: number; // in liters
+  unit: string;
   dateOfUsage: string;
   cropId: string;
 }
@@ -71,11 +79,12 @@ export interface Irrigation {
 
 export interface Expense {
   id: string;
-  category: 'seeds' | 'labor' | 'fertilizers' | 'pesticides' | 'irrigation' | 'other';
+  category: 'seeds' | 'labor' | 'fertilizers' | 'pesticides' | 'irrigation' | 'equipment' | 'transport' | 'other';
   description: string;
   amount: number;
   date: string;
   farmId: string;
+  relatedCropId?: string;
 }
 
 export interface Yield {

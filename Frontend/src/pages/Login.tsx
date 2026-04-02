@@ -1,8 +1,7 @@
-// Login page — green + gold FarmSync UI
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuthStore } from '../context/useAuthStore';
-import { useThemeStore } from '../context/useThemeStore';
+import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { Eye, EyeOff, Moon, Sun, Mail, Lock, LogIn, AlertCircle, Loader2 } from 'lucide-react';
 import Logo from '../components/Logo';
@@ -13,8 +12,8 @@ import toast from 'react-hot-toast';
 
 const Login = () => {
   const { t } = useTranslation();
-  const { theme, toggleTheme } = useThemeStore();
-  const { login: setLogin } = useAuthStore();
+  const { theme, toggleTheme } = useTheme();
+  const { login } = useAuth();
   const navigate = useNavigate();
   
   const [email, setEmail] = useState('admin@farmsync.com');
@@ -32,7 +31,6 @@ const Login = () => {
         setIsApiOnline(true);
       } catch (err) {
         setIsApiOnline(false);
-        // Don't show toast error here to keep UI clean, the red banner handles it
       }
     };
     checkApi();
@@ -41,7 +39,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      setError(t('auth.fillAllFields') || 'Please fill in all fields');
+      setError(t('auth.fillAllFields'));
       return;
     }
 
@@ -49,21 +47,12 @@ const Login = () => {
     setError('');
 
     try {
-      const response: any = await api.login(email, password);
-      // Assuming response structure is { token, user } or { accessToken, user }
-      const token = response.token || response.accessToken;
-      const user = response.user;
-      
-      if (token && user) {
-        setLogin(token, user);
-        toast.success(t('auth.loginSuccess') || 'Welcome back to FarmSync!');
-        navigate('/dashboard');
-      } else {
-        throw new Error('Invalid response from server');
-      }
+      await login(email, password);
+      toast.success(t('auth.loginSuccess'));
+      navigate('/dashboard');
     } catch (err: any) {
       console.error('Login error:', err);
-      const errorMessage = typeof err === 'string' ? err : err.response?.data?.message || t('auth.loginError');
+      const errorMessage = typeof err === 'string' ? err : err.message || t('auth.loginError');
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -88,10 +77,10 @@ const Login = () => {
             </Link>
           </div>
           <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
-            Revolutionizing <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">Farm Management</span> with AI
+            {t('auth.revolutionizing')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">{t('auth.farmManagement')}</span> {t('auth.withAi')}
           </h1>
           <p className="text-xl text-emerald-100 max-w-lg leading-relaxed drop-shadow">
-            Join thousands of modern farmers optimizing their yields, maximizing profits, and building a sustainable future with our intelligent ecosystem.
+            {t('auth.loginBrandingSub')}
           </p>
         </div>
 
@@ -126,7 +115,7 @@ const Login = () => {
             {!isApiOnline && (
               <div className="mb-4 p-2 bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30 rounded-lg flex items-center gap-2 text-red-600 dark:text-red-400 backdrop-blur-sm">
                 <AlertCircle size={16} className="shrink-0" />
-                <p className="text-[11px] font-bold uppercase tracking-wide">Server offline (Demo Mode)</p>
+                <p className="text-[11px] font-bold uppercase tracking-wide">{t('auth.serverOfflineDemo')}</p>
               </div>
             )}
 

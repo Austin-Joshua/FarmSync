@@ -1,8 +1,8 @@
 // History Page - Display past financial and stock data with stacked visualization
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '../context/useAuthStore';
-import { MonthlyIncome, StockRecord } from '../types';
+import { useAuth } from '../context/AuthContext';
+import { MonthlyIncome } from '../types';
 import DetailModal from '../components/DetailModal';
 import {
   TrendingUp,
@@ -11,6 +11,7 @@ import {
   BarChart3,
   Eye,
   Loader,
+  X,
 } from 'lucide-react';
 import { exportToCSV } from '../utils/exportUtils';
 import api from '../services/api';
@@ -18,10 +19,9 @@ import toast from 'react-hot-toast';
 
 const History = () => {
   const { t } = useTranslation();
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
   const [monthlyIncome, setMonthlyIncome] = useState<MonthlyIncome[]>([]);
-  const [stockRecords, setStockRecords] = useState<StockRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [detailModal, setDetailModal] = useState<{
     type: 'income' | 'crops' | 'price' | null;
@@ -34,7 +34,7 @@ const History = () => {
       try {
         // In a real migration, these would be actual API calls
         // For now, we'll keep the mock data structure but ready for the backend
-        const response = await api.getYields(); // Use yields as proxy for history for now
+        await api.getYields();
         
         // Mocking the structure expected by the UI if API isn't fully ready
         const mockIncome: MonthlyIncome[] = Array.from({ length: 12 }, (_, i) => ({
@@ -51,17 +51,16 @@ const History = () => {
         setMonthlyIncome(sortedIncome);
         
         // Stock records proxy
-        setStockRecords([]);
       } catch (error) {
         console.error('Error fetching history data:', error);
-        toast.error('Failed to load history data');
+        toast.error(t('common.error'));
       } finally {
         setLoading(false);
       }
     };
 
     fetchHistoryData();
-  }, [user?.id]);
+  }, [user?.id, t]);
 
   const getMonthName = (monthIndex: number): string => {
     const monthNames = [
@@ -73,7 +72,6 @@ const History = () => {
   };
 
   const selectedMonthData = selectedMonth ? monthlyIncome.find(m => m.month === selectedMonth) : null;
-  const selectedMonthStocks = stockRecords.filter(s => s.month === selectedMonth);
 
   const exportData = () => {
     if (monthlyIncome.length === 0) {
@@ -90,7 +88,7 @@ const History = () => {
 
     const filename = `FarmSync_History_${new Date().toISOString().split('T')[0]}`;
     exportToCSV(historyData, filename);
-    toast.success('History exported successfully');
+    toast.success(t('history.exportSuccess'));
   };
 
   if (loading) {
@@ -122,7 +120,7 @@ const History = () => {
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-8">{t('history.monthlyProfitOverview')}</h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
-          {monthlyIncome.map((income, index) => (
+          {monthlyIncome.map((income) => (
             <div
               key={income.id}
               onClick={() => setSelectedMonth(selectedMonth === income.month ? null : income.month)}

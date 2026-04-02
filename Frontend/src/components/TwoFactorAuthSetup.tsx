@@ -57,7 +57,7 @@ const TwoFactorAuthSetup: React.FC<TwoFactorAuthSetupProps> = ({
     setLoading(true);
     setError('');
     try {
-      const response = await api.verifyAndEnable2FA(secret, verificationToken);
+      const response = await api.verifyAndEnable2FA(verificationToken);
       if (response.data) {
         setBackupCodes(response.data.backupCodes);
         setStep('success');
@@ -80,7 +80,7 @@ const TwoFactorAuthSetup: React.FC<TwoFactorAuthSetupProps> = ({
     setLoading(true);
     setError('');
     try {
-      await api.disable2FA(disablePassword);
+      await api.disable2FA();
       setStep('setup');
       setDisablePassword('');
       setError('');

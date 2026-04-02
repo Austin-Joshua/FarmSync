@@ -1,0 +1,35 @@
+﻿
+> vite-react-typescript-starter@0.0.0 typecheck
+> tsc --noEmit -p tsconfig.app.json
+
+src/components/ExpenseFormModal.tsx(117,61): error TS2322: Type 'string' is not assignable to type '"seeds" | "labor" | "fertilizers" | "pesticides" | "irrigation" | "equipment" | "transport" | "other"'.
+src/data/mockData.ts(429,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Fertilizer'.
+src/data/mockData.ts(436,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Fertilizer'.
+src/data/mockData.ts(443,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Fertilizer'.
+src/data/mockData.ts(450,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Fertilizer'.
+src/data/mockData.ts(457,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Fertilizer'.
+src/data/mockData.ts(464,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Fertilizer'.
+src/data/mockData.ts(471,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Fertilizer'.
+src/data/mockData.ts(478,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Fertilizer'.
+src/data/mockData.ts(485,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Fertilizer'.
+src/data/mockData.ts(492,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Fertilizer'.
+src/data/mockData.ts(502,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(509,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(516,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(523,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(530,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(537,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(544,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(551,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(558,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(565,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(572,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/data/mockData.ts(579,3): error TS2741: Property 'unit' is missing in type '{ id: string; type: string; quantity: number; dateOfUsage: string; cropId: string; }' but required in type 'Pesticide'.
+src/pages/AdminDashboard.tsx(147,9): error TS6133: 'totalYield' is declared but its value is never read.
+src/pages/AdminDashboard.tsx(277,51): error TS6133: 'index' is declared but its value is never read.
+src/pages/CropManagement.tsx(23,10): error TS6133: 'loading' is declared but its value is never read.
+src/pages/Dashboard.tsx(30,1): error TS6133: 'translateFertilizer' is declared but its value is never read.
+src/pages/ExpenseManagement.tsx(3,1): error TS6133: 'getMonthlyExpenses' is declared but its value is never read.
+src/pages/Landing.tsx(13,9): error TS6133: 'user' is declared but its value is never read.
+src/pages/Landing.tsx(15,9): error TS6133: 'isAuthenticated' is declared but its value is never read.
+src/utils/exportUtils.ts(204,50): error TS6133: 'index' is declared but its value is never read.

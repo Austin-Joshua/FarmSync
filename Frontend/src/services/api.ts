@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { useAuthStore } from '../context/useAuthStore';
-
+import { getAuth } from 'firebase/auth';
 import { API_BASE_URL } from '../config/api';
 
 // Create axios instance
@@ -13,10 +12,16 @@ const api = axios.create({
 
 // Request Interceptor to add Auth Token
 api.interceptors.request.use(
-  (config) => {
-    const token = useAuthStore.getState().token;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+  async (config) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        const token = await user.getIdToken();
+        config.headers.Authorization = `Bearer ${token}`;
+      } catch (error) {
+        console.error('Failed to get Firebase token:', error);
+      }
     }
     return config;
   },
@@ -31,9 +36,6 @@ api.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    if (error.response && error.response.status === 401) {
-      useAuthStore.getState().clearAuth();
-    }
     return Promise.reject(error.response?.data?.message || 'API request failed');
   }
 );
@@ -55,7 +57,7 @@ const ApiService = {
   deleteField: (id: string) => api.delete(`/fields/${id}`),
 
   // Calendar Events
-  getCalendarEvents: (farmId?: string) => api.get('/calendar/events', { params: { farm_id: farmId } }),
+  getCalendarEvents: (farmId?: string, startDate?: string, endDate?: string) => api.get('/calendar/events', { params: { farm_id: farmId, start_date: startDate, end_date: endDate } }),
   createCalendarEvent: (data: any) => api.post('/calendar/events', data),
   updateCalendarEvent: (id: string, data: any) => api.put(`/calendar/events/${id}`, data),
   deleteCalendarEvent: (id: string) => api.delete(`/calendar/events/${id}`),
@@ -141,6 +143,16 @@ const ApiService = {
 
   // Health
   getHealth: () => api.get('/health'),
+
+  // AI Services
+  detectDisease: (file: File) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    return api.post('/ai/disease-detect', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+  sendMessageToAI: (message: string) => api.post('/ai/chat', { message }),
 };
 
 export default ApiService;

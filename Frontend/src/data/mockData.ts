@@ -431,6 +431,7 @@ export const mockFertilizers: Fertilizer[] = [
     type: 'Urea',
     quantity: 50,
     dateOfUsage: '2024-07-10',
+    unit: 'kg',
     cropId: '1',
   },
   {
@@ -438,6 +439,7 @@ export const mockFertilizers: Fertilizer[] = [
     type: 'NPK (19:19:19)',
     quantity: 75,
     dateOfUsage: '2024-08-15',
+    unit: 'kg',
     cropId: '1',
   },
   {
@@ -445,6 +447,7 @@ export const mockFertilizers: Fertilizer[] = [
     type: 'DAP',
     quantity: 40,
     dateOfUsage: '2024-11-10',
+    unit: 'kg',
     cropId: '2',
   },
   {
@@ -452,6 +455,7 @@ export const mockFertilizers: Fertilizer[] = [
     type: 'MOP (Muriate of Potash)',
     quantity: 30,
     dateOfUsage: '2024-07-25',
+    unit: 'kg',
     cropId: '1',
   },
   {
@@ -459,6 +463,7 @@ export const mockFertilizers: Fertilizer[] = [
     type: 'SSP (Single Super Phosphate)',
     quantity: 60,
     dateOfUsage: '2024-08-05',
+    unit: 'kg',
     cropId: '3',
   },
   {
@@ -466,6 +471,7 @@ export const mockFertilizers: Fertilizer[] = [
     type: 'Zinc Sulphate',
     quantity: 25,
     dateOfUsage: '2024-09-10',
+    unit: 'kg',
     cropId: '5',
   },
   {
@@ -473,6 +479,7 @@ export const mockFertilizers: Fertilizer[] = [
     type: 'Organic Compost',
     quantity: 100,
     dateOfUsage: '2024-06-20',
+    unit: 'kg',
     cropId: '5',
   },
   {
@@ -480,6 +487,7 @@ export const mockFertilizers: Fertilizer[] = [
     type: 'Vermicompost',
     quantity: 80,
     dateOfUsage: '2024-07-15',
+    unit: 'kg',
     cropId: '6',
   },
   {
@@ -487,6 +495,7 @@ export const mockFertilizers: Fertilizer[] = [
     type: 'NPK (12:32:16)',
     quantity: 45,
     dateOfUsage: '2024-10-01',
+    unit: 'kg',
     cropId: '2',
   },
   {
@@ -494,6 +503,7 @@ export const mockFertilizers: Fertilizer[] = [
     type: 'Bone Meal',
     quantity: 35,
     dateOfUsage: '2024-08-20',
+    unit: 'kg',
     cropId: '4',
   },
 ];
@@ -504,6 +514,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Insecticide - Imidacloprid',
     quantity: 2.5,
     dateOfUsage: '2024-07-25',
+    unit: 'L',
     cropId: '1',
   },
   {
@@ -511,6 +522,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Fungicide - Mancozeb',
     quantity: 3.0,
     dateOfUsage: '2024-08-20',
+    unit: 'L',
     cropId: '1',
   },
   {
@@ -518,6 +530,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Herbicide - Glyphosate',
     quantity: 1.5,
     dateOfUsage: '2024-11-15',
+    unit: 'L',
     cropId: '2',
   },
   {
@@ -525,6 +538,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Neem Oil (Organic)',
     quantity: 5.0,
     dateOfUsage: '2024-07-12',
+    unit: 'L',
     cropId: '5',
   },
   {
@@ -532,6 +546,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Insecticide - Chlorpyriphos',
     quantity: 2.0,
     dateOfUsage: '2024-08-08',
+    unit: 'L',
     cropId: '3',
   },
   {
@@ -539,6 +554,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Fungicide - Copper Oxychloride',
     quantity: 4.5,
     dateOfUsage: '2024-09-05',
+    unit: 'L',
     cropId: '6',
   },
   {
@@ -546,6 +562,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Herbicide - 2,4-D',
     quantity: 1.0,
     dateOfUsage: '2024-07-30',
+    unit: 'L',
     cropId: '4',
   },
   {
@@ -553,6 +570,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Biological - Bacillus Thuringiensis',
     quantity: 3.5,
     dateOfUsage: '2024-08-18',
+    unit: 'L',
     cropId: '5',
   },
   {
@@ -560,6 +578,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Insecticide - Cypermethrin',
     quantity: 2.8,
     dateOfUsage: '2024-09-20',
+    unit: 'L',
     cropId: '10',
   },
   {
@@ -567,6 +586,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Fungicide - Carbendazim',
     quantity: 3.2,
     dateOfUsage: '2024-10-10',
+    unit: 'L',
     cropId: '9',
   },
   {
@@ -574,6 +594,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Herbicide - Atrazine',
     quantity: 1.8,
     dateOfUsage: '2024-08-25',
+    unit: 'L',
     cropId: '11',
   },
   {
@@ -581,6 +602,7 @@ export const mockPesticides: Pesticide[] = [
     type: 'Organic - Garlic Extract',
     quantity: 4.0,
     dateOfUsage: '2024-07-20',
+    unit: 'L',
     cropId: '6',
   },
 ];

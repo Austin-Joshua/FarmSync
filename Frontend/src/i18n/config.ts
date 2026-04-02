@@ -1,42 +1,20 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-
-import enTranslations from './locales/en.json';
-import mlTranslations from './locales/ml.json';
-import taTranslations from './locales/ta.json';
-import hiTranslations from './locales/hi.json';
-import teTranslations from './locales/te.json';
-import knTranslations from './locales/kn.json';
+import Backend from 'i18next-http-backend';
 
 i18n
+  .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    resources: {
-      en: {
-        translation: enTranslations,
-      },
-      ml: {
-        translation: mlTranslations,
-      },
-      ta: {
-        translation: taTranslations,
-      },
-      hi: {
-        translation: hiTranslations,
-      },
-      te: {
-        translation: teTranslations,
-      },
-      kn: {
-        translation: knTranslations,
-      },
-    },
     fallbackLng: 'en',
     debug: false,
     interpolation: {
       escapeValue: false,
+    },
+    backend: {
+      loadPath: '/locales/{{lng}}/translation.json',
     },
     detection: {
       order: ['localStorage', 'navigator'],
@@ -44,7 +22,7 @@ i18n
       lookupLocalStorage: 'i18nextLng',
     },
     react: {
-      useSuspense: false,
+      useSuspense: true, // Switched to true for better lazy loading experience with React.Suspense
     },
   });
 

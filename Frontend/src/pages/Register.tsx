@@ -1,20 +1,18 @@
-// Register page — green + gold FarmSync UI
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuthStore } from '../context/useAuthStore';
-import { useThemeStore } from '../context/useThemeStore';
+import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import { User, Mail, Lock, UserPlus, Sun, Moon, AlertCircle, Phone, MapPin, Loader2, Eye, EyeOff } from 'lucide-react';
 import Logo from '../components/Logo';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import OAuthSignIn from '../components/OAuthSignIn';
-import api from '../services/api';
 import toast from 'react-hot-toast';
 
 const Register = () => {
   const { t } = useTranslation();
-  const { theme, toggleTheme } = useThemeStore();
-  const { setAuth } = useAuthStore();
+  const { theme, toggleTheme } = useTheme();
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -50,11 +48,11 @@ const Register = () => {
     setError('');
 
     try {
-      const response: any = await api.register(
+      await register(
         formData.fullName,
         formData.email,
         formData.password,
-        formData.role,
+        formData.role as any,
         {
           phone: formData.phone,
           location: formData.location,
@@ -63,20 +61,11 @@ const Register = () => {
         }
       );
       
-      const token = response.token || response.accessToken;
-      const user = response.user;
-
-      if (token && user) {
-        setAuth(user, token);
-        toast.success(t('auth.registerSuccess') || 'Account created successfully!');
-        navigate('/dashboard');
-      } else {
-        toast.success(t('auth.registerSuccess') || 'Account created! Please sign in.');
-        navigate('/login');
-      }
+      toast.success(t('auth.registerSuccess'));
+      navigate('/dashboard');
     } catch (err: any) {
       console.error('Registration error:', err);
-      const errorMessage = typeof err === 'string' ? err : err.response?.data?.message || t('auth.registerError');
+      const errorMessage = typeof err === 'string' ? err : err.message || t('auth.registerError');
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -101,10 +90,10 @@ const Register = () => {
             </Link>
           </div>
           <h1 className="text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
-            Start Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">Digital Farming</span> Journey
+            {t('auth.startYour')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">{t('auth.digitalFarming')}</span> {t('auth.journey')}
           </h1>
           <p className="text-xl text-emerald-100 max-w-lg leading-relaxed drop-shadow">
-            Create an account today and get access to real-time weather monitoring, crop disease detection, and detailed financial analytics tailored for your farm.
+            {t('auth.registerBrandingSub')}
           </p>
         </div>
 

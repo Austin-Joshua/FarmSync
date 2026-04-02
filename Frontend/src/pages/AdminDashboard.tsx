@@ -1,6 +1,5 @@
-// Exclusive Admin Dashboard with Comprehensive Statistics
 import { useState, useEffect } from 'react';
-import { useAuthStore } from '../context/useAuthStore';
+import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import {
   TrendingUp,
@@ -62,7 +61,7 @@ interface AdminStatistics {
 }
 
 const AdminDashboard = () => {
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [statistics, setStatistics] = useState<AdminStatistics | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -145,7 +144,7 @@ const AdminDashboard = () => {
   const totalRevenue = statistics.revenueByDistrict.reduce((sum, item) => sum + item.totalRevenue, 0);
   const totalExpenses = statistics.revenueByDistrict.reduce((sum, item) => sum + item.totalExpenses, 0);
   const totalProfit = totalRevenue - totalExpenses;
-  const totalYield = statistics.revenueByDistrict.reduce((sum, item) => sum + item.totalYield, 0);
+// totalYield calculation removed as it's unused
 
   return (
     <div className="space-y-6">
@@ -238,8 +237,8 @@ const AdminDashboard = () => {
                   paddingAngle={5}
                   dataKey="revenue"
                 >
-                  {revenueChartData.map((_entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  {revenueChartData.map((_entry) => (
+                    <Cell key={`cell-${_entry.name}`} fill={COLORS[revenueChartData.indexOf(_entry) % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -275,7 +274,7 @@ const AdminDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-         {statistics.revenueByDistrict.map((item, index) => (
+         {statistics.revenueByDistrict.map((item) => (
            <div key={item.district} className="card group hover:shadow-2xl transition-all duration-500 border-none bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 overflow-hidden relative">
              <div className="absolute top-0 right-0 p-8 text-gray-500/5 group-hover:scale-150 transition-transform"><MapPin size={80} /></div>
              <h3 className="text-lg font-black text-gray-900 dark:text-white uppercase mb-4 tracking-wider">{item.district}</h3>

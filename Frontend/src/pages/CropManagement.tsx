@@ -1,5 +1,5 @@
 // Crop Management page
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import CropCard from '../components/CropCard';
 import CropFormModal from '../components/CropFormModal';
@@ -12,9 +12,14 @@ import { translateCrop } from '../utils/translations';
 import DetailModal from '../components/DetailModal';
 import { formatDateDisplay } from '../utils/dateFormatter';
 
+import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
+import toast from 'react-hot-toast';
+
 const CropManagement = () => {
   const { t } = useTranslation();
-  const [crops, setCrops] = useState<Crop[]>(mockCrops);
+  const { user } = useAuth();
+  const [crops, setCrops] = useState<Crop[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -26,12 +31,30 @@ const CropManagement = () => {
     data?: Crop[];
   }>({ type: null });
 
-  // LIFO: Sort by date (newest first) - using sowingDate as reference
-  const sortedCrops = [...crops].sort((a, b) => {
-    const dateA = new Date(a.sowingDate).getTime();
-    const dateB = new Date(b.sowingDate).getTime();
-    return dateB - dateA; // Descending order (newest first)
-  });
+  useEffect(() => {
+    const fetchCrops = async () => {
+      if (!user) return;
+      try {
+        const response = await api.getCrops();
+        if (response.data) {
+          // Sort by sowing date descending (LIFO/Newest first)
+          const sorted = response.data.sort((a: Crop, b: Crop) => 
+            new Date(b.sowingDate).getTime() - new Date(a.sowingDate).getTime()
+          );
+          setCrops(sorted);
+        }
+      } catch (error) {
+        console.error('Failed to fetch crops:', error);
+        toast.error(t('crops.errorFetching') || 'Failed to fetch crops');
+        // Fallback to mock data if API fails (for demo purposes)
+        setCrops(mockCrops);
+      } finally {
+      }
+    };
+    fetchCrops();
+  }, [user, t]);
+
+  const sortedCrops = [...crops]; // Already sorted by useEffect
 
   const filteredCrops = sortedCrops.filter((crop) => {
     const searchLower = searchTerm.toLowerCase();
@@ -54,11 +77,17 @@ const CropManagement = () => {
     setIsFormModalOpen(true);
   };
 
-  const handleDeleteCrop = (cropId: string, e: React.MouseEvent) => {
+  const handleDeleteCrop = async (cropId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (confirm(t('crops.confirmDelete') || 'Are you sure you want to delete this crop?')) {
-      setCrops(crops.filter(c => c.id !== cropId));
-      alert(t('crops.cropDeleted') || 'Crop deleted successfully!');
+      try {
+        await api.deleteCrop(cropId);
+        setCrops(crops.filter(c => c.id !== cropId));
+        toast.success(t('crops.cropDeleted') || 'Crop deleted successfully!');
+      } catch (error) {
+        console.error('Failed to delete crop:', error);
+        toast.error(t('crops.errorDeleting') || 'Failed to delete crop');
+      }
     }
   };
 
@@ -67,34 +96,31 @@ const CropManagement = () => {
     setIsDetailModalOpen(true);
   };
 
-  const handleSaveCrop = (cropData: Crop | Omit<Crop, 'id'>) => {
-    if ('id' in cropData && cropData.id) {
-      // Editing existing crop - maintain LIFO order
-      const updated = crops.map(c => c.id === cropData.id ? cropData as Crop : c);
-      const sorted = updated.sort((a, b) => {
-        const dateA = new Date(a.sowingDate).getTime();
-        const dateB = new Date(b.sowingDate).getTime();
-        return dateB - dateA; // Descending order (newest first)
-      });
-      setCrops(sorted);
-      alert(t('crops.cropUpdated') || 'Crop updated successfully!');
-    } else {
-      // Adding new crop (will be first due to LIFO - newest dates first)
-      const newCrop: Crop = {
-        ...cropData as Omit<Crop, 'id'>,
-        id: Date.now().toString(),
-      };
-      // Insert at beginning, then sort to ensure proper LIFO order
-      const updated = [newCrop, ...crops].sort((a, b) => {
-        const dateA = new Date(a.sowingDate).getTime();
-        const dateB = new Date(b.sowingDate).getTime();
-        return dateB - dateA;
-      });
-      setCrops(updated);
-      alert(t('crops.cropAdded') || 'Crop added successfully!');
+  const handleSaveCrop = async (cropData: Crop | Omit<Crop, 'id'>) => {
+    try {
+      if ('id' in cropData && cropData.id) {
+        // Editing existing crop
+        const response = await api.updateCrop(cropData.id, cropData);
+        if (response.data) {
+          const updated = crops.map(c => c.id === cropData.id ? response.data : c);
+          setCrops(updated.sort((a, b) => new Date(b.sowingDate).getTime() - new Date(a.sowingDate).getTime()));
+          toast.success(t('crops.cropUpdated') || 'Crop updated successfully!');
+        }
+      } else {
+        // Adding new crop
+        const response = await api.createCrop(cropData);
+        if (response.data) {
+          const updated = [response.data, ...crops].sort((a, b) => new Date(b.sowingDate).getTime() - new Date(a.sowingDate).getTime());
+          setCrops(updated);
+          toast.success(t('crops.cropAdded') || 'Crop added successfully!');
+        }
+      }
+      setIsFormModalOpen(false);
+      setEditingCrop(null);
+    } catch (error) {
+      console.error('Failed to save crop:', error);
+      toast.error(t('crops.errorSaving') || 'Failed to save crop');
     }
-    setEditingCrop(null);
-    setIsFormModalOpen(false);
   };
 
   return (

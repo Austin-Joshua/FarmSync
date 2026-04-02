@@ -1,15 +1,17 @@
 // Farmer Profile Management page
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuthStore } from '../context/useAuthStore';
+import { useAuth } from '../context/AuthContext';
 import { User as UserIcon, MapPin, Ruler, Droplets, Edit2, Save, X, Phone, Mail, Camera, Loader } from 'lucide-react';
 import { translateSoilType } from '../utils/translations';
 import { BACKEND_ORIGIN } from '../config/api';
+import ApiService from '../services/api';
 import toast from 'react-hot-toast';
 
 const Profile = () => {
   const { t } = useTranslation();
-  const { user, updateUser, uploadProfilePicture } = useAuthStore();
+  const { user, updateUser } = useAuth();
+  const uploadProfilePicture = ApiService.uploadProfilePicture;
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingPicture, setUploadingPicture] = useState(false);
@@ -58,15 +60,15 @@ const Profile = () => {
       await updateUser({
         name: formData.name,
         email: formData.email,
-        phone: formData.phone || null,
-        location: formData.location || null,
-        district: formData.district || null,
-        state: formData.state || null,
-        pincode: formData.pincode || null,
+        phone: formData.phone || undefined,
+        location: formData.location || undefined,
+        district: formData.district || undefined,
+        state: formData.state || undefined,
+        pincode: formData.pincode || undefined,
         land_size: formData.landSize || 0,
-        soil_type: formData.soilType || null,
-        irrigation_type: formData.irrigationType || null,
-        farmer_id: formData.farmerId || null,
+        soil_type: formData.soilType || undefined,
+        irrigation_type: formData.irrigationType || undefined,
+        farmer_id: formData.farmerId || undefined,
       });
       setIsEditing(false);
       toast.success(t('profile.profileUpdated') || 'Profile updated successfully');
