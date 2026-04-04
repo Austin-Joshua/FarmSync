@@ -1,6 +1,8 @@
 import React, { useCallback } from 'react';
 import { BACKEND_ORIGIN } from '../config/api';
 import toast from 'react-hot-toast';
+import { useAuth } from './../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface OAuthLoginProps {
   onSuccess?: () => void;
@@ -8,12 +10,30 @@ interface OAuthLoginProps {
   variant?: 'light' | 'dark';
 }
 
-export const GoogleSignIn: React.FC<OAuthLoginProps> = () => {
-  const handleGoogleLogin = useCallback(() => {
-    toast.loading('Redirecting to Google...', { duration: 2000 });
-    // Spring Boot OAuth2 endpoint: /oauth2/authorization/{registrationId}
-    window.location.href = `${BACKEND_ORIGIN}/oauth2/authorization/google`;
-  }, []);
+export const GoogleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) => {
+  const { loginWithGoogle } = useAuth();
+  const navigate = useNavigate();
+
+  const handleGoogleLogin = useCallback(async () => {
+    try {
+      toast.loading('Connecting to Google...', { id: 'google-login' });
+      await loginWithGoogle();
+      toast.success('Successfully signed in with Google!', { id: 'google-login' });
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (err: any) {
+      console.error(err);
+      let errorMessage = 'Failed to sign in with Google.';
+      if (err.message?.includes('FIREBASE_SETUP_REQUIRED')) {
+        errorMessage = "Identity Services Required: Please enable 'Google' provider in your Firebase console.";
+      }
+      toast.error(errorMessage, { id: 'google-login' });
+      if (onError) onError(errorMessage);
+    }
+  }, [loginWithGoogle, navigate, onSuccess, onError]);
 
   return (
     <button

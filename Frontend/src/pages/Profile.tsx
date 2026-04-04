@@ -208,7 +208,7 @@ const Profile = () => {
               <div className="space-y-1">
                 <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2">
                   <Mail size={14} className="text-primary-600" />
-                  {t('auth.email')}
+                  {t('email')}
                 </label>
                 <p className="text-gray-900 dark:text-gray-100 font-medium opacity-60">{formData.email}</p>
               </div>
@@ -288,3 +288,4 @@ const Profile = () => {
 };
 
 export default Profile;
+

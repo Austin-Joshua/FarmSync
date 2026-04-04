@@ -128,6 +128,14 @@ const AppContent = () => {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <SessionTimeoutWarning />
+      
+      {/* 
+        Conditionally hide AI Assistant on public pages (Landing, Login, Register, etc.)
+        It will be visible in Dashboard and other protected areas.
+      */}
+      {!['/', '/login', '/register', '/forgot-password', '/reset-password'].includes(location.pathname) && (
+        <AIAssistant />
+      )}
     </Suspense>
   );
 };
@@ -141,13 +149,12 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <NotificationProvider>
-          <ErrorBoundary>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AuthProvider>
+          <NotificationProvider>
             <BrowserRouter>
               <AppContent />
-              <AIAssistant />
               <Toaster 
                 position="top-right"
                 toastOptions={{
@@ -159,10 +166,10 @@ function App() {
                 }}
               />
             </BrowserRouter>
-          </ErrorBoundary>
-        </NotificationProvider>
-      </AuthProvider>
-    </ThemeProvider>
+          </NotificationProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

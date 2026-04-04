@@ -57,11 +57,11 @@ const LocationMap = ({ latitude, longitude, locationName, height = '400px' }: Lo
 
   if (!mapLocation) {
     return (
-      <div ref={containerRef} className="card bg-gray-50 dark:bg-gray-700/50 flex items-center justify-center map-container">
-        <div className="text-center">
-          <MapPin size={48} className="mx-auto text-gray-400 dark:text-gray-500 mb-3" />
-          <p className="text-gray-600 dark:text-gray-400">No location available</p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-2">Enable location to view map</p>
+      <div ref={containerRef} className="card bg-gray-50 dark:bg-gray-800 flex items-center justify-center map-container border-2 border-dashed border-gray-300 dark:border-gray-600">
+        <div className="text-center p-6">
+          <MapPin size={48} className="mx-auto text-gray-400 dark:text-gray-400 mb-3" />
+          <p className="text-gray-900 dark:text-white font-bold text-lg">No farm location found</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">Complete your profile to view satellite map data</p>
         </div>
       </div>
     );

@@ -40,7 +40,7 @@ const Register = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password || !formData.fullName) {
-      setError(t('auth.fillRequiredFields') || 'Please fill in all required fields');
+      setError(t('fillRequiredFields') || 'Please fill in all required fields');
       return;
     }
 
@@ -61,11 +61,11 @@ const Register = () => {
         }
       );
       
-      toast.success(t('auth.registerSuccess'));
+      toast.success(t('registerSuccess'));
       navigate('/dashboard');
     } catch (err: any) {
       console.error('Registration error:', err);
-      const errorMessage = typeof err === 'string' ? err : err.message || t('auth.registerError');
+      const errorMessage = typeof err === 'string' ? err : err.message || t('registerError');
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -90,38 +90,38 @@ const Register = () => {
             </Link>
           </div>
           <h1 className="text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
-            {t('auth.startYour')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">{t('auth.digitalFarming')}</span> {t('auth.journey')}
+            Begin Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">Precision Agriculture</span> Strategy
           </h1>
           <p className="text-xl text-emerald-100 max-w-lg leading-relaxed drop-shadow">
-            {t('auth.registerBrandingSub')}
+            Create your digital twin today and optimize every hectare with enterprise-grade agricultural intelligence.
           </p>
         </div>
 
         {/* Register Card Side */}
-        <div className="w-[90%] max-w-[420px] lg:max-w-[600px] animate-fade-in-up mx-auto lg:mx-0">
-          <div className="glass-card shadow-2xl relative">
+        <div className="w-[90%] max-w-[420px] lg:max-w-[500px] animate-fade-in-up mx-auto lg:mx-0">
+          <div className="glass-card shadow-2xl relative !p-6">
             {/* Theme & Language Toggles */}
-            <div className="absolute top-6 right-6 flex items-center gap-3">
+            <div className="absolute top-4 right-4 flex items-center gap-2">
               <LanguageSwitcher />
               <button 
                 onClick={toggleTheme}
-                className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100/50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:scale-110 transition-transform"
+                className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100/50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:scale-110 transition-transform"
               >
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
               </button>
             </div>
 
-            <div className="mb-5 pt-1">
+            <div className="mb-4 pt-1">
               <div className="lg:hidden mb-4 flex justify-center hover:scale-105 transition-transform cursor-pointer">
                 <Link to="/">
                   <Logo size="default" variant="light" />
                 </Link>
               </div>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                {t('auth.createYourAccount')}
+                {t('createYourAccount')}
               </h2>
               <p className="text-gray-600 dark:text-gray-400">
-                {t('auth.joinSystem')}
+                {t('joinSystem')}
               </p>
             </div>
 
@@ -132,11 +132,11 @@ const Register = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-2.5">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('auth.fullName')} *
+                    {t('fullName')} *
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
@@ -146,7 +146,7 @@ const Register = () => {
                       name="fullName"
                       type="text"
                       onChange={handleChange}
-                      className="block w-full pl-11 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm"
+                      className="block w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm text-sm"
                       placeholder="John Doe"
                       required
                     />
@@ -155,7 +155,7 @@ const Register = () => {
 
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('auth.emailAddress')} *
+                    {t('emailAddress')} *
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
@@ -165,7 +165,7 @@ const Register = () => {
                       name="email"
                       type="email"
                       onChange={handleChange}
-                      className="block w-full pl-11 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm"
+                      className="block w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm text-sm"
                       placeholder="john@example.com"
                       required
                     />
@@ -176,7 +176,7 @@ const Register = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('auth.password')} *
+                    {t('password')} *
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
@@ -186,7 +186,7 @@ const Register = () => {
                       name="password"
                       type={showPassword ? 'text' : 'password'}
                       onChange={handleChange}
-                      className="block w-full pl-11 pr-12 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm"
+                      className="block w-full pl-10 pr-12 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm text-sm"
                       placeholder="••••••••"
                       required
                     />
@@ -202,7 +202,7 @@ const Register = () => {
 
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('auth.phone')}
+                    {t('phone')}
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
@@ -212,7 +212,7 @@ const Register = () => {
                       name="phone"
                       type="tel"
                       onChange={handleChange}
-                      className="block w-full pl-11 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm"
+                      className="block w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm text-sm"
                       placeholder="+91 9876543210"
                     />
                   </div>
@@ -222,7 +222,7 @@ const Register = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('auth.location')}
+                    {t('location')}
                   </label>
                   <div className="relative group">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
@@ -232,7 +232,7 @@ const Register = () => {
                       name="location"
                       type="text"
                       onChange={handleChange}
-                      className="block w-full pl-11 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm"
+                      className="block w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm text-sm"
                       placeholder="e.g. Nashik, Maharashtra"
                     />
                   </div>
@@ -240,17 +240,17 @@ const Register = () => {
 
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('auth.role')}
+                    {t('role')}
                   </label>
                   <select
                     name="role"
                     onChange={handleChange}
-                    className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all appearance-none shadow-sm"
+                    className="block w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all appearance-none shadow-sm text-sm"
                     value={formData.role}
                   >
-                    <option value="farmer">{t('auth.farmer')}</option>
-                    <option value="expert">{t('auth.expert')}</option>
-                    <option value="admin">{t('auth.admin')}</option>
+                    <option value="farmer">{t('farmer')}</option>
+                    <option value="expert">{t('expert')}</option>
+                    <option value="admin">{t('admin')}</option>
                   </select>
                 </div>
               </div>
@@ -261,23 +261,23 @@ const Register = () => {
                 className="w-full mt-4 flex items-center justify-center gap-2 py-3 px-6 rounded-xl shadow-lg shadow-primary-500/20 text-lg font-bold text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 transform hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
               >
                 {loading ? <Loader2 size={24} className="animate-spin" /> : <UserPlus size={24} className="group-hover:rotate-12 transition-transform" />}
-                {t('auth.registerButton')}
+                {t('registerButton')}
               </button>
             </form>
 
             <div className="mt-5 text-center">
               <div className="mb-4 flex justify-center">
                 <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                  {t('auth.orContinueEmail')}
+                  {t('orContinueEmail')}
                 </span>
               </div>
 
               <OAuthSignIn />
 
               <p className="mt-6 font-semibold text-gray-700 dark:text-gray-300 text-sm">
-                {t('auth.alreadyHaveAccount')}{' '}
+                {t('alreadyHaveAccount')}{' '}
                 <Link to="/login" className="font-extrabold text-primary-600 dark:text-primary-400 hover:underline">
-                  {t('auth.signIn')}
+                  {t('signIn')}
                 </Link>
               </p>
             </div>
@@ -289,3 +289,4 @@ const Register = () => {
 };
 
 export default Register;
+

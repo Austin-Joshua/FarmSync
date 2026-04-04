@@ -2,35 +2,38 @@ import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { 
   ArrowRight, TrendingUp, Sun, Moon, 
-  Calendar, PieChart, Zap, Database, Check, PlayCircle
+  Calendar, PieChart, Zap, Database, Check, PlayCircle,
+  Menu, X
 } from 'lucide-react';
+import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 
 const Landing = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const features = [
     {
       icon: <Database className="text-emerald-500" />,
-      title: "Smart Inventory",
-      description: "Real-time tracking of seeds, fertilizers, and tools. Never run out of essentials during peak season."
+      title: "Precision Inventory",
+      description: "Automated tracking of seeds, fertilizers, and equipment. Real-time alerts to ensure your supply chain never breaks."
     },
     {
       icon: <TrendingUp className="text-blue-500" />,
-      title: "Yield Prediction",
-      description: "AI-driven models that forecast your harvest based on soil history and local weather patterns."
+      title: "Predictive Analytics",
+      description: "Advanced AI models forecasting harvest quality and quantity based on multi-layered soil and climate data."
     },
     {
       icon: <Calendar className="text-amber-500" />,
-      title: "Crop Calendar",
-      description: "Automated schedules for sowing, irrigation, and harvesting tailored to your specific region."
+      title: "Dynamic Scheduling",
+      description: "Integrated crop calendars that automatically adjust irrigation and sowing based on hyper-local weather shifts."
     },
     {
       icon: <PieChart className="text-purple-500" />,
-      title: "Financial Insights",
-      description: "Detailed expense management and profit analysis to maximize your farm's ROI."
+      title: "Profit Optimization",
+      description: "Enterprise-grade financial tracking and detailed cost-benefit analysis to maximize your farm's returns."
     }
   ];
 
@@ -79,8 +82,8 @@ const Landing = () => {
           <Logo size="default" variant={theme === 'dark' ? 'dark' : 'light'} />
         </div>
         
-        {/* Center Links (Desktop) */}
-        <div className="hidden md:flex items-center gap-10 text-[13px] font-extrabold uppercase tracking-widest">
+        {/* Center Links (Desktop only) */}
+        <div className="hidden lg:flex items-center gap-8 xl:gap-10 text-[13px] font-extrabold uppercase tracking-widest">
           <a href="#features" className="hover:text-primary-500 transition-colors">Features</a>
           <a href="#membership" className="hover:text-primary-500 transition-colors">Membership</a>
           <a href="#academy" className="hover:text-primary-500 transition-colors">Academy</a>
@@ -106,12 +109,44 @@ const Landing = () => {
           </Link>
           <button 
             onClick={() => navigate('/register')}
-            className="flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-[#0d1510] px-6 py-2.5 rounded-full text-sm font-black hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary-500/10"
+            className="flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-[#0d1510] px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-sm font-black hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary-500/10 whitespace-nowrap"
           >
             Get started
           </button>
+
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="lg:hidden p-2 rounded-xl bg-gray-100 dark:bg-white/5 text-gray-900 dark:text-white"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile Menu Dropdown */}
+      {isMobileMenuOpen && (
+        <div className="fixed top-[73px] left-0 right-0 z-40 bg-white/95 dark:bg-[#0d1510]/95 backdrop-blur-xl border-b border-gray-100 dark:border-white/5 p-6 shadow-2xl lg:hidden animate-fade-in-up">
+          <div className="flex flex-col gap-6 text-sm font-extrabold uppercase tracking-widest">
+            <a href="#features" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-500 transition-colors flex items-center justify-between">
+              Features <ArrowRight size={16} />
+            </a>
+            <a href="#membership" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-500 transition-colors flex items-center justify-between">
+              Membership <ArrowRight size={16} />
+            </a>
+            <a href="#academy" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-500 transition-colors flex items-center justify-between">
+              Academy <ArrowRight size={16} />
+            </a>
+            <a href="#how-it-works" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-primary-500 transition-colors flex items-center justify-between">
+              How it works <ArrowRight size={16} />
+            </a>
+            <div className="h-px bg-gray-200 dark:bg-white/10 my-2" />
+            <Link to="/login" className="sm:hidden text-center text-gray-600 dark:text-gray-400 hover:text-primary-500 transition-colors">
+              Log in to your account
+            </Link>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-20 px-6 max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-20">
@@ -122,14 +157,14 @@ const Landing = () => {
             <span>AI-Driven Agriculture</span>
           </div>
           
-          <h1 className="text-5xl sm:text-7xl font-black leading-[1] tracking-tighter italic uppercase">
-            Smarter Fields,<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-emerald-500">Greater Yield</span><br />
-            Better Future.
+          <h1 className="text-5xl sm:text-7xl font-black leading-[1] tracking-tighter italic uppercase text-gray-900 dark:text-white">
+            Precision Fields,<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-emerald-500">Maximum Yield.</span><br />
+            Built for Legacy.
           </h1>
           
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-lg font-bold leading-relaxed">
-            Revolutionize your farm management with deeply accurate insights, automatic tracking, and precision agriculture tools designed for the modern farmer.
+            Empower your agricultural legacy with precise data insights, automated resource tracking, and next-generation optimization tools tailored for professional farm management.
           </p>
           
           <div className="flex flex-wrap gap-4 pt-4">
@@ -270,7 +305,7 @@ const Landing = () => {
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="lg:w-1/2 space-y-8">
                <h3 className="text-5xl font-black uppercase italic tracking-tighter leading-none">The path to<br />optimization.</h3>
-               <p className="text-xl text-gray-400 font-bold leading-relaxed">We simplified the complex agricultural data landscape so you can focus on what matters most: growing your legacy.</p>
+               <p className="text-xl text-gray-400 font-bold leading-relaxed">We distill complex environmental and operational data into actionable intelligence, allowing you to focus on scaling your production and securing your harvest.</p>
                <button onClick={() => navigate('/register')} className="bg-white text-[#0d1510] px-10 py-5 rounded-full text-lg font-black uppercase tracking-tighter italic hover:scale-105 transition-all">Join Waitlist</button>
             </div>
             

@@ -70,7 +70,7 @@ const AIAssistant: React.FC = () => {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-8 right-8 w-16 h-16 rounded-full bg-primary-600 hover:bg-primary-500 text-white shadow-2xl shadow-primary-500/40 flex items-center justify-center animate-bounce hover:animate-none transition-all z-50 group overflow-hidden"
+        className="fixed bottom-8 right-8 w-16 h-16 rounded-full bg-primary-600 hover:bg-primary-500 text-white shadow-2xl shadow-primary-500/40 flex items-center justify-center animate-bounce hover:animate-none transition-all z-50 group"
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-primary-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         <MessageSquare size={28} />

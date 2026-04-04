@@ -175,21 +175,35 @@ const Settings = () => {
                </div>
 
                <div className="flex-1 space-y-4 w-full">
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                   <div>
-                     <label className="label">{t('settings.fullName')}</label>
-                     <input 
-                       className="input" 
-                       value={profileData.name} 
-                       onChange={(e) => setProfileData({...profileData, name: e.target.value})}
-                       disabled={!isEditing}
-                     />
-                   </div>
-                   <div>
-                     <label className="label">{t('auth.emailAddress')}</label>
-                     <input className="input opacity-50 cursor-not-allowed" value={user?.email || ''} disabled />
-                   </div>
-                 </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('settings.fullName') || 'Full Name'}</label>
+                      <input 
+                        className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary-500 outline-none disabled:opacity-50" 
+                        value={profileData.name} 
+                        onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                        disabled={!isEditing}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('emailAddress') || 'Email Address'}</label>
+                      <input className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white disabled:opacity-50 cursor-not-allowed" value={user?.email || ''} disabled />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Location</label>
+                      <input className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none disabled:opacity-50" value={profileData.location} onChange={(e) => setProfileData({...profileData, location: e.target.value})} disabled={!isEditing} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Land Size (Acres)</label>
+                        <input type="number" className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none disabled:opacity-50" value={profileData.landSize} onChange={(e) => setProfileData({...profileData, landSize: parseFloat(e.target.value)})} disabled={!isEditing} />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Soil Type</label>
+                        <input className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-gray-900 dark:text-white outline-none disabled:opacity-50" value={profileData.soilType} onChange={(e) => setProfileData({...profileData, soilType: e.target.value})} disabled={!isEditing} />
+                      </div>
+                    </div>
+                  </div>
 
                  <div className="flex gap-3">
                    {isEditing ? (
@@ -257,3 +271,4 @@ const Settings = () => {
 };
 
 export default Settings;
+

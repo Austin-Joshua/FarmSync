@@ -1,5 +1,5 @@
 // Main Layout component with sidebar and header
-import { ReactNode } from 'react';
+import { ReactNode, useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Home,
@@ -33,6 +33,25 @@ const Layout = ({ children }: LayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [showProfile, setShowProfile] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setShowProfile(false);
+      }
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+        setShowNotifications(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const menuItems = [
     { path: '/dashboard', label: t('navigation.dashboard'), icon: Home },
     { path: '/crops', label: t('navigation.cropManagement'), icon: Sprout },
@@ -59,7 +78,7 @@ const Layout = ({ children }: LayoutProps) => {
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                 isActive(item.path)
                   ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/30'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  : 'text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700/50'
               }`}
             >
               <item.icon size={20} />
@@ -73,7 +92,7 @@ const Layout = ({ children }: LayoutProps) => {
             className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all"
           >
             <LogOut size={20} />
-            <span className="font-medium">{t('auth.logout')}</span>
+            <span className="font-medium">{t('logout')}</span>
           </button>
         </div>
       </aside>
@@ -86,22 +105,82 @@ const Layout = ({ children }: LayoutProps) => {
         <div className="flex items-center gap-4">
           <button
             onClick={toggleTheme}
-            className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-all"
+            className="p-2 text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-all"
             title={t('settings.theme')}
           >
             {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
           </button>
           <LanguageSwitcher />
-          <div className="relative">
-            <Bell size={20} className="text-gray-600 dark:text-gray-400" />
-            {notifications.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full">
-                {notifications.length}
-              </span>
+          <div className="relative" ref={notifRef}>
+            <button 
+              onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-all relative"
+            >
+              <Bell size={20} className="text-gray-600 dark:text-white" />
+              {notifications.length > 0 && (
+                <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white dark:border-gray-800">
+                  {notifications.length}
+                </span>
+              )}
+            </button>
+            
+            {showNotifications && (
+              <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-3 px-4 z-50 animate-fade-in-up">
+                <h3 className="font-bold text-gray-900 dark:text-white mb-3">Notifications</h3>
+                {notifications.length > 0 ? (
+                  <div className="space-y-3 max-h-64 overflow-y-auto">
+                    {notifications.map((notif: any) => (
+                      <div key={notif.id} className="text-sm border-b border-gray-100 dark:border-gray-700 pb-2 last:border-0 last:pb-0">
+                        <p className="font-semibold text-gray-800 dark:text-gray-200">{notif.title}</p>
+                        <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">{notif.message}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">No new notifications</p>
+                )}
+              </div>
             )}
           </div>
-          <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold">
-            {user?.name?.charAt(0) || 'U'}
+          
+          <div className="relative" ref={profileRef}>
+            <button 
+              onClick={() => { setShowProfile(!showProfile); setShowNotifications(false); }}
+              className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary-600 to-primary-400 flex items-center justify-center text-white font-bold shadow-md hover:shadow-lg transition-all focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+            >
+              {user?.name?.charAt(0) || 'U'}
+            </button>
+            
+            {showProfile && (
+              <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-2 z-50 animate-fade-in-up">
+                <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                  <p className="font-bold text-gray-900 dark:text-white">{user?.name || 'User'}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{user?.email || ''}</p>
+                </div>
+                <div className="py-2">
+                  <button 
+                    onClick={() => { setShowProfile(false); navigate('/settings'); }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    Account Settings
+                  </button>
+                  <button 
+                    onClick={() => { setShowProfile(false); navigate('/dashboard'); }}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    Dashboard Help
+                  </button>
+                </div>
+                <div className="py-2 border-t border-gray-100 dark:border-gray-700">
+                  <button 
+                    onClick={() => { setShowProfile(false); logout(); }}
+                    className="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/10 text-sm font-bold text-red-600"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -144,4 +223,5 @@ const Layout = ({ children }: LayoutProps) => {
 };
 
 export default Layout;
+
 

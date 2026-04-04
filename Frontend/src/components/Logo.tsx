@@ -1,6 +1,7 @@
 // FarmSync Perfect Native SVG Logo Component
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '../context/AuthContext';
 
 const Logo = ({ 
   size = 'default',
@@ -13,6 +14,7 @@ const Logo = ({
 }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuth();
   
   const sizeClasses = {
     small: 'text-lg',
@@ -29,10 +31,16 @@ const Logo = ({
   const textColor = variant === 'dark' ? 'text-white' : 'text-gray-900';
 
   const handleLogoClick = () => {
-    if (window.location.pathname === '/' || window.location.pathname === '/landing') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (isAuthenticated) {
+      if (window.location.pathname !== '/dashboard') {
+        navigate('/dashboard');
+      }
     } else {
-      navigate('/');
+      if (window.location.pathname === '/' || window.location.pathname === '/landing') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate('/');
+      }
     }
     onAfterClick?.();
   };

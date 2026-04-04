@@ -13,7 +13,7 @@ import toast from 'react-hot-toast';
 const Login = () => {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
   const [email, setEmail] = useState('admin@farmsync.com');
@@ -22,6 +22,13 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isApiOnline, setIsApiOnline] = useState(true);
+
+  // Auto-redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   // Check API health on load
   useEffect(() => {
@@ -39,7 +46,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      setError(t('auth.fillAllFields'));
+      setError(t('fillAllFields'));
       return;
     }
 
@@ -48,11 +55,18 @@ const Login = () => {
 
     try {
       await login(email, password);
-      toast.success(t('auth.loginSuccess'));
+      toast.success(t('loginSuccess') || 'Login successful');
       navigate('/dashboard');
     } catch (err: any) {
       console.error('Login error:', err);
-      const errorMessage = typeof err === 'string' ? err : err.message || t('auth.loginError');
+      let errorMessage = typeof err === 'string' ? err : err.message || t('loginError') || 'Login failed';
+      
+      if (err.message?.includes('FIREBASE_SETUP_REQUIRED')) {
+        errorMessage = "Identity Services Required: Please enable 'Email/Password' in your Firebase console to activate your account database.";
+      } else if (err.code === 'auth/invalid-login-credentials' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+        errorMessage = "Invalid email or password.";
+      }
+
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -77,45 +91,45 @@ const Login = () => {
             </Link>
           </div>
           <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
-            {t('auth.revolutionizing')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">{t('auth.farmManagement')}</span> {t('auth.withAi')}
+            Revolutionizing <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">Precision Management</span> with AI Intelligence
           </h1>
           <p className="text-xl text-emerald-100 max-w-lg leading-relaxed drop-shadow">
-            {t('auth.loginBrandingSub')}
+            Harness the power of hyper-local data and predictive analytics to secure your farm's future and optimize every hectare.
           </p>
         </div>
 
         {/* Login Card Side - reduced width */}
-        <div className="w-[85%] max-w-[320px] md:max-w-[380px] animate-fade-in-up mx-auto md:mx-0">
-          <div className="glass-card shadow-2xl relative">
+        <div className="w-[85%] max-w-[320px] md:max-w-[340px] animate-fade-in-up mx-auto md:mx-0">
+          <div className="glass-card shadow-2xl relative !p-6">
             {/* Theme & Language Toggles */}
-            <div className="absolute top-6 right-6 flex items-center gap-3">
+            <div className="absolute top-4 right-4 flex items-center gap-2">
               <LanguageSwitcher />
               <button 
                 onClick={toggleTheme}
-                className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-100/50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:scale-110 transition-transform"
+                className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100/50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:scale-110 transition-transform"
               >
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
               </button>
             </div>
 
-            <div className="mb-6 pt-1">
+            <div className="mb-4 pt-1">
               <div className="md:hidden mb-6 flex justify-center hover:scale-105 transition-transform cursor-pointer">
                 <Link to="/">
                   <Logo size="default" variant="light" />
                 </Link>
               </div>
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                {t('auth.welcomeBack')}
+                {t('welcomeBack')}
               </h2>
               <p className="text-gray-600 dark:text-gray-400">
-                {t('auth.signInAccount')}
+                {t('signInAccount')}
               </p>
             </div>
 
             {!isApiOnline && (
               <div className="mb-4 p-2 bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30 rounded-lg flex items-center gap-2 text-red-600 dark:text-red-400 backdrop-blur-sm">
                 <AlertCircle size={16} className="shrink-0" />
-                <p className="text-[11px] font-bold uppercase tracking-wide">{t('auth.serverOfflineDemo')}</p>
+                <p className="text-[11px] font-bold uppercase tracking-wide">{t('serverOfflineDemo')}</p>
               </div>
             )}
 
@@ -129,7 +143,7 @@ const Login = () => {
             <form onSubmit={handleSubmit} className="space-y-3">
               <div className="space-y-2">
                 <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                  {t('auth.emailAddress')}
+                  {t('emailAddress')}
                 </label>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
@@ -139,7 +153,7 @@ const Login = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full pl-11 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all placeholder-gray-400 shadow-sm"
+                    className="block w-full pl-11 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all placeholder-gray-400 shadow-sm text-sm"
                     placeholder="name@farm.com"
                     required
                   />
@@ -149,13 +163,13 @@ const Login = () => {
               <div className="space-y-2">
                 <div className="flex justify-between ml-1">
                   <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                    {t('auth.password')}
+                    {t('password')}
                   </label>
                   <Link 
                     to="/forgot-password"
                     className="text-sm font-bold text-primary-600 dark:text-primary-400 hover:text-primary-500 transition-colors"
                   >
-                    {t('auth.forgotPassword')}
+                    {t('forgotPassword')}
                   </Link>
                 </div>
                 <div className="relative group">
@@ -166,7 +180,7 @@ const Login = () => {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-11 pr-12 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all placeholder-gray-400 shadow-sm"
+                    className="block w-full pl-11 pr-12 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all placeholder-gray-400 shadow-sm text-sm"
                     placeholder="••••••••"
                     required
                   />
@@ -186,23 +200,23 @@ const Login = () => {
                 className="w-full mt-2 flex items-center justify-center gap-2 py-3 px-6 rounded-xl shadow-lg shadow-primary-500/20 text-lg font-bold text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 transform hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
               >
                 {loading ? <Loader2 size={22} className="animate-spin" /> : <LogIn size={22} className="group-hover:translate-x-1 transition-transform" />}
-                {t('auth.signIn')}
+                {t('signIn')}
               </button>
             </form>
 
             <div className="mt-5 text-center">
               <div className="mb-4 flex justify-center">
                 <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                  {t('auth.orContinueEmail')}
+                  {t('orContinueEmail')}
                 </span>
               </div>
 
               <OAuthSignIn />
 
               <p className="mt-6 font-semibold text-gray-700 dark:text-gray-300 text-sm">
-                {t('auth.dontHaveAccount')}{' '}
+                {t('dontHaveAccount')}{' '}
                 <Link to="/register" className="font-extrabold text-primary-600 dark:text-primary-400 hover:underline">
-                  {t('auth.createAccount')}
+                  {t('createAccount')}
                 </Link>
               </p>
             </div>
@@ -214,3 +228,4 @@ const Login = () => {
 };
 
 export default Login;
+

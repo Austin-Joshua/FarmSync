@@ -21,11 +21,11 @@ const PasswordStrengthIndicator = ({ password, showRequirements = true }: Passwo
   }
 
   const requirements = [
-    { test: password.length >= 8, text: t('auth.passwordRequirementMinLength') || 'At least 8 characters' },
-    { test: /[A-Z]/.test(password), text: t('auth.passwordRequirementUppercase') || 'At least one uppercase letter (A-Z)' },
-    { test: /[a-z]/.test(password), text: t('auth.passwordRequirementLowercase') || 'At least one lowercase letter (a-z)' },
-    { test: /[0-9]/.test(password), text: t('auth.passwordRequirementNumber') || 'At least one number (0-9)' },
-    { test: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?~]/.test(password), text: t('auth.passwordRequirementSpecial') || 'At least one special character (!@#$%^&*()_+-=[]{};\':"|,.<>/?~)' },
+    { test: password.length >= 8, text: t('passwordRequirementMinLength') || 'At least 8 characters' },
+    { test: /[A-Z]/.test(password), text: t('passwordRequirementUppercase') || 'At least one uppercase letter (A-Z)' },
+    { test: /[a-z]/.test(password), text: t('passwordRequirementLowercase') || 'At least one lowercase letter (a-z)' },
+    { test: /[0-9]/.test(password), text: t('passwordRequirementNumber') || 'At least one number (0-9)' },
+    { test: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/?~]/.test(password), text: t('passwordRequirementSpecial') || 'At least one special character (!@#$%^&*()_+-=[]{};\':"|,.<>/?~)' },
   ];
 
   return (
@@ -34,7 +34,7 @@ const PasswordStrengthIndicator = ({ password, showRequirements = true }: Passwo
       <div>
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            {t('auth.passwordStrength') || 'Password Strength'}:
+            {t('passwordStrength') || 'Password Strength'}:
           </span>
           <span className={`text-sm font-semibold ${
             validation.strength === 'very-strong' ? 'text-green-600' :
@@ -78,3 +78,4 @@ const PasswordStrengthIndicator = ({ password, showRequirements = true }: Passwo
 };
 
 export default PasswordStrengthIndicator;
+

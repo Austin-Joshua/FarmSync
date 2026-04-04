@@ -1,4 +1,4 @@
- wfrom fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import random
 import time

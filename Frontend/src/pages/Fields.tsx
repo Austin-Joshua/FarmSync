@@ -194,7 +194,7 @@ const Fields = () => {
         </div>
         <button onClick={() => { setShowForm(true); resetForm(); }} className="btn-primary flex items-center gap-2">
           <Plus size={20} />
-          {t('fields.addField') || 'Add Field'}
+          {t('fields.addField') === 'fields.addField' ? 'Add Field' : t('fields.addField')}
         </button>
       </div>
 
@@ -203,7 +203,7 @@ const Fields = () => {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/50">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-                {editingField ? t('fields.editField') : t('fields.addField')}
+                {editingField ? (t('fields.editField') === 'fields.editField' ? 'Edit Field' : t('fields.editField')) : (t('fields.addField') === 'fields.addField' ? 'Add Field' : t('fields.addField'))}
               </h2>
               <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
                 <X size={24} />
@@ -295,7 +295,7 @@ const Fields = () => {
           <MapPin size={64} className="mx-auto text-gray-300 mb-4" />
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No fields mapped yet</h3>
           <p className="text-gray-500 mb-8 max-w-sm mx-auto">Start by adding your first field to track growth and soil health across your farm.</p>
-          <button onClick={() => setShowForm(true)} className="btn-primary">{t('fields.addField')}</button>
+          <button onClick={() => setShowForm(true)} className="btn-primary">{t('fields.addField') === 'fields.addField' ? 'Add Field' : t('fields.addField')}</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

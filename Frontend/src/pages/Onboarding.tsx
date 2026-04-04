@@ -78,13 +78,25 @@ const Onboarding = () => {
 
     setLoading(true);
     try {
-      // Update profile
+      // Update profile in Firebase Client State
       await updateUser({
         location: formData.location,
         land_size: formData.land_size,
         soil_type: formData.soil_type,
         is_onboarded: true
       });
+
+      // Update profile in Java Backend Database
+      try {
+        await api.updateProfile({
+          name: user?.name,
+          location: formData.location,
+          land_size: formData.land_size,
+          soil_type: formData.soil_type,
+        });
+      } catch (e) {
+        console.warn('Backend profile sync failed, continuing...', e);
+      }
 
       // Create farm
       const farmResponse = await api.createFarm({
@@ -136,24 +148,24 @@ const Onboarding = () => {
               <div className="space-y-1">
                 <label className="label">{t('profile.location') || 'Farm Location'}</label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-3.5 text-gray-400" size={18} />
-                  <input className="input pl-10" value={formData.location} onChange={e => handleInputChange('location', e.target.value)} placeholder="e.g. Coimbatore, Tamil Nadu" />
+                  <MapPin className="absolute left-3.5 top-3.5 text-gray-400" size={18} />
+                  <input className="w-full bg-white dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 pl-10 text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary-500 outline-none" value={formData.location} onChange={e => handleInputChange('location', e.target.value)} placeholder="e.g. Coimbatore, Tamil Nadu" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="label">Land Size (Acres)</label>
                   <div className="relative">
-                    <Ruler className="absolute left-3 top-3.5 text-gray-400" size={18} />
-                    <input type="number" className="input pl-10" value={formData.land_size || ''} onChange={e => handleInputChange('land_size', parseFloat(e.target.value))} />
+                    <Ruler className="absolute left-3.5 top-3.5 text-gray-400" size={18} />
+                    <input type="number" className="w-full bg-white dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 pl-10 text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary-500 outline-none" value={formData.land_size || ''} onChange={e => handleInputChange('land_size', parseFloat(e.target.value))} />
                   </div>
                 </div>
                 <div className="space-y-1">
                   <label className="label">Soil Architecture</label>
                   <div className="relative">
-                    <Droplets className="absolute left-3 top-3.5 text-gray-400" size={18} />
-                    <select className="input pl-10" value={formData.soil_type} onChange={e => handleInputChange('soil_type', e.target.value)}>
-                      <option value="">Select Type</option>
+                    <Droplets className="absolute left-3.5 top-3.5 text-gray-400" size={18} />
+                    <select className="w-full bg-white dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 pl-10 text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary-500 outline-none appearance-none" value={formData.soil_type} onChange={e => handleInputChange('soil_type', e.target.value)}>
+                      <option value="" disabled>Select Type</option>
                       {soilTypes.map(t => <option key={t} value={t}>{t}</option>)}
                     </select>
                   </div>
@@ -167,10 +179,10 @@ const Onboarding = () => {
                <h3 className="text-xl font-black text-gray-900 dark:text-white uppercase tracking-tight mb-4">Initial Crop Inventory</h3>
                {formData.crops.map((crop, i) => (
                  <div key={i} className="p-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100 dark:border-gray-700 space-y-3">
-                   <input className="input !bg-white dark:!bg-gray-800" placeholder="Crop Name (e.g. IR-20 Rice)" value={crop.name} onChange={e => updateCrop(i, 'name', e.target.value)} />
+                   <input className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Crop Name (e.g. IR-20 Rice)" value={crop.name} onChange={e => updateCrop(i, 'name', e.target.value)} />
                    <div className="grid grid-cols-2 gap-3">
-                     <input type="number" className="input !bg-white dark:!bg-gray-800" placeholder="Area" value={crop.area || ''} onChange={e => updateCrop(i, 'area', parseFloat(e.target.value))} />
-                     <input type="date" className="input !bg-white dark:!bg-gray-800" value={crop.sowing_date} onChange={e => updateCrop(i, 'sowing_date', e.target.value)} />
+                     <input type="number" className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Area" value={crop.area || ''} onChange={e => updateCrop(i, 'area', parseFloat(e.target.value))} />
+                     <input type="date" className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl px-4 py-3 text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-primary-500 outline-none" value={crop.sowing_date} onChange={e => updateCrop(i, 'sowing_date', e.target.value)} />
                    </div>
                  </div>
                ))}

@@ -114,7 +114,7 @@ const UserPage = () => {
             <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
               <Mail className="text-gray-400" size={18} />
               <div>
-                <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">{t('auth.emailAddress')}</p>
+                <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">{t('emailAddress')}</p>
                 <p className="text-gray-900 dark:text-gray-100 font-medium">{authUser?.email}</p>
               </div>
             </div>
@@ -197,3 +197,4 @@ const UserPage = () => {
 };
 
 export default UserPage;
+

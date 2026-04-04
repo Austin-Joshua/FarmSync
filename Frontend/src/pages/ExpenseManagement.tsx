@@ -166,35 +166,35 @@ const ExpenseManagement = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card bg-red-50 dark:bg-red-900/10">
+        <div className="card bg-red-50 dark:bg-red-900/20">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Monthly Expenses</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Monthly Expenses</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">₹{monthlyTotal.toLocaleString()}</p>
             </div>
-            <IndianRupee className="text-red-600" size={48} />
+            <IndianRupee className="text-red-600 dark:text-red-400" size={48} />
           </div>
         </div>
-        <div className="card bg-orange-50 dark:bg-orange-900/10">
+        <div className="card bg-orange-50 dark:bg-orange-900/20">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('expenses.totalExpenses')}</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('expenses.totalExpenses')}</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 ₹{expenses.reduce((sum, exp) => sum + exp.amount, 0).toLocaleString()}
               </p>
             </div>
-            <TrendingDown className="text-orange-600" size={48} />
+            <TrendingDown className="text-orange-600 dark:text-orange-400" size={48} />
           </div>
         </div>
-        <div className="card bg-blue-50 dark:bg-blue-900/10">
+        <div className="card bg-blue-50 dark:bg-blue-900/20">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('expenses.averageExpense')}</p>
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('expenses.averageExpense')}</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 ₹{Math.round(expenses.reduce((sum, exp) => sum + exp.amount, 0) / (expenses.length || 1)).toLocaleString()}
               </p>
             </div>
-            <Calendar className="text-blue-600" size={48} />
+            <Calendar className="text-blue-600 dark:text-blue-400" size={48} />
           </div>
         </div>
       </div>

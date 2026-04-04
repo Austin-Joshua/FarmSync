@@ -12,6 +12,11 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="https://bolt.new/static/og_default.png" />
     <script>
+      // global polyfill for stompjs/sockjs
+      if (typeof global === 'undefined') {
+        var global = window;
+      }
+      
       // CRITICAL: Run BEFORE anything else loads
       (async function() {
         try {

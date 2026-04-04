@@ -89,13 +89,19 @@ const ClimateAlert = ({ onAlertsChange }: ClimateAlertProps) => {
   const visibleAlerts = alerts.filter((_, index) => !dismissedAlerts.has(index.toString()));
 
   if (!location.latitude || !location.longitude) {
-    return null;
+    return (
+      <div className="p-6 text-center">
+        <AlertTriangle size={32} className="mx-auto text-gray-400 dark:text-gray-500 mb-2" />
+        <p className="text-gray-600 dark:text-gray-400 font-medium">No location provided</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Please set your farm location to receive climate alerts</p>
+      </div>
+    );
   }
 
   if (loading) {
     return (
-      <div className="card bg-yellow-50 border-yellow-200">
-        <div className="flex items-center gap-2 text-yellow-800">
+      <div className="p-6 bg-yellow-50 dark:bg-yellow-900/20 border-b border-yellow-200 dark:border-yellow-800">
+        <div className="flex items-center gap-2 text-yellow-800 dark:text-yellow-200">
           <Info size={18} />
           <span className="text-sm">{t('alerts.checkingAlerts')}</span>
         </div>
@@ -105,8 +111,8 @@ const ClimateAlert = ({ onAlertsChange }: ClimateAlertProps) => {
 
   if (visibleAlerts.length === 0) {
     return (
-      <div className="card bg-green-50 border-green-200">
-        <div className="flex items-center gap-2 text-green-800">
+      <div className="p-6 bg-green-50 dark:bg-green-900/20 border-b border-green-200 dark:border-green-800">
+        <div className="flex items-center gap-2 text-green-800 dark:text-green-200">
           <Info size={18} />
           <span className="text-sm font-medium">{t('alerts.noAlerts')}</span>
         </div>
@@ -115,8 +121,8 @@ const ClimateAlert = ({ onAlertsChange }: ClimateAlertProps) => {
   }
 
   return (
-    <div className="space-y-3">
-      <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+    <div className="space-y-3 p-6">
+      <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
         <AlertTriangle size={24} className="text-orange-500" /> {t('alerts.title')}
       </h2>
       {visibleAlerts.map((alert) => {
