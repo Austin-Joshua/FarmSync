@@ -1,33 +1,54 @@
 package com.farmsync.controller;
 
-import com.farmsync.service.FirebaseService;
+import com.farmsync.dto.CropRequest;
+import com.farmsync.model.Crop;
+import com.farmsync.model.User;
+import com.farmsync.service.CropService;
+import com.farmsync.service.CropTypeService;
+import com.farmsync.service.FarmService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/crops")
 public class CropController {
 
-    private final FirebaseService firebaseService;
+    @Autowired
+    private CropService cropService;
 
-    public CropController(FirebaseService firebaseService) {
-        this.firebaseService = firebaseService;
-    }
+    @Autowired
+    private FarmService farmService;
 
-    @PostMapping("/{id}")
-    public ResponseEntity<String> saveCrop(@PathVariable String id, @RequestBody Map<String, Object> cropData) 
-            throws ExecutionException, InterruptedException {
-        String updateTime = firebaseService.saveData("crops", id, cropData);
-        return ResponseEntity.ok("Successfully updated crop at " + updateTime);
+    @Autowired
+    private CropTypeService cropTypeService;
+
+    @PostMapping
+    public ResponseEntity<Crop> createCrop(@RequestBody CropRequest request, @AuthenticationPrincipal User user) {
+        Crop crop = Crop.builder()
+                .name(request.getName())
+                .sowingDate(request.getSowingDate())
+                .harvestDate(request.getHarvestDate())
+                .status(request.getStatus() != null ? request.getStatus() : "active")
+                .farm(farmService.findById(request.getFarmId()).orElseThrow(() -> new RuntimeException("Farm not found")))
+                .build();
+        
+        if (request.getCropTypeId() != null) {
+            crop.setCropType(cropTypeService.findById(request.getCropTypeId()).orElse(null));
+        } else if (request.getCropTypeName() != null) {
+            crop.setCropType(cropTypeService.findByName(request.getCropTypeName()).orElse(null));
+        }
+
+        Crop savedCrop = cropService.createCrop(crop, user);
+        return ResponseEntity.status(201).body(savedCrop);
     }
 
     @GetMapping
-    public ResponseEntity<List<Map<String, Object>>> getAllCrops() 
-            throws ExecutionException, InterruptedException {
-        return ResponseEntity.ok(firebaseService.getAllData("crops"));
+    public ResponseEntity<List<Crop>> getCropsByFarm(@RequestParam UUID farmId, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(cropService.findByFarmId(farmId, user));
     }
 }

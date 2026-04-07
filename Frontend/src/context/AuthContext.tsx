@@ -161,6 +161,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Helper to remove undefined fields which Firestore doesn't support
+  const stripUndefined = (obj: any) => {
+    return Object.fromEntries(
+      Object.entries(obj).filter(([_, v]) => v !== undefined)
+    );
+  };
+
   const register = async (name: string, email: string, password: string, role: UserRole, metadata: any = {}) => {
     if (!auth) {
       throw new Error("AUTHENTICATION_UNINITIALIZED: The initialization service is offline. Please check your network or Firebase configuration.");
@@ -196,7 +203,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // 3. Save to Firestore (Simultaneous Cloud Save)
     if (firebaseUser) {
-      await setDoc(doc(db, 'users', firebaseUser.uid), userData);
+      // Use helper to ensure no undefined values are sent to Firestore
+      await setDoc(doc(db, 'users', firebaseUser.uid), stripUndefined(userData));
     }
     
     // 4. Save to Backend Database (Simultaneous Backend Sync)
@@ -227,7 +235,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const updatedUser = { ...user, ...partialUser };
     const { id, ...updateData } = updatedUser;
     
-    await setDoc(doc(db, 'users', id), updateData, { merge: true });
+    // Use helper to ensure no undefined values are sent to Firestore during updates
+    await setDoc(doc(db, 'users', id), stripUndefined(updateData), { merge: true });
     setUser(updatedUser);
   };
 

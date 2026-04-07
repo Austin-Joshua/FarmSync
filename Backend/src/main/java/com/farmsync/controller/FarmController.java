@@ -59,6 +59,8 @@ public class FarmController {
         if (request.getSoilTypeId() != null) {
             UUID soilTypeId = request.getSoilTypeId();
             farm.setSoilType(soilTypeService.findById(java.util.Objects.requireNonNull(soilTypeId)).orElse(null));
+        } else if (request.getSoilTypeName() != null) {
+            farm.setSoilType(soilTypeService.findByName(request.getSoilTypeName()).orElse(null));
         }
 
         Farm savedFarm = farmService.createFarm(farm);

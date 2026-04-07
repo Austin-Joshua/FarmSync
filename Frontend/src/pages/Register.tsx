@@ -56,7 +56,7 @@ const Register = () => {
         {
           phone: formData.phone,
           location: formData.location,
-          land_size: formData.land_size ? parseFloat(formData.land_size) : undefined,
+          land_size: formData.land_size ? parseFloat(formData.land_size) : null,
           soil_type: formData.soil_type,
         }
       );

@@ -9,4 +9,5 @@ public class FarmRequest {
     private String location;
     private Double landSize;
     private UUID soilTypeId;
+    private String soilTypeName;
 }
