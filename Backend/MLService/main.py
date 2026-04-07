@@ -1,11 +1,19 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import random
 import time
+import os
 
-app = FastAPI(title="FarmSync ML Disease Detection Service")
+# Import our refined ML predictor
+try:
+    import predict_logic as predictor
+except ImportError:
+    predictor = None
 
-# CORS middleware for testing
+app = FastAPI(title="FarmSync ML Intelligence Service")
+
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -13,7 +21,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Mocked classification logic
+# --- Models for Request/Response ---
+
+class CropRecommendationRequest(BaseModel):
+    N: float
+    P: float
+    K: float
+    temperature: float
+    humidity: float
+    ph: float
+    rainfall: float
+
+# --- Mocked Disease Detection Logic ---
 DISEASES = [
     {
         "disease": "Leaf Blight",
@@ -39,26 +58,42 @@ DISEASES = [
 
 @app.get("/")
 def read_root():
-    return {"status": "ML Service is Online", "version": "1.0.0"}
+    # Check if model is ready
+    model_ready = False
+    if predictor:
+        model, _ = predictor.load_model()
+        model_ready = model is not None
+
+    return {
+        "status": "FarmSync ML Service is Online", 
+        "version": "1.2.0",
+        "models_ready": model_ready
+    }
 
 @app.post("/ml/disease-detect")
 async def detect_disease(image: UploadFile = File(...)):
-    # Simulate image processing time
-    time.sleep(1.5)
-    
-    # In a real scenario, we would use TensorFlow/PyTorch here:
-    # model = load_model('models/crop_disease_v4.h5')
-    # img = preprocess(image)
-    # prediction = model.predict(img)
-    
-    # Return a random (mocked) prediction for demonstration
+    """Detects diseases in crop leaves via image analysis (mocked CNN)."""
+    time.sleep(1.2)
     prediction = random.choice(DISEASES)
-    
     return {
         "filename": image.filename,
         **prediction,
         "timestamp": time.time()
     }
+
+@app.post("/ml/crop-recommend")
+async def recommend_crop(data: CropRecommendationRequest):
+    """Recommends the best crop based on soil and weather parameters."""
+    if not predictor:
+        raise HTTPException(status_code=500, detail="ML Predictor module not found.")
+    
+    input_data = data.dict()
+    result = predictor.predict(input_data)
+    
+    if not result.get('success'):
+        raise HTTPException(status_code=500, detail=result.get('error'))
+        
+    return result
 
 if __name__ == "__main__":
     import uvicorn

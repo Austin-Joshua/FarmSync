@@ -1,0 +1,25 @@
+{
+  "model_type": "RandomForestClassifier",
+  "accuracy": 0.5,
+  "accuracy_percent": 50.0,
+  "features": [
+    "N",
+    "P",
+    "K",
+    "temperature",
+    "humidity",
+    "ph",
+    "rainfall"
+  ],
+  "classes": [
+    "banana",
+    "barley",
+    "chickpea",
+    "coffee",
+    "cotton",
+    "maize",
+    "peas",
+    "sugarcane",
+    "wheat"
+  ]
+}
