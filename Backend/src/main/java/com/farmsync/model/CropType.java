@@ -2,8 +2,6 @@ package com.farmsync.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,8 +29,9 @@ public class CropType {
     @Column(nullable = false)
     private String season; // 'kharif', 'rabi', 'zaid', 'year-round'
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "suitable_soil_types", columnDefinition = "jsonb")
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "crop_type_suitable_soils", joinColumns = @JoinColumn(name = "crop_type_id"))
+    @Column(name = "soil_type")
     private List<String> suitableSoilTypes;
 
     @Column(name = "average_yield")

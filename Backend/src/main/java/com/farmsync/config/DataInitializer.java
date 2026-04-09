@@ -1,6 +1,8 @@
 package com.farmsync.config;
 
 import com.farmsync.model.User;
+import com.farmsync.repository.CropTypeRepository;
+import com.farmsync.repository.SoilTypeRepository;
 import com.farmsync.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
