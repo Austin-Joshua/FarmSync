@@ -1,0 +1,10 @@
+.git
+.gitignore
+Frontend/node_modules
+Frontend/dist
+**/target
+Backend/data
+*.mv.db
+*.trace.db
+firebase-service-account*.json*
+**/firebase-service-account*.json*
