@@ -18,4 +18,4 @@ COPY --from=build /app/target/farmsync-server-0.0.1-SNAPSHOT.jar app.jar
 ENV PORT=9090
 EXPOSE 9090
 
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java -Dserver.port=${PORT:-9090} -Dserver.address=0.0.0.0 -jar /app/app.jar"]
