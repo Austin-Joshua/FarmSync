@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { getAuth } from 'firebase/auth';
 import { API_BASE_URL } from '../config/api';
+
+export const AUTH_TOKEN_STORAGE_KEY = 'farmsync_auth_token';
 
 // Create axios instance
 const api = axios.create({
@@ -12,16 +13,10 @@ const api = axios.create({
 
 // Request Interceptor to add Auth Token
 api.interceptors.request.use(
-  async (config) => {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (user) {
-      try {
-        const token = await user.getIdToken();
-        config.headers.Authorization = `Bearer ${token}`;
-      } catch (error) {
-        console.error('Failed to get Firebase token:', error);
-      }
+  (config) => {
+    const token = localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },

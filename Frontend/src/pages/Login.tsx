@@ -61,9 +61,7 @@ const Login = () => {
       console.error('Login error:', err);
       let errorMessage = typeof err === 'string' ? err : err.message || t('loginError') || 'Login failed';
       
-      if (err.message?.includes('FIREBASE_SETUP_REQUIRED')) {
-        errorMessage = "Identity Services Required: Please enable 'Email/Password' in your Firebase console to activate your account database.";
-      } else if (err.code === 'auth/invalid-login-credentials' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+      if (err.code === 'auth/invalid-login-credentials' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
         errorMessage = "Invalid email or password.";
       }
 
