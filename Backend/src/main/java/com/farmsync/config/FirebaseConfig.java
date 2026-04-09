@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 import jakarta.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class FirebaseConfig {
@@ -19,10 +22,18 @@ public class FirebaseConfig {
     @Value("${firebase.storage.bucket:lunar-db-10d04.appspot.com}")
     private String storageBucket;
 
+    @Value("${FIREBASE_SERVICE_ACCOUNT_JSON:}")
+    private String firebaseServiceAccountJson;
+
     @PostConstruct
     public void initialize() {
         try {
-            FileInputStream serviceAccount = new FileInputStream(firebaseConfigPath);
+            InputStream serviceAccount;
+            if (firebaseServiceAccountJson != null && !firebaseServiceAccountJson.isBlank()) {
+                serviceAccount = new ByteArrayInputStream(firebaseServiceAccountJson.getBytes(StandardCharsets.UTF_8));
+            } else {
+                serviceAccount = new FileInputStream(firebaseConfigPath);
+            }
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))

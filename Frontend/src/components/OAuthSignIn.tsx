@@ -26,7 +26,10 @@ export const GoogleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) 
       }
     } catch (err: any) {
       console.error(err);
-      const errorMessage = 'Failed to sign in with Google.';
+      let errorMessage = 'Failed to sign in with Google.';
+      if (err.message?.includes('FIREBASE_SETUP_REQUIRED')) {
+        errorMessage = "Identity Services Required: Please enable 'Google' provider in your Firebase console.";
+      }
       toast.error(errorMessage, { id: 'google-login' });
       if (onError) onError(errorMessage);
     }

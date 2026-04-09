@@ -1,7 +1,10 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { getToken, onMessage } from 'firebase/messaging';
+import { messaging } from '../config/firebase';
 import { toast } from 'react-hot-toast';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import { BACKEND_ORIGIN } from '../config/api';
 
 interface NotificationContextType {
   notifications: any[];
@@ -14,8 +17,34 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [notifications, setNotifications] = useState<any[]>([]);
 
   useEffect(() => {
-    // Real-time notifications over WebSocket only.
-    const socket = new SockJS('http://localhost:9090/ws');
+    let unsubscribeFCM: () => void = () => {};
+
+    if (messaging) {
+      const setupFCM = async () => {
+        try {
+          const token = await getToken(messaging, { 
+            vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY 
+          });
+          if (token) {
+            console.log('FCM Token:', token);
+            // In a real app, send this token to your backend to associate with the user
+          }
+        } catch (error) {
+          console.error('Error setting up FCM:', error);
+        }
+      };
+
+      setupFCM();
+
+      unsubscribeFCM = onMessage(messaging, (payload) => {
+        console.log('Message received. ', payload);
+        toast.success(payload.notification?.title || 'New Notification');
+        setNotifications(prev => [payload, ...prev]);
+      });
+    }
+
+    // 2. WebSocket (STOMP) Setup
+    const socket = new SockJS(`${BACKEND_ORIGIN}/ws`);
     const stompClient = Stomp.over(socket);
 
     stompClient.connect({}, (frame) => {
@@ -30,6 +59,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
+      unsubscribeFCM();
       if (stompClient.connected) {
         stompClient.disconnect(() => {});
       }
