@@ -1,0 +1,24 @@
+# Optional: connect this repo in Render → Blueprints → New Blueprint Instance
+# Or create a Web Service manually: Environment = Docker, Root = Backend, Dockerfile path below.
+services:
+  - type: web
+    name: farmsync-backend
+    runtime: docker
+    dockerfilePath: ./Backend/Dockerfile
+    dockerContext: ./Backend
+    plan: free
+    envVars:
+      - key: PORT
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: FIREBASE_SERVICE_ACCOUNT_JSON
+        sync: false
