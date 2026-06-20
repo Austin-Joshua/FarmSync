@@ -81,8 +81,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const mockGoogleLogin = async () => {
+    const email = 'google-user@farmsync.com';
+    const name = 'Farmer Bob';
+    try {
+      await ApiService.register(name, email, 'oauth2_user', 'farmer');
+    } catch (err) {
+      console.log('Mock registration skipped (user may already exist on backend).');
+    }
+    const response: any = await ApiService.login(email, 'oauth2_user');
+    if (response && response.token && response.user) {
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
+      setUser(response.user);
+    } else {
+      throw new Error('Could not sync mock credentials with the backend server database');
+    }
+  };
+
   const loginWithGoogle = async () => {
     if (!auth) {
+      if (import.meta.env.MODE === 'development') {
+        console.warn("Firebase not initialized, falling back to mock Google login in dev mode");
+        await mockGoogleLogin();
+        return;
+      }
       throw new Error("AUTHENTICATION_UNINITIALIZED: Firebase Google authentication is not initialized. Please check your config parameters.");
     }
     
@@ -115,6 +138,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (err: any) {
       console.error('Google login failed:', err);
+      if (import.meta.env.MODE === 'development') {
+        console.warn("Firebase Google login failed, falling back to mock Google login in dev mode");
+        await mockGoogleLogin();
+        return;
+      }
       throw err;
     }
   };

@@ -1,7 +1,7 @@
 package com.farmsync.controller;
 
 import com.farmsync.model.ForumPost;
-import com.farmsync.model.User;
+import com.farmsync.model.User; // Trigger import resolution
 import com.farmsync.repository.ForumPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

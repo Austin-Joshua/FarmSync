@@ -9,6 +9,7 @@ Backend/*.jar
 Backend/*.war
 Backend/.mvn/wrapper/maven-wrapper.jar
 Backend/hs_err_pid*
+Backend/data/
 
 # Frontend (React)
 Frontend/node_modules/
