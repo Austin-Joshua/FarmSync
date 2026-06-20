@@ -223,9 +223,7 @@ const Dashboard = () => {
   // Colors for charts
   const COLORS = ['#16a34a', '#22c55e', '#4ade80', '#86efac', '#bbf7d0', '#dcfce7'];
 
-  if (user?.role?.toLowerCase() === 'citizen') {
-    return <CitizenDashboard />;
-  }
+
 
   return (
     <div className="space-y-6">
@@ -867,121 +865,6 @@ const Dashboard = () => {
   );
 };
 
-const CitizenDashboard = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [stats, setStats] = useState({
-    totalItems: 0,
-    fruits: 0,
-    vegetables: 0,
-    grains: 0,
-    vendors: 0
-  });
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await api.getMarketplaceItems() as any;
-        const listings = res || [];
-        const uniqueFarmers = new Set(listings.map((i: any) => i.farmer?.id).filter(Boolean));
-        setStats({
-          totalItems: listings.length,
-          fruits: listings.filter((i: any) => i.category === 'fruit').length,
-          vegetables: listings.filter((i: any) => i.category === 'vegetable').length,
-          grains: listings.filter((i: any) => i.category === 'grain').length,
-          vendors: uniqueFarmers.size
-        });
-      } catch (e) {
-        console.error('Failed to load marketplace statistics', e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStats();
-  }, []);
-
-  return (
-    <div className="space-y-6">
-      {/* Hero Welcome Banner */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-800 dark:to-teal-800 rounded-3xl p-8 shadow-xl text-white">
-        <div className="absolute right-0 top-0 translate-x-12 -translate-y-12 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-        <div className="relative z-10 space-y-3">
-          <span className="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider">
-            Citizen Portal
-          </span>
-          <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight">
-            Welcome to FarmSync, {user?.name || 'Citizen'}!
-          </h1>
-          <p className="text-emerald-100 max-w-lg text-sm lg:text-base leading-relaxed">
-            Support local agriculture by purchasing fresh fruits, vegetables, and grains directly from verified regional farmers.
-          </p>
-          <div className="pt-2">
-            <button
-              onClick={() => navigate('/citizen-marketplace')}
-              className="px-6 py-2.5 bg-white text-emerald-700 font-extrabold text-sm rounded-xl shadow-lg hover:bg-emerald-50 active:scale-[0.98] transition-all animate-bounce"
-            >
-              Browse Grocery Catalog
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div className="glass-card p-6 border-l-4 border-emerald-500">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Items for Sale</p>
-          <p className="text-3xl font-extrabold text-gray-900 dark:text-white">
-            {loading ? '...' : stats.totalItems}
-          </p>
-        </div>
-        <div className="glass-card p-6 border-l-4 border-amber-500">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Active Grains</p>
-          <p className="text-3xl font-extrabold text-gray-900 dark:text-white">
-            {loading ? '...' : stats.grains}
-          </p>
-        </div>
-        <div className="glass-card p-6 border-l-4 border-red-500">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Fresh Fruits</p>
-          <p className="text-3xl font-extrabold text-gray-900 dark:text-white">
-            {loading ? '...' : stats.fruits}
-          </p>
-        </div>
-        <div className="glass-card p-6 border-l-4 border-green-500">
-          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Local Farmers</p>
-          <p className="text-3xl font-extrabold text-gray-900 dark:text-white">
-            {loading ? '...' : stats.vendors}
-          </p>
-        </div>
-      </div>
-
-      {/* Weather & Climate Alerts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="glass-card overflow-hidden">
-            <ClimateAlert />
-          </div>
-          {/* Quick Info Box */}
-          <div className="glass-card p-6 flex items-start gap-4">
-            <div className="p-3 bg-primary-100 dark:bg-primary-950/20 text-primary-600 dark:text-primary-400 rounded-2xl">
-              <Sparkles size={24} />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">AI Matchmaking</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
-                FarmSync uses district-wide pricing heuristics to identify and suggest the absolute lowest vendor rates on everyday groceries, protecting both citizen wallets and farmer margins.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div className="glass-card p-6">
-            <WeatherCard />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export default Dashboard;

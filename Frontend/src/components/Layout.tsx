@@ -19,7 +19,6 @@ import {
   CalendarDays,
   TrendingUp,
   FileText,
-  Users,
   ChevronDown,
   ChevronUp,
   Leaf,
@@ -77,55 +76,8 @@ const Layout = ({ children }: LayoutProps) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Navigation groups dynamically computed based on user role
-  const role = user?.role?.toLowerCase();
-  const navGroups = role === 'citizen' ? [
-    {
-      label: 'Overview',
-      items: [
-        { path: '/dashboard', label: 'Citizen Portal', icon: Home },
-      ],
-    },
-    {
-      label: 'Marketplace',
-      items: [
-        { path: '/citizen-marketplace', label: 'Grocery Store', icon: ShoppingCart },
-      ],
-    },
-    {
-      label: 'Community',
-      items: [
-        { path: '/community', label: 'Farmer Forum', icon: MessageSquare, badge: 'NEW' },
-      ],
-    },
-    {
-      label: 'System',
-      items: [
-        { path: '/profile', label: 'My Profile', icon: Users },
-        { path: '/settings', label: t('navigation.settings'), icon: Settings },
-      ],
-    },
-  ] : role === 'admin' ? [
-    {
-      label: 'Command Center',
-      items: [
-        { path: '/dashboard', label: 'System Overview', icon: Home },
-        { path: '/admin', label: 'Admin Telemetry', icon: Users },
-      ],
-    },
-    {
-      label: 'Marketplace',
-      items: [
-        { path: '/citizen-marketplace', label: 'Browse Grocery', icon: ShoppingCart },
-      ],
-    },
-    {
-      label: 'System',
-      items: [
-        { path: '/settings', label: t('navigation.settings'), icon: Settings },
-      ],
-    },
-  ] : [
+  // Navigation groups (uniform across all user roles)
+  const navGroups = [
     {
       label: 'Overview',
       items: [
@@ -145,7 +97,7 @@ const Layout = ({ children }: LayoutProps) => {
     {
       label: 'Marketplace',
       items: [
-        { path: '/farmer-marketplace', label: 'Sell Goods', icon: ShoppingCart, badge: 'SELL' },
+        { path: '/marketplace', label: 'Community Market', icon: ShoppingCart, badge: 'NEW' },
       ],
     },
     {
@@ -195,21 +147,11 @@ const Layout = ({ children }: LayoutProps) => {
     );
   };
 
-  // Mobile bottom navigation items based on role
-  const mobileItems = role === 'citizen' ? [
-    { path: '/dashboard', label: 'Home', icon: Home },
-    { path: '/citizen-marketplace', label: 'Grocery', icon: ShoppingCart },
-    { path: '/community', label: 'Forum', icon: MessageSquare },
-    { path: '/settings', label: 'Settings', icon: Settings },
-  ] : role === 'admin' ? [
-    { path: '/dashboard', label: 'Home', icon: Home },
-    { path: '/admin', label: 'Telemetry', icon: Users },
-    { path: '/citizen-marketplace', label: 'Grocery', icon: ShoppingCart },
-    { path: '/settings', label: 'Settings', icon: Settings },
-  ] : [
+  // Mobile bottom navigation items (uniform across all user roles)
+  const mobileItems = [
     { path: '/dashboard', label: 'Home', icon: Home },
     { path: '/crops', label: 'Crops', icon: Sprout },
-    { path: '/farmer-marketplace', label: 'Sell', icon: ShoppingCart },
+    { path: '/marketplace', label: 'Market', icon: ShoppingCart },
     { path: '/settings', label: 'Settings', icon: Settings },
   ];
 
