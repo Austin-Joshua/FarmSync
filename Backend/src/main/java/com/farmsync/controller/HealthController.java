@@ -17,6 +17,7 @@ public class HealthController {
         Map<String, String> status = new HashMap<>();
         status.put("status", "UP");
         status.put("message", "FarmSync Backend is running");
+        status.put("version", "v1.0.3-sha256-jwt-fix");
         return ResponseEntity.ok(status);
     }
 }
