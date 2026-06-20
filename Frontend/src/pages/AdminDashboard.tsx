@@ -13,7 +13,9 @@ import {
   IndianRupee,
   Loader,
   RefreshCw,
-  TrendingDown
+  TrendingDown,
+  Trash2,
+  Lock
 } from 'lucide-react';
 import {
   BarChart,
@@ -65,6 +67,42 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [statistics, setStatistics] = useState<AdminStatistics | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'analytics' | 'marketplace'>('analytics');
+  const [marketplaceItems, setMarketplaceItems] = useState<any[]>([]);
+  const [loadingMarket, setLoadingMarket] = useState(false);
+
+  const fetchMarketplaceItems = async () => {
+    try {
+      setLoadingMarket(true);
+      const res = await api.getMarketplaceItems() as any;
+      setMarketplaceItems(res || []);
+    } catch (e) {
+      console.error('Failed to load marketplace listings', e);
+      toast.error('Failed to query marketplace listings');
+    } finally {
+      setLoadingMarket(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'marketplace') {
+      fetchMarketplaceItems();
+    }
+  }, [activeTab]);
+
+  const handleAdminDeleteListing = async (id: string) => {
+    if (!window.confirm('Are you sure you want to moderate and delete this marketplace listing?')) return;
+    try {
+      const response = await api.adminDeleteMarketplaceItem(id) as any;
+      if (response && response.status === 'success') {
+        toast.success('Listing moderated and deleted successfully');
+        fetchMarketplaceItems();
+      }
+    } catch (err: any) {
+      console.error('Failed to delete listing as admin:', err);
+      toast.error('Failed to delete listing');
+    }
+  };
 
   const fetchStatistics = async () => {
     try {
@@ -147,7 +185,7 @@ const AdminDashboard = () => {
 // totalYield calculation removed as it's unused
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tighter italic">Global Command Center</h1>
@@ -161,6 +199,33 @@ const AdminDashboard = () => {
            <button onClick={fetchStatistics} className="p-2 bg-primary-600 text-white rounded-xl hover:rotate-180 transition-transform duration-500"><RefreshCw size={20} /></button>
         </div>
       </div>
+
+      {/* Tabs */}
+      <div className="flex border-b border-gray-200 dark:border-gray-700">
+        <button
+          onClick={() => setActiveTab('analytics')}
+          className={`px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all ${
+            activeTab === 'analytics'
+              ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-black'
+              : 'border-transparent text-gray-400 hover:text-gray-600 dark:text-gray-500'
+          }`}
+        >
+          Telemetry & Analytics
+        </button>
+        <button
+          onClick={() => setActiveTab('marketplace')}
+          className={`px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all ${
+            activeTab === 'marketplace'
+              ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-black'
+              : 'border-transparent text-gray-400 hover:text-gray-600 dark:text-gray-500'
+          }`}
+        >
+          Marketplace Moderation
+        </button>
+      </div>
+
+      {activeTab === 'analytics' ? (
+        <div className="space-y-6">
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="card border-l-4 border-blue-500 relative overflow-hidden group">
@@ -300,6 +365,83 @@ const AdminDashboard = () => {
            </div>
          ))}
       </div>
+      </div>
+      ) : (
+        /* Marketplace Moderation View */
+        <div className="space-y-6">
+          <div className="glass-card p-6">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <Lock size={20} className="text-primary-600" />
+              Community Marketplace Moderator
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Review, moderate, and delete listings published by farmers to maintain marketplace compliance.</p>
+
+            {loadingMarket ? (
+              <div className="flex flex-col items-center justify-center py-12">
+                <Loader className="animate-spin h-10 w-10 text-primary-600 mb-2" />
+                <p className="text-gray-500 font-medium">Hydrating listings database...</p>
+              </div>
+            ) : (
+              <div className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-500 text-[10px] font-black uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
+                        <th className="px-6 py-4">Produce Name</th>
+                        <th className="px-6 py-4">Category</th>
+                        <th className="px-6 py-4">Vendor Farmer</th>
+                        <th className="px-6 py-4">Stock</th>
+                        <th className="px-6 py-4">Listed Price</th>
+                        <th className="px-6 py-4 text-right">Moderation Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
+                      {marketplaceItems.map((item) => (
+                        <tr key={item.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
+                          <td className="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                            {item.name}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400 px-2 py-0.5 bg-primary-100/50 dark:bg-primary-900/20 rounded-full">
+                              {item.category}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-300 font-semibold">
+                            {item.farmer?.name || 'Unknown Farmer'}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
+                            {item.quantity} {item.unit}
+                          </td>
+                          <td className="px-6 py-4 text-base font-black text-gray-900 dark:text-white">
+                            ₹{item.price} / {item.unit}
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <button
+                              onClick={() => handleAdminDeleteListing(item.id)}
+                              className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 font-bold text-xs rounded-lg active:scale-[0.98] transition-all flex items-center gap-1 ml-auto"
+                            >
+                              <Trash2 size={13} />
+                              Moderate & Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+
+                      {marketplaceItems.length === 0 && (
+                        <tr>
+                          <td colSpan={6} className="text-center py-12 text-gray-500 dark:text-gray-400 text-sm">
+                            No listings currently published in the marketplace.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

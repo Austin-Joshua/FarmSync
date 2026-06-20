@@ -43,6 +43,8 @@ import { NotificationProvider } from './context/NotificationContext';
 import AIAssistant from './components/AIAssistant';
 import { ThemeProvider } from './context/ThemeContext';
 import CropRecommendation from './pages/CropRecommendation';
+import CitizenMarketplace from './pages/CitizenMarketplace';
+import FarmerMarketplace from './pages/FarmerMarketplace';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 
 // Component to handle document title updates
@@ -279,6 +281,26 @@ const AppContent = () => {
                 <AdminDashboard />
               </Layout>
             </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/citizen-marketplace"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <CitizenMarketplace />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/farmer-marketplace"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <FarmerMarketplace />
+              </Layout>
+            </ProtectedRoute>
           }
         />
         <Route

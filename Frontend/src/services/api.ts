@@ -229,6 +229,16 @@ const ApiService = {
   getProfile: () => api.get('/auth/profile'),
   updateProfile: (data: any) => api.put('/auth/profile', data),
   
+  // Marketplace
+  getMarketplaceItems: (category?: string) => api.get('/marketplace', { params: { category } }),
+  getMyMarketplaceListings: () => api.get('/marketplace/my-listings'),
+  getProductVendors: (name: string) => api.get('/marketplace/product', { params: { name } }),
+  getLowestMarketPrice: (name: string) => api.get('/marketplace/lowest-price', { params: { name } }),
+  createMarketplaceItem: (data: any) => api.post('/marketplace', data),
+  updateMarketplaceItem: (id: string, data: any) => api.put(`/marketplace/${id}`, data),
+  buyMarketplaceItem: (id: string, quantity: number) => api.post(`/marketplace/${id}/buy`, { quantity }),
+  deleteMarketplaceItem: (id: string) => api.delete(`/marketplace/${id}`),
+  adminDeleteMarketplaceItem: (id: string) => api.delete(`/marketplace/admin/${id}`),
   // Alerts/Notifications
   getUnreadAlerts: () => api.get('/alerts/unread'),
   markAllAlertsAsRead: () => api.post('/alerts/mark-all-read'),

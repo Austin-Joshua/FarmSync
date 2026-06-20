@@ -77,8 +77,55 @@ const Layout = ({ children }: LayoutProps) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Navigation groups
-  const navGroups = [
+  // Navigation groups dynamically computed based on user role
+  const role = user?.role?.toLowerCase();
+  const navGroups = role === 'citizen' ? [
+    {
+      label: 'Overview',
+      items: [
+        { path: '/dashboard', label: 'Citizen Portal', icon: Home },
+      ],
+    },
+    {
+      label: 'Marketplace',
+      items: [
+        { path: '/citizen-marketplace', label: 'Grocery Store', icon: ShoppingCart },
+      ],
+    },
+    {
+      label: 'Community',
+      items: [
+        { path: '/community', label: 'Farmer Forum', icon: MessageSquare, badge: 'NEW' },
+      ],
+    },
+    {
+      label: 'System',
+      items: [
+        { path: '/profile', label: 'My Profile', icon: Users },
+        { path: '/settings', label: t('navigation.settings'), icon: Settings },
+      ],
+    },
+  ] : role === 'admin' ? [
+    {
+      label: 'Command Center',
+      items: [
+        { path: '/dashboard', label: 'System Overview', icon: Home },
+        { path: '/admin', label: 'Admin Telemetry', icon: Users },
+      ],
+    },
+    {
+      label: 'Marketplace',
+      items: [
+        { path: '/citizen-marketplace', label: 'Browse Grocery', icon: ShoppingCart },
+      ],
+    },
+    {
+      label: 'System',
+      items: [
+        { path: '/settings', label: t('navigation.settings'), icon: Settings },
+      ],
+    },
+  ] : [
     {
       label: 'Overview',
       items: [
@@ -96,6 +143,12 @@ const Layout = ({ children }: LayoutProps) => {
       ],
     },
     {
+      label: 'Marketplace',
+      items: [
+        { path: '/farmer-marketplace', label: 'Sell Goods', icon: ShoppingCart, badge: 'SELL' },
+      ],
+    },
+    {
       label: 'AI Tools',
       items: [
         { path: '/crop-recommend', label: 'AI Crop Advisor', icon: Leaf, badge: 'NEW' },
@@ -108,7 +161,7 @@ const Layout = ({ children }: LayoutProps) => {
       items: [
         { path: '/irrigation', label: 'Irrigation', icon: Droplets },
         { path: '/fertilizer', label: 'Fertilizer & Pest', icon: FlaskConical },
-        { path: '/market', label: 'Market Prices', icon: ShoppingCart },
+        { path: '/market', label: 'Market Prices', icon: BarChart2 },
       ],
     },
     {
@@ -123,14 +176,12 @@ const Layout = ({ children }: LayoutProps) => {
       items: [
         { path: '/finance', label: 'Projections & Loans', icon: Landmark, badge: 'AI' },
         { path: '/expenses', label: t('navigation.expenses'), icon: IndianRupee },
-        { path: '/market', label: t('navigation.market'), icon: BarChart2 },
         { path: '/reports', label: 'Reports', icon: FileText },
       ],
     },
     {
       label: 'System',
       items: [
-        ...(user?.role?.toLowerCase() === 'admin' ? [{ path: '/admin', label: 'Admin Panel', icon: Users }] : []),
         { path: '/settings', label: t('navigation.settings'), icon: Settings },
       ],
     },
@@ -144,12 +195,21 @@ const Layout = ({ children }: LayoutProps) => {
     );
   };
 
-  // All flat items for mobile bottom nav (most important ones)
-  const mobileItems = [
+  // Mobile bottom navigation items based on role
+  const mobileItems = role === 'citizen' ? [
+    { path: '/dashboard', label: 'Home', icon: Home },
+    { path: '/citizen-marketplace', label: 'Grocery', icon: ShoppingCart },
+    { path: '/community', label: 'Forum', icon: MessageSquare },
+    { path: '/settings', label: 'Settings', icon: Settings },
+  ] : role === 'admin' ? [
+    { path: '/dashboard', label: 'Home', icon: Home },
+    { path: '/admin', label: 'Telemetry', icon: Users },
+    { path: '/citizen-marketplace', label: 'Grocery', icon: ShoppingCart },
+    { path: '/settings', label: 'Settings', icon: Settings },
+  ] : [
     { path: '/dashboard', label: 'Home', icon: Home },
     { path: '/crops', label: 'Crops', icon: Sprout },
-    { path: '/crop-recommend', label: 'AI', icon: Leaf },
-    { path: '/market', label: 'Market', icon: ShoppingCart },
+    { path: '/farmer-marketplace', label: 'Sell', icon: ShoppingCart },
     { path: '/settings', label: 'Settings', icon: Settings },
   ];
 

@@ -21,7 +21,7 @@ const Register = () => {
     password: '',
     phone: '',
     location: '',
-    role: 'farmer' as 'farmer' | 'expert' | 'admin',
+    role: 'farmer' as 'farmer' | 'citizen' | 'admin',
     land_size: '',
     soil_type: '',
   });
@@ -249,7 +249,7 @@ const Register = () => {
                     value={formData.role}
                   >
                     <option value="farmer">{t('farmer')}</option>
-                    <option value="expert">{t('expert')}</option>
+                    <option value="citizen">Citizen</option>
                     <option value="admin">{t('admin')}</option>
                   </select>
                 </div>
