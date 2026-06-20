@@ -19,8 +19,24 @@ public class JwtUtils {
     @Value("${farmsync.jwt.secret}")
     private String jwtSecret;
 
+    private SecretKey getSigningKey() {
+        try {
+            java.security.MessageDigest digest = java.security.MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(jwtSecret.getBytes(StandardCharsets.UTF_8));
+            return Keys.hmacShaKeyFor(hash);
+        } catch (java.security.NoSuchAlgorithmException e) {
+            byte[] bytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
+            if (bytes.length < 32) {
+                byte[] padded = new byte[32];
+                System.arraycopy(bytes, 0, padded, 0, bytes.length);
+                return Keys.hmacShaKeyFor(padded);
+            }
+            return Keys.hmacShaKeyFor(bytes);
+        }
+    }
+
     public Claims getClaimsFromToken(String token) {
-        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        SecretKey key = getSigningKey();
         return Jwts.parser()
                 .verifyWith(key)
                 .build()
@@ -38,13 +54,13 @@ public class JwtUtils {
         return claims.get("email", String.class);
     }
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(org.springframework.security.core.Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return generateToken(user);
     }
 
     public String generateToken(User user) {
-        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        SecretKey key = getSigningKey();
 
         return Jwts.builder()
                 .subject(user.getId().toString())
