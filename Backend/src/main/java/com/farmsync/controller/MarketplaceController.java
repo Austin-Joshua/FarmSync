@@ -3,7 +3,6 @@ package com.farmsync.controller;
 import com.farmsync.model.MarketplaceItem;
 import com.farmsync.model.User;
 import com.farmsync.repository.MarketplaceItemRepository;
-import com.farmsync.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +23,7 @@ public class MarketplaceController {
     @Autowired
     private MarketplaceItemRepository marketplaceItemRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+
 
     private static final String CSV_PATH = resolveDatasetPath();
     private List<CropMarketData> cropDataList = new ArrayList<>();

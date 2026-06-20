@@ -37,3 +37,9 @@ Backend/firebase-service-account.json
 Dataset/PlantVillage/
 *.pkl
 *.csv
+
+# Python Virtual Environments
+venv/
+.venv/
+Backend/MLService/venv/
+
