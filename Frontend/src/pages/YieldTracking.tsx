@@ -1,22 +1,41 @@
 // Yield Tracking page
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { mockYields, getCropName } from '../data/mockData';
+import { getCropName } from '../data/mockData';
 import { translateCrop } from '../utils/translations';
 import { getCropIcon } from '../utils/cropIcons';
-import { Plus, TrendingUp, Award, Eye } from 'lucide-react';
+import { Plus, TrendingUp, Award, Eye, Loader2 } from 'lucide-react';
 import { Yield } from '../types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import DetailModal from '../components/DetailModal';
 import { formatDateDisplay } from '../utils/dateFormatter';
+import ApiService from '../services/api';
+import toast from 'react-hot-toast';
 
 const YieldTracking = () => {
   const { t } = useTranslation();
-  const [yields] = useState<Yield[]>(mockYields);
+  const [yields, setYields] = useState<Yield[]>([]);
+  const [loading, setLoading] = useState(true);
   const [detailModal, setDetailModal] = useState<{
     type: 'chart' | 'records' | null;
     data?: any;
   }>({ type: null });
+
+  useEffect(() => {
+    const fetchYields = async () => {
+      try {
+        const data = await ApiService.getYields() as any;
+        setYields(Array.isArray(data) ? data : []);
+      } catch (err) {
+        // Backend may not be running — show friendly message, keep empty
+        toast.error('Could not load yield records. Make sure the backend is running.');
+        setYields([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchYields();
+  }, []);
 
   const handleAddYield = () => {
     alert(t('yield.addYield') + ' - Form would open here.');
@@ -60,6 +79,13 @@ const YieldTracking = () => {
 
   return (
     <div className="space-y-6">
+      {loading && (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 size={32} className="animate-spin text-primary-600" />
+        </div>
+      )}
+      {!loading && (
+      <>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -268,6 +294,8 @@ const YieldTracking = () => {
             </div>
           </div>
         </DetailModal>
+      )}
+        </>
       )}
     </div>
   );

@@ -16,8 +16,8 @@ const Login = () => {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   
-  const [email, setEmail] = useState('admin@farmsync.com');
-  const [password, setPassword] = useState('password');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -82,9 +82,9 @@ const Login = () => {
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-earth-500/20 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <div className="container max-w-6xl mx-auto px-4 z-10 flex flex-col md:flex-row items-center gap-12">
+      <div className="container max-w-6xl mx-auto px-4 z-10 flex flex-col lg:flex-row items-center gap-12">
         {/* Branding Side */}
-        <div className="hidden md:flex flex-col w-1/2 space-y-8 animate-fade-in">
+        <div className="hidden lg:flex flex-col w-1/2 space-y-8 animate-fade-in">
           <div className="inline-block hover:scale-105 transition-transform cursor-pointer">
             <Link to="/">
               <Logo size="large" />

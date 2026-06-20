@@ -11,8 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/crops")
@@ -27,13 +30,30 @@ public class CropController {
     @Autowired
     private CropTypeService cropTypeService;
 
+    private Map<String, Object> cropToMap(Crop crop) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", crop.getId());
+        map.put("name", crop.getName());
+        map.put("status", crop.getStatus());
+        map.put("season", crop.getSeason());
+        map.put("sowingDate", crop.getSowingDate());
+        map.put("harvestDate", crop.getHarvestDate());
+        map.put("farmId", crop.getFarm() != null ? crop.getFarm().getId() : null);
+        map.put("farmName", crop.getFarm() != null ? crop.getFarm().getName() : null);
+        map.put("category", crop.getCropType() != null ? crop.getCropType().getCategory() : null);
+        map.put("cropType", crop.getCropType() != null ? crop.getCropType().getName() : null);
+        map.put("createdAt", crop.getCreatedAt());
+        return map;
+    }
+
     @PostMapping
-    public ResponseEntity<Crop> createCrop(@RequestBody CropRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Map<String, Object>> createCrop(@RequestBody CropRequest request, @AuthenticationPrincipal User user) {
         Crop crop = Crop.builder()
                 .name(request.getName())
                 .sowingDate(request.getSowingDate())
                 .harvestDate(request.getHarvestDate())
                 .status(request.getStatus() != null ? request.getStatus() : "active")
+                .season(request.getSeason())
                 .farm(farmService.findById(request.getFarmId()).orElseThrow(() -> new RuntimeException("Farm not found")))
                 .build();
         
@@ -44,11 +64,22 @@ public class CropController {
         }
 
         Crop savedCrop = cropService.createCrop(crop, user);
-        return ResponseEntity.status(201).body(savedCrop);
+        return ResponseEntity.status(201).body(cropToMap(savedCrop));
     }
 
     @GetMapping
-    public ResponseEntity<List<Crop>> getCropsByFarm(@RequestParam UUID farmId, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(cropService.findByFarmId(farmId, user));
+    public ResponseEntity<List<Map<String, Object>>> getCrops(
+            @RequestParam(required = false) UUID farmId,
+            @AuthenticationPrincipal User user) {
+        List<Crop> crops;
+        if (farmId != null) {
+            crops = cropService.findByFarmId(farmId, user);
+        } else {
+            crops = cropService.findAllByUser(user);
+        }
+        List<Map<String, Object>> result = crops.stream()
+                .map(this::cropToMap)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(result);
     }
 }

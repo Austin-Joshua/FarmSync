@@ -14,4 +14,7 @@ public class StockResponse {
     private UUID userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    // Aliases for frontend compatibility
+    private String name;
+    private String category;
 }

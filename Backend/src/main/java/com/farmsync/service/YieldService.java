@@ -1,5 +1,6 @@
 package com.farmsync.service;
 
+import com.farmsync.model.Crop;
 import com.farmsync.model.Yield;
 import com.farmsync.model.User;
 import com.farmsync.repository.YieldRepository;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,6 +27,16 @@ public class YieldService {
                 .orElseThrow(() -> new RuntimeException("Crop not found"));
         
         return yieldRepository.findByCropId(cropId);
+    }
+
+    public List<Yield> findAllByUser(User user) {
+        // Get all crops for this user, then collect all their yields
+        List<Crop> userCrops = cropService.findAllByUser(user);
+        List<Yield> allYields = new ArrayList<>();
+        for (Crop crop : userCrops) {
+            allYields.addAll(yieldRepository.findByCropId(crop.getId()));
+        }
+        return allYields;
     }
 
     public Optional<Yield> findById(@org.springframework.lang.NonNull UUID id, User user) {

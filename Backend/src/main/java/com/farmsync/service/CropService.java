@@ -33,6 +33,10 @@ public class CropService {
         return cropRepository.findByFarmId(farmId);
     }
 
+    public List<Crop> findAllByUser(User user) {
+        return cropRepository.findByFarmFarmerId(user.getId());
+    }
+
     public Optional<Crop> findById(@org.springframework.lang.NonNull UUID id, User user) {
         Crop crop = cropRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Crop not found"));

@@ -5,6 +5,7 @@ import StatCard from '../components/StatCard';
 import WeatherCard from '../components/WeatherCard';
 import ClimateAlert from '../components/ClimateAlert';
 import LocationMap from '../components/LocationMap';
+import AIInsightsWidget from '../components/AIInsightsWidget';
 import { useAuth } from '../context/AuthContext';
 import Skeleton from '../components/ui/Skeleton';
 import { useTranslation } from 'react-i18next';
@@ -245,6 +246,9 @@ const Dashboard = () => {
           <TrendingUp size={20} className="text-primary-600" />
         </button>
       </div>
+
+      {/* AI ML Insights Section */}
+      <AIInsightsWidget />
 
       {/* Weather, Alerts & Map Section with glassmorphism */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

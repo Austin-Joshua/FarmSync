@@ -20,12 +20,30 @@ import ExpenseManagement from './pages/ExpenseManagement';
 import Settings from './pages/Settings';
 import Fields from './pages/Fields';
 import DiseaseDetection from './pages/DiseaseDetection';
+import AboutUs from './pages/AboutUs';
+import AdminDashboard from './pages/AdminDashboard';
+import CropCalendar from './pages/CropCalendar';
+import FertilizerPesticide from './pages/FertilizerPesticide';
+import History from './pages/History';
+import Irrigation from './pages/Irrigation';
+import MarketPrices from './pages/MarketPrices';
+import Profile from './pages/Profile';
+import Reports from './pages/Reports';
+import UserPage from './pages/UserPage';
+import YieldTracking from './pages/YieldTracking';
+import Community from './pages/Community';
+import Compliance from './pages/Compliance';
+import Finance from './pages/Finance';
+import IoTDashboard from './pages/IoTDashboard';
+import PestPrediction from './pages/PestPrediction';
 import SessionTimeoutWarning from './components/SessionTimeoutWarning';
 import ErrorBoundary from './components/ErrorBoundary';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import AIAssistant from './components/AIAssistant';
 import { ThemeProvider } from './context/ThemeContext';
+import CropRecommendation from './pages/CropRecommendation';
+import AdminProtectedRoute from './components/AdminProtectedRoute';
 
 // Component to handle document title updates
 const AppContent = () => {
@@ -119,6 +137,176 @@ const AppContent = () => {
             <ProtectedRoute>
               <Layout>
                 <DiseaseDetection />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <History />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Reports />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/market"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <MarketPrices />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/yield"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <YieldTracking />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/calendar"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <CropCalendar />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/fertilizer"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <FertilizerPesticide />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/irrigation"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Irrigation />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/crop-recommend"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <CropRecommendation />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/community"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Community />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/compliance"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Compliance />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/finance"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Finance />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/iot-dashboard"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <IoTDashboard />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/pest-predict"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <PestPrediction />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <AdminProtectedRoute>
+              <Layout>
+                <AdminDashboard />
+              </Layout>
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <AboutUs />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Profile />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <UserPage />
               </Layout>
             </ProtectedRoute>
           }

@@ -33,3 +33,6 @@ Backend/.env
 Frontend/.env
 firebase-service-account.json
 Backend/firebase-service-account.json
+Dataset/PlantVillage/
+*.pkl
+*.csv

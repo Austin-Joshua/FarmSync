@@ -1,0 +1,48 @@
+{
+  "model_type": "RandomForestRegressor",
+  "r2_score": -0.11056913757370257,
+  "rmse": 13.316833743349045,
+  "features": [
+    "crop",
+    "irrigation",
+    "soil",
+    "season",
+    "area",
+    "fertilizer",
+    "pesticide",
+    "water"
+  ],
+  "encoders": {
+    "crop": {
+      "barley": 0,
+      "carrot": 1,
+      "cotton": 2,
+      "maize": 3,
+      "potato": 4,
+      "rice": 5,
+      "soybean": 6,
+      "sugarcane": 7,
+      "tomato": 8,
+      "wheat": 9
+    },
+    "irrigation": {
+      "drip": 0,
+      "flood": 1,
+      "manual": 2,
+      "rain-fed": 3,
+      "sprinkler": 4
+    },
+    "soil": {
+      "clay": 0,
+      "loamy": 1,
+      "peaty": 2,
+      "sandy": 3,
+      "silty": 4
+    },
+    "season": {
+      "kharif": 0,
+      "rabi": 1,
+      "zaid": 2
+    }
+  }
+}

@@ -192,3 +192,299 @@ org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CROP_TYPES" not found; SQL state
        add constraint FKhatvpxbl4ewywvf7blr3qtk3 
        foreign key (crop_type_id) 
        references crop [42102-224]
+2026-06-20 11:38:18.383375+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_income (\000d\000a        id uuid not null,\000d\000a        average_price float(53),\000d\000a        created_at timestamp(6),\000d\000a        crops_sold integer not null,\000d\000a        [*]month integer not null,\000d\000a        total_income float(53) not null,\000d\000a        updated_at timestamp(6),\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_income (
+        id uuid not null,
+        average_price float(53),
+        created_at timestamp(6),
+        crops_sold integer not null,
+        month integer not null,
+        total_income float(53) not null,
+        updated_at timestamp(6),
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 11:38:18.407565+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_stock_usage (\000d\000a        id uuid not null,\000d\000a        created_at timestamp(6),\000d\000a        date_recorded date not null,\000d\000a        item_name varchar(255) not null,\000d\000a        item_type varchar(255) not null,\000d\000a        [*]month integer not null,\000d\000a        quantity_used float(53) not null,\000d\000a        remaining_stock float(53) not null,\000d\000a        unit varchar(255) not null,\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_stock_usage (
+        id uuid not null,
+        created_at timestamp(6),
+        date_recorded date not null,
+        item_name varchar(255) not null,
+        item_type varchar(255) not null,
+        month integer not null,
+        quantity_used float(53) not null,
+        remaining_stock float(53) not null,
+        unit varchar(255) not null,
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 11:38:18.458343+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    alter table if exists monthly_income \000d\000a       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, [*]month, year)"; expected "identifier"; SQL statement:
+
+    alter table if exists monthly_income 
+       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, month, year) [42001-224]
+2026-06-20 12:09:56.777544+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_income (\000d\000a        id uuid not null,\000d\000a        average_price float(53),\000d\000a        created_at timestamp(6),\000d\000a        crops_sold integer not null,\000d\000a        [*]month integer not null,\000d\000a        total_income float(53) not null,\000d\000a        updated_at timestamp(6),\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_income (
+        id uuid not null,
+        average_price float(53),
+        created_at timestamp(6),
+        crops_sold integer not null,
+        month integer not null,
+        total_income float(53) not null,
+        updated_at timestamp(6),
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 12:09:56.798191+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_stock_usage (\000d\000a        id uuid not null,\000d\000a        created_at timestamp(6),\000d\000a        date_recorded date not null,\000d\000a        item_name varchar(255) not null,\000d\000a        item_type varchar(255) not null,\000d\000a        [*]month integer not null,\000d\000a        quantity_used float(53) not null,\000d\000a        remaining_stock float(53) not null,\000d\000a        unit varchar(255) not null,\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_stock_usage (
+        id uuid not null,
+        created_at timestamp(6),
+        date_recorded date not null,
+        item_name varchar(255) not null,
+        item_type varchar(255) not null,
+        month integer not null,
+        quantity_used float(53) not null,
+        remaining_stock float(53) not null,
+        unit varchar(255) not null,
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 12:09:56.804673+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    alter table if exists monthly_income \000d\000a       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, [*]month, year)"; expected "identifier"; SQL statement:
+
+    alter table if exists monthly_income 
+       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, month, year) [42001-224]
+2026-06-20 12:32:38.569080+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_income (\000d\000a        id uuid not null,\000d\000a        average_price float(53),\000d\000a        created_at timestamp(6),\000d\000a        crops_sold integer not null,\000d\000a        [*]month integer not null,\000d\000a        total_income float(53) not null,\000d\000a        updated_at timestamp(6),\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_income (
+        id uuid not null,
+        average_price float(53),
+        created_at timestamp(6),
+        crops_sold integer not null,
+        month integer not null,
+        total_income float(53) not null,
+        updated_at timestamp(6),
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 12:32:38.620182+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_stock_usage (\000d\000a        id uuid not null,\000d\000a        created_at timestamp(6),\000d\000a        date_recorded date not null,\000d\000a        item_name varchar(255) not null,\000d\000a        item_type varchar(255) not null,\000d\000a        [*]month integer not null,\000d\000a        quantity_used float(53) not null,\000d\000a        remaining_stock float(53) not null,\000d\000a        unit varchar(255) not null,\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_stock_usage (
+        id uuid not null,
+        created_at timestamp(6),
+        date_recorded date not null,
+        item_name varchar(255) not null,
+        item_type varchar(255) not null,
+        month integer not null,
+        quantity_used float(53) not null,
+        remaining_stock float(53) not null,
+        unit varchar(255) not null,
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 12:32:38.640260+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    alter table if exists monthly_income \000d\000a       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, [*]month, year)"; expected "identifier"; SQL statement:
+
+    alter table if exists monthly_income 
+       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, month, year) [42001-224]
+2026-06-20 12:49:38.731799+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_income (\000d\000a        id uuid not null,\000d\000a        average_price float(53),\000d\000a        created_at timestamp(6),\000d\000a        crops_sold integer not null,\000d\000a        [*]month integer not null,\000d\000a        total_income float(53) not null,\000d\000a        updated_at timestamp(6),\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_income (
+        id uuid not null,
+        average_price float(53),
+        created_at timestamp(6),
+        crops_sold integer not null,
+        month integer not null,
+        total_income float(53) not null,
+        updated_at timestamp(6),
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 12:49:38.752849+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_stock_usage (\000d\000a        id uuid not null,\000d\000a        created_at timestamp(6),\000d\000a        date_recorded date not null,\000d\000a        item_name varchar(255) not null,\000d\000a        item_type varchar(255) not null,\000d\000a        [*]month integer not null,\000d\000a        quantity_used float(53) not null,\000d\000a        remaining_stock float(53) not null,\000d\000a        unit varchar(255) not null,\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_stock_usage (
+        id uuid not null,
+        created_at timestamp(6),
+        date_recorded date not null,
+        item_name varchar(255) not null,
+        item_type varchar(255) not null,
+        month integer not null,
+        quantity_used float(53) not null,
+        remaining_stock float(53) not null,
+        unit varchar(255) not null,
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 12:49:38.761312+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    alter table if exists monthly_income \000d\000a       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, [*]month, year)"; expected "identifier"; SQL statement:
+
+    alter table if exists monthly_income 
+       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, month, year) [42001-224]
+2026-06-20 12:50:23.230313+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_income (\000d\000a        id uuid not null,\000d\000a        average_price float(53),\000d\000a        created_at timestamp(6),\000d\000a        crops_sold integer not null,\000d\000a        [*]month integer not null,\000d\000a        total_income float(53) not null,\000d\000a        updated_at timestamp(6),\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_income (
+        id uuid not null,
+        average_price float(53),
+        created_at timestamp(6),
+        crops_sold integer not null,
+        month integer not null,
+        total_income float(53) not null,
+        updated_at timestamp(6),
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 12:50:23.257044+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_stock_usage (\000d\000a        id uuid not null,\000d\000a        created_at timestamp(6),\000d\000a        date_recorded date not null,\000d\000a        item_name varchar(255) not null,\000d\000a        item_type varchar(255) not null,\000d\000a        [*]month integer not null,\000d\000a        quantity_used float(53) not null,\000d\000a        remaining_stock float(53) not null,\000d\000a        unit varchar(255) not null,\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_stock_usage (
+        id uuid not null,
+        created_at timestamp(6),
+        date_recorded date not null,
+        item_name varchar(255) not null,
+        item_type varchar(255) not null,
+        month integer not null,
+        quantity_used float(53) not null,
+        remaining_stock float(53) not null,
+        unit varchar(255) not null,
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 12:50:23.265066+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    alter table if exists monthly_income \000d\000a       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, [*]month, year)"; expected "identifier"; SQL statement:
+
+    alter table if exists monthly_income 
+       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, month, year) [42001-224]
+2026-06-20 13:10:02.610691+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_income (\000d\000a        id uuid not null,\000d\000a        average_price float(53),\000d\000a        created_at timestamp(6),\000d\000a        crops_sold integer not null,\000d\000a        [*]month integer not null,\000d\000a        total_income float(53) not null,\000d\000a        updated_at timestamp(6),\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_income (
+        id uuid not null,
+        average_price float(53),
+        created_at timestamp(6),
+        crops_sold integer not null,
+        month integer not null,
+        total_income float(53) not null,
+        updated_at timestamp(6),
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 13:10:02.623268+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_stock_usage (\000d\000a        id uuid not null,\000d\000a        created_at timestamp(6),\000d\000a        date_recorded date not null,\000d\000a        item_name varchar(255) not null,\000d\000a        item_type varchar(255) not null,\000d\000a        [*]month integer not null,\000d\000a        quantity_used float(53) not null,\000d\000a        remaining_stock float(53) not null,\000d\000a        unit varchar(255) not null,\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_stock_usage (
+        id uuid not null,
+        created_at timestamp(6),
+        date_recorded date not null,
+        item_name varchar(255) not null,
+        item_type varchar(255) not null,
+        month integer not null,
+        quantity_used float(53) not null,
+        remaining_stock float(53) not null,
+        unit varchar(255) not null,
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 13:10:02.628844+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    alter table if exists monthly_income \000d\000a       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, [*]month, year)"; expected "identifier"; SQL statement:
+
+    alter table if exists monthly_income 
+       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, month, year) [42001-224]
+2026-06-20 15:53:18.158562+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_income (\000d\000a        id uuid not null,\000d\000a        average_price float(53),\000d\000a        created_at timestamp(6),\000d\000a        crops_sold integer not null,\000d\000a        [*]month integer not null,\000d\000a        total_income float(53) not null,\000d\000a        updated_at timestamp(6),\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_income (
+        id uuid not null,
+        average_price float(53),
+        created_at timestamp(6),
+        crops_sold integer not null,
+        month integer not null,
+        total_income float(53) not null,
+        updated_at timestamp(6),
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 15:53:18.172786+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_stock_usage (\000d\000a        id uuid not null,\000d\000a        created_at timestamp(6),\000d\000a        date_recorded date not null,\000d\000a        item_name varchar(255) not null,\000d\000a        item_type varchar(255) not null,\000d\000a        [*]month integer not null,\000d\000a        quantity_used float(53) not null,\000d\000a        remaining_stock float(53) not null,\000d\000a        unit varchar(255) not null,\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_stock_usage (
+        id uuid not null,
+        created_at timestamp(6),
+        date_recorded date not null,
+        item_name varchar(255) not null,
+        item_type varchar(255) not null,
+        month integer not null,
+        quantity_used float(53) not null,
+        remaining_stock float(53) not null,
+        unit varchar(255) not null,
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 15:53:18.194714+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    alter table if exists monthly_income \000d\000a       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, [*]month, year)"; expected "identifier"; SQL statement:
+
+    alter table if exists monthly_income 
+       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, month, year) [42001-224]
+2026-06-20 16:09:14.748942+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_income (\000d\000a        id uuid not null,\000d\000a        average_price float(53),\000d\000a        created_at timestamp(6),\000d\000a        crops_sold integer not null,\000d\000a        [*]month integer not null,\000d\000a        total_income float(53) not null,\000d\000a        updated_at timestamp(6),\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_income (
+        id uuid not null,
+        average_price float(53),
+        created_at timestamp(6),
+        crops_sold integer not null,
+        month integer not null,
+        total_income float(53) not null,
+        updated_at timestamp(6),
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 16:09:14.776009+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table monthly_stock_usage (\000d\000a        id uuid not null,\000d\000a        created_at timestamp(6),\000d\000a        date_recorded date not null,\000d\000a        item_name varchar(255) not null,\000d\000a        item_type varchar(255) not null,\000d\000a        [*]month integer not null,\000d\000a        quantity_used float(53) not null,\000d\000a        remaining_stock float(53) not null,\000d\000a        unit varchar(255) not null,\000d\000a        year integer not null,\000d\000a        user_id uuid not null,\000d\000a        primary key (id)\000d\000a    )"; expected "identifier"; SQL statement:
+
+    create table monthly_stock_usage (
+        id uuid not null,
+        created_at timestamp(6),
+        date_recorded date not null,
+        item_name varchar(255) not null,
+        item_type varchar(255) not null,
+        month integer not null,
+        quantity_used float(53) not null,
+        remaining_stock float(53) not null,
+        unit varchar(255) not null,
+        year integer not null,
+        user_id uuid not null,
+        primary key (id)
+    ) [42001-224]
+2026-06-20 16:09:14.782134+05:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    alter table if exists monthly_income \000d\000a       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, [*]month, year)"; expected "identifier"; SQL statement:
+
+    alter table if exists monthly_income 
+       add constraint UK9189ujxxh70f2e25uhdfsokhj unique (user_id, month, year) [42001-224]

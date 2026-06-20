@@ -67,9 +67,9 @@ const MarketPrices = () => {
         api.getBestTimeToSell(selectedCrop),
       ]);
 
-      setCurrentPrice(priceData.data as PriceData);
-      setPriceHistory(historyData.data as PriceHistory[]);
-      setBestTimeToSell(bestTimeData.data as BestTimeToSell);
+      setCurrentPrice(priceData as PriceData);
+      setPriceHistory(historyData as PriceHistory[]);
+      setBestTimeToSell(bestTimeData as BestTimeToSell);
     } catch (err: any) {
       setError(err.message || 'Failed to load market price data');
     } finally {

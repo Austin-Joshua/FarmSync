@@ -1,9 +1,14 @@
 package com.farmsync.config;
 
 import com.farmsync.model.User;
-import com.farmsync.repository.CropTypeRepository;
-import com.farmsync.repository.SoilTypeRepository;
+import com.farmsync.repository.FarmRepository;
+import com.farmsync.repository.CropRepository;
+import com.farmsync.repository.ExpenseRepository;
+import com.farmsync.repository.YieldRepository;
+import com.farmsync.repository.StockItemRepository;
 import com.farmsync.repository.UserRepository;
+import com.farmsync.repository.SoilTypeRepository;
+import com.farmsync.repository.CropTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +27,21 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private CropTypeRepository cropTypeRepository;
+
+    @Autowired
+    private FarmRepository farmRepository;
+
+    @Autowired
+    private CropRepository cropRepository;
+
+    @Autowired
+    private ExpenseRepository expenseRepository;
+
+    @Autowired
+    private YieldRepository yieldRepository;
+
+    @Autowired
+    private StockItemRepository stockItemRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -65,6 +85,143 @@ public class DataInitializer implements CommandLineRunner {
                         .waterRequirement("medium")
                         .description("Standard " + cropName + " crop type.")
                         .build());
+            }
+        }
+
+        // Seed Synthetic Data for Admin User
+        User admin = userRepository.findByEmail("admin@farmsync.com").orElse(null);
+        if (admin != null) {
+            com.farmsync.model.SoilType soil = soilTypeRepository.findByName("Black (Regur)").orElse(null);
+            
+            // Seed default farm if not present
+            com.farmsync.model.Farm farm;
+            java.util.List<com.farmsync.model.Farm> existingFarms = farmRepository.findByFarmerId(admin.getId());
+            if (existingFarms.isEmpty()) {
+                farm = com.farmsync.model.Farm.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .name("Admin Primary Estate")
+                        .location("Coimbatore, Tamil Nadu")
+                        .landSize(12.5)
+                        .soilType(soil)
+                        .farmer(admin)
+                        .build();
+                farm = farmRepository.save(farm);
+                
+                // Keep admin profile in sync with local SQL database farm fields
+                admin.setLocation("Coimbatore, Tamil Nadu");
+                admin.setLandSize(12.5);
+                admin.setSoilType("Black (Regur)");
+                userRepository.save(admin);
+
+                System.out.println("Default farm seeded for admin: Admin Primary Estate");
+            } else {
+                farm = existingFarms.get(0);
+            }
+            
+            // Seed default crops if not present
+            java.util.List<com.farmsync.model.Crop> existingCrops = cropRepository.findByFarmId(farm.getId());
+            if (existingCrops.isEmpty()) {
+                com.farmsync.model.CropType cropType = cropTypeRepository.findByName("Rice").orElse(null);
+                
+                com.farmsync.model.Crop activeCrop = com.farmsync.model.Crop.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .name("IR-20 Rice")
+                        .cropType(cropType)
+                        .season("kharif")
+                        .sowingDate(java.time.LocalDate.now().minusDays(45))
+                        .status("active")
+                        .farm(farm)
+                        .build();
+                activeCrop = cropRepository.save(activeCrop);
+                
+                com.farmsync.model.Crop harvestedCrop = com.farmsync.model.Crop.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .name("Sona Masuri Wheat")
+                        .cropType(cropTypeRepository.findByName("Wheat").orElse(null))
+                        .season("rabi")
+                        .sowingDate(java.time.LocalDate.now().minusDays(180))
+                        .harvestDate(java.time.LocalDate.now().minusDays(20))
+                        .status("harvested")
+                        .farm(farm)
+                        .build();
+                harvestedCrop = cropRepository.save(harvestedCrop);
+                
+                System.out.println("Default crops seeded for farm");
+
+                // Seed Yields for harvested crop
+                yieldRepository.save(com.farmsync.model.Yield.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .crop(harvestedCrop)
+                        .quantity(4500.0)
+                        .date(java.time.LocalDate.now().minusDays(20))
+                        .quality("excellent")
+                        .build());
+                System.out.println("Default yields seeded for crop");
+                
+                // Seed expenses
+                expenseRepository.save(com.farmsync.model.Expense.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .category("seeds")
+                        .description("High-yield IR-20 Rice Seeds")
+                        .amount(12500.0)
+                        .date(java.time.LocalDate.now().minusDays(45))
+                        .farm(farm)
+                        .build());
+                expenseRepository.save(com.farmsync.model.Expense.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .category("labor")
+                        .description("Sowing labor expenses")
+                        .amount(8000.0)
+                        .date(java.time.LocalDate.now().minusDays(43))
+                        .farm(farm)
+                        .build());
+                expenseRepository.save(com.farmsync.model.Expense.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .category("fertilizers")
+                        .description("NPK Fertilizer complex")
+                        .amount(15400.0)
+                        .date(java.time.LocalDate.now().minusDays(30))
+                        .farm(farm)
+                        .build());
+                expenseRepository.save(com.farmsync.model.Expense.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .category("irrigation")
+                        .description("Drip system maintenance")
+                        .amount(4500.0)
+                        .date(java.time.LocalDate.now().minusDays(15))
+                        .farm(farm)
+                        .build());
+                System.out.println("Default expenses seeded for farm");
+            }
+            
+            // Seed stock/inventory items if not present
+            java.util.List<com.farmsync.model.StockItem> existingStock = stockItemRepository.findByUserId(admin.getId());
+            if (existingStock.isEmpty()) {
+                stockItemRepository.save(com.farmsync.model.StockItem.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .user(admin)
+                        .itemName("Urea Nitrogen Fertilizer")
+                        .itemType("fertilizer")
+                        .quantity(250.0)
+                        .unit("kg")
+                        .build());
+                stockItemRepository.save(com.farmsync.model.StockItem.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .user(admin)
+                        .itemName("Neem Oil Pesticide")
+                        .itemType("pesticide")
+                        .quantity(15.0)
+                        .unit("liters")
+                        .build());
+                stockItemRepository.save(com.farmsync.model.StockItem.builder()
+                        .id(java.util.UUID.randomUUID())
+                        .user(admin)
+                        .itemName("IR-20 Rice Seeds")
+                        .itemType("seeds")
+                        .quantity(80.0)
+                        .unit("kg")
+                        .build());
+                System.out.println("Default stock inventory items seeded for user");
             }
         }
     }

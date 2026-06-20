@@ -34,10 +34,7 @@ public class YieldController {
         if (cropId != null) {
             yields = yieldService.findByCropId(cropId, user);
         } else {
-            // Ideally, fetch all yields for all crops for all farms of the user
-            // To simplify, we'll return an empty list if cropId is not provided
-            // or fetch all crops first. For now, let's just use cropId as required in practice.
-            return ResponseEntity.ok(List.of());
+            yields = yieldService.findAllByUser(user);
         }
         
         List<YieldResponse> responses = yields.stream()

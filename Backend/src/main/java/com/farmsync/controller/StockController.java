@@ -30,6 +30,17 @@ public class StockController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/low")
+    public ResponseEntity<List<StockResponse>> getLowStockItems(@AuthenticationPrincipal User user) {
+        List<StockItem> items = stockService.findByUserId(user.getId(), user);
+        // Items with quantity below 50 are considered "low stock"
+        List<StockResponse> lowStock = items.stream()
+                .filter(item -> item.getQuantity() != null && item.getQuantity() < 50)
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lowStock);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<StockResponse> getStockItem(@PathVariable @org.springframework.lang.NonNull UUID id, @AuthenticationPrincipal User user) {
         StockItem item = stockService.findById(id, user)
@@ -80,6 +91,9 @@ public class StockController {
         response.setUserId(item.getUser().getId());
         response.setCreatedAt(item.getCreatedAt());
         response.setUpdatedAt(item.getUpdatedAt());
+        // Aliases for frontend compatibility
+        response.setName(item.getItemName());
+        response.setCategory(item.getItemType());
         return response;
     }
 }

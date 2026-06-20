@@ -1,18 +1,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  signInWithCustomToken,
-  signOut, 
-  updateProfile,
-  signInWithPopup,
-  GoogleAuthProvider
-} from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../config/firebase';
 import { User, UserRole } from '../types';
 import ApiService from '../services/api';
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '../config/firebase';
 
 interface AuthContextType {
   user: User | null;
@@ -33,211 +23,137 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Safety timeout to prevent indefinite blank screen if Firebase fails to initialize
-    const timeoutId = setTimeout(() => {
-      console.warn('Firebase initialization timed out. Proceeding in offline/unauthenticated mode.');
-      setLoading(false);
-    }, 3000);
-
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      clearTimeout(timeoutId);
-      try {
-        if (firebaseUser) {
-          // Fetch additional user data from Firestore
-          const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
-          if (userDoc.exists()) {
-            setUser({
-              id: firebaseUser.uid,
-              email: firebaseUser.email!,
-              ...userDoc.data()
-            } as User);
-          } else {
-            // Fallback if doc doesn't exist for some reason
-            setUser({
-              id: firebaseUser.uid,
-              email: firebaseUser.email!,
-              name: firebaseUser.displayName || 'User',
-              role: 'farmer'
-            });
+    const initializeAuth = async () => {
+      const savedToken = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
+      
+      if (savedToken && savedUser) {
+        try {
+          setUser(JSON.parse(savedUser));
+          // Verify session integrity with backend
+          const profile = await ApiService.getProfile();
+          if (profile) {
+            const userProfile = profile as any as User;
+            setUser(userProfile);
+            localStorage.setItem('user', JSON.stringify(userProfile));
           }
-        } else {
+        } catch (error) {
+          console.error('Session verification failed, logging out:', error);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
           setUser(null);
         }
-      } catch (error) {
-        console.error('Error in auth state change:', error);
-        setUser(null);
-      } finally {
-        setLoading(false);
       }
-    });
-
-    return () => {
-      clearTimeout(timeoutId);
-      unsubscribe();
+      setLoading(false);
     };
+
+    initializeAuth();
   }, []);
 
   const login = async (email: string, password: string) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (err: any) {
-      if (err.code === 'auth/configuration-not-found') {
-        throw new Error("FIREBASE_SETUP_REQUIRED: Authentication methods are not enabled. Please enable 'Email/Password' in your Firebase Console for project 'lunar-db-10d04'.");
+      const response: any = await ApiService.login(email, password);
+      if (response && response.token && response.user) {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        setUser(response.user);
+      } else {
+        throw new Error('Invalid server response structure');
       }
+    } catch (err: any) {
+      console.error('Backend Login failed:', err);
       throw err;
     }
   };
 
   const loginWithToken = async (token: string) => {
-    await signInWithCustomToken(auth, token);
+    localStorage.setItem('token', token);
+    try {
+      const profile = await ApiService.getProfile();
+      if (profile) {
+        const userProfile = profile as any as User;
+        localStorage.setItem('user', JSON.stringify(userProfile));
+        setUser(userProfile);
+      }
+    } catch (err) {
+      localStorage.removeItem('token');
+      throw err;
+    }
   };
 
   const loginWithGoogle = async () => {
     if (!auth) {
-      throw new Error("AUTHENTICATION_UNINITIALIZED: Firebase not initialized.");
+      throw new Error("AUTHENTICATION_UNINITIALIZED: Firebase Google authentication is not initialized. Please check your config parameters.");
     }
-
+    
     try {
       const provider = new GoogleAuthProvider();
-      
-      // Ensures the flow is fast and clean, always letting the user explicitly select their preferred account
       provider.setCustomParameters({
         prompt: 'select_account'
       });
-
+      
       const userCredential = await signInWithPopup(auth, provider);
-      
       const firebaseUser = userCredential.user;
+      const email = firebaseUser.email || '';
+      const name = firebaseUser.displayName || 'Google User';
       
-      const userData = {
-        name: firebaseUser.displayName || 'User',
-        email: firebaseUser.email || '',
-        role: 'farmer' as UserRole, // Default role
-        is_onboarded: false,
-        createdAt: new Date().toISOString(),
-      };
-
-      // Try to read existing data, but don't fail the whole login if Firestore isn't setup
-      let userDocExists = false;
-      let existingData = {};
+      // Attempt registration on our Spring Boot local DB (ignore if they already exist)
       try {
-        const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
-        userDocExists = userDoc.exists();
-        if (userDocExists) existingData = userDoc.data() || {};
-      } catch (firestoreError) {
-        console.warn("Firestore check skipped. Continuing login...", firestoreError);
+        await ApiService.register(name, email, 'oauth2_user', 'farmer');
+      } catch (err) {
+        console.log('Registration skipped (user may already exist on backend).');
       }
-
-      if (!userDocExists) {
-         try {
-           await setDoc(doc(db, 'users', firebaseUser.uid), userData);
-         } catch (e) {
-           console.warn("Could not save to Firestore. Operating in local Auth mode.", e);
-         }
-         
-         // Try to sync with backend optionally
-         try {
-           await ApiService.register(userData.name, userData.email, 'oauth2_user', 'farmer');
-         } catch(e) {}
-         
-         setUser({
-           id: firebaseUser.uid,
-           ...userData
-         } as User);
+      
+      // Log in on backend to get local JWT
+      const response: any = await ApiService.login(email, 'oauth2_user');
+      if (response && response.token && response.user) {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+        setUser(response.user);
       } else {
-         // If it exists, update the local session state immediately so navigation doesn't bounce back
-         setUser({
-           id: firebaseUser.uid,
-           email: firebaseUser.email!,
-           ...existingData
-         } as User);
+        throw new Error('Could not sync user credentials with the backend server database');
       }
     } catch (err: any) {
-      console.error("Google Auth Error:", err);
-      if (err.code === 'auth/configuration-not-found' || err.code === 'auth/provider-already-linked' || err.message?.includes('network')) {
-        throw new Error("FIREBASE_SETUP_REQUIRED: Google Provider is not fully enabled in the console or your domain is not whitelisted.");
-      }
+      console.error('Google login failed:', err);
       throw err;
     }
-  };
-
-  // Helper to remove undefined fields which Firestore doesn't support
-  const stripUndefined = (obj: any) => {
-    return Object.fromEntries(
-      Object.entries(obj).filter(([_, v]) => v !== undefined)
-    );
   };
 
   const register = async (name: string, email: string, password: string, role: UserRole, metadata: any = {}) => {
-    if (!auth) {
-      throw new Error("AUTHENTICATION_UNINITIALIZED: The initialization service is offline. Please check your network or Firebase configuration.");
-    }
-
-    let firebaseUser = null;
-
     try {
-      // 1. Create in Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      firebaseUser = userCredential.user;
-
-      // 2. Update Firebase Profile
-      await updateProfile(firebaseUser, { displayName: name });
-    } catch (err: any) {
-      console.error('Firebase Auth failed:', err);
-      
-      // Specifically handle configuration errors
-      if (err.code === 'auth/configuration-not-found') {
-        throw new Error("FIREBASE_SETUP_REQUIRED: Authentication methods are not enabled. Please enable 'Email/Password' in your Firebase Console for project 'lunar-db-10d04'.");
-      }
-      throw err;
-    }
-
-    const userData = {
-      name,
-      email,
-      role,
-      is_onboarded: false,
-      createdAt: new Date().toISOString(),
-      ...metadata
-    };
-
-    // 3. Save to Firestore (Simultaneous Cloud Save)
-    if (firebaseUser) {
-      // Use helper to ensure no undefined values are sent to Firestore
-      await setDoc(doc(db, 'users', firebaseUser.uid), stripUndefined(userData));
-    }
-    
-    // 4. Save to Backend Database (Simultaneous Backend Sync)
-    // We execute this even if Firestore is slow, to ensure multi-db persistence
-    try {
+      // Create user directly on local relational database
       await ApiService.register(name, email, password, role, metadata);
-      console.log('Backend sync successful');
-    } catch (apiError) {
-      console.error('Backend sync failed:', apiError);
-    }
-
-    // 5. Update local state
-    if (firebaseUser) {
-      setUser({
-        id: firebaseUser.uid,
-        ...userData
-      } as User);
+      // Auto login after successful registration
+      await login(email, password);
+    } catch (err: any) {
+      console.error('Backend Registration failed:', err);
+      throw err;
     }
   };
 
   const logout = async () => {
-    await signOut(auth);
+    try {
+      await ApiService.logout();
+    } catch (e) {
+      // Ignore if logout API call fails
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+    }
   };
 
   const updateUser = async (partialUser: Partial<User>) => {
     if (!user) return;
-    
-    const updatedUser = { ...user, ...partialUser };
-    const { id, ...updateData } = updatedUser;
-    
-    // Use helper to ensure no undefined values are sent to Firestore during updates
-    await setDoc(doc(db, 'users', id), stripUndefined(updateData), { merge: true });
-    setUser(updatedUser);
+    try {
+      const updatedUser = { ...user, ...partialUser };
+      await ApiService.updateProfile(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    } catch (err) {
+      console.error('Profile update failed:', err);
+      throw err;
+    }
   };
 
   return (

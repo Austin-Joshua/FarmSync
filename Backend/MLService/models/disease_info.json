@@ -1,0 +1,62 @@
+{
+  "model_type": "GradientBoostingClassifier",
+  "accuracy": 0.9553571428571429,
+  "accuracy_percent": 95.53571428571429,
+  "cv_accuracy": 95.68693693693695,
+  "features": [
+    "R_mean",
+    "G_mean",
+    "B_mean",
+    "R_std",
+    "G_std",
+    "B_std",
+    "H_mean",
+    "S_mean",
+    "V_mean",
+    "H_std",
+    "S_std",
+    "V_std",
+    "lesion_density",
+    "texture_variance"
+  ],
+  "classes": [
+    "Healthy",
+    "Leaf Blight",
+    "Rust (Puccinia)",
+    "Powdery Mildew",
+    "Bacterial Leaf Spot",
+    "Leaf Curl Virus"
+  ],
+  "disease_info": {
+    "Healthy": {
+      "solution": "No disease detected. Continue standard monitoring and fertilization schedule.",
+      "severity": "None",
+      "urgency": "low"
+    },
+    "Leaf Blight": {
+      "solution": "Apply fungicide containing copper oxychloride or mancozeb (2g/L). Improve air circulation, avoid overhead watering, and remove infected leaves immediately.",
+      "severity": "High",
+      "urgency": "high"
+    },
+    "Rust (Puccinia)": {
+      "solution": "Spray propiconazole (0.1%) or sulfur dust. Remove infected leaves. Avoid nitrogen-heavy fertilizers. Apply every 10-14 days during wet season.",
+      "severity": "Medium",
+      "urgency": "medium"
+    },
+    "Powdery Mildew": {
+      "solution": "Apply potassium bicarbonate solution or horticultural oil (neem oil 3ml/L). Ensure full sun exposure. Use resistant varieties in future seasons.",
+      "severity": "Medium",
+      "urgency": "medium"
+    },
+    "Bacterial Leaf Spot": {
+      "solution": "Apply copper-based bactericide (Bordeaux mixture 1%). Remove and destroy infected plant parts. Avoid working in fields when wet. Improve drainage.",
+      "severity": "High",
+      "urgency": "high"
+    },
+    "Leaf Curl Virus": {
+      "solution": "No chemical cure for viral infection. Remove and burn infected plants. Control whitefly vectors with imidacloprid (0.5ml/L). Use virus-free seeds next season.",
+      "severity": "Critical",
+      "urgency": "critical"
+    }
+  }
+}

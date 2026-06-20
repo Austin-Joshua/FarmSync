@@ -29,7 +29,10 @@ public class User {
     private String role; // 'farmer' or 'admin'
 
     @Column(nullable = false)
+    @com.fasterxml.jackson.annotation.JsonProperty(access = com.fasterxml.jackson.annotation.JsonProperty.Access.WRITE_ONLY)
     private String password;
+
+    private String phone;
 
     private String location;
 

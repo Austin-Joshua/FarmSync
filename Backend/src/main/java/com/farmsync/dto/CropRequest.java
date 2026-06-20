@@ -12,5 +12,6 @@ public class CropRequest {
     private LocalDate sowingDate;
     private LocalDate harvestDate;
     private String status;
+    private String season;
     private UUID farmId;
 }
