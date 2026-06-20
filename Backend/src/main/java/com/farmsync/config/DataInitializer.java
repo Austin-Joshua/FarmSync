@@ -48,8 +48,9 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (!userRepository.existsByEmail("admin@farmsync.com")) {
-            User admin = User.builder()
+        User admin = userRepository.findByEmail("admin@farmsync.com").orElse(null);
+        if (admin == null) {
+            admin = User.builder()
                     .id(UUID.randomUUID())
                     .name("Admin")
                     .email("admin@farmsync.com")
@@ -58,6 +59,10 @@ public class DataInitializer implements CommandLineRunner {
                     .build();
             userRepository.save(admin);
             System.out.println("Default admin user created: admin@farmsync.com / admin123");
+        } else {
+            admin.setPassword(passwordEncoder.encode("admin123"));
+            userRepository.save(admin);
+            System.out.println("Default admin user password verified/reset to admin123");
         }
 
         // Seed Soil Types
@@ -89,7 +94,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // Seed Synthetic Data for Admin User
-        User admin = userRepository.findByEmail("admin@farmsync.com").orElse(null);
+        admin = userRepository.findByEmail("admin@farmsync.com").orElse(null);
         if (admin != null) {
             com.farmsync.model.SoilType soil = soilTypeRepository.findByName("Black (Regur)").orElse(null);
             
