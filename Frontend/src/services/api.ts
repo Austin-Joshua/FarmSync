@@ -29,7 +29,19 @@ api.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    return Promise.reject(error.response?.data?.message || 'API request failed');
+    if (error.response?.data) {
+      const data = error.response.data;
+      if (data.message) {
+        return Promise.reject(data.message);
+      }
+      if (data.status === 403 || data.status === 401) {
+        return Promise.reject('Invalid email or password');
+      }
+      if (data.status === 500) {
+        return Promise.reject('User not found. Please register first.');
+      }
+    }
+    return Promise.reject(error.response?.data?.message || error.message || 'API request failed');
   }
 );
 
