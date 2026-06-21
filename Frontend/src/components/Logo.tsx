@@ -1,11 +1,12 @@
-// FarmSync Premium Image Logo Component (Transparent PNG)
+// FarmSync Premium Theme-Aware Image Logo Component
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const Logo = ({ 
   size = 'default',
-  variant = 'dark', // 'dark' for dark backgrounds, 'light' for light backgrounds
+  variant, // 'dark' for dark backgrounds (white text), 'light' for light backgrounds (dark text)
   onAfterClick,
 }: { 
   size?: 'small' | 'default' | 'large';
@@ -15,6 +16,7 @@ const Logo = ({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
+  const { theme } = useTheme();
   
   const heightClasses = {
     small: 'h-8 sm:h-9',
@@ -37,8 +39,12 @@ const Logo = ({
     onAfterClick?.();
   };
 
-  // The logo image contains the text "FARMSYNC" and the tagline, with a transparent background.
-  // It natively blends with both light and dark modes perfectly.
+  // Determine if the background is dark.
+  // If variant is passed explicitly (e.g. 'dark' or 'light'), respect it.
+  // Otherwise, default to the current active theme.
+  const isDarkBg = variant ? (variant === 'dark') : (theme === 'dark');
+  const logoSrc = isDarkBg ? '/logo-dark.png' : '/logo-light.png';
+
   return (
     <button
       onClick={handleLogoClick}
@@ -47,7 +53,7 @@ const Logo = ({
       aria-label={t('navigation.home')}
     >
       <img 
-        src="/logo.png" 
+        src={logoSrc} 
         alt="FarmSync Logo" 
         className={`${heightClasses[size]} w-auto object-contain`}
       />
