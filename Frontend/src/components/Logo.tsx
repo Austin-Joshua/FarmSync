@@ -1,4 +1,4 @@
-// FarmSync Premium Image Logo Component
+// FarmSync Premium Image Logo Component (Transparent PNG)
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
@@ -37,9 +37,8 @@ const Logo = ({
     onAfterClick?.();
   };
 
-  // The logo image contains the text "FARMSYNC" and the tagline, with a black background.
-  // We use mix-blend-screen so the black background is transparent and blends perfectly with
-  // both light headers (white/gray) and dark headers/sidebars.
+  // The logo image contains the text "FARMSYNC" and the tagline, with a transparent background.
+  // It natively blends with both light and dark modes perfectly.
   return (
     <button
       onClick={handleLogoClick}
@@ -48,9 +47,9 @@ const Logo = ({
       aria-label={t('navigation.home')}
     >
       <img 
-        src="/logo.jpg" 
+        src="/logo.png" 
         alt="FarmSync Logo" 
-        className={`${heightClasses[size]} w-auto object-contain mix-blend-screen`}
+        className={`${heightClasses[size]} w-auto object-contain`}
       />
     </button>
   );
