@@ -220,7 +220,7 @@ const Landing = () => {
             <span>Smart Agritech Platform</span>
           </div>
           
-          <h1 className="text-5xl sm:text-7xl font-black leading-[1] tracking-tighter italic uppercase text-gray-900 dark:text-white">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1] tracking-tighter italic uppercase text-gray-900 dark:text-white">
             Precision Fields,<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500">Maximum Yield.</span><br />
             Built for Legacy.
@@ -251,8 +251,8 @@ const Landing = () => {
         {/* Decorative App Dashboard Simulation */}
         <div className="lg:w-1/2 relative w-full group">
           <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-transparent blur-3xl opacity-30 group-hover:opacity-50 transition-opacity" />
-          <div className="relative bg-white dark:bg-white/5 p-1.5 backdrop-blur-2xl rounded-[3rem] border border-gray-200 dark:border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] overflow-hidden transform hover:rotate-1 transition-all duration-700">
-             <div className="bg-gray-50 dark:bg-[#0b130e]/90 p-8 rounded-[2.7rem]">
+          <div className="relative bg-white dark:bg-white/5 p-1.5 backdrop-blur-2xl rounded-[2rem] sm:rounded-[3rem] border border-gray-200 dark:border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.12)] overflow-hidden transform hover:rotate-1 transition-all duration-700">
+             <div className="bg-gray-50 dark:bg-[#0b130e]/90 p-4 sm:p-8 rounded-[1.8rem] sm:rounded-[2.7rem]">
                 <div className="flex justify-between items-start mb-10">
                    <div className="bg-emerald-100 dark:bg-emerald-500/20 p-4 rounded-3xl">
                       <TrendingUp size={32} className="text-emerald-600 dark:text-emerald-400 animate-pulse" />
@@ -268,15 +268,15 @@ const Landing = () => {
                    <h3 className="text-4xl font-black uppercase italic tracking-tighter text-gray-900 dark:text-white">Field Analysis</h3>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                   <div className="p-6 bg-white dark:bg-white/5 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                   <div className="p-4 sm:p-6 bg-white dark:bg-white/5 rounded-[1.5rem] sm:rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm">
                       <p className="text-xs font-bold text-gray-500 dark:text-white/40 mb-1">Moisture Level</p>
-                      <p className="text-3xl font-black text-emerald-500 tracking-tighter">78.4%</p>
+                      <p className="text-2xl sm:text-3xl font-black text-emerald-500 tracking-tighter">78.4%</p>
                       <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold block mt-1">Optimal Range</span>
                    </div>
-                   <div className="p-6 bg-white dark:bg-white/5 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm">
+                   <div className="p-4 sm:p-6 bg-white dark:bg-white/5 rounded-[1.5rem] sm:rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-sm">
                       <p className="text-xs font-bold text-gray-500 dark:text-white/40 mb-1">Nitrogen (N)</p>
-                      <p className="text-3xl font-black text-amber-500 tracking-tighter">Medium</p>
+                      <p className="text-2xl sm:text-3xl font-black text-amber-500 tracking-tighter">Medium</p>
                       <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold block mt-1">Slight deficit</span>
                    </div>
                 </div>
@@ -297,7 +297,7 @@ const Landing = () => {
       <section id="features" className="py-28 px-6 max-w-7xl mx-auto border-t border-gray-100 dark:border-white/5">
         <div className="text-center mb-20 space-y-4">
           <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">Core Ecosystem</h2>
-          <h3 className="text-4xl sm:text-6xl font-black uppercase italic tracking-tighter">Everything you need to <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-400">scale.</span></h3>
+          <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter">Everything you need to <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-400">scale.</span></h3>
           <p className="text-gray-500 max-w-lg mx-auto font-bold">Ditch the notebooks. Keep track of operations, weather shifts, and yields in one central agritech control panel.</p>
         </div>
         
@@ -319,13 +319,13 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">Interactive Showcase</h2>
-            <h3 className="text-4xl sm:text-5xl font-black uppercase italic tracking-tighter">See FarmSync in <span className="text-emerald-500">Action</span></h3>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter">See FarmSync in <span className="text-emerald-500">Action</span></h3>
             <p className="text-gray-500 max-w-lg mx-auto mt-4 font-bold">Discover our tools designed to help farmers coordinate logistics and predict profitability.</p>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-12 items-center">
             {/* Left selector */}
-            <div className="w-full lg:w-1/3 flex flex-col gap-4">
+            <div className="w-full lg:w-1/3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
               <button 
                 onClick={() => setActivePreviewTab('weather')}
                 className={`text-left p-6 rounded-[2rem] border transition-all duration-300 ${activePreviewTab === 'weather' ? 'bg-emerald-600 border-emerald-500 text-white shadow-xl shadow-emerald-500/15' : 'bg-white dark:bg-white/5 border-gray-200 dark:border-white/5 hover:border-emerald-500/30'}`}
@@ -486,15 +486,15 @@ const Landing = () => {
                     <span className="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-[10px] font-black">Q2 Overview</span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-6 bg-emerald-500/5 border border-emerald-500/10 rounded-[2rem]">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="p-4 sm:p-6 bg-emerald-500/5 border border-emerald-500/10 rounded-[1.5rem] sm:rounded-[2rem]">
                       <span className="text-xs text-gray-500 block font-bold">Total Investments</span>
-                      <strong className="text-2xl sm:text-3xl font-black block mt-2 text-emerald-500">₹32,450</strong>
+                      <strong className="text-xl sm:text-2xl md:text-3xl font-black block mt-2 text-emerald-500">₹32,450</strong>
                       <span className="text-[10px] text-gray-400 block mt-1">Seeds & chemical inputs</span>
                     </div>
-                    <div className="p-6 bg-teal-500/5 border border-teal-500/10 rounded-[2rem]">
+                    <div className="p-4 sm:p-6 bg-teal-500/5 border border-teal-500/10 rounded-[1.5rem] sm:rounded-[2rem]">
                       <span className="text-xs text-gray-500 block font-bold">Projected Income</span>
-                      <strong className="text-2xl sm:text-3xl font-black block mt-2 text-teal-500">₹145,000</strong>
+                      <strong className="text-xl sm:text-2xl md:text-3xl font-black block mt-2 text-teal-500">₹145,000</strong>
                       <span className="text-[10px] text-teal-600 block mt-1">+24% vs historical average</span>
                     </div>
                   </div>
@@ -514,7 +514,7 @@ const Landing = () => {
       <section id="testimonials" className="py-28 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">Success Stories</h2>
-          <h3 className="text-4xl sm:text-5xl font-black uppercase italic tracking-tighter">Farmers Trusting <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-400">FarmSync.</span></h3>
+          <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter">Farmers Trusting <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-400">FarmSync.</span></h3>
         </div>
 
         <div className="relative max-w-4xl mx-auto">
@@ -557,13 +557,13 @@ const Landing = () => {
           {/* Nav arrows */}
           <button 
             onClick={prevTestimonial}
-            className="absolute left-[-20px] sm:left-[-30px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white dark:bg-[#0c1611] border border-gray-200 dark:border-white/10 flex items-center justify-center shadow-lg hover:text-emerald-500 transition-colors"
+            className="absolute left-[-20px] sm:left-[-30px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white dark:bg-[#0c1611] border border-gray-200 dark:border-white/10 flex items-center justify-center shadow-lg hover:text-emerald-500 transition-colors z-10 hidden md:flex"
           >
             <ChevronLeft size={20} />
           </button>
           <button 
             onClick={nextTestimonial}
-            className="absolute right-[-20px] sm:right-[-30px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white dark:bg-[#0c1611] border border-gray-200 dark:border-white/10 flex items-center justify-center shadow-lg hover:text-emerald-500 transition-colors"
+            className="absolute right-[-20px] sm:right-[-30px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white dark:bg-[#0c1611] border border-gray-200 dark:border-white/10 flex items-center justify-center shadow-lg hover:text-emerald-500 transition-colors z-10 hidden md:flex"
           >
             <ChevronRight size={20} />
           </button>
@@ -575,7 +575,7 @@ const Landing = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">Got Questions?</h2>
-            <h3 className="text-4xl sm:text-5xl font-black uppercase italic tracking-tighter">Frequently Asked <span className="text-emerald-500">Details</span></h3>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter">Frequently Asked <span className="text-emerald-500">Details</span></h3>
           </div>
 
           <div className="space-y-4">
@@ -610,7 +610,7 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="lg:w-1/2 space-y-8">
-               <h3 className="text-5xl font-black uppercase italic tracking-tighter leading-none">The path to<br />optimization.</h3>
+               <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">The path to<br />optimization.</h3>
                <p className="text-xl text-gray-400 font-bold leading-relaxed">We distill complex environmental and operational data into actionable intelligence, allowing you to focus on scaling your production and securing your harvest.</p>
                <button onClick={() => navigate('/register')} className="bg-white text-[#0b130e] px-10 py-5 rounded-full text-lg font-black uppercase tracking-tighter italic hover:scale-105 transition-all">Start Free Now</button>
             </div>
@@ -636,7 +636,7 @@ const Landing = () => {
       {/* Final CTA */}
       <section className="py-28 px-6 text-center">
          <div className="max-w-4xl mx-auto space-y-10">
-            <h2 className="text-5xl sm:text-7xl font-black leading-none tracking-tighter uppercase italic">Ready to sync your farm with the future?</h2>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-none tracking-tighter uppercase italic">Ready to sync your farm with the future?</h2>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                <button onClick={() => navigate('/register')} className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-12 py-6 rounded-full text-xl font-black uppercase tracking-tighter italic shadow-2xl shadow-emerald-500/20 transition-all active:scale-95">Get Started Now</button>
                <a href="#showcase" onClick={(e) => handleScroll(e, 'showcase')} className="w-full sm:w-auto px-12 py-6 rounded-full text-xl font-black uppercase tracking-tighter border-2 border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-center inline-block">See App Preview</a>
