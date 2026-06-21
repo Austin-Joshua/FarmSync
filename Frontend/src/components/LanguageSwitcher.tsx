@@ -18,6 +18,8 @@ const LanguageSwitcher = ({ variant = 'desktop' }: LanguageSwitcherProps) => {
     { code: 'hi', name: 'हिन्दी (Hindi)', flag: '🇮🇳' },
     { code: 'te', name: 'తెలుగు (Telugu)', flag: '🇮🇳' },
     { code: 'kn', name: 'ಕನ್ನಡ (Kannada)', flag: '🇮🇳' },
+    { code: 'bn', name: 'বাংলা (Bengali)', flag: '🇮🇳' },
+    { code: 'mr', name: 'मराठी (Marathi)', flag: '🇮🇳' },
   ];
 
 

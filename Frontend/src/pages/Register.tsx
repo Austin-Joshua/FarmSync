@@ -28,6 +28,8 @@ const LANGUAGES = [
   { code: 'te', label: 'తెలుగు (Telugu)' },
   { code: 'ta', label: 'தமிழ் (Tamil)' },
   { code: 'kn', label: 'ಕನ್ನಡ (Kannada)' },
+  { code: 'bn', label: 'বাংলা (Bengali)' },
+  { code: 'ml', label: 'മലയാളം (Malayalam)' },
   { code: 'gu', label: 'ગુજરાતી (Gujarati)' },
   { code: 'pa', label: 'ਪੰਜਾਬੀ (Punjabi)' },
 ];

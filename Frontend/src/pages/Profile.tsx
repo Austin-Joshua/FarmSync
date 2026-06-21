@@ -27,6 +27,8 @@ const LANGUAGES = [
   { code: 'te', label: 'తెలుగు' },
   { code: 'ta', label: 'தமிழ்' },
   { code: 'kn', label: 'ಕನ್ನಡ' },
+  { code: 'bn', label: 'বাংলা' },
+  { code: 'ml', label: 'മലയാളം' },
   { code: 'gu', label: 'ગુજરાતી' },
   { code: 'pa', label: 'ਪੰਜਾਬੀ' },
 ];

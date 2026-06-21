@@ -52,77 +52,77 @@ const Layout = ({ children }: LayoutProps) => {
   const navGroups = (() => {
     const adminGroups = [
       { label: 'Overview', items: [
-        { path: '/dashboard', label: 'Command Center', icon: Activity },
-        { path: '/admin', label: 'Analytics Hub', icon: BarChart2 },
+        { path: '/dashboard', label: 'Command Center', translationKey: 'commandCenter', icon: Activity },
+        { path: '/admin', label: 'Analytics Hub', translationKey: 'analyticsHub', icon: BarChart2 },
       ]},
       { label: 'Administration', items: [
-        { path: '/admin', label: 'District Analytics', icon: Shield },
-        { path: '/marketplace', label: 'Marketplace Moderation', icon: Store },
-        { path: '/community', label: 'Community Moderation', icon: MessageSquare },
+        { path: '/admin', label: 'District Analytics', translationKey: 'districtAnalytics', icon: Shield },
+        { path: '/marketplace', label: 'Marketplace Moderation', translationKey: 'marketplaceModeration', icon: Store },
+        { path: '/community', label: 'Community Moderation', translationKey: 'communityModeration', icon: MessageSquare },
       ]},
       { label: 'Farm Data', items: [
-        { path: '/crops', label: t('navigation.cropManagement'), icon: Sprout },
-        { path: '/reports', label: 'System Reports', icon: FileText },
+        { path: '/crops', label: 'Crop Management', translationKey: 'cropManagement', icon: Sprout },
+        { path: '/reports', label: 'System Reports', translationKey: 'systemReports', icon: FileText },
       ]},
       { label: 'System', items: [
-        { path: '/settings', label: t('navigation.settings'), icon: Settings },
+        { path: '/settings', label: 'Settings', translationKey: 'settings', icon: Settings },
       ]},
     ];
 
     const farmerGroups = [
       { label: 'Overview', items: [
-        { path: '/dashboard', label: t('navigation.dashboard'), icon: Home },
+        { path: '/dashboard', label: 'Dashboard', translationKey: 'dashboard', icon: Home },
       ]},
       { label: 'Farm Management', items: [
-        { path: '/crops', label: t('navigation.cropManagement'), icon: Sprout },
-        { path: '/fields', label: t('navigation.fields'), icon: MapPin },
-        { path: '/yield', label: 'Yield Tracking', icon: TrendingUp },
-        { path: '/calendar', label: 'Crop Calendar', icon: CalendarDays },
-        { path: '/iot-dashboard', label: 'IoT Sensors', icon: Wifi, badge: 'LIVE' },
+        { path: '/crops', label: 'Crop Management', translationKey: 'cropManagement', icon: Sprout },
+        { path: '/fields', label: 'Fields', translationKey: 'fields', icon: MapPin },
+        { path: '/yield', label: 'Yield Tracking', translationKey: 'yieldTracking', icon: TrendingUp },
+        { path: '/calendar', label: 'Crop Calendar', translationKey: 'calendar', icon: CalendarDays },
+        { path: '/iot-dashboard', label: 'IoT Sensors', translationKey: 'iotSensors', icon: Wifi, badge: 'LIVE' },
       ]},
       { label: 'Marketplace', items: [
-        { path: '/marketplace', label: 'Community Market', icon: ShoppingCart, badge: 'NEW' },
-        { path: '/market', label: 'Market Prices', icon: BarChart2 },
+        { path: '/marketplace', label: 'Community Market', translationKey: 'communityMarket', icon: ShoppingCart, badge: 'NEW' },
+        { path: '/market', label: 'Market Prices', translationKey: 'marketPrices', icon: BarChart2 },
       ]},
       { label: 'AI Tools', items: [
-        { path: '/crop-recommend', label: 'AI Crop Advisor', icon: Leaf, badge: 'AI' },
-        { path: '/ai-detect', label: 'Disease Detection', icon: Zap },
-        { path: '/pest-predict', label: 'Pest Prediction', icon: Bug },
+        { path: '/crop-recommend', label: 'AI Crop Advisor', translationKey: 'aiCropAdvisor', icon: Leaf, badge: 'AI' },
+        { path: '/ai-detect', label: 'Disease Detection', translationKey: 'diseaseDetection', icon: Zap },
+        { path: '/pest-predict', label: 'Pest Prediction', translationKey: 'pestPrediction', icon: Bug },
       ]},
       { label: 'Resources', items: [
-        { path: '/irrigation', label: 'Irrigation', icon: Droplets },
-        { path: '/fertilizer', label: 'Fertilizer & Pest', icon: FlaskConical },
-        { path: '/stock', label: 'Stock & Inventory', icon: Package },
+        { path: '/irrigation', label: 'Irrigation', translationKey: 'irrigation', icon: Droplets },
+        { path: '/fertilizer', label: 'Fertilizer & Pest', translationKey: 'fertilizerPest', icon: FlaskConical },
+        { path: '/stock', label: 'Stock & Inventory', translationKey: 'stockInventory', icon: Package },
       ]},
       { label: 'Community', items: [
-        { path: '/community', label: 'Farmer Forum', icon: MessageSquare, badge: 'NEW' },
-        { path: '/compliance', label: 'Certifications', icon: ShieldCheck },
+        { path: '/community', label: 'Farmer Forum', translationKey: 'farmerForum', icon: MessageSquare, badge: 'NEW' },
+        { path: '/compliance', label: 'Certifications', translationKey: 'compliance', icon: ShieldCheck },
       ]},
       { label: 'Finance', items: [
-        { path: '/finance', label: 'Projections & Loans', icon: Landmark, badge: 'AI' },
-        { path: '/expenses', label: t('navigation.expenses'), icon: IndianRupee },
-        { path: '/reports', label: 'Reports', icon: FileText },
+        { path: '/finance', label: 'Projections & Loans', translationKey: 'finance', icon: Landmark, badge: 'AI' },
+        { path: '/expenses', label: 'Expenses', translationKey: 'expenses', icon: IndianRupee },
+        { path: '/reports', label: 'Reports', translationKey: 'reports', icon: FileText },
       ]},
       { label: 'System', items: [
-        { path: '/settings', label: t('navigation.settings'), icon: Settings },
+        { path: '/settings', label: 'Settings', translationKey: 'settings', icon: Settings },
       ]},
     ];
 
     const citizenGroups = [
       { label: 'Discover', items: [
-        { path: '/dashboard', label: 'My Dashboard', icon: Home },
-        { path: '/market', label: 'Market Prices', icon: BarChart2 },
+        { path: '/dashboard', label: 'My Dashboard', translationKey: 'myDashboard', icon: Home },
+        { path: '/market', label: 'Market Prices', translationKey: 'marketPrices', icon: BarChart2 },
       ]},
       { label: 'Marketplace', items: [
-        { path: '/marketplace', label: 'Buy Produce', icon: ShoppingCart, badge: 'NEW' },
-        { path: '/history', label: 'My Orders', icon: FileText },
+        { path: '/marketplace', label: 'Buy Produce', translationKey: 'buyProduce', icon: ShoppingCart, badge: 'NEW' },
+        { path: '/history', label: 'My Orders', translationKey: 'myOrders', icon: FileText },
       ]},
       { label: 'Community', items: [
-        { path: '/community', label: 'Farmer Forum', icon: MessageSquare },
-        { path: '/compliance', label: 'Schemes & Subsidies', icon: ShieldCheck },
+        { path: '/community', label: 'Farmer Forum', translationKey: 'farmerForum', icon: MessageSquare },
+        { path: '/compliance', label: 'Schemes & Subsidies', translationKey: 'schemesSubsidies', icon: ShieldCheck },
       ]},
       { label: 'System', items: [
-        { path: '/settings', label: 'Settings', icon: Settings },
+        { path: '/settings', label: 'Settings', translationKey: 'settings', icon: Settings },
       ]},
     ];
 
@@ -133,22 +133,22 @@ const Layout = ({ children }: LayoutProps) => {
 
   const mobileItems = (() => {
     if (role === 'admin') return [
-      { path: '/dashboard', label: 'Home', icon: Home },
-      { path: '/admin', label: 'Analytics', icon: Activity },
-      { path: '/marketplace', label: 'Moderate', icon: Store },
-      { path: '/settings', label: 'Settings', icon: Settings },
+      { path: '/dashboard', label: 'Home', translationKey: 'home', icon: Home },
+      { path: '/admin', label: 'Analytics', translationKey: 'analytics', icon: Activity },
+      { path: '/marketplace', label: 'Moderate', translationKey: 'moderate', icon: Store },
+      { path: '/settings', label: 'Settings', translationKey: 'settings', icon: Settings },
     ];
     if (role === 'citizen') return [
-      { path: '/dashboard', label: 'Home', icon: Home },
-      { path: '/market', label: 'Prices', icon: BarChart2 },
-      { path: '/marketplace', label: 'Buy', icon: ShoppingCart },
-      { path: '/community', label: 'Forum', icon: MessageSquare },
+      { path: '/dashboard', label: 'Home', translationKey: 'home', icon: Home },
+      { path: '/market', label: 'Prices', translationKey: 'prices', icon: BarChart2 },
+      { path: '/marketplace', label: 'Buy', translationKey: 'buy', icon: ShoppingCart },
+      { path: '/community', label: 'Forum', translationKey: 'forum', icon: MessageSquare },
     ];
     return [
-      { path: '/dashboard', label: 'Home', icon: Home },
-      { path: '/crops', label: 'Crops', icon: Sprout },
-      { path: '/marketplace', label: 'Market', icon: ShoppingCart },
-      { path: '/settings', label: 'Settings', icon: Settings },
+      { path: '/dashboard', label: 'Home', translationKey: 'home', icon: Home },
+      { path: '/crops', label: 'Crops', translationKey: 'crops', icon: Sprout },
+      { path: '/marketplace', label: 'Market', translationKey: 'market', icon: ShoppingCart },
+      { path: '/settings', label: 'Settings', translationKey: 'settings', icon: Settings },
     ];
   })();
 
@@ -177,36 +177,41 @@ const Layout = ({ children }: LayoutProps) => {
                   hasActive ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400'
                 }`}
               >
-                <span className="text-[9px] font-black uppercase tracking-widest">{group.label}</span>
+                <span className="text-[9px] font-black uppercase tracking-widest">
+                  {t('navigation.group.' + group.label.replace(/\s+/g, ''), { defaultValue: group.label })}
+                </span>
                 {isExpanded ? <ChevronUp size={9} /> : <ChevronDown size={9} />}
               </button>
             )}
             {(isExpanded || compact) && (
               <div className="space-y-0.5 mt-0.5">
-                {group.items.map((item) => (
-                  <button
-                    key={item.path}
-                    onClick={() => { navigate(item.path); setMobileOpen(false); }}
-                    title={compact ? item.label : undefined}
-                    className={`w-full flex items-center gap-3 ${compact ? 'justify-center px-2 py-3' : 'px-3 py-2.5'} rounded-xl transition-all text-left ${
-                      isActive(item.path)
-                        ? 'bg-primary-600 text-white shadow-md shadow-primary-600/30'
-                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'
-                    }`}
-                  >
-                    <item.icon size={compact ? 20 : 17} className="flex-shrink-0" />
-                    {!compact && (
-                      <>
-                        <span className="font-medium text-sm flex-1">{item.label}</span>
-                        {(item as any).badge && (
-                          <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-full ${
-                            isActive(item.path) ? 'bg-white/20 text-white' : 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
-                          }`}>{(item as any).badge}</span>
-                        )}
-                      </>
-                    )}
-                  </button>
-                ))}
+                {group.items.map((item) => {
+                  const translatedLabel = t('navigation.' + item.translationKey, { defaultValue: item.label });
+                  return (
+                    <button
+                      key={item.path}
+                      onClick={() => { navigate(item.path); setMobileOpen(false); }}
+                      title={compact ? translatedLabel : undefined}
+                      className={`w-full flex items-center gap-3 ${compact ? 'justify-center px-2 py-3' : 'px-3 py-2.5'} rounded-xl transition-all text-left ${
+                        isActive(item.path)
+                          ? 'bg-primary-600 text-white shadow-md shadow-primary-600/30'
+                          : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'
+                      }`}
+                    >
+                      <item.icon size={compact ? 20 : 17} className="flex-shrink-0" />
+                      {!compact && (
+                        <>
+                          <span className="font-medium text-sm flex-1">{translatedLabel}</span>
+                          {(item as any).badge && (
+                            <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-full ${
+                              isActive(item.path) ? 'bg-white/20 text-white' : 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400'
+                            }`}>{(item as any).badge}</span>
+                          )}
+                        </>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -310,7 +315,7 @@ const Layout = ({ children }: LayoutProps) => {
             <span className="font-medium text-sm">{t('logout')}</span>
           </button>
           <div className="mt-2 px-3 text-[9px] text-gray-400 text-center">
-            ML Engine: <span className="text-green-500 font-bold">99.5% accuracy</span>
+            {t('navigation.mlEngine', 'ML Engine')}: <span className="text-green-500 font-bold">99.5% {t('navigation.accuracy', 'accuracy')}</span>
           </div>
         </div>
       </aside>
@@ -329,7 +334,7 @@ const Layout = ({ children }: LayoutProps) => {
             {(() => {
               for (const group of navGroups) {
                 const found = group.items.find(i => i.path === location.pathname);
-                if (found) return found.label;
+                if (found) return t('navigation.' + found.translationKey, { defaultValue: found.label });
               }
               return t('common.appName');
             })()}
@@ -359,7 +364,7 @@ const Layout = ({ children }: LayoutProps) => {
             </button>
             {showNotifications && (
               <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-3 px-4 z-50">
-                <h3 className="font-bold text-gray-900 dark:text-white mb-3 text-sm">Notifications</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-3 text-sm">{t('navigation.notifications', 'Notifications')}</h3>
                 {notifications.length > 0 ? (
                   <div className="space-y-3 max-h-64 overflow-y-auto">
                     {notifications.map((notif: any) => (
@@ -370,7 +375,7 @@ const Layout = ({ children }: LayoutProps) => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 text-center py-4">No new notifications</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 text-center py-4">{t('navigation.noNewNotifications', 'No new notifications')}</p>
                 )}
               </div>
             )}
@@ -394,16 +399,16 @@ const Layout = ({ children }: LayoutProps) => {
                   </span>
                 </div>
                 <div className="py-1">
-                  <button onClick={() => { setShowProfile(false); navigate('/profile'); }} className="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300">My Profile</button>
-                  <button onClick={() => { setShowProfile(false); navigate('/settings'); }} className="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300">Account Settings</button>
+                  <button onClick={() => { setShowProfile(false); navigate('/profile'); }} className="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300">{t('navigation.myProfile', 'My Profile')}</button>
+                  <button onClick={() => { setShowProfile(false); navigate('/settings'); }} className="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300">{t('navigation.accountSettings', 'Account Settings')}</button>
                   {role !== 'citizen' && (
                     <button onClick={() => { setShowProfile(false); navigate('/crop-recommend'); }} className="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-xs font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                      <Leaf size={12} className="text-green-500" /> AI Crop Advisor
+                      <Leaf size={12} className="text-green-500" /> {t('navigation.aiCropAdvisor', 'AI Crop Advisor')}
                     </button>
                   )}
                 </div>
                 <div className="py-1 border-t border-gray-100 dark:border-gray-700">
-                  <button onClick={() => { setShowProfile(false); logout(); }} className="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/10 text-xs font-bold text-red-600">Sign out</button>
+                  <button onClick={() => { setShowProfile(false); logout(); }} className="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/10 text-xs font-bold text-red-600">{t('navigation.signOut', 'Sign out')}</button>
                 </div>
               </div>
             )}
@@ -431,7 +436,7 @@ const Layout = ({ children }: LayoutProps) => {
               }`}
             >
               <item.icon size={active ? 22 : 20} className={active ? 'scale-110' : ''} />
-              <span className="text-[9px] font-bold">{item.label}</span>
+              <span className="text-[9px] font-bold">{t('navigation.' + item.translationKey, { defaultValue: item.label })}</span>
               {active && <span className="absolute -bottom-1 w-1 h-1 bg-primary-600 rounded-full" />}
             </button>
           );

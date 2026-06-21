@@ -43,7 +43,9 @@
     "selected": "തിരഞ്ഞെടുത്ത",
     "actions": "പ്രവർത്തനങ്ങൾ",
     "myAccount": "എന്റെ അക്കൗണ്ട്",
-    "user": "ഉപയോഗിക്കാരൻ"
+    "user": "ഉപയോഗിക്കാരൻ",
+    "darkMode": "ഡാർക്ക് മോഡ്",
+    "lightMode": "ലൈറ്റ് മോഡ്"
   },
   "auth": {
     "login": "പ്രവേശിക്കുക",
@@ -308,6 +310,46 @@
     "calendar": "കാലെന്ദരം",
     "settings": "ക്രമീകരണങ്ങൾ",
     "profile": "പ്രൊഫൈൽ",
-    "help": "സഹായം"
+    "help": "സഹായം",
+    "group": {
+      "Overview": "അവലോകനം",
+      "Administration": "ഭരണവിഭാഗം",
+      "FarmData": "ഫാം ഡാറ്റ",
+      "System": "സിസ്റ്റം",
+      "FarmManagement": "ഫാം മാനേജ്മെന്റ്",
+      "Marketplace": "മാർക്കറ്റ് പ്ലേസ്",
+      "AITools": "AI ടൂളുകൾ",
+      "Resources": "വിഭവങ്ങൾ",
+      "Community": "കൂട്ടായ്മ",
+      "Finance": "ധനകാര്യം",
+      "Discover": "കണ്ടെത്തുക"
+    },
+    "commandCenter": "കമാൻഡ് സെന്റർ",
+    "analyticsHub": "അനലിറ്റിക്സ് ഹബ്",
+    "districtAnalytics": "ജില്ലാ അനലിറ്റിക്സ്",
+    "marketplaceModeration": "മാർക്കറ്റ് മോഡറേഷൻ",
+    "communityModeration": "കമ്മ്യൂണിറ്റി മോഡറേഷൻ",
+    "systemReports": "സിസ്റ്റം റിപ്പോർട്ടുകൾ",
+    "iotSensors": "IoT സെൻസറുകൾ",
+    "communityMarket": "കമ്മ്യൂണിറ്റി മാർക്കറ്റ്",
+    "aiCropAdvisor": "AI വിള ഉപദേശകൻ",
+    "diseaseDetection": "രോഗ നിർണ്ണയം",
+    "pestPrediction": "കീട പ്രവചനം",
+    "fertilizerPest": "വളവും കീടനാശിനിയും",
+    "stockInventory": "സ്റ്റോക്കും ഇൻവെന്ററിയും",
+    "farmerForum": "കർഷക ഫോറം",
+    "compliance": "സർട്ടിഫിക്കറ്റുകൾ",
+    "finance": "പ്രൊജക്ഷനും വായ്പകളും",
+    "myDashboard": "എന്റെ ഡാഷ്‌ബോർഡ്",
+    "buyProduce": "ഉൽപ്പന്നങ്ങൾ വാങ്ങുക",
+    "myOrders": "എന്റെ ഓർഡറുകൾ",
+    "schemesSubsidies": "പദ്ധതികളും സബ്‌സിഡികളും",
+    "mlEngine": "AI എഞ്ചിൻ",
+    "accuracy": "കൃത്യത",
+    "notifications": "അറിയിപ്പുകൾ",
+    "noNewNotifications": "പുതിയ അറിയിപ്പുകൾ ഇല്ല",
+    "myProfile": "എന്റെ പ്രൊഫൈൽ",
+    "accountSettings": "അക്കൗണ്ട് ക്രമീകരണങ്ങൾ",
+    "signOut": "ലോഗ് ഔട്ട്"
   }
 }
