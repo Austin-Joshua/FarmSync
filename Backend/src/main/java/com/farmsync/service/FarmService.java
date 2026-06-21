@@ -25,7 +25,7 @@ public class FarmService {
         return farmRepository.findByFarmerId(farmerId);
     }
 
-    public Optional<Farm> findById(@org.springframework.lang.NonNull UUID id) {
+    public Optional<Farm> findById(UUID id) {
         return farmRepository.findById(id);
     }
 
@@ -35,17 +35,23 @@ public class FarmService {
     }
 
     @Transactional
-    public Farm updateFarm(@org.springframework.lang.NonNull UUID id, Farm farmDetails, User user) {
+    public Farm updateFarm(UUID id, Farm farmDetails, User user) {
         Farm farm = farmRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Farm not found"));
 
-        // Security check: Only owner or admin can update
+        // Security: Only owner or admin can update
         if (!farm.getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
             throw new RuntimeException("Unauthorized access");
         }
 
         if (farmDetails.getName() != null) farm.setName(farmDetails.getName());
         if (farmDetails.getLocation() != null) farm.setLocation(farmDetails.getLocation());
+        if (farmDetails.getState() != null) farm.setState(farmDetails.getState());
+        if (farmDetails.getDistrict() != null) farm.setDistrict(farmDetails.getDistrict());
+        if (farmDetails.getVillage() != null) farm.setVillage(farmDetails.getVillage());
+        if (farmDetails.getLatitude() != null) farm.setLatitude(farmDetails.getLatitude());
+        if (farmDetails.getLongitude() != null) farm.setLongitude(farmDetails.getLongitude());
+        if (farmDetails.getBoundaryCoordinates() != null) farm.setBoundaryCoordinates(farmDetails.getBoundaryCoordinates());
         if (farmDetails.getLandSize() != null) farm.setLandSize(farmDetails.getLandSize());
         if (farmDetails.getSoilType() != null) farm.setSoilType(farmDetails.getSoilType());
 
@@ -53,11 +59,10 @@ public class FarmService {
     }
 
     @Transactional
-    public void deleteFarm(@org.springframework.lang.NonNull UUID id, User user) {
+    public void deleteFarm(UUID id, User user) {
         Farm farm = farmRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Farm not found"));
 
-        // Security check
         if (!farm.getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
             throw new RuntimeException("Unauthorized access");
         }

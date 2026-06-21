@@ -3,11 +3,34 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import { User, Mail, Lock, UserPlus, Sun, Moon, AlertCircle, Phone, MapPin, Loader2, Eye, EyeOff } from 'lucide-react';
+import {
+  User, Mail, Lock, UserPlus, Sun, Moon, AlertCircle,
+  Phone, MapPin, Loader2, Eye, EyeOff, Globe, Building2, Home
+} from 'lucide-react';
 import Logo from '../components/Logo';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import OAuthSignIn from '../components/OAuthSignIn';
 import toast from 'react-hot-toast';
+
+const INDIA_STATES = [
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+  'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
+  'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
+  'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu',
+  'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+  'Delhi', 'Jammu & Kashmir', 'Ladakh',
+];
+
+const LANGUAGES = [
+  { code: 'en', label: 'English' },
+  { code: 'hi', label: 'हिंदी (Hindi)' },
+  { code: 'mr', label: 'मराठी (Marathi)' },
+  { code: 'te', label: 'తెలుగు (Telugu)' },
+  { code: 'ta', label: 'தமிழ் (Tamil)' },
+  { code: 'kn', label: 'ಕನ್ನಡ (Kannada)' },
+  { code: 'gu', label: 'ગુજરાતી (Gujarati)' },
+  { code: 'pa', label: 'ਪੰਜਾਬੀ (Punjabi)' },
+];
 
 const Register = () => {
   const { t } = useTranslation();
@@ -15,15 +38,19 @@ const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
+  const [step, setStep] = useState(1); // 1 = Account, 2 = Farm & Location
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
     phone: '',
-    location: '',
     role: 'farmer' as 'farmer' | 'citizen' | 'admin',
+    state: '',
+    district: '',
+    village: '',
     land_size: '',
     soil_type: '',
+    preferred_language: 'en',
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -31,19 +58,25 @@ const Register = () => {
   const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleNext = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.email || !formData.password || !formData.fullName) {
+      setError('Please fill in all required fields');
+      return;
+    }
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters');
+      return;
+    }
+    setError('');
+    setStep(2);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.email || !formData.password || !formData.fullName) {
-      setError(t('fillRequiredFields') || 'Please fill in all required fields');
-      return;
-    }
-
     setLoading(true);
     setError('');
 
@@ -55,17 +88,20 @@ const Register = () => {
         formData.role as any,
         {
           phone: formData.phone,
-          location: formData.location,
+          state: formData.state,
+          district: formData.district,
+          village: formData.village,
+          location: [formData.village, formData.district, formData.state].filter(Boolean).join(', '),
           land_size: formData.land_size ? parseFloat(formData.land_size) : null,
           soil_type: formData.soil_type,
+          preferred_language: formData.preferred_language,
         }
       );
-      
-      toast.success(t('registerSuccess'));
+      toast.success('Account created successfully! Welcome to FarmSync 🌾');
       navigate('/dashboard');
     } catch (err: any) {
       console.error('Registration error:', err);
-      const errorMessage = typeof err === 'string' ? err : err.message || t('registerError');
+      const errorMessage = typeof err === 'string' ? err : err.message || 'Registration failed';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -75,35 +111,50 @@ const Register = () => {
 
   return (
     <div className={`min-h-screen flex items-center justify-center relative overflow-hidden transition-colors duration-500 ${theme === 'dark' ? 'bg-[#0f172a]' : 'bg-gradient-to-br from-[#064e3b] to-[#047857]'}`}>
-      {/* Dynamic Animated Background */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-white/10 blur-[120px] animate-pulse"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-earth-500/20 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }}></div>
+      {/* Animated background blobs */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-white/10 blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-earth-500/20 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
       <div className="container max-w-7xl mx-auto px-4 z-10 flex flex-col lg:flex-row items-center gap-12 py-12">
         {/* Branding Side */}
         <div className="hidden lg:flex flex-col w-1/2 space-y-8 animate-fade-in">
-          <div className="inline-block hover:scale-105 transition-transform cursor-pointer">
-            <Link to="/">
-              <Logo size="large" />
-            </Link>
-          </div>
+          <Link to="/" className="inline-block hover:scale-105 transition-transform">
+            <Logo size="large" />
+          </Link>
           <h1 className="text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
-            Begin Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">Precision Agriculture</span> Strategy
+            Begin Your{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">
+              Precision Agriculture
+            </span>{' '}
+            Journey
           </h1>
           <p className="text-xl text-emerald-100 max-w-lg leading-relaxed drop-shadow">
-            Create your digital twin today and optimize every hectare with enterprise-grade agricultural intelligence.
+            Create your digital farm profile and unlock AI-powered crop planning, market intelligence, and yield predictions.
           </p>
+
+          {/* Step indicators */}
+          <div className="flex items-center gap-4">
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${step >= 1 ? 'bg-emerald-400/20 text-emerald-200 border border-emerald-400/30' : 'bg-white/5 text-white/50'}`}>
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black ${step >= 1 ? 'bg-emerald-400 text-emerald-900' : 'bg-white/20'}`}>1</span>
+              Account Setup
+            </div>
+            <div className="h-px w-8 bg-white/20" />
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${step >= 2 ? 'bg-emerald-400/20 text-emerald-200 border border-emerald-400/30' : 'bg-white/5 text-white/50'}`}>
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black ${step >= 2 ? 'bg-emerald-400 text-emerald-900' : 'bg-white/20'}`}>2</span>
+              Farm Profile
+            </div>
+          </div>
         </div>
 
-        {/* Register Card Side */}
+        {/* Register Card */}
         <div className="w-[90%] max-w-[420px] lg:max-w-[500px] animate-fade-in-up mx-auto lg:mx-0">
           <div className="glass-card shadow-2xl relative !p-6">
             {/* Theme & Language Toggles */}
             <div className="absolute top-4 right-4 flex items-center gap-2">
               <LanguageSwitcher />
-              <button 
+              <button
                 onClick={toggleTheme}
                 className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100/50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:scale-110 transition-transform"
               >
@@ -112,16 +163,20 @@ const Register = () => {
             </div>
 
             <div className="mb-4 pt-1">
-              <div className="lg:hidden mb-4 flex justify-center hover:scale-105 transition-transform cursor-pointer">
-                <Link to="/">
-                  <Logo size="default" variant="light" />
-                </Link>
+              <div className="lg:hidden mb-4 flex justify-center hover:scale-105 transition-transform">
+                <Link to="/"><Logo size="default" variant="light" /></Link>
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                {t('createYourAccount')}
+              {/* Mobile step indicators */}
+              <div className="lg:hidden flex items-center gap-3 mb-4">
+                {[1, 2].map(s => (
+                  <div key={s} className={`flex-1 h-1.5 rounded-full transition-all ${step >= s ? 'bg-primary-500' : 'bg-gray-200 dark:bg-gray-700'}`} />
+                ))}
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-1">
+                {step === 1 ? 'Create Account' : 'Farm Profile'}
               </h2>
-              <p className="text-gray-600 dark:text-gray-400">
-                {t('joinSystem')}
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {step === 1 ? 'Step 1 of 2 — Basic Information' : 'Step 2 of 2 — Farm & Location'}
               </p>
             </div>
 
@@ -132,125 +187,75 @@ const Register = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-2">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('fullName')} *
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
-                      <User size={18} />
+            {/* STEP 1: Account Info */}
+            {step === 1 && (
+              <form onSubmit={handleNext} className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('fullName')} *</label>
+                    <div className="relative group">
+                      <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                      <input
+                        name="fullName" type="text" value={formData.fullName} onChange={handleChange}
+                        className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                        placeholder="Ravi Kumar" required
+                      />
                     </div>
-                    <input
-                      name="fullName"
-                      type="text"
-                      onChange={handleChange}
-                      className="block w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm text-sm"
-                      placeholder="John Doe"
-                      required
-                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('emailAddress')} *</label>
+                    <div className="relative group">
+                      <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                      <input
+                        name="email" type="email" value={formData.email} onChange={handleChange}
+                        className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                        placeholder="ravi@example.com" required
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('emailAddress')} *
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
-                      <Mail size={18} />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('password')} *</label>
+                    <div className="relative group">
+                      <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                      <input
+                        name="password" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange}
+                        className="block w-full pl-9 pr-10 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                        placeholder="••••••••" required
+                      />
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-500">
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      </button>
                     </div>
-                    <input
-                      name="email"
-                      type="email"
-                      onChange={handleChange}
-                      className="block w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm text-sm"
-                      placeholder="john@example.com"
-                      required
-                    />
                   </div>
-                </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('password')} *
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
-                      <Lock size={18} />
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('phone')}</label>
+                    <div className="relative group">
+                      <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                      <input
+                        name="phone" type="tel" value={formData.phone} onChange={handleChange}
+                        className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                        placeholder="+91 9876543210"
+                      />
                     </div>
-                    <input
-                      name="password"
-                      type={showPassword ? 'text' : 'password'}
-                      onChange={handleChange}
-                      className="block w-full pl-10 pr-12 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm text-sm"
-                      placeholder="••••••••"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary-500 transition-colors"
-                    >
-                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                    </button>
                   </div>
                 </div>
 
+                {/* Role Selector */}
                 <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('phone')}
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
-                      <Phone size={18} />
-                    </div>
-                    <input
-                      name="phone"
-                      type="tel"
-                      onChange={handleChange}
-                      className="block w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm text-sm"
-                      placeholder="+91 9876543210"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('location')}
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors">
-                      <MapPin size={18} />
-                    </div>
-                    <input
-                      name="location"
-                      type="text"
-                      onChange={handleChange}
-                      className="block w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all shadow-sm text-sm"
-                      placeholder="e.g. Nashik, Maharashtra"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('role')} *
-                  </label>
+                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('role')} *</label>
                   <div className="grid grid-cols-3 gap-2">
                     {[
-                      { value: 'farmer', label: '🌾 Farmer', desc: 'Manage crops' },
+                      { value: 'farmer', label: '🌾 Farmer', desc: 'Manage crops & farm' },
                       { value: 'citizen', label: '🏙️ Citizen', desc: 'Buy produce' },
-                      { value: 'admin', label: '🛡️ Admin', desc: 'Manage platform' },
+                      { value: 'admin', label: '🛡️ Admin', desc: 'Platform access' },
                     ].map(opt => (
                       <button
-                        type="button"
-                        key={opt.value}
+                        type="button" key={opt.value}
                         onClick={() => setFormData(p => ({ ...p, role: opt.value as any }))}
                         className={`flex flex-col items-center gap-0.5 p-2.5 rounded-xl border-2 transition-all text-center ${
                           formData.role === opt.value
@@ -266,34 +271,120 @@ const Register = () => {
                   </div>
                 </div>
 
-              </div>
+                <button type="submit"
+                  className="w-full mt-2 flex items-center justify-center gap-2 py-3 px-6 rounded-xl shadow-lg shadow-primary-500/20 text-sm font-bold text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 transform hover:scale-[1.01] active:scale-[0.99] transition-all"
+                >
+                  Continue to Farm Profile →
+                </button>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full mt-4 flex items-center justify-center gap-2 py-3 px-6 rounded-xl shadow-lg shadow-primary-500/20 text-lg font-bold text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 transform hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
-              >
-                {loading ? <Loader2 size={24} className="animate-spin" /> : <UserPlus size={24} className="group-hover:rotate-12 transition-transform" />}
-                {t('registerButton')}
-              </button>
-            </form>
+                <div className="mt-4 text-center space-y-3">
+                  <OAuthSignIn />
+                  <p className="font-semibold text-gray-700 dark:text-gray-300 text-xs">
+                    {t('alreadyHaveAccount')}{' '}
+                    <Link to="/login" className="font-extrabold text-primary-600 dark:text-primary-400 hover:underline">{t('signIn')}</Link>
+                  </p>
+                </div>
+              </form>
+            )}
 
-            <div className="mt-5 text-center">
-              <div className="mb-4 flex justify-center">
-                <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
-                  {t('orContinueEmail')}
-                </span>
-              </div>
+            {/* STEP 2: Farm & Location */}
+            {step === 2 && (
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">State</label>
+                    <div className="relative group">
+                      <MapPin size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                      <select
+                        name="state" value={formData.state} onChange={handleChange}
+                        className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm appearance-none"
+                      >
+                        <option value="">Select State</option>
+                        {INDIA_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                      </select>
+                    </div>
+                  </div>
 
-              <OAuthSignIn />
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">District</label>
+                    <div className="relative group">
+                      <Building2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                      <input
+                        name="district" type="text" value={formData.district} onChange={handleChange}
+                        className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                        placeholder="e.g. Nashik"
+                      />
+                    </div>
+                  </div>
+                </div>
 
-              <p className="mt-6 font-semibold text-gray-700 dark:text-gray-300 text-sm">
-                {t('alreadyHaveAccount')}{' '}
-                <Link to="/login" className="font-extrabold text-primary-600 dark:text-primary-400 hover:underline">
-                  {t('signIn')}
-                </Link>
-              </p>
-            </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">Village / Town</label>
+                    <div className="relative group">
+                      <Home size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                      <input
+                        name="village" type="text" value={formData.village} onChange={handleChange}
+                        className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                        placeholder="e.g. Igatpuri"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">Farm Size (Acres)</label>
+                    <input
+                      name="land_size" type="number" step="0.1" min="0" value={formData.land_size} onChange={handleChange}
+                      className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                      placeholder="e.g. 5.5"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">Soil Type</label>
+                    <select
+                      name="soil_type" value={formData.soil_type} onChange={handleChange}
+                      className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                    >
+                      <option value="">Select Soil Type</option>
+                      {['Alluvial', 'Black (Regur)', 'Red & Yellow', 'Laterite', 'Arid & Desert', 'Saline', 'Peaty', 'Forest'].map(s => (
+                        <option key={s} value={s}>{s}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1 flex items-center gap-1">
+                      <Globe size={12} /> Preferred Language
+                    </label>
+                    <select
+                      name="preferred_language" value={formData.preferred_language} onChange={handleChange}
+                      className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                    >
+                      {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 mt-2">
+                  <button
+                    type="button" onClick={() => setStep(1)}
+                    className="flex-1 py-2.5 px-4 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-sm hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
+                  >
+                    ← Back
+                  </button>
+                  <button
+                    type="submit" disabled={loading}
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl shadow-lg shadow-primary-500/20 text-sm font-bold text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 transform hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50"
+                  >
+                    {loading ? <Loader2 size={18} className="animate-spin" /> : <UserPlus size={18} />}
+                    Create Account
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>
@@ -302,4 +393,3 @@ const Register = () => {
 };
 
 export default Register;
-

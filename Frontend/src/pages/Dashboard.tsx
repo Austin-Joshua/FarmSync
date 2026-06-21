@@ -10,6 +10,7 @@ import Skeleton from '../components/ui/Skeleton';
 import { useTranslation } from 'react-i18next';
 import { useLocation as useGpsLocation } from '../hooks/useLocation';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import {
   MapPin, LandPlot, IndianRupee, TrendingUp, Package, Users, Sprout,
   Droplets, Bug, ExternalLink, AlertTriangle, ArrowRight,
@@ -41,6 +42,8 @@ const Dashboard = () => {
     type: 'totalFields' | 'activeCrops' | 'totalYield' | 'netProfit' | null;
     data?: any;
   }>({ type: null });
+  
+  const [isEditingMap, setIsEditingMap] = useState(false);
   
   const [data, setData] = useState<{
     farms: any[];
@@ -122,6 +125,54 @@ const Dashboard = () => {
       DataCache.set('dashboard_data', { data: newData, timestamp: now });
     } catch (error) {
       console.error('Failed to load dashboard data:', error);
+    }
+  };
+
+  const handleSaveMapLocation = async (
+    latVal: number,
+    lonVal: number,
+    address: string,
+    boundaryCoords: string | null,
+    stateVal: string,
+    districtVal: string,
+    villageVal: string
+  ) => {
+    try {
+      const primaryFarm = data.farms[0];
+      if (primaryFarm) {
+        await api.updateFarm(primaryFarm.id, {
+          name: primaryFarm.name,
+          landSize: primaryFarm.landSize || primaryFarm.area || 0,
+          location: address,
+          latitude: latVal,
+          longitude: lonVal,
+          boundaryCoordinates: boundaryCoords,
+          state: stateVal,
+          district: districtVal,
+          village: villageVal
+        });
+      }
+      
+      if (user) {
+        await api.updateProfile({
+          name: user.name,
+          phone: (user as any).phone,
+          state: stateVal || undefined,
+          district: districtVal || undefined,
+          village: villageVal || undefined,
+          location: address,
+          land_size: user.land_size,
+          soil_type: user.soil_type,
+          preferred_language: (user as any).preferredLanguage
+        });
+      }
+      
+      toast.success('Farm boundary and location updated successfully!');
+      setIsEditingMap(false);
+      fetchDashboardData(true);
+    } catch (err: any) {
+      console.error('Failed to update farm map details:', err);
+      toast.error('Failed to update map details: ' + (err.message || err));
     }
   };
 
@@ -244,6 +295,148 @@ const Dashboard = () => {
       {/* AI ML Insights Section */}
       <AIInsightsWidget />
 
+      {/* My Farms & Crop Growth Tracker Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        {/* My Farms Widget */}
+        <div className="glass-card p-4 sm:p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4 border-b border-gray-100 dark:border-white/5 pb-3">
+              <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                <LandPlot size={20} className="text-emerald-500" />
+                My Farms & Estates
+              </h2>
+              <span className="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-black">
+                {data.farms.length} Total
+              </span>
+            </div>
+            
+            {data.farms.length === 0 ? (
+              <div className="text-center py-6">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No farms registered yet.</p>
+                <button onClick={() => navigate('/profile')} className="btn-primary py-2 px-4 text-xs font-black uppercase">
+                  Register Primary Farm
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4 max-h-[280px] overflow-y-auto pr-1">
+                {data.farms.map((farm) => (
+                  <div key={farm.id} className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-200/50 dark:border-white/5 hover:border-emerald-500/20 transition-all flex items-center justify-between gap-4">
+                    <div className="space-y-1 flex-1">
+                      <h4 className="font-black text-sm text-gray-900 dark:text-white uppercase tracking-tight">{farm.name}</h4>
+                      <p className="text-xs text-gray-500 flex items-center gap-1">
+                        <MapPin size={12} /> {farm.location || 'Location not mapped'}
+                      </p>
+                      <div className="flex flex-wrap gap-2 pt-1.5">
+                        <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] px-2 py-0.5 rounded font-bold">
+                          {farm.landSize || farm.area || 0} acres
+                        </span>
+                        <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] px-2 py-0.5 rounded font-bold">
+                          {farm.soilTypeName || farm.soilType || 'Soil not tested'}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <button 
+                      onClick={() => navigate('/fields')}
+                      className="px-3 py-2 bg-white dark:bg-white/10 text-gray-700 dark:text-white border border-gray-200 dark:border-white/5 rounded-xl text-xs font-black uppercase hover:bg-emerald-50 hover:text-white dark:hover:bg-emerald-600 transition-all shrink-0"
+                    >
+                      Quick Nav
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Crop Growth tracker */}
+        <div className="glass-card p-4 sm:p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4 border-b border-gray-100 dark:border-white/5 pb-3">
+              <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                <Sprout size={20} className="text-emerald-500" />
+                Active Crop Growth Tracker
+              </h2>
+              <span className="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-black">
+                {data.crops.filter(c => c.status === 'active').length} Active
+              </span>
+            </div>
+
+            {data.crops.filter(c => c.status === 'active').length === 0 ? (
+              <div className="text-center py-6">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No active crops currently tracked.</p>
+                <button onClick={() => navigate('/crop-management')} className="btn-primary py-2 px-4 text-xs font-black uppercase">
+                  Add Crop Profile
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-4 max-h-[280px] overflow-y-auto pr-1">
+                {data.crops.filter(c => c.status === 'active').map((crop) => {
+                  const nowTime = Date.now();
+                  const sowTime = new Date(crop.sowingDate).getTime();
+                  const harvestTime = crop.harvestDate ? new Date(crop.harvestDate).getTime() : (sowTime + 120 * 24 * 60 * 60 * 1000);
+                  const totalDuration = harvestTime - sowTime;
+                  const elapsed = nowTime - sowTime;
+                  const progress = Math.max(0, Math.min(100, Math.ceil((elapsed / (totalDuration || 1)) * 100)));
+                  
+                  // Stage selection based on progress
+                  let stageLabel = "Sowing";
+                  let stageColor = "text-emerald-500 bg-emerald-500/10";
+                  if (progress > 85) {
+                    stageLabel = "Harvesting";
+                    stageColor = "text-teal-500 bg-teal-500/10";
+                  } else if (progress > 60) {
+                    stageLabel = "Yield Development";
+                    stageColor = "text-indigo-500 bg-indigo-500/10";
+                  } else if (progress > 30) {
+                    stageLabel = "Vegetative Growth";
+                    stageColor = "text-amber-500 bg-amber-500/10";
+                  } else if (progress > 10) {
+                    stageLabel = "Germination";
+                    stageColor = "text-blue-500 bg-blue-500/10";
+                  }
+                  
+                  const daysRemaining = Math.max(0, Math.ceil((harvestTime - nowTime) / (1000 * 60 * 60 * 24)));
+
+                  return (
+                    <div key={crop.id} className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-200/50 dark:border-white/5 hover:border-emerald-500/20 transition-all space-y-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl" title={crop.name}>{getCropIcon(crop.name)}</span>
+                          <div>
+                            <h4 className="font-bold text-sm text-gray-900 dark:text-white">{translateCrop(crop.name)}</h4>
+                            <span className="text-[10px] text-gray-400 font-bold block mt-0.5">
+                              Sown on: {formatDateDisplay(crop.sowingDate)}
+                            </span>
+                          </div>
+                        </div>
+                        <span className={`text-[10px] px-2 py-1 rounded-full font-black uppercase tracking-wider shrink-0 ${stageColor}`}>
+                          {stageLabel}
+                        </span>
+                      </div>
+
+                      {/* Progress Bar */}
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between items-center text-[10px] text-gray-500 font-bold">
+                          <span>{progress}% Completed</span>
+                          <span>{daysRemaining > 0 ? `${daysRemaining} days left` : 'Harvest Ready'}</span>
+                        </div>
+                        <div className="w-full h-2 bg-gray-200 dark:bg-white/5 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full transition-all duration-500" 
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Weather, Alerts & Map Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="lg:col-span-2 space-y-4 sm:space-y-6">
@@ -252,16 +445,29 @@ const Dashboard = () => {
           </div>
           {/* Location Map */}
           <div className="glass-card p-4 sm:p-6">
-            <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 flex items-center gap-2">
-              <MapPin size={20} className="text-primary-600 dark:text-primary-400" />
-              {t('dashboard.farmLocation')}
+            <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <MapPin size={20} className="text-primary-600 dark:text-primary-400" />
+                {t('dashboard.farmLocation')}
+              </span>
+              {data.farms.length > 0 && (
+                <button
+                  onClick={() => setIsEditingMap(!isEditingMap)}
+                  className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl border transition-all ${isEditingMap ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-primary-500/15 border-primary-500/20 text-primary-600 hover:bg-primary-500/20'}`}
+                >
+                  {isEditingMap ? 'Close Edit' : 'Edit Location & Boundary'}
+                </button>
+              )}
             </h2>
-            <div className="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700/50 shadow-inner">
+            <div className="rounded-[2rem] overflow-hidden border border-gray-200 dark:border-gray-700/50 shadow-inner p-1">
               <LocationMap
-                latitude={gpsLocation.latitude}
-                longitude={gpsLocation.longitude}
-                locationName={user?.location || gpsLocation.address || t('dashboard.locationNotSet')}
-                height="250px"
+                latitude={data.farms[0]?.latitude || gpsLocation.latitude}
+                longitude={data.farms[0]?.longitude || gpsLocation.longitude}
+                locationName={data.farms[0]?.location || user?.location || gpsLocation.address || t('dashboard.locationNotSet')}
+                boundaryCoordinates={data.farms[0]?.boundaryCoordinates}
+                isEditable={isEditingMap}
+                onChangeLocation={handleSaveMapLocation}
+                height="320px"
               />
             </div>
           </div>

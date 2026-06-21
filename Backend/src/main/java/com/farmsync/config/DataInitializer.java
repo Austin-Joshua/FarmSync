@@ -70,7 +70,6 @@ public class DataInitializer implements CommandLineRunner {
         for (String soilName : defaultSoils) {
             if (soilTypeRepository.findByName(soilName).isEmpty()) {
                 soilTypeRepository.save(com.farmsync.model.SoilType.builder()
-                        .id(java.util.UUID.randomUUID())
                         .name(soilName)
                         .description("Default " + soilName + " soil type.")
                         .build());
@@ -82,7 +81,6 @@ public class DataInitializer implements CommandLineRunner {
         for (String cropName : defaultCrops) {
             if (cropTypeRepository.findByName(cropName).isEmpty()) {
                 cropTypeRepository.save(com.farmsync.model.CropType.builder()
-                        .id(java.util.UUID.randomUUID())
                         .name(cropName)
                         .category("Cereals")
                         .season("kharif")
@@ -103,7 +101,6 @@ public class DataInitializer implements CommandLineRunner {
             java.util.List<com.farmsync.model.Farm> existingFarms = farmRepository.findByFarmerId(admin.getId());
             if (existingFarms.isEmpty()) {
                 farm = com.farmsync.model.Farm.builder()
-                        .id(java.util.UUID.randomUUID())
                         .name("Admin Primary Estate")
                         .location("Coimbatore, Tamil Nadu")
                         .landSize(12.5)
@@ -129,7 +126,6 @@ public class DataInitializer implements CommandLineRunner {
                 com.farmsync.model.CropType cropType = cropTypeRepository.findByName("Rice").orElse(null);
                 
                 com.farmsync.model.Crop activeCrop = com.farmsync.model.Crop.builder()
-                        .id(java.util.UUID.randomUUID())
                         .name("IR-20 Rice")
                         .cropType(cropType)
                         .season("kharif")
@@ -140,7 +136,6 @@ public class DataInitializer implements CommandLineRunner {
                 activeCrop = cropRepository.save(activeCrop);
                 
                 com.farmsync.model.Crop harvestedCrop = com.farmsync.model.Crop.builder()
-                        .id(java.util.UUID.randomUUID())
                         .name("Sona Masuri Wheat")
                         .cropType(cropTypeRepository.findByName("Wheat").orElse(null))
                         .season("rabi")
@@ -155,7 +150,6 @@ public class DataInitializer implements CommandLineRunner {
 
                 // Seed Yields for harvested crop
                 yieldRepository.save(com.farmsync.model.Yield.builder()
-                        .id(java.util.UUID.randomUUID())
                         .crop(harvestedCrop)
                         .quantity(4500.0)
                         .date(java.time.LocalDate.now().minusDays(20))
@@ -165,7 +159,6 @@ public class DataInitializer implements CommandLineRunner {
                 
                 // Seed expenses
                 expenseRepository.save(com.farmsync.model.Expense.builder()
-                        .id(java.util.UUID.randomUUID())
                         .category("seeds")
                         .description("High-yield IR-20 Rice Seeds")
                         .amount(12500.0)
@@ -173,7 +166,6 @@ public class DataInitializer implements CommandLineRunner {
                         .farm(farm)
                         .build());
                 expenseRepository.save(com.farmsync.model.Expense.builder()
-                        .id(java.util.UUID.randomUUID())
                         .category("labor")
                         .description("Sowing labor expenses")
                         .amount(8000.0)
@@ -181,7 +173,6 @@ public class DataInitializer implements CommandLineRunner {
                         .farm(farm)
                         .build());
                 expenseRepository.save(com.farmsync.model.Expense.builder()
-                        .id(java.util.UUID.randomUUID())
                         .category("fertilizers")
                         .description("NPK Fertilizer complex")
                         .amount(15400.0)
@@ -189,7 +180,6 @@ public class DataInitializer implements CommandLineRunner {
                         .farm(farm)
                         .build());
                 expenseRepository.save(com.farmsync.model.Expense.builder()
-                        .id(java.util.UUID.randomUUID())
                         .category("irrigation")
                         .description("Drip system maintenance")
                         .amount(4500.0)
@@ -203,7 +193,6 @@ public class DataInitializer implements CommandLineRunner {
             java.util.List<com.farmsync.model.StockItem> existingStock = stockItemRepository.findByUserId(admin.getId());
             if (existingStock.isEmpty()) {
                 stockItemRepository.save(com.farmsync.model.StockItem.builder()
-                        .id(java.util.UUID.randomUUID())
                         .user(admin)
                         .itemName("Urea Nitrogen Fertilizer")
                         .itemType("fertilizer")
@@ -211,7 +200,6 @@ public class DataInitializer implements CommandLineRunner {
                         .unit("kg")
                         .build());
                 stockItemRepository.save(com.farmsync.model.StockItem.builder()
-                        .id(java.util.UUID.randomUUID())
                         .user(admin)
                         .itemName("Neem Oil Pesticide")
                         .itemType("pesticide")
@@ -219,7 +207,6 @@ public class DataInitializer implements CommandLineRunner {
                         .unit("liters")
                         .build());
                 stockItemRepository.save(com.farmsync.model.StockItem.builder()
-                        .id(java.util.UUID.randomUUID())
                         .user(admin)
                         .itemName("IR-20 Rice Seeds")
                         .itemType("seeds")
@@ -257,7 +244,6 @@ public class DataInitializer implements CommandLineRunner {
         if (farmerFarms.isEmpty()) {
             com.farmsync.model.SoilType redSoil = soilTypeRepository.findByName("Red").orElse(null);
             com.farmsync.model.Farm farmerFarm = com.farmsync.model.Farm.builder()
-                    .id(java.util.UUID.randomUUID())
                     .name("Ravi's Organic Farm")
                     .location("Salem, Tamil Nadu")
                     .landSize(8.5)
@@ -269,7 +255,6 @@ public class DataInitializer implements CommandLineRunner {
             // Farmer crops
             com.farmsync.model.CropType maizeType = cropTypeRepository.findByName("Maize").orElse(null);
             com.farmsync.model.Crop maizeCrop = com.farmsync.model.Crop.builder()
-                    .id(java.util.UUID.randomUUID())
                     .name("Hybrid Maize HM-4")
                     .cropType(maizeType)
                     .season("kharif")
@@ -281,7 +266,6 @@ public class DataInitializer implements CommandLineRunner {
 
             com.farmsync.model.CropType cottonType = cropTypeRepository.findByName("Cotton").orElse(null);
             com.farmsync.model.Crop cottonCrop = com.farmsync.model.Crop.builder()
-                    .id(java.util.UUID.randomUUID())
                     .name("MCU-5 Cotton")
                     .cropType(cottonType)
                     .season("kharif")
@@ -294,7 +278,6 @@ public class DataInitializer implements CommandLineRunner {
 
             // Farmer yield
             yieldRepository.save(com.farmsync.model.Yield.builder()
-                    .id(java.util.UUID.randomUUID())
                     .crop(cottonCrop)
                     .quantity(2800.0)
                     .date(java.time.LocalDate.now().minusDays(10))
@@ -303,7 +286,6 @@ public class DataInitializer implements CommandLineRunner {
 
             // Farmer expenses
             expenseRepository.save(com.farmsync.model.Expense.builder()
-                    .id(java.util.UUID.randomUUID())
                     .category("seeds")
                     .description("Hybrid Maize Seeds HM-4")
                     .amount(6500.0)
@@ -311,7 +293,6 @@ public class DataInitializer implements CommandLineRunner {
                     .farm(farmerFarm)
                     .build());
             expenseRepository.save(com.farmsync.model.Expense.builder()
-                    .id(java.util.UUID.randomUUID())
                     .category("fertilizers")
                     .description("DAP Fertilizer")
                     .amount(9200.0)
@@ -319,7 +300,6 @@ public class DataInitializer implements CommandLineRunner {
                     .farm(farmerFarm)
                     .build());
             expenseRepository.save(com.farmsync.model.Expense.builder()
-                    .id(java.util.UUID.randomUUID())
                     .category("labor")
                     .description("Harvest labor - cotton")
                     .amount(5500.0)
@@ -329,7 +309,6 @@ public class DataInitializer implements CommandLineRunner {
 
             // Farmer stock
             stockItemRepository.save(com.farmsync.model.StockItem.builder()
-                    .id(java.util.UUID.randomUUID())
                     .user(farmerFinal)
                     .itemName("DAP Fertilizer")
                     .itemType("fertilizer")
@@ -337,7 +316,6 @@ public class DataInitializer implements CommandLineRunner {
                     .unit("kg")
                     .build());
             stockItemRepository.save(com.farmsync.model.StockItem.builder()
-                    .id(java.util.UUID.randomUUID())
                     .user(farmerFinal)
                     .itemName("Chlorpyrifos Pesticide")
                     .itemType("pesticide")

@@ -10,4 +10,10 @@ public class FarmRequest {
     private Double landSize;
     private UUID soilTypeId;
     private String soilTypeName;
+    private String state;
+    private String district;
+    private String village;
+    private Double latitude;
+    private Double longitude;
+    private String boundaryCoordinates;
 }

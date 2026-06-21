@@ -8,7 +8,8 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  loginWithToken: (token: string) => Promise<void>;
+  loginWithToken: (token: string, refreshToken?: string) => Promise<void>;
+  loginWithOtp: (phone: string, otp: string, name?: string) => Promise<void>;
   register: (name: string, email: string, password: string, role: UserRole, metadata?: any) => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (partialUser: Partial<User>) => Promise<void>;
@@ -56,6 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (response && response.token && response.user) {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
+        if (response.refreshToken) localStorage.setItem('refreshToken', response.refreshToken);
         setUser(response.user);
       } else {
         throw new Error('Invalid server response structure');
@@ -66,8 +68,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const loginWithToken = async (token: string) => {
+  const loginWithToken = async (token: string, refreshToken?: string) => {
     localStorage.setItem('token', token);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     try {
       const profile = await ApiService.getProfile();
       if (profile) {
@@ -77,7 +80,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (err) {
       localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
       throw err;
+    }
+  };
+
+  const loginWithOtp = async (phone: string, otp: string, name?: string) => {
+    const response: any = await ApiService.verifyOtp(phone, otp, name);
+    if (response && response.token && response.user) {
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(response.user));
+      if (response.refreshToken) localStorage.setItem('refreshToken', response.refreshToken);
+      setUser(response.user);
+    } else {
+      throw new Error('OTP verification failed');
     }
   };
 
@@ -93,6 +109,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (response && response.token && response.user) {
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response.user));
+      if (response.refreshToken) localStorage.setItem('refreshToken', response.refreshToken);
       setUser(response.user);
     } else {
       throw new Error('Could not sync mock credentials with the backend server database');
@@ -105,30 +122,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await mockGoogleLogin();
       return;
     }
-    
+
     try {
       const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({
-        prompt: 'select_account'
-      });
-      
+      provider.setCustomParameters({ prompt: 'select_account' });
       const userCredential = await signInWithPopup(auth, provider);
       const firebaseUser = userCredential.user;
       const email = firebaseUser.email || '';
       const name = firebaseUser.displayName || 'Google User';
-      
-      // Attempt registration on our Spring Boot local DB (ignore if they already exist)
+
       try {
         await ApiService.register(name, email, 'oauth2_user', 'farmer');
       } catch (err) {
         console.log('Registration skipped (user may already exist on backend).');
       }
-      
-      // Log in on backend to get local JWT
+
       const response: any = await ApiService.login(email, 'oauth2_user');
       if (response && response.token && response.user) {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
+        if (response.refreshToken) localStorage.setItem('refreshToken', response.refreshToken);
         setUser(response.user);
       } else {
         throw new Error('Could not sync user credentials with the backend server database');
@@ -155,12 +168,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
-      await ApiService.logout();
+      const refreshToken = localStorage.getItem('refreshToken') || undefined;
+      await ApiService.logout(refreshToken);
     } catch (e) {
       // Ignore if logout API call fails
     } finally {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('refreshToken');
       setUser(null);
     }
   };
@@ -185,6 +200,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         loading,
         login,
         loginWithToken,
+        loginWithOtp,
         loginWithGoogle,
         register,
         logout,

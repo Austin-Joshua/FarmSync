@@ -72,7 +72,7 @@ const ForgotPassword = () => {
               </p>
               <div className="space-y-3">
                 <button
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => navigate('/login')}
                   className="w-full btn-primary"
                 >
                   Back to Login

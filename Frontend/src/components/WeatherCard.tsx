@@ -18,13 +18,67 @@ const WEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY || '';
 const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5';
 const GEOCODING_API_URL = 'https://api.openweathermap.org/geo/1.0';
 
-const getCurrentWeather = async (lat: number, lon: number) => {
+const getCurrentWeather = async (lat: number, lon: number): Promise<WeatherData> => {
   if (!WEATHER_API_KEY) {
-    throw new Error('API key not configured');
+    // Keyless fallback using free Open-Meteo API
+    const response = await axios.get(`https://api.open-meteo.com/v1/forecast`, {
+      params: {
+        latitude: lat,
+        longitude: lon,
+        current: 'temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,pressure_msl,wind_speed_10m',
+        wind_speed_unit: 'ms'
+      }
+    });
+
+    const current = response.data?.current;
+    if (!current) {
+      throw new Error('Failed to retrieve keyless weather data');
+    }
+
+    const wmoCode = current.weather_code;
+    let condition = "Clear Sky";
+    let icon = "01d";
+    if (wmoCode === 0) { condition = "Clear Sky"; icon = "01d"; }
+    else if (wmoCode === 1 || wmoCode === 2) { condition = "Partly Cloudy"; icon = "02d"; }
+    else if (wmoCode === 3) { condition = "Overcast"; icon = "04d"; }
+    else if (wmoCode >= 45 && wmoCode <= 48) { condition = "Foggy"; icon = "50d"; }
+    else if (wmoCode >= 51 && wmoCode <= 55) { condition = "Drizzle"; icon = "09d"; }
+    else if (wmoCode >= 61 && wmoCode <= 65) { condition = "Rainy"; icon = "10d"; }
+    else if (wmoCode >= 71 && wmoCode <= 75) { condition = "Snowy"; icon = "13d"; }
+    else if (wmoCode >= 80 && wmoCode <= 82) { condition = "Rain Showers"; icon = "09d"; }
+    else if (wmoCode >= 95) { condition = "Thunderstorm"; icon = "11d"; }
+
+    return {
+      temperature: current.temperature_2m,
+      humidity: current.relative_humidity_2m,
+      rainfall: current.rain || current.precipitation || 0,
+      windSpeed: current.wind_speed_10m,
+      condition: condition,
+      icon: icon,
+      pressure: current.pressure_msl,
+      visibility: 10000,
+      feelsLike: current.apparent_temperature,
+      timestamp: new Date()
+    };
   }
-  return axios.get(`${WEATHER_API_URL}/weather`, {
+
+  const response = await axios.get(`${WEATHER_API_URL}/weather`, {
     params: { lat, lon, appid: WEATHER_API_KEY, units: 'metric' },
   });
+
+  const rawData = response.data;
+  return {
+    temperature: rawData.main.temp,
+    humidity: rawData.main.humidity,
+    rainfall: rawData.rain ? (rawData.rain['1h'] || rawData.rain['3h'] || 0) : 0,
+    windSpeed: rawData.wind.speed,
+    condition: rawData.weather[0]?.main || 'Clear',
+    icon: rawData.weather[0]?.icon || '01d',
+    pressure: rawData.main.pressure,
+    visibility: rawData.visibility || 10000,
+    feelsLike: rawData.main.feels_like,
+    timestamp: new Date()
+  };
 };
 
 const getCurrentLocation = async (lat: number, lon: number) => {
@@ -74,10 +128,10 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
       // Fetch location name (optional - don't fail if this fails)
       try {
         const locationResponse = await getCurrentLocation(lat, lon);
-        if (locationResponse.data) {
-          const loc = locationResponse.data;
+        if (locationResponse.data && Array.isArray(locationResponse.data) && locationResponse.data.length > 0) {
+          const loc = locationResponse.data[0];
           setLocationName(
-            loc.address || `${loc.district || ''}, ${loc.state || ''}`.trim() || `${lat.toFixed(4)}, ${lon.toFixed(4)}`
+            loc.name || `${loc.local_names?.en || ''}`.trim() || `${lat.toFixed(4)}, ${lon.toFixed(4)}`
           );
         } else {
           setLocationName(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
@@ -89,13 +143,9 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
       }
 
       // Fetch weather data
-      const weatherResponse = await getCurrentWeather(lat, lon);
-      if (weatherResponse.data) {
-        setWeather(weatherResponse.data);
-        setLastUpdate(new Date());
-      } else {
-        throw new Error('No weather data received from server');
-      }
+      const weatherData = await getCurrentWeather(lat, lon);
+      setWeather(weatherData);
+      setLastUpdate(new Date());
 
       // Check for alerts (optional - don't fail if this fails)
       try {
@@ -114,12 +164,8 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
       console.error('Weather fetch error:', err);
       // Provide user-friendly error message
       let errorMessage = 'Failed to fetch weather data';
-      if (err.message?.includes('API key')) {
-        errorMessage = 'Weather API key not configured. Using mock data.';
-      } else if (err.message?.includes('Network') || err.message?.includes('fetch')) {
-        errorMessage = 'Unable to connect to weather service. Check your internet connection or backend server.';
-      } else if (err.message?.includes('401') || err.message?.includes('Unauthorized')) {
-        errorMessage = 'Authentication required. Please login again.';
+      if (err.message?.includes('Network') || err.message?.includes('fetch')) {
+        errorMessage = 'Unable to connect to weather service. Check your internet connection.';
       } else if (err.message) {
         errorMessage = err.message;
       }

@@ -37,15 +37,15 @@ const AboutUs = () => {
           </h2>
           <div className="relative">
             {/* Timeline Line */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-green-500 to-green-600 dark:from-green-600 dark:to-green-700"></div>
+            <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-green-500 to-green-600 dark:from-green-600 dark:to-green-700"></div>
 
             {/* Timeline Items */}
             <div className="space-y-12">
               {/* Item 1 */}
-              <div className="relative flex items-center">
-                <div className="w-1/2 pr-8 text-right">
+              <div className="relative flex flex-col md:flex-row items-start md:items-center">
+                <div className="w-full md:w-1/2 pr-0 md:pr-8 pl-12 md:pl-0 text-left md:text-right order-2 md:order-1">
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                    <div className="flex items-center justify-end mb-3">
+                    <div className="flex items-center justify-start md:justify-end mb-3">
                       <Calendar className="w-6 h-6 text-green-600 mr-2" />
                       <span className="text-sm font-semibold text-green-600 dark:text-green-400">2024 - Inception</span>
                     </div>
@@ -57,15 +57,15 @@ const AboutUs = () => {
                     </p>
                   </div>
                 </div>
-                <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10"></div>
-                <div className="w-1/2 pl-8"></div>
+                <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10 top-6 md:top-auto"></div>
+                <div className="hidden md:block w-1/2 order-2"></div>
               </div>
 
               {/* Item 2 */}
-              <div className="relative flex items-center">
-                <div className="w-1/2 pr-8"></div>
-                <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10"></div>
-                <div className="w-1/2 pl-8">
+              <div className="relative flex flex-col md:flex-row items-start md:items-center">
+                <div className="hidden md:block w-1/2"></div>
+                <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10 top-6 md:top-auto"></div>
+                <div className="w-full md:w-1/2 pl-12 md:pl-8">
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
                     <div className="flex items-center mb-3">
                       <Code className="w-6 h-6 text-green-600 mr-2" />
@@ -82,10 +82,10 @@ const AboutUs = () => {
               </div>
 
               {/* Item 3 */}
-              <div className="relative flex items-center">
-                <div className="w-1/2 pr-8 text-right">
+              <div className="relative flex flex-col md:flex-row items-start md:items-center">
+                <div className="w-full md:w-1/2 pr-0 md:pr-8 pl-12 md:pl-0 text-left md:text-right order-2 md:order-1">
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                    <div className="flex items-center justify-end mb-3">
+                    <div className="flex items-center justify-start md:justify-end mb-3">
                       <Target className="w-6 h-6 text-green-600 mr-2" />
                       <span className="text-sm font-semibold text-green-600 dark:text-green-400">2024 - Launch</span>
                     </div>
@@ -97,15 +97,15 @@ const AboutUs = () => {
                     </p>
                   </div>
                 </div>
-                <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10"></div>
-                <div className="w-1/2 pl-8"></div>
+                <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10 top-6 md:top-auto"></div>
+                <div className="hidden md:block w-1/2 order-2"></div>
               </div>
 
               {/* Item 4 */}
-              <div className="relative flex items-center">
-                <div className="w-1/2 pr-8"></div>
-                <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10"></div>
-                <div className="w-1/2 pl-8">
+              <div className="relative flex flex-col md:flex-row items-start md:items-center">
+                <div className="hidden md:block w-1/2"></div>
+                <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10 top-6 md:top-auto"></div>
+                <div className="w-full md:w-1/2 pl-12 md:pl-8">
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
                     <div className="flex items-center mb-3">
                       <Award className="w-6 h-6 text-green-600 mr-2" />

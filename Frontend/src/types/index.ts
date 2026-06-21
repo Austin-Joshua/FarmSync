@@ -8,8 +8,9 @@ export interface User {
   email: string;
   role: UserRole;
   location?: string;
-  district?: string;
   state?: string;
+  district?: string;
+  village?: string;
   pincode?: string;
   land_size?: number;
   soil_type?: string;
@@ -17,6 +18,10 @@ export interface User {
   farmer_id?: string;
   phone?: string;
   picture_url?: string;
+  pictureUrl?: string;
+  preferredLanguage?: string;
+  preferred_language?: string;
+  fcmToken?: string;
   is_onboarded?: boolean;
 }
 
@@ -24,6 +29,12 @@ export interface Farm {
   id: string;
   name: string;
   location: string;
+  state?: string;
+  district?: string;
+  village?: string;
+  latitude?: number;
+  longitude?: number;
+  boundaryCoordinates?: string;
   landSize: number; // in acres
   soilType: string;
   farmerId: string;

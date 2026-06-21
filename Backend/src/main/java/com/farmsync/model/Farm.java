@@ -24,6 +24,19 @@ public class Farm {
     @Column(nullable = false)
     private String location;
 
+    private String state;
+
+    private String district;
+
+    private String village;
+
+    private Double latitude;
+
+    private Double longitude;
+
+    @Column(name = "boundary_coordinates", columnDefinition = "TEXT")
+    private String boundaryCoordinates; // JSON polygon coordinates array [[lat,lng],...]
+
     @Column(name = "land_size", nullable = false)
     private Double landSize;
 

@@ -53,6 +53,12 @@ public class FarmController {
                 .name(request.getName())
                 .location(request.getLocation())
                 .landSize(request.getLandSize())
+                .state(request.getState())
+                .district(request.getDistrict())
+                .village(request.getVillage())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .boundaryCoordinates(request.getBoundaryCoordinates())
                 .farmer(user)
                 .build();
         
@@ -73,6 +79,12 @@ public class FarmController {
                 .name(request.getName())
                 .location(request.getLocation())
                 .landSize(request.getLandSize())
+                .state(request.getState())
+                .district(request.getDistrict())
+                .village(request.getVillage())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
+                .boundaryCoordinates(request.getBoundaryCoordinates())
                 .build();
         
         if (request.getSoilTypeId() != null) {
@@ -97,6 +109,12 @@ public class FarmController {
         response.setLocation(farm.getLocation());
         response.setLandSize(farm.getLandSize());
         response.setFarmerId(farm.getFarmer().getId());
+        response.setState(farm.getState());
+        response.setDistrict(farm.getDistrict());
+        response.setVillage(farm.getVillage());
+        response.setLatitude(farm.getLatitude());
+        response.setLongitude(farm.getLongitude());
+        response.setBoundaryCoordinates(farm.getBoundaryCoordinates());
         if (farm.getSoilType() != null) {
             response.setSoilTypeId(farm.getSoilType().getId());
             response.setSoilTypeName(farm.getSoilType().getName());
