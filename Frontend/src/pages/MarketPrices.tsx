@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { TrendingUp, TrendingDown, Minus, Bell, Calendar, IndianRupee, BarChart3, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { TrendingUp, TrendingDown, Minus, Bell, Calendar, IndianRupee, BarChart3, AlertCircle, ShoppingCart } from 'lucide-react';
 import api from '../services/api';
 import { formatDateDisplay, formatDateShort } from '../utils/dateFormatter';
+import toast from 'react-hot-toast';
 
 interface PriceData {
   crop: string;
@@ -36,6 +38,7 @@ interface BestTimeToSell {
 
 const MarketPrices = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [selectedCrop, setSelectedCrop] = useState<string>('');
   const [currentPrice, setCurrentPrice] = useState<PriceData | null>(null);
   const [priceHistory, setPriceHistory] = useState<PriceHistory[]>([]);
@@ -116,97 +119,92 @@ const MarketPrices = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-green-50 to-earth-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-950 p-4 md:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
             {t('marketPrices.title', 'Market Prices')}
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
             {t('marketPrices.subtitle', 'Track real-time crop prices and get selling recommendations')}
           </p>
         </div>
+        <button
+          onClick={() => navigate('/marketplace')}
+          className="btn-primary flex items-center gap-2 self-start sm:self-auto text-sm"
+        >
+          <ShoppingCart size={16} /> Buy from Farmers
+        </button>
+      </div>
 
-        {/* Crop Selection */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
-          <label htmlFor="crop-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-            {t('marketPrices.selectCrop', 'Select Crop')}
-          </label>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3" role="group" aria-labelledby="crop-select">
-            {crops.map((crop) => (
-              <button
-                key={crop}
-                onClick={() => setSelectedCrop(crop)}
-                className={`p-3 rounded-lg border-2 transition-all ${
-                  selectedCrop === crop
-                    ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
-                    : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700'
-                }`}
-              >
-                <span className="capitalize font-medium">{crop}</span>
-              </button>
-            ))}
-          </div>
+      {/* Crop Selection */}
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6">
+        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
+          {t('marketPrices.selectCrop', 'Select Crop')}
+        </label>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+          {crops.map((crop) => (
+            <button
+              key={crop}
+              onClick={() => setSelectedCrop(crop)}
+              className={`py-2.5 px-3 rounded-xl border-2 transition-all text-sm font-semibold capitalize ${
+                selectedCrop === crop
+                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
+                  : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 text-gray-600 dark:text-gray-300'
+              }`}
+            >
+              {crop}
+            </button>
+          ))}
         </div>
+      </div>
 
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg mb-6">
-            {error}
-          </div>
-        )}
+      {error && (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded-xl flex items-center gap-2 text-sm">
+          <AlertCircle size={16} /> {error}
+        </div>
+      )}
 
-        {loading && (
-          <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">{t('common.loading', 'Loading...')}</p>
-          </div>
-        )}
+      {loading && (
+        <div className="text-center py-12">
+          <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600" />
+          <p className="mt-3 text-gray-500 text-sm">{t('common.loading', 'Loading...')}</p>
+        </div>
+      )}
 
-        {currentPrice && !loading && (
-          <>
-            {/* Current Price Card */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 capitalize">
-                  {currentPrice.crop}
-                </h2>
-                <button
-                  onClick={() => setShowAlertForm(!showAlertForm)}
-                  className="btn-secondary flex items-center gap-2"
-                >
-                  <Bell size={18} />
-                  {t('marketPrices.setAlert', 'Set Alert')}
+      {currentPrice && !loading && (
+        <>
+          {/* Current Price Card */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 capitalize">
+                {currentPrice.crop}
+              </h2>
+              <div className="flex gap-2">
+                <button onClick={() => { navigate('/marketplace'); toast.success('Redirecting to marketplace!'); }} className="btn-primary flex items-center gap-2 text-sm py-2">
+                  <ShoppingCart size={15} /> Buy from Farmers
+                </button>
+                <button onClick={() => setShowAlertForm(!showAlertForm)} className="btn-secondary flex items-center gap-2 text-sm py-2">
+                  <Bell size={15} /> Alert
                 </button>
               </div>
+            </div>
 
-              {showAlertForm && (
-                <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4">
-                  <h3 className="font-semibold mb-3">{t('marketPrices.setPriceAlert', 'Set Price Alert')}</h3>
-                  <div className="grid md:grid-cols-3 gap-3">
-                    <input
-                      type="number"
-                      value={alertPrice}
-                      onChange={(e) => setAlertPrice(e.target.value)}
-                      placeholder={t('marketPrices.targetPrice', 'Target Price')}
-                      className="input-field"
-                    />
-                    <select
-                      aria-label="Price alert condition"
-                      value={alertCondition}
-                      onChange={(e) => setAlertCondition(e.target.value as 'above' | 'below')}
-                      className="input-field"
-                    >
-                      <option value="above">{t('marketPrices.above', 'Above')}</option>
-                      <option value="below">{t('marketPrices.below', 'Below')}</option>
-                    </select>
-                    <button onClick={handleSetAlert} className="btn-primary">
-                      {t('marketPrices.setAlert', 'Set Alert')}
-                    </button>
-                  </div>
+            {showAlertForm && (
+              <div className="bg-gray-50 dark:bg-gray-700/50 rounded-xl p-4 mb-4">
+                <h3 className="font-semibold mb-3 text-sm">{t('marketPrices.setPriceAlert', 'Set Price Alert')}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <input type="number" value={alertPrice} onChange={(e) => setAlertPrice(e.target.value)} placeholder={t('marketPrices.targetPrice', 'Target Price')} className="input-field" />
+                  <select aria-label="Price alert condition" value={alertCondition} onChange={(e) => setAlertCondition(e.target.value as 'above' | 'below')} className="input-field">
+                    <option value="above">{t('marketPrices.above', 'Above')}</option>
+                    <option value="below">{t('marketPrices.below', 'Below')}</option>
+                  </select>
+                  <button onClick={handleSetAlert} className="btn-primary text-sm">{t('marketPrices.setAlert', 'Set Alert')}</button>
                 </div>
-              )}
+              </div>
+            )}
 
-              <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
                     {t('marketPrices.currentPrice', 'Current Price')}
@@ -332,14 +330,14 @@ const MarketPrices = () => {
         )}
 
         {!selectedCrop && !loading && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-12 text-center">
-            <AlertCircle className="mx-auto text-gray-400 mb-4" size={48} />
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              {t('marketPrices.selectCropMessage', 'Please select a crop to view market prices')}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 sm:p-12 text-center">
+            <BarChart3 className="mx-auto text-gray-300 dark:text-gray-600 mb-4" size={48} />
+            <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">
+              {t('marketPrices.selectCropMessage', 'Select a crop to view market prices')}
             </p>
+            <p className="text-xs text-gray-400 mt-2">Choose from rice, wheat, tomato, cotton, and more</p>
           </div>
         )}
-      </div>
     </div>
   );
 };

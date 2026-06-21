@@ -26,7 +26,17 @@ api.interceptors.request.use(
 // Response Interceptor to handle errors
 api.interceptors.response.use(
   (response) => {
-    return response.data;
+    const body = response.data;
+    if (body && typeof body === 'object') {
+      if (!('data' in body)) {
+        Object.defineProperty(body, 'data', {
+          get() { return this; },
+          configurable: true,
+          enumerable: false
+        });
+      }
+    }
+    return body;
   },
   (error) => {
     if (error.response?.data) {

@@ -38,10 +38,10 @@ public class MonthlyStockUsage {
     @Column(nullable = false)
     private String unit;
 
-    @Column(nullable = false)
+    @Column(name = "`month`", nullable = false)
     private Integer month;
 
-    @Column(nullable = false)
+    @Column(name = "`year`", nullable = false)
     private Integer year;
 
     @Column(name = "date_recorded", nullable = false)

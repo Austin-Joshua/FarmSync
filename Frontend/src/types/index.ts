@@ -1,6 +1,6 @@
 // Type definitions for the Digital Farm Record Management System
 
-export type UserRole = 'farmer' | 'admin';
+export type UserRole = 'farmer' | 'admin' | 'citizen';
 
 export interface User {
   id: string;

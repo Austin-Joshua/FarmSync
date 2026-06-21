@@ -24,10 +24,10 @@ public class MonthlyIncome {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(name = "`month`", nullable = false)
     private Integer month;
 
-    @Column(nullable = false)
+    @Column(name = "`year`", nullable = false)
     private Integer year;
 
     @Builder.Default

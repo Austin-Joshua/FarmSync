@@ -229,5 +229,142 @@ public class DataInitializer implements CommandLineRunner {
                 System.out.println("Default stock inventory items seeded for user");
             }
         }
+
+        // ===== Seed Farmer Demo User =====
+        User farmer = userRepository.findByEmail("farmer@farmsync.com").orElse(null);
+        if (farmer == null) {
+            farmer = User.builder()
+                    .id(UUID.randomUUID())
+                    .name("Ravi Kumar")
+                    .email("farmer@farmsync.com")
+                    .password(passwordEncoder.encode("farmer123"))
+                    .role("farmer")
+                    .location("Salem, Tamil Nadu")
+                    .landSize(8.5)
+                    .soilType("Red")
+                    .build();
+            userRepository.save(farmer);
+            System.out.println("Demo farmer user created: farmer@farmsync.com / farmer123");
+        } else {
+            farmer.setPassword(passwordEncoder.encode("farmer123"));
+            userRepository.save(farmer);
+            System.out.println("Demo farmer password reset to farmer123");
+        }
+
+        // Seed farmer's farm and crops
+        final User farmerFinal = farmer;
+        java.util.List<com.farmsync.model.Farm> farmerFarms = farmRepository.findByFarmerId(farmerFinal.getId());
+        if (farmerFarms.isEmpty()) {
+            com.farmsync.model.SoilType redSoil = soilTypeRepository.findByName("Red").orElse(null);
+            com.farmsync.model.Farm farmerFarm = com.farmsync.model.Farm.builder()
+                    .id(java.util.UUID.randomUUID())
+                    .name("Ravi's Organic Farm")
+                    .location("Salem, Tamil Nadu")
+                    .landSize(8.5)
+                    .soilType(redSoil)
+                    .farmer(farmerFinal)
+                    .build();
+            farmerFarm = farmRepository.save(farmerFarm);
+
+            // Farmer crops
+            com.farmsync.model.CropType maizeType = cropTypeRepository.findByName("Maize").orElse(null);
+            com.farmsync.model.Crop maizeCrop = com.farmsync.model.Crop.builder()
+                    .id(java.util.UUID.randomUUID())
+                    .name("Hybrid Maize HM-4")
+                    .cropType(maizeType)
+                    .season("kharif")
+                    .sowingDate(java.time.LocalDate.now().minusDays(30))
+                    .status("active")
+                    .farm(farmerFarm)
+                    .build();
+            cropRepository.save(maizeCrop);
+
+            com.farmsync.model.CropType cottonType = cropTypeRepository.findByName("Cotton").orElse(null);
+            com.farmsync.model.Crop cottonCrop = com.farmsync.model.Crop.builder()
+                    .id(java.util.UUID.randomUUID())
+                    .name("MCU-5 Cotton")
+                    .cropType(cottonType)
+                    .season("kharif")
+                    .sowingDate(java.time.LocalDate.now().minusDays(120))
+                    .harvestDate(java.time.LocalDate.now().minusDays(10))
+                    .status("harvested")
+                    .farm(farmerFarm)
+                    .build();
+            cropRepository.save(cottonCrop);
+
+            // Farmer yield
+            yieldRepository.save(com.farmsync.model.Yield.builder()
+                    .id(java.util.UUID.randomUUID())
+                    .crop(cottonCrop)
+                    .quantity(2800.0)
+                    .date(java.time.LocalDate.now().minusDays(10))
+                    .quality("good")
+                    .build());
+
+            // Farmer expenses
+            expenseRepository.save(com.farmsync.model.Expense.builder()
+                    .id(java.util.UUID.randomUUID())
+                    .category("seeds")
+                    .description("Hybrid Maize Seeds HM-4")
+                    .amount(6500.0)
+                    .date(java.time.LocalDate.now().minusDays(30))
+                    .farm(farmerFarm)
+                    .build());
+            expenseRepository.save(com.farmsync.model.Expense.builder()
+                    .id(java.util.UUID.randomUUID())
+                    .category("fertilizers")
+                    .description("DAP Fertilizer")
+                    .amount(9200.0)
+                    .date(java.time.LocalDate.now().minusDays(25))
+                    .farm(farmerFarm)
+                    .build());
+            expenseRepository.save(com.farmsync.model.Expense.builder()
+                    .id(java.util.UUID.randomUUID())
+                    .category("labor")
+                    .description("Harvest labor - cotton")
+                    .amount(5500.0)
+                    .date(java.time.LocalDate.now().minusDays(10))
+                    .farm(farmerFarm)
+                    .build());
+
+            // Farmer stock
+            stockItemRepository.save(com.farmsync.model.StockItem.builder()
+                    .id(java.util.UUID.randomUUID())
+                    .user(farmerFinal)
+                    .itemName("DAP Fertilizer")
+                    .itemType("fertilizer")
+                    .quantity(120.0)
+                    .unit("kg")
+                    .build());
+            stockItemRepository.save(com.farmsync.model.StockItem.builder()
+                    .id(java.util.UUID.randomUUID())
+                    .user(farmerFinal)
+                    .itemName("Chlorpyrifos Pesticide")
+                    .itemType("pesticide")
+                    .quantity(8.0)
+                    .unit("liters")
+                    .build());
+            System.out.println("Demo farmer farm, crops, and data seeded");
+        }
+
+        // ===== Seed Citizen Demo User =====
+        User citizen = userRepository.findByEmail("citizen@farmsync.com").orElse(null);
+        if (citizen == null) {
+            citizen = User.builder()
+                    .id(UUID.randomUUID())
+                    .name("Priya Sharma")
+                    .email("citizen@farmsync.com")
+                    .password(passwordEncoder.encode("citizen123"))
+                    .role("citizen")
+                    .location("Chennai, Tamil Nadu")
+                    .build();
+            userRepository.save(citizen);
+            System.out.println("Demo citizen user created: citizen@farmsync.com / citizen123");
+        } else {
+            citizen.setPassword(passwordEncoder.encode("citizen123"));
+            userRepository.save(citizen);
+            System.out.println("Demo citizen password reset to citizen123");
+        }
     }
 }
+

@@ -1,5 +1,4 @@
-// Dashboard - Summary Overview Page (Read-Only)
-// This page provides a consolidated view without modifying any existing modules
+// Dashboard - Role-aware Summary Overview Page
 import { useState, useEffect } from 'react';
 import StatCard from '../components/StatCard';
 import WeatherCard from '../components/WeatherCard';
@@ -9,40 +8,17 @@ import AIInsightsWidget from '../components/AIInsightsWidget';
 import { useAuth } from '../context/AuthContext';
 import Skeleton from '../components/ui/Skeleton';
 import { useTranslation } from 'react-i18next';
-import { useLocation } from '../hooks/useLocation';
+import { useLocation as useGpsLocation } from '../hooks/useLocation';
 import { useNavigate } from 'react-router-dom';
 import {
-  MapPin,
-  LandPlot,
-  IndianRupee,
-  TrendingUp,
-  Package,
-  Users,
-  Sprout,
-  Droplets,
-  Bug,
-  ExternalLink,
-  AlertTriangle,
-  ArrowRight,
-  CloudRain,
-  Wind,
-  Thermometer,
+  MapPin, LandPlot, IndianRupee, TrendingUp, Package, Users, Sprout,
+  Droplets, Bug, ExternalLink, AlertTriangle, ArrowRight,
+  CloudRain, Wind, Thermometer,
 } from 'lucide-react';
+import { StockItem } from '../data/mockData';
 import {
-  StockItem,
-} from '../data/mockData';
-import {
-  BarChart,
-  Bar,
-  PieChart,
-  Pie,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
+  BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis,
+  CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import DetailModal from '../components/DetailModal';
 import { translateCrop, translateDistrict, translateCategory } from '../utils/translations';
@@ -50,12 +26,17 @@ import { getCropIcon } from '../utils/cropIcons';
 import api from '../services/api';
 import { DataCache } from '../utils/dataCache';
 import { formatDateDisplay } from '../utils/dateFormatter';
+import CitizenDashboard from './CitizenDashboard';
+import AdminDashboard from './AdminDashboard';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { location: gpsLocation } = useLocation();
+  const { location: gpsLocation } = useGpsLocation();
   const navigate = useNavigate();
+
+  // NOTE: role-based rendering happens AFTER all hooks (see just before return)
+
   const [detailModal, setDetailModal] = useState<{
     type: 'totalFields' | 'activeCrops' | 'totalYield' | 'netProfit' | null;
     data?: any;
@@ -115,17 +96,24 @@ const Dashboard = () => {
         api.getExpenses(),
         api.getYields(),
         api.getStockItems(),
-        user.role === 'admin' ? api.getAdminStatistics() : Promise.resolve({ data: { geographicStats: [] } })
+        user.role === 'admin' ? api.getAdminStatistics() : Promise.resolve(null)
       ]);
+
+      const statsBody = farmerStatsRes || {};
+      // Backend returns farmerLoginsByDistrict with uniqueFarmers; map to expected shape
+      const farmerStats = (statsBody.farmerLoginsByDistrict || []).map((s: any) => ({
+        district: s.district,
+        count: s.uniqueFarmers || s.count || 0,
+      }));
 
       const newData = {
         farms: farmsRes.data || [],
         crops: cropsRes.data || [],
         expenses: expensesRes.data || [],
         yields: yieldsRes.data || [],
-        transactions: [], 
+        transactions: [],
         stockItems: stockRes.data || [],
-        farmerStats: farmerStatsRes.data?.geographicStats || [],
+        farmerStats,
       };
 
       const now = Date.now();
@@ -148,9 +136,8 @@ const Dashboard = () => {
       setLoadingLowStock(true);
       try {
         const response = await api.getLowStockItems();
-        if (response.data) {
-          setLowStockItems(response.data);
-        }
+        const items = Array.isArray(response) ? response : (response as any)?.data || [];
+        setLowStockItems(items);
       } catch (error) {
         console.error('Failed to load low stock items:', error);
       } finally {
@@ -166,9 +153,9 @@ const Dashboard = () => {
       if (!user) return;
       try {
         const response = await api.getUnreadAlerts();
-        if (response.data) {
-          setWeatherAlerts(response.data.slice(0, 3));
-        }
+        // response is the unwrapped body (an array); also has non-enum .data pointing to itself
+        const alertList = Array.isArray(response) ? response : (response as any)?.data || [];
+        setWeatherAlerts(alertList.slice(0, 3));
       } catch (error) {
         console.error('Failed to load weather alerts:', error);
       }
@@ -201,9 +188,12 @@ const Dashboard = () => {
     amount: value,
   }));
 
-  const totalIncome = data.transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
-  const netProfit = totalIncome - totalInputInvestment;
+  // Compute income from harvested yields (quantity × ₹45/kg as a revenue proxy)
   const totalYield = data.yields.reduce((sum, y) => sum + (y.quantity || 0), 0);
+  const totalIncome = data.transactions.length > 0
+    ? data.transactions.reduce((sum, t) => sum + (t.amount || 0), 0)
+    : totalYield * 45;
+  const netProfit = totalIncome - totalInputInvestment;
 
   const stockByCategory = data.stockItems.reduce((acc, item) => {
     if (!acc[item.category]) {
@@ -223,15 +213,17 @@ const Dashboard = () => {
   // Colors for charts
   const COLORS = ['#16a34a', '#22c55e', '#4ade80', '#86efac', '#bbf7d0', '#dcfce7'];
 
-
+  // Role-based rendering (after all hooks)
+  if (user?.role === 'citizen') return <CitizenDashboard />;
+  if (user?.role === 'admin') return <AdminDashboard />;
 
   return (
     <div className="space-y-6">
-      {/* Header with animated subtle fade-in */}
-      <div className="mb-6 flex items-center justify-between animate-in fade-in duration-700">
+      {/* Header */}
+      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in duration-700">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">{t('dashboard.title')}</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1 font-medium italic">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">{t('dashboard.title')}</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1 font-medium text-sm sm:text-base">
             {t('dashboard.subtitle')}
             {lastUpdated && (
               <span className="ml-2 text-xs opacity-60">
@@ -240,28 +232,28 @@ const Dashboard = () => {
             )}
           </p>
         </div>
-        <button 
+        <button
           onClick={() => fetchDashboardData(true)}
-          className="p-3 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all"
+          className="self-start sm:self-auto p-2.5 sm:p-3 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all"
           title="Force Sync"
         >
-          <TrendingUp size={20} className="text-primary-600" />
+          <TrendingUp size={18} className="text-primary-600" />
         </button>
       </div>
 
       {/* AI ML Insights Section */}
       <AIInsightsWidget />
 
-      {/* Weather, Alerts & Map Section with glassmorphism */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+      {/* Weather, Alerts & Map Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
           <div className="glass-card overflow-hidden">
             <ClimateAlert />
           </div>
-          {/* Location Map with glass container */}
-          <div className="glass-card p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-              <MapPin size={24} className="text-primary-600 dark:text-primary-400" />
+          {/* Location Map */}
+          <div className="glass-card p-4 sm:p-6">
+            <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 flex items-center gap-2">
+              <MapPin size={20} className="text-primary-600 dark:text-primary-400" />
               {t('dashboard.farmLocation')}
             </h2>
             <div className="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700/50 shadow-inner">
@@ -269,13 +261,13 @@ const Dashboard = () => {
                 latitude={gpsLocation.latitude}
                 longitude={gpsLocation.longitude}
                 locationName={user?.location || gpsLocation.address || t('dashboard.locationNotSet')}
-                height="350px"
+                height="250px"
               />
             </div>
           </div>
         </div>
-        <div className="space-y-6">
-          <div className="glass-card p-6 h-full">
+        <div className="space-y-4 sm:space-y-6">
+          <div className="glass-card p-4 sm:p-6">
             <WeatherCard />
           </div>
 
@@ -345,10 +337,9 @@ const Dashboard = () => {
                   onClick={async () => {
                     try {
                       await api.markAllAlertsAsRead();
-                      const response = await api.getUnreadAlerts();
-                      if (response.data) {
-                        setWeatherAlerts(response.data.slice(0, 3));
-                      }
+                      const r = await api.getUnreadAlerts();
+                      const list = Array.isArray(r) ? r : (r as any)?.data || [];
+                      setWeatherAlerts(list.slice(0, 3));
                     } catch (error) {
                       console.error('Failed to mark alerts as read:', error);
                     }
@@ -415,10 +406,9 @@ const Dashboard = () => {
                         onClick={async () => {
                           try {
                             await api.markAlertAsRead(alert.id);
-                            const response = await api.getUnreadAlerts();
-                            if (response.data) {
-                              setWeatherAlerts(response.data.slice(0, 3));
-                            }
+                            const r = await api.getUnreadAlerts();
+                            const list = Array.isArray(r) ? r : (r as any)?.data || [];
+                            setWeatherAlerts(list.slice(0, 3));
                           } catch (error) {
                             console.error('Failed to mark alert as read:', error);
                           }

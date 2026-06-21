@@ -57,8 +57,11 @@ interface ListingItem {
 const Marketplace = () => {
   const { user } = useAuth();
   
-  // Tabs: 'buy' | 'sell' | 'moderate'
-  const [activeMarketTab, setActiveMarketTab] = useState<'buy' | 'sell' | 'moderate'>('buy');
+  // Tabs: 'buy' | 'sell' | 'moderate' | 'history'
+  const [activeMarketTab, setActiveMarketTab] = useState<'buy' | 'sell' | 'moderate' | 'history'>('buy');
+  const [cartHistory, setCartHistory] = useState<any[]>(() => {
+    try { return JSON.parse(localStorage.getItem('citizen_cart') || '[]'); } catch { return []; }
+  });
 
   // ----------------------------------------
   // BUY STATE & CATALOG
@@ -329,51 +332,65 @@ const Marketplace = () => {
   }, [activeMarketTab]);
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Upper header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
             🍏 Community Marketplace
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1 font-medium">
-            Browse fresh crops listed by regional farmers, list your own produce, and manage community sales.
+          <p className="text-gray-500 dark:text-gray-400 mt-1 font-medium text-sm">
+            Browse fresh crops from local farmers and buy direct.
           </p>
         </div>
       </div>
 
       {/* Unified Tab Bar */}
-      <div className="flex border-b border-gray-200 dark:border-gray-700">
+      <div className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-none">
         <button
           onClick={() => { setActiveMarketTab('buy'); setSelectedProduct(null); }}
-          className={`px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all ${
+          className={`px-4 sm:px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
             activeMarketTab === 'buy'
-              ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-black'
-              : 'border-transparent text-gray-450 hover:text-gray-600 dark:text-gray-500'
+              ? 'border-primary-600 text-primary-600 dark:text-primary-400'
+              : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
           }`}
         >
-          Buy Fresh Produce
+          🛒 Buy Produce
         </button>
-        <button
-          onClick={() => setActiveMarketTab('sell')}
-          className={`px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all ${
-            activeMarketTab === 'sell'
-              ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-black'
-              : 'border-transparent text-gray-450 hover:text-gray-600 dark:text-gray-500'
-          }`}
-        >
-          Sell Your Produce
-        </button>
+        {user?.role !== 'citizen' && (
+          <button
+            onClick={() => setActiveMarketTab('sell')}
+            className={`px-4 sm:px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
+              activeMarketTab === 'sell'
+                ? 'border-primary-600 text-primary-600 dark:text-primary-400'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+            }`}
+          >
+            📦 Sell Produce
+          </button>
+        )}
+        {user?.role === 'citizen' && (
+          <button
+            onClick={() => setActiveMarketTab('history')}
+            className={`px-4 sm:px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
+              activeMarketTab === 'history'
+                ? 'border-primary-600 text-primary-600 dark:text-primary-400'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
+            }`}
+          >
+            📋 My Orders ({cartHistory.length})
+          </button>
+        )}
         {user?.role?.toLowerCase() === 'admin' && (
           <button
             onClick={() => setActiveMarketTab('moderate')}
-            className={`px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all ${
+            className={`px-4 sm:px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
               activeMarketTab === 'moderate'
-                ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-black'
-                : 'border-transparent text-gray-450 hover:text-gray-600 dark:text-gray-500'
+                ? 'border-primary-600 text-primary-600 dark:text-primary-400'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
             }`}
           >
-            Moderate Listings
+            🛡️ Moderate
           </button>
         )}
       </div>
@@ -983,6 +1000,63 @@ const Marketplace = () => {
               </div>
             </form>
           </div>
+        </div>
+      )}
+      {/* CART HISTORY TAB — Citizen */}
+      {activeMarketTab === 'history' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">My Orders ({cartHistory.length})</h2>
+            {cartHistory.length > 0 && (
+              <button
+                onClick={() => { localStorage.removeItem('citizen_cart'); setCartHistory([]); toast.success('Cart cleared!'); }}
+                className="text-xs font-bold text-red-500 hover:text-red-700 hover:underline"
+              >
+                Clear All
+              </button>
+            )}
+          </div>
+          {cartHistory.length === 0 ? (
+            <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+              <ShoppingBag size={40} className="mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+              <p className="text-gray-500 font-medium">No orders yet</p>
+              <button onClick={() => setActiveMarketTab('buy')} className="mt-3 btn-primary text-sm py-2 px-5">Browse Marketplace</button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {cartHistory.map((item: any, i: number) => (
+                <div key={i} className="flex items-center justify-between p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-xl">
+                      🧺
+                    </div>
+                    <div>
+                      <p className="font-bold text-gray-900 dark:text-white">{item.name}</p>
+                      <p className="text-xs text-gray-500">{item.quantity} {item.unit} • Added {new Date(item.addedAt).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-black text-primary-600 dark:text-primary-400">₹{item.price}/{item.unit}</p>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300">In Cart</span>
+                  </div>
+                </div>
+              ))}
+              <div className="p-4 bg-primary-50 dark:bg-primary-900/20 rounded-2xl border border-primary-200 dark:border-primary-800">
+                <div className="flex justify-between items-center">
+                  <p className="font-bold text-gray-900 dark:text-white">Total Estimated</p>
+                  <p className="text-2xl font-black text-primary-600 dark:text-primary-400">
+                    ₹{cartHistory.reduce((sum: number, item: any) => sum + item.price, 0).toFixed(0)}
+                  </p>
+                </div>
+                <button
+                  onClick={() => { toast.success('Order placed! Farmer will contact you shortly.'); localStorage.removeItem('citizen_cart'); setCartHistory([]); }}
+                  className="w-full mt-3 btn-primary py-3 flex items-center justify-center gap-2"
+                >
+                  <CheckCircle size={18} /> Place Order
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

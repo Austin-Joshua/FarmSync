@@ -45,6 +45,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import CropRecommendation from './pages/CropRecommendation';
 import Marketplace from './pages/Marketplace';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
+import StockManagement from './pages/StockManagement';
 
 // Component to handle document title updates
 const AppContent = () => {
@@ -280,6 +281,16 @@ const AppContent = () => {
                 <AdminDashboard />
               </Layout>
             </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/stock"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <StockManagement />
+              </Layout>
+            </ProtectedRoute>
           }
         />
         <Route

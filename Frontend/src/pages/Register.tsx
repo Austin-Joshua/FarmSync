@@ -240,19 +240,32 @@ const Register = () => {
 
                 <div className="space-y-1.5">
                   <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
-                    {t('role')}
+                    {t('role')} *
                   </label>
-                  <select
-                    name="role"
-                    onChange={handleChange}
-                    className="block w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all appearance-none shadow-sm text-sm"
-                    value={formData.role}
-                  >
-                    <option value="farmer">{t('farmer')}</option>
-                    <option value="citizen">Citizen</option>
-                    <option value="admin">{t('admin')}</option>
-                  </select>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { value: 'farmer', label: '🌾 Farmer', desc: 'Manage crops' },
+                      { value: 'citizen', label: '🏙️ Citizen', desc: 'Buy produce' },
+                      { value: 'admin', label: '🛡️ Admin', desc: 'Manage platform' },
+                    ].map(opt => (
+                      <button
+                        type="button"
+                        key={opt.value}
+                        onClick={() => setFormData(p => ({ ...p, role: opt.value as any }))}
+                        className={`flex flex-col items-center gap-0.5 p-2.5 rounded-xl border-2 transition-all text-center ${
+                          formData.role === opt.value
+                            ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
+                            : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-primary-300'
+                        }`}
+                      >
+                        <span className="text-base">{opt.label.split(' ')[0]}</span>
+                        <span className="text-[10px] font-bold">{opt.label.split(' ')[1]}</span>
+                        <span className="text-[9px] text-gray-400">{opt.desc}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
+
               </div>
 
               <button

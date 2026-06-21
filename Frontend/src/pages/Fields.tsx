@@ -62,7 +62,7 @@ const Fields = () => {
 
     try {
       const response = await api.getFarms();
-      const farmsData = response.data || [];
+      const farmsData = Array.isArray(response) ? response : (response as any)?.data || [];
       setFarms(farmsData);
       DataCache.set(cacheKey, farmsData);
     } catch (err: any) {
@@ -81,7 +81,7 @@ const Fields = () => {
     setLoading(true);
     try {
       const response = await api.getFields();
-      const fieldsData = response.data || [];
+      const fieldsData = Array.isArray(response) ? response : (response as any)?.data || [];
       setFields(fieldsData);
       DataCache.set(cacheKey, fieldsData);
     } catch (err: any) {
