@@ -5,55 +5,13 @@ import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import {
   Eye, EyeOff, Moon, Sun, Mail, Lock, LogIn,
-  AlertCircle, Loader2, Sprout, Shield, Users, Zap
+  AlertCircle, Loader2, Zap
 } from 'lucide-react';
 import Logo from '../components/Logo';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import OAuthSignIn from '../components/OAuthSignIn';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-
-const DEMO_ACCOUNTS = [
-  {
-    role: 'admin',
-    label: 'Admin',
-    name: 'Admin User',
-    email: 'admin@farmsync.com',
-    password: 'admin123',
-    description: 'Command center & analytics',
-    icon: Shield,
-    color: 'from-blue-500 to-blue-700',
-    bg: 'bg-blue-50 dark:bg-blue-900/20',
-    border: 'border-blue-200 dark:border-blue-800',
-    text: 'text-blue-700 dark:text-blue-300',
-  },
-  {
-    role: 'farmer',
-    label: 'Farmer',
-    name: 'Ravi Kumar',
-    email: 'farmer@farmsync.com',
-    password: 'farmer123',
-    description: 'Farm management & crops',
-    icon: Sprout,
-    color: 'from-green-500 to-emerald-700',
-    bg: 'bg-green-50 dark:bg-green-900/20',
-    border: 'border-green-200 dark:border-green-800',
-    text: 'text-green-700 dark:text-green-300',
-  },
-  {
-    role: 'citizen',
-    label: 'Citizen',
-    name: 'Priya Sharma',
-    email: 'citizen@farmsync.com',
-    password: 'citizen123',
-    description: 'Market prices & community',
-    icon: Users,
-    color: 'from-purple-500 to-violet-700',
-    bg: 'bg-purple-50 dark:bg-purple-900/20',
-    border: 'border-purple-200 dark:border-purple-800',
-    text: 'text-purple-700 dark:text-purple-300',
-  },
-];
 
 const Login = () => {
   const { t } = useTranslation();
@@ -65,7 +23,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [demoLoading, setDemoLoading] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [isApiOnline, setIsApiOnline] = useState(true);
 
@@ -86,31 +43,13 @@ const Login = () => {
       toast.success('Welcome back!');
       navigate('/dashboard');
     } catch (err: any) {
-      const msg = err.message?.includes('FIREBASE_SETUP_REQUIRED')
-        ? 'Identity services not configured. Please use demo login below.'
-        : err.code === 'auth/invalid-login-credentials' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found'
-          ? 'Invalid email or password.'
-          : err.message || 'Login failed';
+      const msg = err.code === 'auth/invalid-login-credentials' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found'
+        ? 'Invalid email or password.'
+        : err.message || 'Login failed';
       setError(msg);
       toast.error(msg);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async (account: typeof DEMO_ACCOUNTS[0]) => {
-    setDemoLoading(account.role);
-    setError('');
-    try {
-      await login(account.email, account.password);
-      toast.success(`Welcome, ${account.name}!`);
-      navigate('/dashboard');
-    } catch (err: any) {
-      const msg = `Demo login failed: ${err.message || 'Server unavailable'}`;
-      setError(msg);
-      toast.error(msg);
-    } finally {
-      setDemoLoading(null);
     }
   };
 
@@ -170,51 +109,11 @@ const Login = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400">{t('signInAccount')}</p>
             </div>
 
-            {/* Demo Login Section */}
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-2.5">
-                <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500 px-2 whitespace-nowrap">Quick Demo Login</span>
-                <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {DEMO_ACCOUNTS.map(account => {
-                  const Icon = account.icon;
-                  const isLoading = demoLoading === account.role;
-                  return (
-                    <button
-                      key={account.role}
-                      onClick={() => handleDemoLogin(account)}
-                      disabled={!!demoLoading || loading}
-                      className={`relative flex flex-col items-center gap-1.5 p-2.5 rounded-xl border-2 transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${account.bg} ${account.border}`}
-                    >
-                      {isLoading ? (
-                        <Loader2 size={18} className={`animate-spin ${account.text}`} />
-                      ) : (
-                        <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${account.color} flex items-center justify-center shadow-md`}>
-                          <Icon size={14} className="text-white" />
-                        </div>
-                      )}
-                      <span className={`text-[10px] font-black uppercase tracking-widest ${account.text}`}>{account.label}</span>
-                      <span className="text-[9px] text-gray-500 dark:text-gray-400 text-center leading-tight">{account.description}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Divider */}
-            <div className="flex items-center gap-3 mb-3">
-              <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
-              <span className="text-xs font-bold text-gray-400 dark:text-gray-500">or sign in manually</span>
-              <div className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
-            </div>
-
             {/* Status banners */}
             {!isApiOnline && (
               <div className="mb-3 p-2 bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30 rounded-lg flex items-center gap-2 text-red-600 dark:text-red-400">
                 <AlertCircle size={14} className="shrink-0" />
-                <p className="text-[11px] font-bold uppercase tracking-wide">Server offline — use demo login</p>
+                <p className="text-[11px] font-bold uppercase tracking-wide">Server offline — system running in offline fallback mode</p>
               </div>
             )}
             {error && (
