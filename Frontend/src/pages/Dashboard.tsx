@@ -102,7 +102,7 @@ const Dashboard = () => {
         user.role === 'admin' ? api.getAdminStatistics() : Promise.resolve(null)
       ]);
 
-      const statsBody = farmerStatsRes || {};
+      const statsBody = (farmerStatsRes || {}) as any;
       // Backend returns farmerLoginsByDistrict with uniqueFarmers; map to expected shape
       const farmerStats = (statsBody.farmerLoginsByDistrict || []).map((s: any) => ({
         district: s.district,

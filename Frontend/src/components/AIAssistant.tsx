@@ -5,7 +5,6 @@ import {
   Mic
 } from 'lucide-react';
 import ApiService from '../services/api';
-import toast from 'react-hot-toast';
 
 interface Message {
   id: string;
@@ -53,14 +52,40 @@ const AIAssistant: React.FC = () => {
       const response = await ApiService.sendMessageToAI(input);
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: (response as any).response || "I'm sorry, I couldn't process that request.",
+        text: (response as any).data?.response || (response as any).response || "I'm sorry, I couldn't process that request.",
         sender: 'bot',
         timestamp: new Date()
       };
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error('Chat failed:', error);
-      toast.error('AI Assistant is currently unavailable.');
+      
+      // Fallback local expert chatbot response
+      const lowercaseInput = input.toLowerCase();
+      let reply = "I'm sorry, the connection to our server is currently unstable. How else can I assist you with your crops or IoT sensors?";
+      if (lowercaseInput.includes("hello") || lowercaseInput.includes("hi") || lowercaseInput.includes("hey")) {
+        reply = "Hello! I'm your local fallback agricultural assistant. How can I help you today?";
+      } else if (lowercaseInput.includes("crop") || lowercaseInput.includes("sow") || lowercaseInput.includes("plant")) {
+        reply = "For optimal crop growth, ensure you check the local weather forecasts and match your soil moisture level. You can use our Crop Recommendation tool in the ML panel for precise analytics.";
+      } else if (lowercaseInput.includes("pest") || lowercaseInput.includes("insect") || lowercaseInput.includes("bug")) {
+        reply = "Pests can quickly damage yields. I recommend checking our Pest Risk Prediction tool, ensuring proper field aeration, or applying organic neem oil solutions if threat levels are medium.";
+      } else if (lowercaseInput.includes("disease") || lowercaseInput.includes("leaf") || lowercaseInput.includes("spot")) {
+        reply = "Leaf spotting or yellowing could indicate a fungal infection or nutrient deficiency. Try uploading a picture of the leaves to our Disease Detection tool for an automated scan.";
+      } else if (lowercaseInput.includes("weather") || lowercaseInput.includes("rain") || lowercaseInput.includes("temperature")) {
+        reply = "Keeping tabs on weather is crucial. Make sure your fields have proper drainage to handle excess rainfall, and schedule irrigation during cooler early morning hours to minimize evaporation.";
+      } else if (lowercaseInput.includes("iot") || lowercaseInput.includes("sensor") || lowercaseInput.includes("telemetry")) {
+        reply = "Our IoT Dashboard displays live telemetry (soil moisture, temperature, and NPK levels). Ensure your physical nodes are calibrated and transmitting properly.";
+      } else if (lowercaseInput.includes("yield") || lowercaseInput.includes("predict")) {
+        reply = "Yield prediction depends on several parameters: crop variety, acreage, fertilizer input, and climate conditions. Please check out the Yield Predictor feature for precise estimates.";
+      }
+      
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: reply,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, botMessage]);
     } finally {
       setIsLoading(false);
     }

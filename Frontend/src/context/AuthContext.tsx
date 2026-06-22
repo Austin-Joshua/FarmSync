@@ -31,12 +31,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (savedToken && savedUser) {
         try {
           setUser(JSON.parse(savedUser));
-          // Verify session integrity with backend
+        } catch (error) {
+          console.error('Failed to parse cached user:', error);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setUser(null);
+        }
+      }
+      
+      // Stop blocking initial mount immediately
+      setLoading(false);
+
+      // Verify session integrity with backend in the background
+      if (savedToken && savedUser) {
+        try {
           const profile = await ApiService.getProfile();
           if (profile) {
             const userProfile = profile as any as User;
             setUser(userProfile);
             localStorage.setItem('user', JSON.stringify(userProfile));
+          } else {
+            // Profile is invalid/empty, clear session
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setUser(null);
           }
         } catch (error) {
           console.error('Session verification failed, logging out:', error);
@@ -45,7 +63,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(null);
         }
       }
-      setLoading(false);
     };
 
     initializeAuth();

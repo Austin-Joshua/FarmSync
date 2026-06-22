@@ -2,10 +2,10 @@
 import { useState, useEffect, useRef } from 'react';
 import {
   Wifi, Thermometer, Droplets, Wind, Sun, AlertTriangle,
-  CheckCircle, Battery, Signal, RefreshCw, Activity, Leaf, Eye
+  Battery, Signal, RefreshCw, Activity, Leaf, Eye
 } from 'lucide-react';
 import {
-  LineChart, Line, AreaChart, Area, XAxis, YAxis,
+  AreaChart, Area, XAxis, YAxis,
   CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 
@@ -42,7 +42,6 @@ const IoTDashboard = () => {
   });
   const [selectedSensor, setSelectedSensor] = useState('temp');
   const [paused, setPaused] = useState(false);
-  const [tick, setTick] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -65,7 +64,6 @@ const IoTDashboard = () => {
         });
         return next;
       });
-      setTick(t => t + 1);
     }, 2000);
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [paused]);

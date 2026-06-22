@@ -2,8 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { 
   ArrowRight, TrendingUp, Sun, Moon, 
-  Calendar, PieChart, Zap, Database, Check, PlayCircle,
-  Menu, X, ChevronDown, MessageSquare, ChevronLeft, ChevronRight, Mail, Shield, Smartphone, HelpCircle
+  Calendar, PieChart, Zap, Database,
+  Menu, X, ChevronDown, ChevronLeft, ChevronRight, Mail, Shield, Smartphone
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
@@ -18,7 +18,7 @@ const Landing = () => {
   const [activePreviewTab, setActivePreviewTab] = useState<'weather' | 'disease' | 'inventory' | 'yield'>('weather');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [, setIsSubscribed] = useState(false);
 
   // Smooth scroll helper
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {

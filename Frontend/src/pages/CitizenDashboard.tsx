@@ -3,13 +3,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-  TrendingUp, TrendingDown, ShoppingCart, MessageSquare, CloudRain,
-  Thermometer, Wind, Sun, MapPin, Star, Package, Bell, ArrowRight,
-  IndianRupee, Wheat, Leaf, Sprout, BarChart2, BookOpen, CheckCircle
+  TrendingUp, TrendingDown, ShoppingCart, MessageSquare, MapPin,
+  Package, ArrowRight, BarChart2, BookOpen, CheckCircle
 } from 'lucide-react';
 import WeatherCard from '../components/WeatherCard';
 import LocationMap from '../components/LocationMap';
-import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import api from '../services/api';
 
@@ -60,7 +58,6 @@ interface MarketItem {
 
 const CitizenDashboard = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const [nearbyItems, setNearbyItems] = useState<MarketItem[]>([]);
   const [communityPosts, setCommunityPosts] = useState<any[]>([]);

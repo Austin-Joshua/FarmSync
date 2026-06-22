@@ -18,6 +18,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
+// Triggering IDE re-indexing
 public class SecurityConfig {
 
     @Autowired

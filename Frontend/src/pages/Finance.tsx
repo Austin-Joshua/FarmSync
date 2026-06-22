@@ -2,7 +2,7 @@
 import { useState, useMemo } from 'react';
 import {
   Landmark, TrendingUp, TrendingDown, Calculator, IndianRupee,
-  ExternalLink, CheckCircle, Info, BarChart2, Percent
+  BarChart2
 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid,

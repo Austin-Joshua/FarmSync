@@ -4,7 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useLocation } from '../hooks/useLocation';
 import { useTheme } from '../context/ThemeContext';
-import { MapPin, Navigation, Edit3, Trash2, Check, RotateCcw, Save, Compass } from 'lucide-react';
+import { MapPin, Navigation, Trash2, RotateCcw, Save, Compass } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 // Fix Leaflet's default marker icon paths in React

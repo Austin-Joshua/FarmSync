@@ -3,7 +3,7 @@ import { useState } from 'react';
 import {
   ShieldCheck, Award, FileCheck, Upload, CheckCircle, Clock,
   AlertCircle, Plus, Download, ExternalLink, ChevronDown, ChevronUp,
-  Star, Leaf, Package
+  Leaf, Package
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 

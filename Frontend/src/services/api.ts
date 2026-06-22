@@ -9,6 +9,8 @@ const api = axios.create({
   },
 });
 
+const ML_BASE_URL = import.meta.env.VITE_ML_API_URL || 'http://localhost:8000';
+
 // Request Interceptor to add Auth Token
 api.interceptors.request.use(
   (config) => {
@@ -329,7 +331,7 @@ const ApiService = {
 
   // ML Service (port 8000) with client-side mathematical/decision tree fallbacks
   recommendCrop: (data: { N: number; P: number; K: number; temperature: number; humidity: number; ph: number; rainfall: number }) =>
-    axios.post('http://localhost:8000/ml/crop-recommend', data)
+    axios.post(`${ML_BASE_URL}/ml/crop-recommend`, data)
       .catch(() => {
         // High fidelity Kaggle-trained distance fallback classifier
         const cropProfiles = [
@@ -373,7 +375,7 @@ const ApiService = {
       }),
 
   predictYield: (data: { state: string; district: string; season: string; crop: string; area: number }) =>
-    axios.post('http://localhost:8000/ml/yield-predict', data)
+    axios.post(`${ML_BASE_URL}/ml/yield-predict`, data)
       .catch(() => {
         // Regressive crop factor fallback estimator
         const baseYieldMap: Record<string, number> = {
@@ -400,7 +402,7 @@ const ApiService = {
       }),
 
   predictPest: (data: { temperature: number; humidity: number; rainfall: number; crop: string }) =>
-    axios.post('http://localhost:8000/ml/pest-predict', data)
+    axios.post(`${ML_BASE_URL}/ml/pest-predict`, data)
       .catch(() => {
         // Decision tree pest threat simulator
         let risk = 'Low';
@@ -424,7 +426,7 @@ const ApiService = {
   detectDiseaseML: (file: File) => {
     const formData = new FormData();
     formData.append('image', file);
-    return axios.post('http://localhost:8000/ml/disease-detect', formData, {
+    return axios.post(`${ML_BASE_URL}/ml/disease-detect`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
     .catch(() => {

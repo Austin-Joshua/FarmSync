@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { Package, Plus, Pencil, Trash2, Search, AlertTriangle, Sprout, Droplets, Bug, RefreshCw } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
 
 const CATEGORY_ICONS: Record<string, any> = {
   seeds: Sprout,
@@ -37,7 +36,6 @@ interface StockItem {
 }
 
 const StockManagement = () => {
-  const { t } = useTranslation();
   const [items, setItems] = useState<StockItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
