@@ -71,8 +71,14 @@ public class AIService {
                 })
                 .flatMap(prediction -> {
                     try {
-                        // 1. Upload image to Firebase Storage
-                        String imageUrl = firebaseService.uploadImage(file, "disease-scans");
+                        // 1. Upload image to Firebase Storage if available
+                        String imageUrl;
+                        if (!com.google.firebase.FirebaseApp.getApps().isEmpty()) {
+                            imageUrl = firebaseService.uploadImage(file, "disease-scans");
+                        } else {
+                            imageUrl = "mock-scans/" + java.util.UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+                            System.err.println("Firebase not initialized. Using local/mock path for image: " + imageUrl);
+                        }
                         
                         // 2. Save result to Firestore/DB via DiseaseScanService
                         DiseaseScan scan = DiseaseScan.builder()

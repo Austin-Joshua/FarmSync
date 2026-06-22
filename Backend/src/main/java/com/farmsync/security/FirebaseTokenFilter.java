@@ -35,36 +35,38 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ") && SecurityContextHolder.getContext().getAuthentication() == null) {
             String idToken = header.substring(7);
 
-            try {
-                FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
-                String email = decodedToken.getEmail();
+            if (!com.google.firebase.FirebaseApp.getApps().isEmpty()) {
+                try {
+                    FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
+                    String email = decodedToken.getEmail();
 
-                if (email != null) {
-                    Optional<User> userOptional = userRepository.findByEmail(email);
-                    User user;
-                    
-                    if (userOptional.isPresent()) {
-                        user = userOptional.get();
-                    } else {
-                        // Auto-create local user from Firebase token data
-                        user = new User();
-                        user.setId(java.util.UUID.randomUUID());
-                        user.setEmail(email);
-                        user.setName(decodedToken.getName() != null ? decodedToken.getName() : "Firebase User");
-                        user.setRole("farmer"); // Default role
-                        user = userRepository.save(user);
-                        System.out.println("Auto-created local user record for: " + email);
+                    if (email != null) {
+                        Optional<User> userOptional = userRepository.findByEmail(email);
+                        User user;
+                        
+                        if (userOptional.isPresent()) {
+                            user = userOptional.get();
+                        } else {
+                            // Auto-create local user from Firebase token data
+                            user = new User();
+                            user.setId(java.util.UUID.randomUUID());
+                            user.setEmail(email);
+                            user.setName(decodedToken.getName() != null ? decodedToken.getName() : "Firebase User");
+                            user.setRole("farmer"); // Default role
+                            user = userRepository.save(user);
+                            System.out.println("Auto-created local user record for: " + email);
+                        }
+                        
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                user, null, java.util.Collections.singletonList(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase())));
+                        
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
-                    
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            user, null, java.util.Collections.singletonList(new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase())));
-                    
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
 
-            } catch (Exception e) {
-                // If token is invalid, we don't set the authentication and let the security config handle it
-                System.err.println("Firebase authentication failed: " + e.getMessage());
+                } catch (Exception e) {
+                    // If token is invalid, we don't set the authentication and let the security config handle it
+                    System.err.println("Firebase authentication failed: " + e.getMessage());
+                }
             }
         }
 
