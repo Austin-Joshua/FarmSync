@@ -1,6 +1,7 @@
 package com.farmsync.config;
 
 import com.farmsync.security.FirebaseTokenFilter;
+import com.farmsync.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +24,7 @@ public class SecurityConfig {
     private FirebaseTokenFilter firebaseTokenFilter;
 
     @Autowired
-    private com.farmsync.security.JwtAuthenticationFilter jwtAuthenticationFilter;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
