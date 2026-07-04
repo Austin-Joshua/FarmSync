@@ -16,9 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
-
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
@@ -50,7 +48,7 @@ public class FirebaseService {
             ApiFuture<QuerySnapshot> future = dbFirestore.collection(collection).get();
             List<QueryDocumentSnapshot> documents = future.get().getDocuments();
             return documents.stream()
-                    .map(DocumentSnapshot::getData)
+                    .map(doc -> doc != null ? doc.getData() : new HashMap<String, Object>())
                     .collect(Collectors.toList());
         } catch (InterruptedException | ExecutionException e) {
             logger.error("Error retrieving data from Firestore collection: {}", collection, e);

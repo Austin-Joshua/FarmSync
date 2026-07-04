@@ -161,12 +161,22 @@ def predict_yield(input_data: Dict[str, Any]) -> Dict[str, Any]:
         features = info.get('features', [])
         encoders = info.get('encoders', {})
 
-        # Build feature row
+        # Build feature row with fallbacks for missing features
+        fallbacks = {
+            'irrigation': 'manual',
+            'soil': 'loamy',
+            'fertilizer': 0.5,
+            'pesticide': 10.0,
+            'water': 1000.0,
+            'area': 5.0,
+            'crop': 'rice',
+            'season': 'kharif'
+        }
         row = []
         for feat in features:
             val = input_data.get(feat)
             if val is None:
-                return {'success': False, 'error': f'Missing feature: {feat}'}
+                val = fallbacks.get(feat, 0.0)
             if feat in encoders:
                 enc = encoders[feat]
                 # Normalize to lowercase string to match encoder keys

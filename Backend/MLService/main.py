@@ -61,6 +61,11 @@ class YieldPredictionRequest(BaseModel):
     season: str
     crop: str
     area: float  # in hectares
+    irrigation: str = "manual"
+    soil: str = "loamy"
+    fertilizer: float = 0.5
+    pesticide: float = 10.0
+    water: float = 1000.0
 
 class PestPredictionRequest(BaseModel):
     temperature: float

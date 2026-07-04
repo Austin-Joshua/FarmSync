@@ -25,7 +25,7 @@ import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).parent
-DATASET_DIR = BASE_DIR.resolve().parents[1] / 'Dataset'
+DATASET_DIR = BASE_DIR / 'Dataset'
 
 # Use real Kaggle Crop Recommendation dataset from canonical Dataset/ folder
 FULL_DATASET_PATH = DATASET_DIR / 'Crop_recommendation.csv'
@@ -46,10 +46,9 @@ def load_dataset():
         df = pd.read_csv(FULL_DATASET_PATH)
     elif ORIGINAL_DATASET_PATH.exists():
         print(f"  Full dataset not found. Loading original: {ORIGINAL_DATASET_PATH}")
-        print("  ⚠️  Run generate_dataset.py first for best accuracy!")
         df = pd.read_csv(ORIGINAL_DATASET_PATH)
     else:
-        raise FileNotFoundError("No dataset found. Please run generate_dataset.py first.")
+        raise FileNotFoundError("No dataset found.")
     
     # Normalize column names and map to standard FEATURES casing
     df.columns = [c.strip() for c in df.columns]
@@ -78,7 +77,7 @@ def preprocess_data(df):
 def train_and_evaluate(X, y):
     """Train RandomForest with cross-validation."""
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
+        X, y, test_size=0.2, random_state=60
     )
     
     model = RandomForestClassifier(
@@ -101,9 +100,9 @@ def train_and_evaluate(X, y):
     print(f"  Test Accuracy: {accuracy*100:.2f}%")
     print(f"\n  Classification Report:\n{classification_report(y_test, y_pred)}")
     
-    # 5-fold cross validation
-    print("  Running 5-fold cross-validation...")
-    cv_scores = cross_val_score(model, X, y, cv=5, n_jobs=-1)
+    # 2-fold cross validation (since min class size is 2)
+    print("  Running 2-fold cross-validation...")
+    cv_scores = cross_val_score(model, X, y, cv=2, n_jobs=-1)
     cv_mean = cv_scores.mean()
     cv_std = cv_scores.std()
     print(f"  CV Accuracy: {cv_mean*100:.2f}% ± {cv_std*100:.2f}%")

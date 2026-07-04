@@ -154,7 +154,7 @@ public class MarketplaceController {
 
         if (!items.isEmpty()) {
             lowestPrice = items.stream()
-                    .mapToDouble(MarketplaceItem::getPrice)
+                    .mapToDouble(item -> item != null ? item.getPrice() : 0.0)
                     .min()
                     .orElse(0.0);
             source = "listings";

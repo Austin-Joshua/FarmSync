@@ -167,7 +167,9 @@ public class AnalyticsController {
         }
 
         // 3. Goods Delivered
-        double totalQuantityDelivered = allYields.stream().mapToDouble(Yield::getQuantity).sum();
+        double totalQuantityDelivered = allYields.stream()
+                .mapToDouble(y -> y != null ? y.getQuantity() : 0.0)
+                .sum();
         if (totalQuantityDelivered == 0) {
             totalQuantityDelivered = 15000.0; // default seed in kg
         } else {

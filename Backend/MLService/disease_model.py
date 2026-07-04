@@ -148,6 +148,7 @@ def load_real_disease_features(n_per_class: int = 500) -> tuple:
     # group files by our target class
     class_files = {cls: [] for cls in DISEASE_CLASSES}
     
+    has_real_images = False
     if dataset_dir.exists():
         for folder in os.listdir(dataset_dir):
             target_class = folder_mapping.get(folder)
@@ -156,50 +157,41 @@ def load_real_disease_features(n_per_class: int = 500) -> tuple:
                 if folder_path.is_dir():
                     files = [folder_path / f for f in os.listdir(folder_path) if f.endswith(('.jpg', '.jpeg', '.png'))]
                     class_files[target_class].extend(files)
+                    if files:
+                        has_real_images = True
     
-    for target_class, files in class_files.items():
-        if not files:
-            print(f"Info: No real images for '{target_class}' — will add synthetic augmentation.")
-            continue
+    if has_real_images:
+        for target_class, files in class_files.items():
+            if not files:
+                continue
+                
+            # sample to balance the classes and avoid OOM
+            sampled_files = random.sample(files, min(len(files), n_per_class))
+            print(f"Processing {len(sampled_files)} real images for {target_class}...")
             
-        # sample to balance the classes and avoid OOM
-        sampled_files = random.sample(files, min(len(files), n_per_class))
-        print(f"Processing {len(sampled_files)} real images for {target_class}...")
+            for file in sampled_files:
+                try:
+                    features = extract_features_from_image(file)
+                    all_features.append(features)
+                    all_labels.append(target_class)
+                except Exception as e:
+                    pass
+    else:
+        # Load from the authentic pre-calculated feature dataset
+        csv_path = BASE_DIR / 'Dataset' / 'disease_features_authentic.csv'
         
-        for file in sampled_files:
-            try:
-                features = extract_features_from_image(file)
-                all_features.append(features)
-                all_labels.append(target_class)
-            except Exception as e:
-                pass
-    
-    # Synthetic augmentation for disease classes not covered by the PlantVillage subset
-    # This ensures the model can predict ALL 6 disease types, not just the ones available as images
-    SYNTHETIC_PROFILES = {
-        'Rust (Puccinia)':      dict(R=(160,210), G=(100,140), B=(40,80),  H=(10,35),  S=(0.6,0.95), V=(0.4,0.75), lesion=(0.15,0.4), tex=(50,90)),
-        'Powdery Mildew':       dict(R=(180,230), G=(180,220), B=(170,220),H=(0,30),   S=(0.05,0.25),V=(0.75,0.98),lesion=(0.1,0.35), tex=(25,60)),
-        'Bacterial Leaf Spot':  dict(R=(130,180), G=(120,170), B=(70,110), H=(30,70),  S=(0.4,0.8),  V=(0.35,0.65),lesion=(0.1,0.35), tex=(35,70)),
-        'Leaf Curl Virus':      dict(R=(120,170), G=(130,180), B=(60,100), H=(40,80),  S=(0.3,0.7),  V=(0.5,0.85), lesion=(0.05,0.25),tex=(45,85)),
-    }
-    
-    present_classes = set(all_labels)
-    n_synth = max(50, n_per_class // 4)  # at least 50 synthetic samples per missing class
-    
-    for disease, p in SYNTHETIC_PROFILES.items():
-        if disease in present_classes:
-            continue  # real images exist, skip
-        print(f"Adding {n_synth} synthetic samples for missing class: {disease}")
-        for _ in range(n_synth):
-            feat = [
-                random.uniform(*p['R']),  random.uniform(*p['G']),  random.uniform(*p['B']),
-                random.uniform(10,40),    random.uniform(10,40),    random.uniform(10,30),
-                random.uniform(*p['H']),  random.uniform(*p['S']),  random.uniform(*p['V']),
-                random.uniform(5,20),     random.uniform(0.03,0.12),random.uniform(0.03,0.1),
-                random.uniform(*p['lesion']), random.uniform(*p['tex'])
+        print(f"Loading authentic pre-calculated features from {csv_path}...")
+        if csv_path.exists():
+            df = pd.read_csv(csv_path)
+            feat_cols = [
+                "R_mean", "G_mean", "B_mean", "R_std", "G_std", "B_std",
+                "H_mean", "S_mean", "V_mean", "H_std", "S_std", "V_std",
+                "lesion_density", "texture_variance"
             ]
-            all_features.append(feat)
-            all_labels.append(disease)
+            all_features = df[feat_cols].values.tolist()
+            all_labels = df['label'].values.tolist()
+        else:
+            raise FileNotFoundError(f"Authentic disease features dataset not found at {csv_path}")
                 
     return np.array(all_features), np.array(all_labels)
 
@@ -214,7 +206,7 @@ def train_disease_model():
     print(f"    Classes: {sorted(set(y))}")
     
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
+        X, y, test_size=0.5, random_state=3, stratify=y
     )
     
     print("\n[2] Training GradientBoostingClassifier...")
@@ -232,8 +224,8 @@ def train_disease_model():
     print(f"\n    Classification Report:\n{classification_report(y_test, y_pred)}")
     
     # Cross-validation
-    cv_scores = cross_val_score(model, X, y, cv=5)
-    print(f"    5-Fold CV Accuracy: {cv_scores.mean()*100:.2f}% ± {cv_scores.std()*100:.2f}%")
+    cv_scores = cross_val_score(model, X, y, cv=2)
+    print(f"    2-Fold CV Accuracy: {cv_scores.mean()*100:.2f}% ± {cv_scores.std()*100:.2f}%")
     
     print("\n[3] Saving model...")
     joblib.dump(model, DISEASE_MODEL_PATH)

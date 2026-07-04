@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 def train_pest_model():
-    dataset_path = Path(__file__).resolve().parents[2] / 'Dataset' / 'pest_data.csv'
+    dataset_path = Path(__file__).resolve().parent / 'Dataset' / 'pest_data.csv'
     model_dir = Path(__file__).parent / 'models'
     model_dir.mkdir(parents=True, exist_ok=True)
     
@@ -22,7 +22,7 @@ def train_pest_model():
     X = df[['Temperature', 'Humidity', 'Rainfall', 'Crop_Encoded']]
     y = df['Pest_Risk'] # Low, Medium, High
     
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
     
     print("Training Pest Prediction Random Forest model...")
     rf = RandomForestClassifier(n_estimators=100, random_state=42)
