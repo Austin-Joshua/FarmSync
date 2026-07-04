@@ -1,0 +1,133 @@
+{
+  "dataset_shape": [
+    2200,
+    8
+  ],
+  "n_classes": 22,
+  "classes": [
+    "apple",
+    "banana",
+    "blackgram",
+    "chickpea",
+    "coconut",
+    "coffee",
+    "cotton",
+    "grapes",
+    "jute",
+    "kidneybeans",
+    "lentil",
+    "maize",
+    "mango",
+    "mothbeans",
+    "mungbean",
+    "muskmelon",
+    "orange",
+    "papaya",
+    "pigeonpeas",
+    "pomegranate",
+    "rice",
+    "watermelon"
+  ],
+  "features": [
+    "N",
+    "P",
+    "K",
+    "temperature",
+    "humidity",
+    "ph",
+    "rainfall"
+  ],
+  "train_samples": 1760,
+  "test_samples": 440,
+  "classical_rf": {
+    "accuracy_pct": 93.18,
+    "precision": 0.9333,
+    "recall": 0.9318,
+    "f1_score": 0.9314,
+    "roc_auc": 0.9983,
+    "cv_mean_pct": 93.64,
+    "cv_std_pct": 0.96,
+    "infer_ms_per_sample": 0.12,
+    "n_test_samples": 440
+  },
+  "quantum_vqc": {
+    "target_class": "rice",
+    "is_trained": true,
+    "accuracy_pct": 29.09,
+    "precision": 0.038,
+    "recall": 0.6,
+    "f1_score": 0.0714,
+    "roc_auc": 0.3046,
+    "confusion_matrix": [
+      [
+        116,
+        304
+      ],
+      [
+        8,
+        12
+      ]
+    ],
+    "infer_ms_per_sample": 0.127,
+    "n_test_samples": 440
+  },
+  "hybrid_rf_vqc": {
+    "blend_strategy": "confidence_fusion",
+    "accuracy_pct": 80.0,
+    "precision": 0.9423,
+    "recall": 0.8,
+    "f1_score": 0.8325,
+    "mcc": 0.8058,
+    "cohen_kappa": 0.7905,
+    "n_test_samples": 440
+  },
+  "comparison": {
+    "hybrid_vs_rf_accuracy_delta_pct": -13.18,
+    "hybrid_vs_rf_f1_delta": -0.0989,
+    "vqc_trained": true,
+    "assessment": "No significant hybrid accuracy improvement over RF-alone with binary VQC blending (multiclass RF vs binary VQC creates semantic mismatch)",
+    "recommendation": "Train multiclass VQC (one-vs-rest ensemble) for proper comparison"
+  },
+  "robustness": {
+    "noise_5pct_accuracy_pct": 92.5,
+    "missing_10pct_accuracy_pct": 84.55,
+    "outlier_10pct_accuracy_pct": 89.32,
+    "cv_f1_mean": 0.9362,
+    "cv_f1_std": 0.0099,
+    "noise_degradation_pct": 0.68,
+    "missing_degradation_pct": 8.64
+  },
+  "security": {
+    "jwt_secret_default_risk": "HIGH \u2014 default secret in application.properties; must be env-var in production",
+    "h2_console_exposed": "MEDIUM \u2014 spring.h2.console.enabled=true; must be false in production",
+    "password_hashing": "PASS \u2014 BCryptPasswordEncoder configured",
+    "sql_injection": "PASS \u2014 JPA/Hibernate parameterized queries",
+    "input_validation": "PASS \u2014 Pydantic (FastAPI) + Bean Validation (Spring Boot)",
+    "cors_configured": "PASS \u2014 restricted origins configured",
+    "rbac": "PASS \u2014 ROLE_FARMER, ROLE_ADMIN, ROLE_GOVERNMENT enforced",
+    "xss_protection": "PASS \u2014 React escapes all rendered output",
+    "csrf": "PASS \u2014 JWT bearer token immune to CSRF (stateless)",
+    "file_upload_validation": "PASS \u2014 image content-type check, in-memory processing",
+    "audit_logging": "PASS \u2014 AuditLogRepository implemented",
+    "packages_scanned": {
+      "fastapi": "0.110.0 \u2014 no known CVEs",
+      "qiskit": "2.4.2 \u2014 latest stable",
+      "scikit-learn": "1.4.2 \u2014 no known CVEs",
+      "pillow": "10.3.0 \u2014 no known CVEs",
+      "numpy": "1.26.4 \u2014 no known CVEs"
+    },
+    "owasp_top10": {
+      "A01_Broken_Access_Control": "PASS",
+      "A02_Cryptographic_Failures": "PASS",
+      "A03_Injection": "PASS",
+      "A04_Insecure_Design": "PASS",
+      "A05_Security_Misconfiguration": "PARTIAL \u2014 H2 console + default JWT secret",
+      "A06_Vulnerable_Components": "PASS",
+      "A07_Auth_Session_Management": "PASS",
+      "A08_Software_Data_Integrity": "PASS",
+      "A09_Security_Logging": "PASS",
+      "A10_SSRF": "PASS"
+    }
+  },
+  "generated_at": "2026-07-05 01:41:31.425499"
+}

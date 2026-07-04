@@ -20,6 +20,7 @@ interface RecommendResult {
   cv_accuracy: number;
   quantum_active?: boolean;
   classical_confidence_percent?: number;
+  explainability?: any;
 }
 
 const CROP_EMOJIS: Record<string, string> = {
@@ -232,7 +233,7 @@ export default function CropRecommendation() {
 
               {/* Quantum Decision Intelligence Layer Card */}
               {result.quantum_active && (
-                <div className="glass-card p-6 bg-gradient-to-br from-gray-900 to-indigo-950 text-white relative overflow-hidden border border-indigo-500/20 shadow-xl">
+                <div className="glass-card p-6 bg-gradient-to-br from-gray-900 to-indigo-950 text-white relative overflow-hidden border border-indigo-500/20 shadow-xl animate-in fade-in slide-in-from-bottom duration-700">
                   <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl -translate-y-4 translate-x-4" />
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-[10px] font-black text-indigo-300 bg-indigo-500/25 px-2 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
@@ -254,9 +255,89 @@ export default function CropRecommendation() {
                       <p className="text-lg font-black text-green-400 mt-0.5">{result.confidence_percent.toFixed(1)}%</p>
                     </div>
                   </div>
+                  
+                  {result.explainability && (
+                    <div className="space-y-1.5 mt-3 mb-3">
+                      <div className="flex justify-between text-[10px] font-bold text-indigo-200">
+                        <span>Classical Contribution ({result.explainability.classical_contribution_pct}%)</span>
+                        <span>Quantum Contribution ({result.explainability.quantum_contribution_pct}%)</span>
+                      </div>
+                      <div className="w-full bg-indigo-950 rounded-full h-1.5 flex overflow-hidden border border-indigo-800/40">
+                        <div 
+                          className="bg-indigo-400 h-full" 
+                          style={{ width: `${result.explainability.classical_contribution_pct}%` }} 
+                        />
+                        <div 
+                          className="bg-green-400 h-full" 
+                          style={{ width: `${result.explainability.quantum_contribution_pct}%` }} 
+                        />
+                      </div>
+                    </div>
+                  )}
+
                   <p className="text-[11px] text-indigo-200/80 leading-relaxed">
                     Continuous values mapped via a <strong>Z-Feature Map</strong> and run using a parameterized <strong>RealAmplitudes variational ansatz</strong> on simulated local quantum backends.
                   </p>
+                </div>
+              )}
+
+              {/* Explainability Insights Card */}
+              {result.explainability && (
+                <div className="glass-card p-6 bg-white dark:bg-gray-800/80 border border-gray-150 dark:border-gray-700/80 shadow-md space-y-4 animate-in fade-in slide-in-from-bottom duration-700">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span>📊</span> Decision Diagnostics & Influence
+                  </h3>
+                  
+                  {/* Primary Driver */}
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                    <div>
+                      <p className="text-[10px] text-gray-400 uppercase font-black tracking-wider">Primary Driver</p>
+                      <p className="text-sm font-extrabold text-gray-800 dark:text-gray-200 mt-0.5">{result.explainability.primary_driver}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] text-gray-400 uppercase font-black tracking-wider">Decision Fusion</p>
+                      <p className="text-sm font-extrabold text-indigo-500 mt-0.5">Dynamic Confidence Blended</p>
+                    </div>
+                  </div>
+
+                  {/* Soil vs Weather breakdown */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs font-bold text-gray-600 dark:text-gray-400">
+                      <span>Soil Chemistry Influence ({result.explainability.soil_influence_pct}%)</span>
+                      <span>Weather Influence ({result.explainability.weather_influence_pct}%)</span>
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 flex overflow-hidden">
+                      <div 
+                        className="bg-green-500 h-full" 
+                        style={{ width: `${result.explainability.soil_influence_pct}%` }} 
+                      />
+                      <div 
+                        className="bg-blue-400 h-full" 
+                        style={{ width: `${result.explainability.weather_influence_pct}%` }} 
+                      />
+                    </div>
+                  </div>
+
+                  {/* Feature Importance List */}
+                  <div className="space-y-2.5 pt-1">
+                    <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">Individual Parameter Weights</p>
+                    <div className="space-y-2">
+                      {Object.entries(result.explainability.feature_influence_matrix || {}).map(([feat, pct]) => (
+                        <div key={feat} className="space-y-1">
+                          <div className="flex justify-between text-xs">
+                            <span className="font-semibold text-gray-700 dark:text-gray-300 capitalize">{feat}</span>
+                            <span className="font-bold text-gray-500">{(pct as number).toFixed(1)}%</span>
+                          </div>
+                          <div className="w-full bg-gray-100 dark:bg-gray-700/50 rounded-full h-1.5">
+                            <div 
+                              className="bg-gradient-to-r from-emerald-500 to-green-400 h-1.5 rounded-full" 
+                              style={{ width: `${pct}%` }} 
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
 

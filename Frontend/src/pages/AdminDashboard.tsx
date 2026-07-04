@@ -196,7 +196,7 @@ const AdminDashboard = () => {
              <Calendar size={14} />
              {format(new Date(), 'EEEE, MMMM do yyyy')}
            </div>
-           <button onClick={fetchStatistics} className="p-2 bg-primary-600 text-white rounded-xl hover:rotate-180 transition-transform duration-500"><RefreshCw size={20} /></button>
+           <button onClick={fetchStatistics} aria-label="Refresh statistics" className="p-2 bg-primary-600 text-white rounded-xl hover:rotate-180 transition-transform duration-500"><RefreshCw size={20} /></button>
         </div>
       </div>
 

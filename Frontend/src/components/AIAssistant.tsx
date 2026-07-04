@@ -95,6 +95,7 @@ const AIAssistant: React.FC = () => {
     return (
       <button
         onClick={() => setIsOpen(true)}
+        aria-label="Open AI Assistant"
         className="fixed bottom-24 right-8 w-16 h-16 rounded-full bg-primary-600 hover:bg-primary-500 text-white shadow-2xl shadow-primary-500/40 flex items-center justify-center animate-bounce hover:animate-none transition-all z-50 group"
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-primary-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -129,12 +130,14 @@ const AIAssistant: React.FC = () => {
         <div className="flex items-center gap-2 relative z-10">
           <button 
             onClick={() => setIsMinimized(!isMinimized)}
+            aria-label={isMinimized ? "Maximize AI Assistant" : "Minimize AI Assistant"}
             className="p-2 hover:bg-white/10 rounded-lg transition-all"
           >
             {isMinimized ? <Maximize2 size={16} /> : <Minimize2 size={16} />}
           </button>
           <button 
             onClick={() => setIsOpen(false)}
+            aria-label="Close AI Assistant"
             className="p-2 hover:bg-white/10 rounded-lg transition-all"
           >
             <X size={16} />
@@ -184,7 +187,7 @@ const AIAssistant: React.FC = () => {
           {/* Input Area */}
           <div className="p-5 bg-white dark:bg-[#0d1510] border-t border-gray-100 dark:border-white/5">
             <div className="bg-gray-50 dark:bg-white/5 rounded-2xl p-2 flex items-center gap-2 border border-gray-100 dark:border-white/5">
-              <button className="p-2.5 text-gray-400 hover:text-primary-500 transition-all">
+              <button aria-label="Voice input" className="p-2.5 text-gray-400 hover:text-primary-500 transition-all">
                 <Mic size={20} />
               </button>
               <input 
@@ -198,6 +201,7 @@ const AIAssistant: React.FC = () => {
               <button 
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
+                aria-label="Send message"
                 className="p-2.5 bg-primary-600 hover:bg-primary-500 disabled:bg-gray-400 text-white rounded-xl shadow-lg shadow-primary-500/20 transition-all flex items-center justify-center active:scale-90"
               >
                 <Send size={18} />

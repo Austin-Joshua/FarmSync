@@ -34,15 +34,15 @@ public class MarketplaceController {
     }
 
     private static String resolveDatasetPath() {
-        File rootDataset = new File("Dataset/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
+        File rootDataset = new File("ml-service/datasets/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
         if (rootDataset.exists()) return rootDataset.getAbsolutePath();
-        File backendRelative = new File("../Dataset/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
+        File backendRelative = new File("../ml-service/datasets/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
         if (backendRelative.exists()) return backendRelative.getAbsolutePath();
-        File relative = new File("Backend/MLService/Dataset/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
+        File relative = new File("ml-service/datasets/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
         if (relative.exists()) return relative.getAbsolutePath();
-        File sibling = new File("MLService/Dataset/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
+        File sibling = new File("../ml-service/datasets/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
         if (sibling.exists()) return sibling.getAbsolutePath();
-        return System.getProperty("user.dir") + File.separator + "Dataset" + File.separator
+        return System.getProperty("user.dir") + File.separator + "ml-service" + File.separator + "datasets" + File.separator
                 + "All-India_-Crop-wise-Area,-Production-&-Yield.csv";
     }
 

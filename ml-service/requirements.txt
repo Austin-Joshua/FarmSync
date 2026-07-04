@@ -1,0 +1,31 @@
+# FarmSync MLService — Python dependencies
+# Install with: pip install -r requirements.txt
+
+fastapi==0.110.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+starlette>=0.36.0
+
+# ML / Data Science
+scikit-learn==1.4.2
+numpy==1.26.4
+pandas==2.2.2
+scipy>=1.12.0
+
+# Optional: for advanced model export
+joblib==1.4.0
+Pillow==10.3.0
+
+# Quantum Computing (NISQ QML and Optimization)
+qiskit>=1.0.0
+qiskit-aer>=0.14.0
+qiskit-machine-learning>=0.7.0
+
+# Production deployment (Item 4: 4-worker cloud deployment)
+gunicorn>=21.2.0
+
+# Caching (Item 3: Redis prediction cache)
+redis>=5.0.0
+
+# Observability (Item 5: Prometheus metrics)
+prometheus-client>=0.20.0

@@ -237,7 +237,7 @@ const Layout = ({ children }: LayoutProps) => {
       }`}>
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between flex-shrink-0">
           <Logo />
-          <button onClick={() => setMobileOpen(false)} className="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-500 hover:text-gray-900 dark:hover:text-white">
+          <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-500 hover:text-gray-900 dark:hover:text-white">
             <X size={18} />
           </button>
         </div>
@@ -342,7 +342,7 @@ const Layout = ({ children }: LayoutProps) => {
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-3">
-          <button onClick={toggleTheme} className="p-2 text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-all" title={t('settings.theme')}>
+          <button onClick={toggleTheme} aria-label="Toggle theme" className="p-2 text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-all" title={t('settings.theme')}>
             {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
           </button>
           <div className="hidden sm:block">
@@ -353,6 +353,7 @@ const Layout = ({ children }: LayoutProps) => {
           <div className="relative" ref={notifRef}>
             <button
               onClick={() => { setShowNotifications(!showNotifications); setShowProfile(false); }}
+              aria-label="View notifications"
               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-all relative"
             >
               <Bell size={18} className="text-gray-600 dark:text-white" />

@@ -14,20 +14,20 @@ public class MarketController {
 
     private static String resolveDatasetPath() {
         // 1. Try consolidated dataset path at workspace root
-        java.io.File rootDataset = new java.io.File("Dataset/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
+        java.io.File rootDataset = new java.io.File("ml-service/datasets/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
         if (rootDataset.exists()) return rootDataset.getAbsolutePath();
         
-        // 2. Try consolidated path relative to Backend directory
-        java.io.File backendRelative = new java.io.File("../Dataset/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
+        // 2. Try consolidated path relative to backend directory (when running from backend/)
+        java.io.File backendRelative = new java.io.File("../ml-service/datasets/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
         if (backendRelative.exists()) return backendRelative.getAbsolutePath();
 
         // 3. Fallbacks
-        java.io.File relative = new java.io.File("Backend/MLService/Dataset/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
+        java.io.File relative = new java.io.File("ml-service/datasets/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
         if (relative.exists()) return relative.getAbsolutePath();
-        java.io.File sibling = new java.io.File("MLService/Dataset/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
+        java.io.File sibling = new java.io.File("../ml-service/datasets/All-India_-Crop-wise-Area,-Production-&-Yield.csv");
         if (sibling.exists()) return sibling.getAbsolutePath();
         
-        return System.getProperty("user.dir") + java.io.File.separator + "Dataset" + java.io.File.separator
+        return System.getProperty("user.dir") + java.io.File.separator + "ml-service" + java.io.File.separator + "datasets" + java.io.File.separator
                 + "All-India_-Crop-wise-Area,-Production-&-Yield.csv";
     }
 

@@ -175,11 +175,11 @@ const CropCalendar = () => {
       <div className="card !p-0 overflow-hidden border-none shadow-xl">
         <div className="bg-primary-600 dark:bg-primary-900 p-6 flex items-center justify-between text-white">
           <div className="flex items-center gap-4">
-             <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} className="p-2 hover:bg-white/10 rounded-full transition-colors"><ChevronLeft size={24} /></button>
+             <button onClick={() => setCurrentDate(subMonths(currentDate, 1))} aria-label="Previous month" className="p-2 hover:bg-white/10 rounded-full transition-colors"><ChevronLeft size={24} /></button>
              <h2 className="text-2xl font-black min-w-[200px] text-center">
                {format(currentDate, 'MMMM yyyy')}
              </h2>
-             <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} className="p-2 hover:bg-white/10 rounded-full transition-colors"><ChevronRight size={24} /></button>
+             <button onClick={() => setCurrentDate(addMonths(currentDate, 1))} aria-label="Next month" className="p-2 hover:bg-white/10 rounded-full transition-colors"><ChevronRight size={24} /></button>
           </div>
           <button onClick={() => setCurrentDate(new Date())} className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-sm font-bold transition-colors">Today</button>
         </div>

@@ -1,0 +1,53 @@
+{
+  "crop_recommendation": {
+    "before": {
+      "n_estimators": 100,
+      "max_depth": "15",
+      "size_kb": 360.8,
+      "cv_accuracy_pct": 93.82
+    },
+    "after": {
+      "n_estimators": 100,
+      "max_depth": 15,
+      "size_kb": 9200.9,
+      "cv_accuracy_pct": 93.82
+    },
+    "memory_reduction_pct": -2450.3,
+    "accuracy_delta_pct": 0.0,
+    "infer_ms_per_sample": 29.958,
+    "saved": true
+  },
+  "yield_prediction": {
+    "before": {
+      "n_estimators": 100,
+      "size_kb": 9083.4
+    },
+    "after": {
+      "n_estimators": 100,
+      "max_depth": 12,
+      "size_kb": 9083.4,
+      "r2": 0.998,
+      "rmse": 104.4357,
+      "mae": 70.9836
+    },
+    "memory_reduction_pct": 0.0,
+    "saved": true
+  },
+  "pest_prediction": {
+    "n_estimators": 100,
+    "size_kb": 70.3,
+    "classes": [
+      "Corn",
+      "Cotton",
+      "Rice",
+      "Sugarcane",
+      "Wheat"
+    ],
+    "note": "No re-training needed \u2014 model is already compact at 70KB"
+  },
+  "disease_detection": {
+    "size_kb": 477.5,
+    "type": "GradientBoostingClassifier",
+    "note": "GradientBoostingClassifier \u2014 already optimized for speed"
+  }
+}

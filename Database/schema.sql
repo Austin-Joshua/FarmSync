@@ -206,3 +206,53 @@ CREATE TABLE IF NOT EXISTS monthly_stock_usage (
     date_recorded DATE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ══════════════════════════════════════════════════════
+-- PERFORMANCE INDEXES
+-- Phase 7 optimization: cover all high-frequency query
+-- patterns in the multi-tenant FarmSync architecture.
+-- ══════════════════════════════════════════════════════
+
+-- User lookups (login, profile, JWT validation)
+CREATE INDEX IF NOT EXISTS idx_users_email       ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_role        ON users(role);
+
+-- Farm queries by farmer (most common multi-tenant filter)
+CREATE INDEX IF NOT EXISTS idx_farms_farmer_id   ON farms(farmer_id);
+
+-- Crops by farm (dashboard, crop list)
+CREATE INDEX IF NOT EXISTS idx_crops_farm_id     ON crops(farm_id);
+CREATE INDEX IF NOT EXISTS idx_crops_status      ON crops(status);
+CREATE INDEX IF NOT EXISTS idx_crops_farm_status ON crops(farm_id, status);
+
+-- Expenses by farm and date (finance dashboard, monthly reports)
+CREATE INDEX IF NOT EXISTS idx_expenses_farm_id  ON expenses(farm_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_date     ON expenses(date);
+
+-- Disease scans by user (scan history page)
+CREATE INDEX IF NOT EXISTS idx_disease_user_id   ON disease_scans(user_id);
+CREATE INDEX IF NOT EXISTS idx_disease_scanned   ON disease_scans(scanned_at);
+
+-- Yields by crop (yield tracking dashboard)
+CREATE INDEX IF NOT EXISTS idx_yields_crop_id    ON yields(crop_id);
+
+-- Stock items by user (stock management page)
+CREATE INDEX IF NOT EXISTS idx_stock_user_id     ON stock_items(user_id);
+
+-- Crop recommendations by user (history queries)
+CREATE INDEX IF NOT EXISTS idx_recommendations_user ON crop_recommendations(user_id);
+CREATE INDEX IF NOT EXISTS idx_recommendations_farm ON crop_recommendations(farm_id);
+
+-- Audit logs by user and timestamp (admin audit trail)
+CREATE INDEX IF NOT EXISTS idx_audit_user_id     ON audit_logs(user_id);
+CREATE INDEX IF NOT EXISTS idx_audit_created     ON audit_logs(created_at);
+
+-- Monthly income composite (unique constraint already exists, index supports analytics)
+CREATE INDEX IF NOT EXISTS idx_income_user_year  ON monthly_income(user_id, year);
+
+-- Fertilizer and pesticide usage by crop
+CREATE INDEX IF NOT EXISTS idx_fertilizers_crop  ON fertilizers(crop_id);
+CREATE INDEX IF NOT EXISTS idx_pesticides_crop   ON pesticides(crop_id);
+
+-- Irrigations by crop
+CREATE INDEX IF NOT EXISTS idx_irrigations_crop  ON irrigations(crop_id);

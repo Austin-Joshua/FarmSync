@@ -1,0 +1,17 @@
+{
+  "r2_score": 0.9979595005027072,
+  "rmse": 104.43568934599756,
+  "mae": 70.98358348521445,
+  "n_estimators": 100,
+  "max_depth": 12,
+  "features": [
+    "Farm_Area(acres)",
+    "Fertilizer_Used(tons)",
+    "Pesticide_Used(kg)",
+    "Water_Usage(cubic meters)",
+    "Crop_Type",
+    "Irrigation_Type",
+    "Soil_Type",
+    "Season"
+  ]
+}
