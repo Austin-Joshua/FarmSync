@@ -140,6 +140,7 @@ export default function AIInsightsWidget() {
             ) : (
               <p className="text-sm text-gray-500 italic">No recent alerts.</p>
             )}
+          </div>
         </div>
       </div>
 

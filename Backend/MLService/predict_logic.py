@@ -8,6 +8,7 @@ Handles crop recommendation and yield prediction.
 import numpy as np
 import json
 import joblib
+import time
 from pathlib import Path
 from typing import Dict, Any, List
 
@@ -82,8 +83,9 @@ def load_model():
 
 
 def predict(input_data: Dict[str, float]) -> Dict[str, Any]:
-    """Make crop recommendation prediction (Hybrid Classical + Quantum VQC)."""
+    """Make crop recommendation prediction (Hybrid Classical + Quantum VQC) with telemetry."""
     try:
+        t_start = time.perf_counter()
         model, model_info = load_model()
 
         if model is None:
@@ -103,11 +105,14 @@ def predict(input_data: Dict[str, float]) -> Dict[str, Any]:
 
         class_idx = list(model.classes_).index(prediction)
         confidence = float(probabilities[class_idx])
+        t_classical = time.perf_counter() - t_start
 
         # Quantum VQC Refinement
         quantum_active = False
         q_probs_normalized = []
         hybrid_probabilities = probabilities.copy()
+        t_quantum_start = time.perf_counter()
+        t_quantum = 0.0
         
         if _QUANTUM_ENGINE is not None:
             try:
@@ -145,6 +150,7 @@ def predict(input_data: Dict[str, float]) -> Dict[str, Any]:
                     hybrid_probabilities /= hybrid_sum
                     
                 quantum_active = True
+                t_quantum = time.perf_counter() - t_quantum_start
             except Exception as q_err:
                 print(f"Quantum VQC runtime error: {q_err}")
 
@@ -165,6 +171,8 @@ def predict(input_data: Dict[str, float]) -> Dict[str, Any]:
         best_crop_idx = top_indices[0]
         best_crop = str(model.classes_[best_crop_idx])
         best_confidence = float(hybrid_probabilities[best_crop_idx])
+        
+        t_total = time.perf_counter() - t_start
 
         return {
             'success': True,
@@ -178,7 +186,12 @@ def predict(input_data: Dict[str, float]) -> Dict[str, Any]:
             'quantum_active': quantum_active,
             'quantum_vqc_probabilities': q_probs_normalized,
             'classical_probabilities': probabilities.tolist(),
-            'classical_confidence_percent': round(confidence * 100, 1)
+            'classical_confidence_percent': round(confidence * 100, 1),
+            'telemetry': {
+                'classical_latency_ms': round(t_classical * 1000, 2),
+                'quantum_latency_ms': round(t_quantum * 1000, 2),
+                'total_latency_ms': round(t_total * 1000, 2)
+            }
         }
 
     except Exception as e:
@@ -209,10 +222,11 @@ def load_yield_model():
 
 def predict_yield(input_data: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Predict crop yield (tons) using farm-level agricultural data.
+    Predict crop yield (tons) using farm-level agricultural data (with QAOA and telemetry).
     Inputs: crop, area, irrigation, fertilizer, pesticide, soil, season, water
     """
     try:
+        t_start = time.perf_counter()
         model, info = load_yield_model()
         if model is None:
             return {'success': False, 'error': 'Yield model not trained yet.'}
@@ -249,9 +263,12 @@ def predict_yield(input_data: Dict[str, Any]) -> Dict[str, Any]:
         X = np.array([row])
         predicted_yield = float(model.predict(X)[0])
         predicted_yield = max(0.0, predicted_yield)  # Clamp to non-negative
+        t_classical = time.perf_counter() - t_start
 
         # Integrate Quantum QAOA Resource Optimization
         quantum_optimized = {}
+        t_quantum_start = time.perf_counter()
+        t_quantum = 0.0
         if _QUANTUM_ENGINE is not None:
             try:
                 # Ensure input resource values are provided or get fallbacks
@@ -262,8 +279,11 @@ def predict_yield(input_data: Dict[str, Any]) -> Dict[str, Any]:
                 }
                 qaoa_res = _QUANTUM_ENGINE.optimize_resources_qaoa(predicted_yield, qaoa_input)
                 quantum_optimized = qaoa_res
+                t_quantum = time.perf_counter() - t_quantum_start
             except Exception as q_err:
                 print(f"Quantum QAOA optimization error: {q_err}")
+
+        t_total = time.perf_counter() - t_start
 
         return {
             'success': True,
@@ -272,7 +292,12 @@ def predict_yield(input_data: Dict[str, Any]) -> Dict[str, Any]:
             'predicted_yield': round(predicted_yield, 2),
             'unit': 'tons',
             'model_r2': info.get('r2_score') if info else None,
-            'quantum_resource_optimization': quantum_optimized
+            'quantum_resource_optimization': quantum_optimized,
+            'telemetry': {
+                'classical_latency_ms': round(t_classical * 1000, 2),
+                'quantum_latency_ms': round(t_quantum * 1000, 2),
+                'total_latency_ms': round(t_total * 1000, 2)
+            }
         }
 
     except Exception as e:
