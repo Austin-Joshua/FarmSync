@@ -140,9 +140,53 @@ export default function AIInsightsWidget() {
             ) : (
               <p className="text-sm text-gray-500 italic">No recent alerts.</p>
             )}
-          </div>
         </div>
       </div>
+
+      {/* Quantum Resource Optimization Panel */}
+      {yieldPrediction?.quantum_resource_optimization && (
+        <div className="mt-6 p-5 bg-gradient-to-br from-gray-950 to-indigo-950 text-white rounded-xl border border-indigo-500/20 relative overflow-hidden shadow-lg">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl -translate-y-6 translate-x-6" />
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+            <div>
+              <span className="text-[9px] font-black text-indigo-300 bg-indigo-500/20 px-2.5 py-1 rounded-full uppercase tracking-widest flex items-center gap-1.5 w-fit">
+                <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-ping" />
+                Quantum Decision Layer Active
+              </span>
+              <h3 className="text-base font-black mt-2 flex items-center gap-2 text-indigo-100">
+                ⚛️ Hybrid QAOA Resource Optimizer
+              </h3>
+            </div>
+            <div className="text-left sm:text-right">
+              <span className="text-xs text-indigo-400 font-bold block">Engine Parameters</span>
+              <span className="text-[11px] text-indigo-200">3 Qubits • 2,048 Shots • QUBO Minimized</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-black/40 p-4 rounded-xl border border-indigo-500/10">
+            <div>
+              <span className="text-[10px] text-indigo-400 uppercase font-black tracking-wider">Optimal Fertilizer</span>
+              <p className="text-sm font-bold text-gray-200 mt-1">{yieldPrediction.quantum_resource_optimization.optimal_fertilizer_strategy}</p>
+            </div>
+            <div>
+              <span className="text-[10px] text-indigo-400 uppercase font-black tracking-wider">Optimal Water</span>
+              <p className="text-sm font-bold text-gray-200 mt-1">{yieldPrediction.quantum_resource_optimization.optimal_water_strategy}</p>
+            </div>
+            <div>
+              <span className="text-[10px] text-indigo-400 uppercase font-black tracking-wider">Optimal Pesticide</span>
+              <p className="text-sm font-bold text-gray-200 mt-1">{yieldPrediction.quantum_resource_optimization.optimal_pesticide_strategy}</p>
+            </div>
+            <div>
+              <span className="text-[10px] text-green-400 uppercase font-black tracking-wider">Projected Savings</span>
+              <p className="text-base font-black text-green-400 mt-0.5">
+                ₹{yieldPrediction.quantum_resource_optimization.estimated_resource_savings_rupees.toLocaleString()}
+              </p>
+            </div>
+          </div>
+          <p className="text-[10px] text-indigo-300/80 mt-3.5 leading-relaxed">
+            Agricultural decision variables are mapped as spin states of an Ising Hamiltonian. Minimum energy states are solved using a simulated <strong>Quantum Approximate Optimization Algorithm (QAOA)</strong> to maximize total yield while minimizing waste.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

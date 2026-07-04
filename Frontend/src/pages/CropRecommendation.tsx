@@ -18,6 +18,8 @@ interface RecommendResult {
   advice: string;
   model_accuracy: number;
   cv_accuracy: number;
+  quantum_active?: boolean;
+  classical_confidence_percent?: number;
 }
 
 const CROP_EMOJIS: Record<string, string> = {
@@ -227,6 +229,36 @@ export default function CropRecommendation() {
                   <p className="text-sm text-green-800 dark:text-green-300">{result.advice}</p>
                 </div>
               </div>
+
+              {/* Quantum Decision Intelligence Layer Card */}
+              {result.quantum_active && (
+                <div className="glass-card p-6 bg-gradient-to-br from-gray-900 to-indigo-950 text-white relative overflow-hidden border border-indigo-500/20 shadow-xl">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl -translate-y-4 translate-x-4" />
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] font-black text-indigo-300 bg-indigo-500/25 px-2 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full animate-ping" />
+                      QML VQC Optimizer Active
+                    </span>
+                    <span className="text-xs text-indigo-400 font-bold">4 Qubits (Angle Encoded)</span>
+                  </div>
+                  <h3 className="text-lg font-black flex items-center gap-2 mb-3">
+                    ⚛️ Quantum Refined Decisions
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3 bg-black/40 p-3.5 rounded-xl border border-indigo-500/10 mb-3">
+                    <div>
+                      <p className="text-[10px] text-indigo-300 uppercase font-black">Classical RF Probability</p>
+                      <p className="text-lg font-black text-gray-300 mt-0.5">{result.classical_confidence_percent?.toFixed(1)}%</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-green-300 uppercase font-black">Hybrid QML Probability</p>
+                      <p className="text-lg font-black text-green-400 mt-0.5">{result.confidence_percent.toFixed(1)}%</p>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-indigo-200/80 leading-relaxed">
+                    Continuous values mapped via a <strong>Z-Feature Map</strong> and run using a parameterized <strong>RealAmplitudes variational ansatz</strong> on simulated local quantum backends.
+                  </p>
+                </div>
+              )}
 
               {/* Top 3 Recommendations */}
               <div className="glass-card p-6">

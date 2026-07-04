@@ -247,6 +247,54 @@ async def predict_pest_risk(data: PestPredictionRequest):
         
     return result
 
+@app.post("/ml/quantum-recommend")
+async def quantum_recommend_crop(data: CropRecommendationRequest):
+    """Refines crop recommendation using hybrid classical + quantum Variational Quantum Classifier (VQC)."""
+    if not predictor:
+        raise HTTPException(status_code=500, detail="ML Predictor module not found.")
+    
+    input_data = data.dict()
+    result = predictor.predict(input_data)
+    
+    if not result.get('success'):
+        raise HTTPException(status_code=500, detail=result.get('error'))
+        
+    return {
+        "success": True,
+        "recommended_crop": result.get("recommended_crop"),
+        "confidence_percent": result.get("confidence_percent"),
+        "recommendations": result.get("recommendations"),
+        "quantum_active": result.get("quantum_active"),
+        "quantum_vqc_probabilities": result.get("quantum_vqc_probabilities"),
+        "classical_probabilities": result.get("classical_probabilities")
+    }
+
+class QuantumOptimizeRequest(BaseModel):
+    predicted_yield: float
+    fertilizer: float
+    water: float
+    pesticide: float
+
+@app.post("/ml/quantum-optimize")
+async def quantum_optimize_resources(data: QuantumOptimizeRequest):
+    """Optimizes operational resources (fertilizer, water, pesticide) using QAOA/QUBO."""
+    if not predictor or not predictor._QUANTUM_ENGINE:
+        raise HTTPException(status_code=500, detail="Quantum engine not loaded.")
+        
+    try:
+        input_data = {
+            'fertilizer': data.fertilizer,
+            'water': data.water,
+            'pesticide': data.pesticide
+        }
+        result = predictor._QUANTUM_ENGINE.optimize_resources_qaoa(data.predicted_yield, input_data)
+        return {
+            "success": True,
+            "quantum_resource_optimization": result
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Quantum optimization error: {str(e)}")
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
