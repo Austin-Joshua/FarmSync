@@ -471,7 +471,7 @@ const Dashboard = () => {
             <ClimateAlert />
           </div>
           {/* Location Map */}
-          <div className="glass-card p-4 sm:p-6">
+          <div className="glass-card p-4 sm:p-6 flex flex-col">
             <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 flex items-center justify-between">
               <span className="flex items-center gap-2">
                 <MapPin size={20} className="text-primary-600 dark:text-primary-400" />
@@ -486,7 +486,7 @@ const Dashboard = () => {
                 </button>
               )}
             </h2>
-            <div className="rounded-[2rem] overflow-hidden border border-gray-200 dark:border-gray-700/50 shadow-inner p-1">
+            <div className="flex-grow min-h-[320px]">
               <LocationMap
                 latitude={data.farms[0]?.latitude || gpsLocation.latitude}
                 longitude={data.farms[0]?.longitude || gpsLocation.longitude}
@@ -494,14 +494,17 @@ const Dashboard = () => {
                 boundaryCoordinates={data.farms[0]?.boundaryCoordinates}
                 isEditable={isEditingMap}
                 onChangeLocation={handleSaveMapLocation}
-                height="320px"
+                height="100%"
               />
             </div>
           </div>
         </div>
         <div className="space-y-4 sm:space-y-6">
           <div className="glass-card p-4 sm:p-6">
-            <WeatherCard />
+            <WeatherCard
+              latitude={data.farms[0]?.latitude || gpsLocation.latitude}
+              longitude={data.farms[0]?.longitude || gpsLocation.longitude}
+            />
           </div>
 
           {/* Low Stock Alert Widget */}

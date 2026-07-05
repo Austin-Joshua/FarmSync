@@ -109,9 +109,11 @@ export interface WeatherData {
 
 interface WeatherCardProps {
   onAlertsDetected?: (hasAlerts: boolean) => void;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
-const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
+const WeatherCard = ({ onAlertsDetected, latitude, longitude }: WeatherCardProps) => {
   const { location, requestLocation } = useLocation();
   const { t } = useTranslation();
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -119,6 +121,10 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+
+  // Use props if provided, otherwise fall back to hook values
+  const activeLat = latitude !== undefined && latitude !== null ? latitude : location.latitude;
+  const activeLng = longitude !== undefined && longitude !== null ? longitude : location.longitude;
 
   const fetchWeatherData = async (lat: number, lon: number) => {
     setLoading(true);
@@ -172,8 +178,8 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
       setError(errorMessage);
       
       // Still try to show coordinates even if API fails
-      if (!locationName && location.latitude && location.longitude) {
-        setLocationName(`${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`);
+      if (!locationName && activeLat && activeLng) {
+        setLocationName(`${activeLat.toFixed(4)}, ${activeLng.toFixed(4)}`);
       }
     } finally {
       setLoading(false);
@@ -181,14 +187,14 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
   };
 
   useEffect(() => {
-    if (location.latitude && location.longitude) {
-      fetchWeatherData(location.latitude, location.longitude);
+    if (activeLat && activeLng) {
+      fetchWeatherData(activeLat, activeLng);
     }
-  }, [location.latitude, location.longitude]);
+  }, [activeLat, activeLng]);
 
   const handleRefresh = () => {
-    if (location.latitude && location.longitude) {
-      fetchWeatherData(location.latitude, location.longitude);
+    if (activeLat && activeLng) {
+      fetchWeatherData(activeLat, activeLng);
     } else {
       requestLocation();
     }
@@ -219,9 +225,9 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
     return iconMap[iconCode] || '🌤️';
   };
 
-  if (!location.latitude || !location.longitude) {
+  if (!activeLat || !activeLng) {
     return (
-      <div className="card bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-600">
+      <div className="w-full h-full bg-transparent">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
             <MapPin size={20} className="text-orange-600 dark:text-orange-400" />
@@ -247,7 +253,7 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
   }
 
   return (
-    <div className="card bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-600">
+    <div className="w-full h-full bg-transparent">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
             <MapPin size={20} className="text-orange-600 dark:text-orange-400" />
@@ -286,7 +292,7 @@ const WeatherCard = ({ onAlertsDetected }: WeatherCardProps) => {
           <div className="mb-4">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-1 flex items-center gap-1">
               <MapPin size={14} className="text-orange-600 dark:text-orange-400" />
-              {locationName || `${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}`}
+              {locationName || `${activeLat.toFixed(4)}, ${activeLng.toFixed(4)}`}
             </p>
                 {lastUpdate && (
                   <p className="text-xs text-gray-500 dark:text-gray-500">

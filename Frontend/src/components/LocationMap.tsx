@@ -43,12 +43,12 @@ function MapUpdater({ center }: { center: [number, number] }) {
 }
 
 // Click event handler for drawing boundary/placing pin
-function MapClickHandler({ 
-  onMapClick, 
-  enabled 
-}: { 
-  onMapClick: (latlng: L.LatLng) => void; 
-  enabled: boolean; 
+function MapClickHandler({
+  onMapClick,
+  enabled
+}: {
+  onMapClick: (latlng: L.LatLng) => void;
+  enabled: boolean;
 }) {
   useMapEvents({
     click(e) {
@@ -75,6 +75,7 @@ const LocationMap = ({
   // Internal states
   const [lat, setLat] = useState<number>(latitude || 20.5937); // Defaults to center of India
   const [lng, setLng] = useState<number>(longitude || 78.9629);
+  const center: [number, number] = [lat, lng];
   const [stateVal, setStateVal] = useState<string>('');
   const [districtVal, setDistrictVal] = useState<string>('');
   const [villageVal, setVillageVal] = useState<string>('');
@@ -180,12 +181,10 @@ const LocationMap = ({
     }
   };
 
-  const center: [number, number] = [lat, lng];
-
   return (
-    <div ref={containerRef} className="flex flex-col lg:flex-row gap-6 w-full bg-transparent">
+    <div ref={containerRef} className="flex flex-col lg:flex-row gap-4 w-full h-full min-h-0 bg-transparent">
       {/* Map Side */}
-      <div className="flex-1 rounded-[2rem] overflow-hidden border border-gray-200 dark:border-white/5 shadow-xl relative min-h-[350px]" style={{ height: '400px' }}>
+      <div className="flex-1 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 relative h-full min-h-0" style={{ height }}>
         <MapContainer
           key={theme} // Force redraw on theme swap
           center={center}
@@ -196,7 +195,7 @@ const LocationMap = ({
         >
           <MapUpdater center={center} />
           <MapClickHandler onMapClick={handleMapClick} enabled={isEditable} />
-          
+
           {theme === 'dark' ? (
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors & <a href="https://carto.com/">CARTO</a>'
@@ -224,9 +223,9 @@ const LocationMap = ({
 
           {/* Draw Polygon vertices markers */}
           {isEditable && drawnPoints.map((point, idx) => (
-            <Marker 
-              key={`vertex-${idx}`} 
-              position={point} 
+            <Marker
+              key={`vertex-${idx}`}
+              position={point}
               icon={L.divIcon({
                 className: 'bg-emerald-500 w-3 h-3 rounded-full border-2 border-white shadow-md',
                 iconSize: [12, 12]
@@ -236,15 +235,15 @@ const LocationMap = ({
 
           {/* Boundary Polygon rendering */}
           {drawnPoints.length > 1 && (
-            <Polygon 
-              positions={drawnPoints} 
-              pathOptions={{ 
-                color: '#10b981', 
-                fillColor: '#10b981', 
+            <Polygon
+              positions={drawnPoints}
+              pathOptions={{
+                color: '#10b981',
+                fillColor: '#10b981',
                 fillOpacity: 0.25,
                 weight: 3,
-                dashArray: drawMode ? '5, 5' : undefined 
-              }} 
+                dashArray: drawMode ? '5, 5' : undefined
+              }}
             />
           )}
         </MapContainer>
@@ -267,7 +266,7 @@ const LocationMap = ({
             </div>
 
             {/* GPS Trigger */}
-            <button 
+            <button
               onClick={triggerGPS}
               className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
@@ -277,13 +276,13 @@ const LocationMap = ({
 
             {/* Map Mode selectors */}
             <div className="grid grid-cols-2 gap-2 bg-gray-50 dark:bg-white/5 p-1 rounded-2xl border border-gray-200/50 dark:border-white/5">
-              <button 
+              <button
                 onClick={() => setDrawMode(false)}
                 className={`py-2 px-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${!drawMode ? 'bg-white dark:bg-white/10 text-emerald-600 dark:text-emerald-400 shadow-sm' : 'text-gray-400'}`}
               >
                 Pin Mode
               </button>
-              <button 
+              <button
                 onClick={() => setDrawMode(true)}
                 className={`py-2 px-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${drawMode ? 'bg-white dark:bg-white/10 text-emerald-600 dark:text-emerald-400 shadow-sm' : 'text-gray-400'}`}
               >
@@ -295,20 +294,20 @@ const LocationMap = ({
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
                 <label className="text-[10px] font-black uppercase text-gray-400">Latitude</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   step="0.000001"
-                  value={lat} 
+                  value={lat}
                   onChange={(e) => setLat(parseFloat(e.target.value) || 0)}
                   className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-emerald-500"
                 />
               </div>
               <div className="space-y-1">
                 <label className="text-[10px] font-black uppercase text-gray-400">Longitude</label>
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   step="0.000001"
-                  value={lng} 
+                  value={lng}
                   onChange={(e) => setLng(parseFloat(e.target.value) || 0)}
                   className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-emerald-500"
                 />
@@ -319,9 +318,9 @@ const LocationMap = ({
             <div className="space-y-3">
               <div className="space-y-1">
                 <label className="text-[10px] font-black uppercase text-gray-400">Village</label>
-                <input 
-                  type="text" 
-                  value={villageVal} 
+                <input
+                  type="text"
+                  value={villageVal}
                   onChange={(e) => setVillageVal(e.target.value)}
                   placeholder="e.g. Igatpuri"
                   className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-emerald-500"
@@ -329,9 +328,9 @@ const LocationMap = ({
               </div>
               <div className="space-y-1">
                 <label className="text-[10px] font-black uppercase text-gray-400">District</label>
-                <input 
-                  type="text" 
-                  value={districtVal} 
+                <input
+                  type="text"
+                  value={districtVal}
                   onChange={(e) => setDistrictVal(e.target.value)}
                   placeholder="e.g. Nashik"
                   className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-emerald-500"
@@ -339,9 +338,9 @@ const LocationMap = ({
               </div>
               <div className="space-y-1">
                 <label className="text-[10px] font-black uppercase text-gray-400">State</label>
-                <input 
-                  type="text" 
-                  value={stateVal} 
+                <input
+                  type="text"
+                  value={stateVal}
                   onChange={(e) => setStateVal(e.target.value)}
                   placeholder="e.g. Maharashtra"
                   className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-emerald-500"
@@ -352,14 +351,14 @@ const LocationMap = ({
             {/* Polygon draw options */}
             {drawnPoints.length > 0 && (
               <div className="flex gap-2 border-t border-gray-100 dark:border-white/5 pt-4">
-                <button 
+                <button
                   onClick={undoLastVertex}
                   className="flex-1 py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all"
                 >
                   <RotateCcw size={12} />
                   Undo point
                 </button>
-                <button 
+                <button
                   onClick={clearBoundary}
                   className="flex-1 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all"
                 >
@@ -371,7 +370,7 @@ const LocationMap = ({
           </div>
 
           {/* Action triggers */}
-          <button 
+          <button
             onClick={saveMapData}
             className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 hover:scale-[1.02] active:scale-[0.98] transition-all"
           >

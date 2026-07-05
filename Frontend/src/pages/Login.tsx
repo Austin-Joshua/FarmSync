@@ -36,7 +36,7 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) { setError(t('fillAllFields')); return; }
+    if (!email || !password) { setError(t('auth.fillAllFields')); return; }
     setLoading(true); setError('');
     try {
       await login(email, password);
@@ -105,8 +105,8 @@ const Login = () => {
             </div>
 
             <div className="mb-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">{t('welcomeBack')}</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('signInAccount')}</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">{t('auth.welcomeBack')}</h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t('auth.signInAccount')}</p>
             </div>
 
             {/* Status banners */}
@@ -125,7 +125,7 @@ const Login = () => {
 
             <form onSubmit={handleSubmit} className="space-y-3" autoComplete="off">
               <div>
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1 block mb-1">{t('emailAddress')}</label>
+                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1 block mb-1">{t('auth.emailAddress')}</label>
                 <div className="relative group">
                   <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
                   <input
@@ -140,8 +140,8 @@ const Login = () => {
               </div>
               <div>
                 <div className="flex justify-between mb-1">
-                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('password')}</label>
-                  <Link to="/forgot-password" className="text-xs font-bold text-primary-600 dark:text-primary-400 hover:text-primary-500">{t('forgotPassword')}</Link>
+                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('auth.password')}</label>
+                  <Link to="/forgot-password" className="text-xs font-bold text-primary-600 dark:text-primary-400 hover:text-primary-500">{t('auth.forgotPassword')}</Link>
                 </div>
                 <div className="relative group">
                   <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
@@ -161,15 +161,15 @@ const Login = () => {
               <button type="submit" disabled={loading}
                 className="w-full flex items-center justify-center gap-2 py-2.5 px-6 rounded-xl shadow-lg shadow-primary-500/20 text-sm font-bold text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50">
                 {loading ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
-                {t('signIn')}
+                {t('auth.signIn')}
               </button>
             </form>
 
             <div className="mt-4 text-center space-y-3">
               <OAuthSignIn />
               <p className="font-semibold text-gray-700 dark:text-gray-300 text-xs">
-                {t('dontHaveAccount')}{' '}
-                <Link to="/register" className="font-extrabold text-primary-600 dark:text-primary-400 hover:underline">{t('createAccount')}</Link>
+                {t('auth.dontHaveAccount')}{' '}
+                <Link to="/register" className="font-extrabold text-primary-600 dark:text-primary-400 hover:underline">{t('auth.createAccount')}</Link>
               </p>
             </div>
           </div>

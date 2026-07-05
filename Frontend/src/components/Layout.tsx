@@ -13,6 +13,7 @@ import Logo from './Logo';
 import OfflineBanner from './OfflineBanner';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useAuth } from '../context/AuthContext';
+import api from '../services/api';
 import { useNotifications } from '../context/NotificationContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -25,6 +26,17 @@ const Layout = ({ children }: LayoutProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleLogout = async () => {
+    try {
+      const refreshToken = localStorage.getItem('refreshToken') || undefined;
+      await api.logout(refreshToken);
+    } catch (e) {}
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('refreshToken');
+    window.location.href = '/';
+  };
 
   const [showProfile, setShowProfile] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -119,7 +131,6 @@ const Layout = ({ children }: LayoutProps) => {
       ]},
       { label: 'Community', items: [
         { path: '/community', label: 'Farmer Forum', translationKey: 'farmerForum', icon: MessageSquare },
-        { path: '/compliance', label: 'Schemes & Subsidies', translationKey: 'schemesSubsidies', icon: ShieldCheck },
       ]},
       { label: 'System', items: [
         { path: '/settings', label: 'Settings', translationKey: 'settings', icon: Settings },
@@ -158,7 +169,7 @@ const Layout = ({ children }: LayoutProps) => {
   );
 
   const roleColor = role === 'admin' ? 'from-blue-500 to-blue-700'
-    : role === 'citizen' ? 'from-purple-500 to-violet-700'
+    : role === 'citizen' ? 'from-emerald-600 to-teal-700'
     : 'from-primary-500 to-emerald-600';
 
   const RoleIcon = role === 'admin' ? Shield : role === 'citizen' ? Users : Sprout;
@@ -241,22 +252,6 @@ const Layout = ({ children }: LayoutProps) => {
             <X size={18} />
           </button>
         </div>
-        {user && (
-          <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
-            <div className={`flex items-center gap-3 bg-gradient-to-r ${roleColor} rounded-2xl px-3 py-2.5 shadow-lg`}>
-              <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white font-black text-sm flex-shrink-0">
-                {user.name?.charAt(0) || 'U'}
-              </div>
-              <div className="overflow-hidden">
-                <p className="text-xs font-bold text-white truncate">{user.name}</p>
-                <div className="flex items-center gap-1.5">
-                  <RoleIcon size={10} className="text-white/70" />
-                  <p className="text-[10px] text-white/70 capitalize">{role}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
         <NavContent />
         <div className="p-3 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
           <button onClick={() => logout()} className="w-full flex items-center gap-3 px-3 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
@@ -273,11 +268,9 @@ const Layout = ({ children }: LayoutProps) => {
         onMouseEnter={() => setSidebarExpanded(true)}
         onMouseLeave={() => setSidebarExpanded(false)}
       >
-        <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0 flex items-center gap-2 min-h-[60px]">
+        <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0 flex items-center justify-center min-h-[60px]">
           {sidebarExpanded ? <Logo /> : (
-            <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${roleColor} flex items-center justify-center shadow-md mx-auto`}>
-              <RoleIcon size={16} className="text-white" />
-            </div>
+            <RoleIcon size={20} className="text-emerald-600 dark:text-emerald-500 mx-auto" />
           )}
         </div>
         {sidebarExpanded ? <NavContent /> : <NavContent compact />}
@@ -293,29 +286,14 @@ const Layout = ({ children }: LayoutProps) => {
       <aside className="hidden lg:flex fixed left-0 top-0 h-full w-60 flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
           <Logo />
-          {user && (
-            <div className={`mt-3 flex items-center gap-2 bg-gradient-to-r ${roleColor} rounded-xl px-3 py-2 shadow-sm`}>
-              <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-black flex-shrink-0">
-                {user.name?.charAt(0) || 'U'}
-              </div>
-              <div className="overflow-hidden flex-1">
-                <p className="text-[11px] font-bold text-white truncate">{user.name}</p>
-                <div className="flex items-center gap-1">
-                  <RoleIcon size={9} className="text-white/70" />
-                  <p className="text-[9px] text-white/70 capitalize">{role}</p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
         <NavContent />
         <div className="p-3 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
-          <button onClick={() => logout()} className="w-full flex items-center gap-3 px-3 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
             <LogOut size={17} />
             <span className="font-medium text-sm">{t('logout')}</span>
           </button>
           <div className="mt-2 px-3 text-[9px] text-gray-400 text-center">
-            {t('navigation.mlEngine', 'ML Engine')}: <span className="text-green-500 font-bold">99.5% {t('navigation.accuracy', 'accuracy')}</span>
           </div>
         </div>
       </aside>
@@ -410,7 +388,7 @@ const Layout = ({ children }: LayoutProps) => {
                   )}
                 </div>
                 <div className="py-1 border-t border-gray-100 dark:border-gray-700">
-                  <button onClick={() => { setShowProfile(false); logout(); }} className="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/10 text-xs font-bold text-red-600">{t('navigation.signOut', 'Sign out')}</button>
+                  <button onClick={() => { setShowProfile(false); handleLogout(); }} className="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/10 text-xs font-bold text-red-600">{t('navigation.signOut', 'Sign out')}</button>
                 </div>
               </div>
             )}

@@ -101,8 +101,8 @@ api.interceptors.response.use(
 
     if (error.response?.data) {
       const data = error.response.data;
-      if (data.error) return Promise.reject(data.error);
       if (data.message) return Promise.reject(data.message);
+      if (data.error) return Promise.reject(data.error);
       if (data.status === 403) return Promise.reject('Invalid email or password');
       if (data.status === 500) return Promise.reject('User not found. Please register first.');
     }

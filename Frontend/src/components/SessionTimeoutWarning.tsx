@@ -40,7 +40,6 @@ const SessionTimeoutWarning: React.FC = () => {
       }
     };
 
-    checkToken();
     const interval = setInterval(checkToken, CHECK_INTERVAL);
     
     let countdown: NodeJS.Timeout;

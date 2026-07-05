@@ -189,7 +189,7 @@
   }
 
   .glass-card {
-    @apply glass rounded-2xl p-8 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1;
+    @apply glass rounded-2xl transition-all duration-300 hover:shadow-2xl hover:-translate-y-1;
   }
 }
 

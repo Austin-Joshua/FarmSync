@@ -60,7 +60,9 @@ const Register = () => {
   const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    const mappedName = name === 'fs_email_addr' ? 'email' : name === 'fs_password' ? 'password' : name;
+    setFormData(prev => ({ ...prev, [mappedName]: value }));
   };
 
   const handleNext = (e: React.FormEvent) => {
@@ -194,7 +196,7 @@ const Register = () => {
               <form onSubmit={handleNext} className="space-y-3">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('fullName')} *</label>
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('auth.fullName')} *</label>
                     <div className="relative group">
                       <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
                       <input
@@ -206,11 +208,13 @@ const Register = () => {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('emailAddress')} *</label>
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('auth.emailAddress')} *</label>
                     <div className="relative group">
                       <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
                       <input
-                        name="email" type="email" value={formData.email} onChange={handleChange}
+                        name="fs_email_addr" type="email" value={formData.email} onChange={handleChange}
+                        autoComplete="off"
+                        data-lpignore="true"
                         className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
                         placeholder="ravi@example.com" required
                       />
@@ -220,11 +224,13 @@ const Register = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('password')} *</label>
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('auth.password')} *</label>
                     <div className="relative group">
                       <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
                       <input
-                        name="password" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange}
+                        name="fs_password" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange}
+                        autoComplete="new-password"
+                        data-lpignore="true"
                         className="block w-full pl-9 pr-10 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
                         placeholder="••••••••" required
                       />
@@ -235,7 +241,7 @@ const Register = () => {
                   </div>
 
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('phone')}</label>
+                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('auth.phone')}</label>
                     <div className="relative group">
                       <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
                       <input
@@ -249,12 +255,11 @@ const Register = () => {
 
                 {/* Role Selector */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('role')} *</label>
-                  <div className="grid grid-cols-3 gap-2">
+                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('auth.role')} *</label>
+                  <div className="grid grid-cols-2 gap-3">
                     {[
                       { value: 'farmer', label: '🌾 Farmer', desc: 'Manage crops & farm' },
                       { value: 'citizen', label: '🏙️ Citizen', desc: 'Buy produce' },
-                      { value: 'admin', label: '🛡️ Admin', desc: 'Platform access' },
                     ].map(opt => (
                       <button
                         type="button" key={opt.value}
@@ -282,8 +287,8 @@ const Register = () => {
                 <div className="mt-4 text-center space-y-3">
                   <OAuthSignIn />
                   <p className="font-semibold text-gray-700 dark:text-gray-300 text-xs">
-                    {t('alreadyHaveAccount')}{' '}
-                    <Link to="/login" className="font-extrabold text-primary-600 dark:text-primary-400 hover:underline">{t('signIn')}</Link>
+                    {t('auth.alreadyHaveAccount')}{' '}
+                    <Link to="/login" className="font-extrabold text-primary-600 dark:text-primary-400 hover:underline">{t('auth.signIn')}</Link>
                   </p>
                 </div>
               </form>
@@ -320,55 +325,85 @@ const Register = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">Village / Town</label>
-                    <div className="relative group">
-                      <Home size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
-                      <input
-                        name="village" type="text" value={formData.village} onChange={handleChange}
-                        className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
-                        placeholder="e.g. Igatpuri"
-                      />
+                {formData.role === 'citizen' ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">Village / Town</label>
+                      <div className="relative group">
+                        <Home size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                        <input
+                          name="village" type="text" value={formData.village} onChange={handleChange}
+                          className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                          placeholder="e.g. Igatpuri"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1 flex items-center gap-1">
+                        <Globe size={12} /> Preferred Language
+                      </label>
+                      <select
+                        name="preferred_language" value={formData.preferred_language} onChange={handleChange}
+                        className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                      >
+                        {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+                      </select>
                     </div>
                   </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">Village / Town</label>
+                        <div className="relative group">
+                          <Home size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                          <input
+                            name="village" type="text" value={formData.village} onChange={handleChange}
+                            className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                            placeholder="e.g. Igatpuri"
+                          />
+                        </div>
+                      </div>
 
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">Farm Size (Acres)</label>
-                    <input
-                      name="land_size" type="number" step="0.1" min="0" value={formData.land_size} onChange={handleChange}
-                      className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
-                      placeholder="e.g. 5.5"
-                    />
-                  </div>
-                </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">Farm Size (Acres)</label>
+                        <input
+                          name="land_size" type="number" step="0.1" min="0" value={formData.land_size} onChange={handleChange}
+                          className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                          placeholder="e.g. 5.5"
+                        />
+                      </div>
+                    </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">Soil Type</label>
-                    <select
-                      name="soil_type" value={formData.soil_type} onChange={handleChange}
-                      className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
-                    >
-                      <option value="">Select Soil Type</option>
-                      {['Alluvial', 'Black (Regur)', 'Red & Yellow', 'Laterite', 'Arid & Desert', 'Saline', 'Peaty', 'Forest'].map(s => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </select>
-                  </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">Soil Type</label>
+                        <select
+                          name="soil_type" value={formData.soil_type} onChange={handleChange}
+                          className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                        >
+                          <option value="">Select Soil Type</option>
+                          {['Alluvial', 'Black (Regur)', 'Red & Yellow', 'Laterite', 'Arid & Desert', 'Saline', 'Peaty', 'Forest'].map(s => (
+                            <option key={s} value={s}>{s}</option>
+                          ))}
+                        </select>
+                      </div>
 
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1 flex items-center gap-1">
-                      <Globe size={12} /> Preferred Language
-                    </label>
-                    <select
-                      name="preferred_language" value={formData.preferred_language} onChange={handleChange}
-                      className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
-                    >
-                      {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
-                    </select>
-                  </div>
-                </div>
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1 flex items-center gap-1">
+                          <Globe size={12} /> Preferred Language
+                        </label>
+                        <select
+                          name="preferred_language" value={formData.preferred_language} onChange={handleChange}
+                          className="block w-full px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
+                        >
+                          {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.label}</option>)}
+                        </select>
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 <div className="flex gap-3 mt-2">
                   <button

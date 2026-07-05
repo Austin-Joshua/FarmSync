@@ -1,20 +1,35 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import Backend from 'i18next-http-backend';
+
+// Direct imports — works with Vite bundling (no HTTP backend needed)
+import en from './locales/en.json';
+import hi from './locales/hi.json';
+import ml from './locales/ml.json';
+import ta from './locales/ta.json';
+import te from './locales/te.json';
+import kn from './locales/kn.json';
+import bn from './locales/bn.json';
+import mr from './locales/mr.json';
 
 i18n
-  .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    resources: {
+      en: { translation: en },
+      hi: { translation: hi },
+      ml: { translation: ml },
+      ta: { translation: ta },
+      te: { translation: te },
+      kn: { translation: kn },
+      bn: { translation: bn },
+      mr: { translation: mr },
+    },
     fallbackLng: 'en',
     debug: false,
     interpolation: {
       escapeValue: false,
-    },
-    backend: {
-      loadPath: '/locales/{{lng}}/translation.json',
     },
     detection: {
       order: ['localStorage', 'navigator'],
@@ -22,7 +37,8 @@ i18n
       lookupLocalStorage: 'i18nextLng',
     },
     react: {
-      useSuspense: true, // Switched to true for better lazy loading experience with React.Suspense
+      // false because resources are bundled directly — no async loading
+      useSuspense: false,
     },
   });
 

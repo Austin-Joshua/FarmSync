@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Landing = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [, setIsSubscribed] = useState(false);
+  const { t } = useTranslation();
 
   // Smooth scroll helper
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -33,54 +35,54 @@ const Landing = () => {
   const features = [
     {
       icon: <Database className="text-emerald-500" />,
-      title: "Precision Inventory",
-      description: "Automated tracking of seeds, fertilizers, and equipment. Real-time alerts to ensure your supply chain never breaks."
+      title: t('landing.feature1Title'),
+      description: t('landing.feature1Desc')
     },
     {
       icon: <TrendingUp className="text-blue-500" />,
-      title: "Predictive Analytics",
-      description: "Advanced AI models forecasting harvest quality and quantity based on multi-layered soil and climate data."
+      title: t('landing.feature2Title'),
+      description: t('landing.feature2Desc')
     },
     {
       icon: <Calendar className="text-amber-500" />,
-      title: "Dynamic Scheduling",
-      description: "Integrated crop calendars that automatically adjust irrigation and sowing based on hyper-local weather shifts."
+      title: t('landing.feature3Title'),
+      description: t('landing.feature3Desc')
     },
     {
       icon: <PieChart className="text-purple-500" />,
-      title: "Profit Optimization",
-      description: "Enterprise-grade financial tracking and detailed cost-benefit analysis to maximize your farm's returns."
+      title: t('landing.feature4Title'),
+      description: t('landing.feature4Desc')
     }
   ];
 
   const steps = [
-    { title: "Connect Fields", description: "Register your profile and map your field coordinates or draw farm boundaries." },
-    { title: "AI Soil & Weather Analysis", description: "Our engines process satellite telemetry, soil types, and hyper-local climate models." },
-    { title: "Optimize & Succeed", description: "Receive real-time automated advisories for sowing, watering, and pest prevention." }
+    { title: t('landing.step1Title'), description: t('landing.step1Desc') },
+    { title: t('landing.step2Title'), description: t('landing.step2Desc') },
+    { title: t('landing.step3Title'), description: t('landing.step3Desc') }
   ];
 
   const testimonials = [
     {
-      quote: "FarmSync increased my yield by 28% in the first season using the precision sowing advisor! The localized weather alerts are exceptionally accurate.",
-      author: "Ramesh Kumar",
-      location: "Punjab, India",
-      crop: "Wheat & Mustard",
+      quote: t('landing.testimonial1Quote'),
+      author: t('landing.testimonial1Author'),
+      location: t('landing.testimonial1Location'),
+      crop: t('landing.testimonial1Crop'),
       initials: "RK",
       gradient: "from-amber-500 to-orange-600"
     },
     {
-      quote: "The AI disease alert saved my cotton crop from a pink bollworm outbreak. It suggested the exact organic treatment within minutes of uploading a photo.",
-      author: "Ananya Patel",
-      location: "Gujarat, India",
-      crop: "Organic Cotton",
+      quote: t('landing.testimonial2Quote'),
+      author: t('landing.testimonial2Author'),
+      location: t('landing.testimonial2Location'),
+      crop: t('landing.testimonial2Crop'),
       initials: "AP",
       gradient: "from-emerald-400 to-teal-600"
     },
     {
-      quote: "Managing multiple remote fields and logging chemical expenses used to be a nightmare. Profitability is up 35% since we digitized our operations.",
-      author: "Suresh Reddy",
-      location: "Andhra Pradesh, India",
-      crop: "Rice & Chilli",
+      quote: t('landing.testimonial3Quote'),
+      author: t('landing.testimonial3Author'),
+      location: t('landing.testimonial3Location'),
+      crop: t('landing.testimonial3Crop'),
       initials: "SR",
       gradient: "from-blue-500 to-indigo-600"
     }
@@ -88,32 +90,32 @@ const Landing = () => {
 
   const faqs = [
     {
-      q: "How does offline mode sync data when network coverage is weak?",
-      a: "FarmSync leverages service worker storage. All logs, activities, and boundary details can be recorded offline. When a secure cellular or Wi-Fi signal is detected, the database automatically syncs transparently."
+      q: t('landing.faq1Q'),
+      a: t('landing.faq1A')
     },
     {
-      q: "Do I need to purchase external hardware or sensors?",
-      a: "No hardware is required. We integrate with global satellite networks, local agricultural telemetry models, and government soil health reports to construct your field profile completely digitally."
+      q: t('landing.faq2Q'),
+      a: t('landing.faq2A')
     },
     {
-      q: "Can I share my dashboard analytics with my family or farm operators?",
-      a: "Yes! FarmSync supports multi-role co-operator accounts. You can grant access to family members or machinery operators with granular permissions."
+      q: t('landing.faq3Q'),
+      a: t('landing.faq3A')
     },
     {
-      q: "How accurate is the AI disease classification model?",
-      a: "Our deep learning models are trained on over 500,000 agricultural sample cases. The accuracy is 92% for key crops like rice, wheat, corn, and organic cotton when clear photos of leaf lesions are provided."
+      q: t('landing.faq4Q'),
+      a: t('landing.faq4A')
     }
   ];
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newsletterEmail || !newsletterEmail.includes('@')) {
-      toast.error('Please enter a valid email address.');
+      toast.error(t('landing.newsletterError'));
       return;
     }
     setIsSubscribed(true);
     setNewsletterEmail('');
-    toast.success('Successfully subscribed to FarmSync Weekly! 🌾');
+    toast.success(t('landing.newsletterSuccess'));
   };
 
   const nextTestimonial = () => {
@@ -141,11 +143,11 @@ const Landing = () => {
         
         {/* Scroll Links */}
         <div className="hidden lg:flex items-center gap-8 xl:gap-10 text-[13px] font-extrabold uppercase tracking-widest">
-          <a href="#features" onClick={(e) => handleScroll(e, 'features')} className="hover:text-emerald-500 transition-colors">Features</a>
-          <a href="#showcase" onClick={(e) => handleScroll(e, 'showcase')} className="hover:text-emerald-500 transition-colors">App Preview</a>
-          <a href="#testimonials" onClick={(e) => handleScroll(e, 'testimonials')} className="hover:text-emerald-500 transition-colors">Stories</a>
-          <a href="#faq" onClick={(e) => handleScroll(e, 'faq')} className="hover:text-emerald-500 transition-colors">FAQ</a>
-          <a href="#how-it-works" onClick={(e) => handleScroll(e, 'how-it-works')} className="hover:text-emerald-500 transition-colors">How it works</a>
+          <a href="#features" onClick={(e) => handleScroll(e, 'features')} className="hover:text-emerald-500 transition-colors">{t('landing.features')}</a>
+          <a href="#showcase" onClick={(e) => handleScroll(e, 'showcase')} className="hover:text-emerald-500 transition-colors">{t('landing.appPreview')}</a>
+          <a href="#testimonials" onClick={(e) => handleScroll(e, 'testimonials')} className="hover:text-emerald-500 transition-colors">{t('landing.stories')}</a>
+          <a href="#faq" onClick={(e) => handleScroll(e, 'faq')} className="hover:text-emerald-500 transition-colors">{t('landing.faq')}</a>
+          <a href="#how-it-works" onClick={(e) => handleScroll(e, 'how-it-works')} className="hover:text-emerald-500 transition-colors">{t('landing.howItWorks')}</a>
         </div>
 
         {/* Action Controls */}
@@ -163,13 +165,13 @@ const Landing = () => {
           </div>
           
           <Link to="/login" className="hidden sm:block text-sm font-black hover:text-emerald-500 transition-colors uppercase tracking-wider">
-             Log in
+             {t('landing.logIn')}
           </Link>
           <button 
             onClick={() => navigate('/register')}
             className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-white dark:text-[#0b130e] px-4 sm:px-6 py-2 sm:py-2.5 rounded-full text-sm font-black hover:scale-105 active:scale-95 transition-all shadow-xl shadow-emerald-500/10 whitespace-nowrap"
           >
-            Get started
+            {t('landing.getStarted')}
           </button>
 
           {/* Mobile Menu Button */}
@@ -187,23 +189,23 @@ const Landing = () => {
         <div className="fixed top-[73px] left-0 right-0 z-40 bg-white/95 dark:bg-[#0b130e]/95 backdrop-blur-xl border-b border-gray-100 dark:border-white/5 p-6 shadow-2xl lg:hidden animate-fade-in-up">
           <div className="flex flex-col gap-6 text-sm font-extrabold uppercase tracking-widest">
             <a href="#features" onClick={(e) => handleScroll(e, 'features')} className="hover:text-emerald-500 transition-colors flex items-center justify-between">
-              Features <ArrowRight size={16} />
+              {t('landing.features')} <ArrowRight size={16} />
             </a>
             <a href="#showcase" onClick={(e) => handleScroll(e, 'showcase')} className="hover:text-emerald-500 transition-colors flex items-center justify-between">
-              App Preview <ArrowRight size={16} />
+              {t('landing.appPreview')} <ArrowRight size={16} />
             </a>
             <a href="#testimonials" onClick={(e) => handleScroll(e, 'testimonials')} className="hover:text-emerald-500 transition-colors flex items-center justify-between">
-              Success Stories <ArrowRight size={16} />
+              {t('landing.stories')} <ArrowRight size={16} />
             </a>
             <a href="#faq" onClick={(e) => handleScroll(e, 'faq')} className="hover:text-emerald-500 transition-colors flex items-center justify-between">
-              FAQ <ArrowRight size={16} />
+              {t('landing.faq')} <ArrowRight size={16} />
             </a>
             <a href="#how-it-works" onClick={(e) => handleScroll(e, 'how-it-works')} className="hover:text-emerald-500 transition-colors flex items-center justify-between">
-              How it works <ArrowRight size={16} />
+              {t('landing.howItWorks')} <ArrowRight size={16} />
             </a>
             <div className="h-px bg-gray-200 dark:bg-white/10 my-2" />
             <Link to="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-center text-emerald-600 dark:text-emerald-400 font-bold py-2 border border-emerald-500/20 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/20">
-              Log in to your account
+              {t('landing.logInAccount')}
             </Link>
           </div>
         </div>
@@ -217,17 +219,17 @@ const Landing = () => {
         <div className="lg:w-1/2 flex flex-col items-start space-y-8 animate-fade-in-up">
           <div className="flex items-center gap-3 px-4 py-2 bg-emerald-100 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 rounded-full text-xs font-black uppercase tracking-[0.2em] border border-emerald-200/50 dark:border-emerald-500/10">
             <Zap size={14} className="animate-bounce text-emerald-500" />
-            <span>Smart Agritech Platform</span>
+            <span>{t('landing.badge')}</span>
           </div>
           
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1] tracking-tighter italic uppercase text-gray-900 dark:text-white">
-            Precision Fields,<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500">Maximum Yield.</span><br />
-            Built for Legacy.
+            {t('landing.headline1')}<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 via-teal-400 to-green-500">{t('landing.headline2')}</span><br />
+            {t('landing.headline3')}
           </h1>
           
           <p className="text-lg text-gray-600 dark:text-gray-400 max-w-lg font-bold leading-relaxed">
-            Empower your agricultural operations with satellite weather intelligence, automated input cost logging, interactive field boundary drawing, and precision AI advisory.
+            {t('landing.subtext')}
           </p>
           
           <div className="flex flex-wrap gap-4 pt-4">
@@ -235,7 +237,7 @@ const Landing = () => {
               onClick={() => navigate('/register')}
               className="bg-emerald-600 hover:bg-emerald-500 text-white px-10 py-5 rounded-full text-lg font-black italic uppercase tracking-tighter flex items-center gap-3 shadow-2xl shadow-emerald-500/40 hover:scale-105 active:scale-95 transition-all group"
             >
-              Start Free Trial
+              {t('landing.startFreeTrial')}
               <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform" />
             </button>
             <a 
@@ -243,7 +245,7 @@ const Landing = () => {
               onClick={(e) => handleScroll(e, 'showcase')}
               className="px-10 py-5 rounded-full text-lg font-black uppercase tracking-tighter border-2 border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 transition-all"
             >
-              See App Preview
+              {t('landing.seeAppPreview')}
             </a>
           </div>
         </div>
@@ -296,9 +298,9 @@ const Landing = () => {
       {/* Features Grid Section */}
       <section id="features" className="py-28 px-6 max-w-7xl mx-auto border-t border-gray-100 dark:border-white/5">
         <div className="text-center mb-20 space-y-4">
-          <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">Core Ecosystem</h2>
-          <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter">Everything you need to <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-400">scale.</span></h3>
-          <p className="text-gray-500 max-w-lg mx-auto font-bold">Ditch the notebooks. Keep track of operations, weather shifts, and yields in one central agritech control panel.</p>
+          <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">{t('landing.coreEcosystem')}</h2>
+          <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter">{t('landing.everythingYouNeed')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-400">{t('landing.scale')}</span></h3>
+          <p className="text-gray-500 max-w-lg mx-auto font-bold">{t('landing.featureSubtitle')}</p>
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -318,9 +320,9 @@ const Landing = () => {
       <section id="showcase" className="py-28 px-6 bg-gray-50 dark:bg-white/5 border-t border-b border-gray-100 dark:border-white/5">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">Interactive Showcase</h2>
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter">See FarmSync in <span className="text-emerald-500">Action</span></h3>
-            <p className="text-gray-500 max-w-lg mx-auto mt-4 font-bold">Discover our tools designed to help farmers coordinate logistics and predict profitability.</p>
+            <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">{t('landing.interactiveShowcase')}</h2>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter">{t('landing.seeFarmSync')} <span className="text-emerald-500">{t('landing.inAction')}</span></h3>
+            <p className="text-gray-500 max-w-lg mx-auto mt-4 font-bold">{t('landing.showcaseSubtitle')}</p>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-12 items-center">
@@ -332,10 +334,10 @@ const Landing = () => {
               >
                 <div className="flex items-center gap-3 mb-2">
                   <Sun size={20} className={activePreviewTab === 'weather' ? 'text-white' : 'text-emerald-500'} />
-                  <h4 className="font-black uppercase tracking-wider text-sm">Weather Intelligence</h4>
+                  <h4 className="font-black uppercase tracking-wider text-sm">{t('landing.weatherIntelligence')}</h4>
                 </div>
                 <p className={`text-xs font-bold leading-relaxed ${activePreviewTab === 'weather' ? 'text-white/80' : 'text-gray-500'}`}>
-                  Get 7-day granular forecasting and AI advisories for precise sowing scheduling.
+                  {t('landing.weatherDesc')}
                 </p>
               </button>
 
@@ -345,10 +347,10 @@ const Landing = () => {
               >
                 <div className="flex items-center gap-3 mb-2">
                   <Shield size={20} className={activePreviewTab === 'disease' ? 'text-white' : 'text-emerald-500'} />
-                  <h4 className="font-black uppercase tracking-wider text-sm">AI Disease Diagnosis</h4>
+                  <h4 className="font-black uppercase tracking-wider text-sm">{t('landing.aiDisease')}</h4>
                 </div>
                 <p className={`text-xs font-bold leading-relaxed ${activePreviewTab === 'disease' ? 'text-white/80' : 'text-gray-500'}`}>
-                  Snap pictures of your crops to diagnose disease issues and get recommendation steps.
+                  {t('landing.aiDiseaseDesc')}
                 </p>
               </button>
 
@@ -358,10 +360,10 @@ const Landing = () => {
               >
                 <div className="flex items-center gap-3 mb-2">
                   <Database size={20} className={activePreviewTab === 'inventory' ? 'text-white' : 'text-emerald-500'} />
-                  <h4 className="font-black uppercase tracking-wider text-sm">Inventory Log</h4>
+                  <h4 className="font-black uppercase tracking-wider text-sm">{t('landing.inventoryLog')}</h4>
                 </div>
                 <p className={`text-xs font-bold leading-relaxed ${activePreviewTab === 'inventory' ? 'text-white/80' : 'text-gray-500'}`}>
-                  Log seeds, fertilizers, and pesticide stock levels with warnings when thresholds drop.
+                  {t('landing.inventoryDesc')}
                 </p>
               </button>
 
@@ -371,10 +373,10 @@ const Landing = () => {
               >
                 <div className="flex items-center gap-3 mb-2">
                   <TrendingUp size={20} className={activePreviewTab === 'yield' ? 'text-white' : 'text-emerald-500'} />
-                  <h4 className="font-black uppercase tracking-wider text-sm">Yield & Profits Tracker</h4>
+                  <h4 className="font-black uppercase tracking-wider text-sm">{t('landing.yieldTracker')}</h4>
                 </div>
                 <p className={`text-xs font-bold leading-relaxed ${activePreviewTab === 'yield' ? 'text-white/80' : 'text-gray-500'}`}>
-                  Record operational costs and track market prices to ensure you remain highly profitable.
+                  {t('landing.yieldDesc')}
                 </p>
               </button>
             </div>
@@ -384,8 +386,8 @@ const Landing = () => {
               {activePreviewTab === 'weather' && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-gray-100 dark:border-white/5 pb-4">
-                    <span className="text-sm font-black uppercase text-emerald-500 tracking-widest">Weather Intelligence Dashboard</span>
-                    <span className="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-[10px] font-black">Active Field A</span>
+                    <span className="text-sm font-black uppercase text-emerald-500 tracking-widest">{t('landing.weatherDashboard')}</span>
+                    <span className="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-[10px] font-black">{t('landing.activeField')}</span>
                   </div>
                   
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -404,9 +406,9 @@ const Landing = () => {
                   </div>
 
                   <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-500/20 rounded-2xl p-6">
-                    <h5 className="font-black text-amber-800 dark:text-amber-400 text-sm mb-1 uppercase tracking-wider">💡 SOWING ADVISORY</h5>
+                    <h5 className="font-black text-amber-800 dark:text-amber-400 text-sm mb-1 uppercase tracking-wider">💡 {t('landing.sowingAdvisory')}</h5>
                     <p className="text-sm text-amber-700 dark:text-amber-300/90 font-semibold leading-relaxed">
-                      Hyper-local forecasts suggest moderate rain in 48 hours. Optimal window for urea application is open until tomorrow noon. Avoid immediate sowing.
+                      {t('landing.sowingAdvisoryText')}
                     </p>
                   </div>
                 </div>
@@ -415,8 +417,8 @@ const Landing = () => {
               {activePreviewTab === 'disease' && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-gray-100 dark:border-white/5 pb-4">
-                    <span className="text-sm font-black uppercase text-emerald-500 tracking-widest">AI Leaf Scanner</span>
-                    <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-3 py-1 rounded-full text-[10px] font-black">Warning Triggered</span>
+                    <span className="text-sm font-black uppercase text-emerald-500 tracking-widest">{t('landing.aiLeafScanner')}</span>
+                    <span className="bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 px-3 py-1 rounded-full text-[10px] font-black">{t('landing.warningTriggered')}</span>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-6 items-center">
@@ -447,8 +449,8 @@ const Landing = () => {
               {activePreviewTab === 'inventory' && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-gray-100 dark:border-white/5 pb-4">
-                    <span className="text-sm font-black uppercase text-emerald-500 tracking-widest">Inventory Management</span>
-                    <span className="bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 px-3 py-1 rounded-full text-[10px] font-black">Low Stock Alert</span>
+                    <span className="text-sm font-black uppercase text-emerald-500 tracking-widest">{t('landing.inventoryMgmt')}</span>
+                    <span className="bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 px-3 py-1 rounded-full text-[10px] font-black">{t('landing.lowStockAlert')}</span>
                   </div>
 
                   <div className="space-y-3">
@@ -482,7 +484,7 @@ const Landing = () => {
               {activePreviewTab === 'yield' && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between border-b border-gray-100 dark:border-white/5 pb-4">
-                    <span className="text-sm font-black uppercase text-emerald-500 tracking-widest">Financial analytics & yield forecasts</span>
+                    <span className="text-sm font-black uppercase text-emerald-500 tracking-widest">{t('landing.financialAnalytics')}</span>
                     <span className="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-[10px] font-black">Q2 Overview</span>
                   </div>
 
@@ -513,8 +515,8 @@ const Landing = () => {
       {/* Testimonials Carousel Section */}
       <section id="testimonials" className="py-28 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">Success Stories</h2>
-          <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter">Farmers Trusting <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-400">FarmSync.</span></h3>
+          <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">{t('landing.successStories')}</h2>
+          <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter">{t('landing.farmersTrusting')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-green-400">FarmSync.</span></h3>
         </div>
 
         <div className="relative max-w-4xl mx-auto">
@@ -574,8 +576,8 @@ const Landing = () => {
       <section id="faq" className="py-28 px-6 bg-gray-50 dark:bg-white/5 border-t border-b border-gray-100 dark:border-white/5">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">Got Questions?</h2>
-            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter">Frequently Asked <span className="text-emerald-500">Details</span></h3>
+            <h2 className="text-[12px] font-black uppercase tracking-[0.5em] text-emerald-500 mb-2">{t('landing.gotQuestions')}</h2>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter">{t('landing.frequentlyAsked')} <span className="text-emerald-500">{t('landing.details')}</span></h3>
           </div>
 
           <div className="space-y-4">
@@ -610,23 +612,23 @@ const Landing = () => {
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="flex flex-col lg:flex-row items-center gap-20">
             <div className="lg:w-1/2 space-y-8">
-               <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">The path to<br />optimization.</h3>
-               <p className="text-xl text-gray-400 font-bold leading-relaxed">We distill complex environmental and operational data into actionable intelligence, allowing you to focus on scaling your production and securing your harvest.</p>
-               <button onClick={() => navigate('/register')} className="bg-white text-[#0b130e] px-10 py-5 rounded-full text-lg font-black uppercase tracking-tighter italic hover:scale-105 transition-all">Start Free Now</button>
+               <h3 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">{t('landing.pathToOptimization')}</h3>
+               <p className="text-xl text-gray-400 font-bold leading-relaxed">{t('landing.pathSubtext')}</p>
+               <button onClick={() => navigate('/register')} className="bg-white text-[#0b130e] px-10 py-5 rounded-full text-lg font-black uppercase tracking-tighter italic hover:scale-105 transition-all">{t('landing.startFreeNow')}</button>
             </div>
             
             <div className="lg:w-1/2 grid grid-cols-1 gap-12 relative">
                <div className="absolute left-10 top-0 bottom-0 w-px bg-white/20 hidden sm:block" />
                {steps.map((s, i) => (
-                 <div key={i} className="relative pl-0 sm:pl-24 group">
-                    <div className="absolute left-0 top-0 w-20 h-20 rounded-full bg-white text-[#0b130e] flex items-center justify-center text-3xl font-black italic shadow-2xl z-10 group-hover:scale-110 transition-transform hidden sm:flex">
-                       0{i + 1}
-                    </div>
-                    <div className="pt-2">
-                       <h4 className="text-2xl font-black uppercase tracking-tighter mb-2 text-white">{s.title}</h4>
-                       <p className="text-gray-400 font-bold text-sm leading-relaxed">{s.description}</p>
-                    </div>
-                 </div>
+                  <div key={i} className="relative pl-0 sm:pl-24 group">
+                     <div className="absolute left-0 top-0 w-20 h-20 rounded-full bg-white text-[#0b130e] flex items-center justify-center text-3xl font-black italic shadow-2xl z-10 group-hover:scale-110 transition-transform hidden sm:flex">
+                        0{i + 1}
+                     </div>
+                     <div className="pt-2">
+                        <h4 className="text-2xl font-black uppercase tracking-tighter mb-2 text-white">{s.title}</h4>
+                        <p className="text-gray-400 font-bold text-sm leading-relaxed">{s.description}</p>
+                     </div>
+                  </div>
                ))}
             </div>
           </div>
@@ -636,10 +638,10 @@ const Landing = () => {
       {/* Final CTA */}
       <section className="py-28 px-6 text-center">
          <div className="max-w-4xl mx-auto space-y-10">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-none tracking-tighter uppercase italic">Ready to sync your farm with the future?</h2>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-none tracking-tighter uppercase italic">{t('landing.readyToSync')}</h2>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-               <button onClick={() => navigate('/register')} className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-12 py-6 rounded-full text-xl font-black uppercase tracking-tighter italic shadow-2xl shadow-emerald-500/20 transition-all active:scale-95">Get Started Now</button>
-               <a href="#showcase" onClick={(e) => handleScroll(e, 'showcase')} className="w-full sm:w-auto px-12 py-6 rounded-full text-xl font-black uppercase tracking-tighter border-2 border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-center inline-block">See App Preview</a>
+               <button onClick={() => navigate('/register')} className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-12 py-6 rounded-full text-xl font-black uppercase tracking-tighter italic shadow-2xl shadow-emerald-500/20 transition-all active:scale-95">{t('landing.getStartedNow')}</button>
+               <a href="#showcase" onClick={(e) => handleScroll(e, 'showcase')} className="w-full sm:w-auto px-12 py-6 rounded-full text-xl font-black uppercase tracking-tighter border-2 border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 transition-all text-center inline-block">{t('landing.seeAppPreview')}</a>
             </div>
          </div>
       </section>
@@ -651,26 +653,26 @@ const Landing = () => {
             <div className="md:col-span-2 space-y-6">
                <Logo size="default" variant={theme === 'dark' ? 'dark' : 'light'} />
                <p className="text-gray-500 dark:text-gray-400 text-sm font-semibold max-w-sm">
-                  FarmSync is a global precision agritech platform designed to optimize yield metrics, track inputs, log chemical use, and mitigate crop risks.
+                  {t('landing.footerAbout')}
                </p>
-               <p className="text-xs text-gray-400">&copy; 2026 FarmSync Ltd. All rights reserved.</p>
+               <p className="text-xs text-gray-400">{t('landing.copyright')}</p>
             </div>
 
             {/* Useful Links */}
             <div>
-               <h5 className="font-black text-xs uppercase tracking-[0.2em] mb-4 text-gray-900 dark:text-white">Navigation</h5>
+               <h5 className="font-black text-xs uppercase tracking-[0.2em] mb-4 text-gray-900 dark:text-white">{t('landing.navNavigation')}</h5>
                <ul className="space-y-3 text-xs font-bold text-gray-500">
-                  <li><a href="#features" onClick={(e) => handleScroll(e, 'features')} className="hover:text-emerald-500 transition-colors">Features</a></li>
-                  <li><a href="#showcase" onClick={(e) => handleScroll(e, 'showcase')} className="hover:text-emerald-500 transition-colors">App Preview</a></li>
-                  <li><a href="#testimonials" onClick={(e) => handleScroll(e, 'testimonials')} className="hover:text-emerald-500 transition-colors">Testimonials</a></li>
-                  <li><a href="#faq" onClick={(e) => handleScroll(e, 'faq')} className="hover:text-emerald-500 transition-colors">Frequently Asked</a></li>
+                  <li><a href="#features" onClick={(e) => handleScroll(e, 'features')} className="hover:text-emerald-500 transition-colors">{t('landing.features')}</a></li>
+                  <li><a href="#showcase" onClick={(e) => handleScroll(e, 'showcase')} className="hover:text-emerald-500 transition-colors">{t('landing.appPreview')}</a></li>
+                  <li><a href="#testimonials" onClick={(e) => handleScroll(e, 'testimonials')} className="hover:text-emerald-500 transition-colors">{t('landing.stories')}</a></li>
+                  <li><a href="#faq" onClick={(e) => handleScroll(e, 'faq')} className="hover:text-emerald-500 transition-colors">{t('landing.faq')}</a></li>
                </ul>
             </div>
 
             {/* Newsletter Signup */}
             <div>
-               <h5 className="font-black text-xs uppercase tracking-[0.2em] mb-4 text-gray-900 dark:text-white">FarmSync Weekly</h5>
-               <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 font-semibold">Weekly precision insights, pest alerts, and regional yield forecast updates directly to your inbox.</p>
+               <h5 className="font-black text-xs uppercase tracking-[0.2em] mb-4 text-gray-900 dark:text-white">{t('landing.farmSyncWeekly')}</h5>
+               <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 font-semibold">{t('landing.newsletterDesc')}</p>
                
                <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
                   <div className="relative flex-1">
@@ -679,7 +681,7 @@ const Landing = () => {
                         type="email" 
                         value={newsletterEmail}
                         onChange={(e) => setNewsletterEmail(e.target.value)}
-                        placeholder="Enter email"
+                        placeholder={t('landing.emailPlaceholder')}
                         className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-full pl-10 pr-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-emerald-500 text-gray-900 dark:text-white"
                         required
                      />
@@ -697,12 +699,12 @@ const Landing = () => {
 
          <div className="max-w-7xl mx-auto border-t border-gray-100 dark:border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
             <div className="flex gap-8">
-               <a href="#" className="hover:text-emerald-500 transition-colors">Privacy Policy</a>
-               <a href="#" className="hover:text-emerald-500 transition-colors">Terms of Service</a>
-               <a href="#" className="hover:text-emerald-500 transition-colors">SLA Agreement</a>
+               <a href="#" className="hover:text-emerald-500 transition-colors">{t('landing.privacyPolicy')}</a>
+               <a href="#" className="hover:text-emerald-500 transition-colors">{t('landing.termsOfService')}</a>
+               <a href="#" className="hover:text-emerald-500 transition-colors">{t('landing.slaAgreement')}</a>
             </div>
             <div>
-               <span>Precision telemetry active 🌍</span>
+               <span>{t('landing.telemetryActive')}</span>
             </div>
          </div>
       </footer>
