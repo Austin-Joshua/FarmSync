@@ -53,21 +53,28 @@ const PestPrediction: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl p-8 text-white shadow-lg">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-            <Bug className="w-8 h-8" />
+    <div className="space-y-6">
+      <div className="glass-card bg-gradient-to-r from-orange-500 to-red-600 p-8 text-white relative overflow-hidden border-0">
+        <div className="absolute top-0 right-0 -mt-10 -mr-10 opacity-20">
+          <Bug size={200} />
+        </div>
+        <div className="relative z-10 flex items-center gap-6">
+          <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-md shadow-inner">
+            <Bug className="w-10 h-10 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Pest Outbreak Predictor</h1>
-            <p className="text-red-100 mt-1">AI-powered risk analysis based on weather and crop data</p>
+            <h1 className="text-4xl font-black uppercase tracking-tight text-white drop-shadow-md">
+              Pest Outbreak Predictor
+            </h1>
+            <p className="text-red-100 mt-2 font-medium text-lg">
+              AI-powered risk analysis using environmental and crop data
+            </p>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm">
+        <div className="glass-card p-6 flex flex-col justify-center">
           <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
             <ThermometerSun className="w-5 h-5 text-orange-500" />
             Environmental Data
@@ -153,7 +160,7 @@ const PestPrediction: React.FC = () => {
           </form>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 shadow-sm flex flex-col justify-center">
+        <div className="glass-card p-6 flex flex-col justify-center text-center">
           {error ? (
             <div className="p-4 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-xl border border-red-200 dark:border-red-800">
               <AlertTriangle className="w-6 h-6 mb-2" />

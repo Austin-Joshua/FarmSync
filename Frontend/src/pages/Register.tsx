@@ -154,7 +154,7 @@ const Register = () => {
 
         {/* Register Card */}
         <div className="w-[90%] max-w-[420px] lg:max-w-[500px] animate-fade-in-up mx-auto lg:mx-0">
-          <div className="glass-card shadow-2xl relative !p-6">
+          <div className="glass-card p-6 shadow-2xl relative">
             {/* Theme & Language Toggles */}
             <div className="absolute top-4 right-4 flex items-center gap-2">
               <LanguageSwitcher />

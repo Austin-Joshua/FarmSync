@@ -90,7 +90,7 @@ const Login = () => {
 
         {/* Login Card */}
         <div className="w-full max-w-md mx-auto lg:w-1/2">
-          <div className="glass-card shadow-2xl !p-5 sm:!p-7">
+          <div className="glass-card p-6 shadow-2xl">
             {/* Header controls */}
             <div className="absolute top-4 right-4 flex items-center gap-2">
               <LanguageSwitcher />
