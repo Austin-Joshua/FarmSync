@@ -36,19 +36,21 @@ const CropManagement = () => {
       if (!user) return;
       try {
         const response = await api.getCrops();
-        if (response.data) {
+        if (response.data && response.data.length > 0) {
           // Sort by sowing date descending (LIFO/Newest first)
           const sorted = response.data.sort((a: Crop, b: Crop) => 
             new Date(b.sowingDate).getTime() - new Date(a.sowingDate).getTime()
           );
           setCrops(sorted);
+        } else {
+          // Empty or null response - display pre-populated crops
+          setCrops(mockCrops);
         }
       } catch (error) {
         console.error('Failed to fetch crops:', error);
         toast.error(t('crops.errorFetching') || 'Failed to fetch crops');
         // Fallback to mock data if API fails (for demo purposes)
         setCrops(mockCrops);
-      } finally {
       }
     };
     fetchCrops();
@@ -166,9 +168,6 @@ const CropManagement = () => {
               <option value="planned">{t('crops.planned')}</option>
             </select>
           </div>
-        </div>
-        <div className="mt-3 text-xs text-gray-500">
-          <strong>{t('crops.note')}</strong> {t('crops.cropDataNote')}
         </div>
       </div>
 

@@ -13,7 +13,8 @@ interface AuthContextType {
   register: (name: string, email: string, password: string, role: UserRole, metadata?: any) => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (partialUser: Partial<User>) => Promise<void>;
-  loginWithGoogle: () => Promise<void>;
+  loginWithGoogle: (email?: string, name?: string, role?: UserRole) => Promise<void>;
+  loginWithMicrosoft: (email?: string, name?: string, role?: UserRole) => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -114,11 +115,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const mockGoogleLogin = async () => {
-    const email = 'google-user@farmsync.com';
-    const name = 'Farmer Bob';
+  const mockGoogleLogin = async (mockEmail?: string, mockName?: string, mockRole?: UserRole) => {
+    const email = mockEmail || 'farmer@farmsync.com';
+    const name = mockName || 'Ravi Kumar';
+    const role = mockRole || 'farmer';
     try {
-      await ApiService.register(name, email, 'oauth2_user', 'farmer');
+      await ApiService.register(name, email, 'oauth2_user', role);
     } catch (err) {
       console.log('Mock registration skipped (user may already exist on backend).');
     }
@@ -133,11 +135,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const loginWithGoogle = async () => {
-    if (!auth) {
-      console.warn("Firebase not initialized, falling back to mock Google login");
-      await mockGoogleLogin();
+  const loginWithGoogle = async (email?: string, name?: string, role?: UserRole) => {
+    if (email) {
+      await mockGoogleLogin(email, name, role);
       return;
+    }
+
+    if (!auth) {
+      console.warn("Firebase not initialized, throwing configuration error");
+      throw new Error("FIREBASE_NOT_INITIALIZED");
     }
 
     try {
@@ -145,16 +151,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       provider.setCustomParameters({ prompt: 'select_account' });
       const userCredential = await signInWithPopup(auth, provider);
       const firebaseUser = userCredential.user;
-      const email = firebaseUser.email || '';
-      const name = firebaseUser.displayName || 'Google User';
+      const fEmail = firebaseUser.email || '';
+      const fName = firebaseUser.displayName || 'Google User';
 
       try {
-        await ApiService.register(name, email, 'oauth2_user', 'farmer');
+        await ApiService.register(fName, fEmail, 'oauth2_user', 'farmer');
       } catch (err) {
         console.log('Registration skipped (user may already exist on backend).');
       }
 
-      const response: any = await ApiService.login(email, 'oauth2_user');
+      const response: any = await ApiService.login(fEmail, 'oauth2_user');
       if (response && response.token && response.user) {
         localStorage.setItem('token', response.token);
         localStorage.setItem('user', JSON.stringify(response.user));
@@ -165,10 +171,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (err: any) {
       console.error('Google login failed:', err);
-      console.warn("Firebase Google login failed, falling back to mock Google login");
-      await mockGoogleLogin();
-      return;
+      throw err; // Propagate error so OAuthSignIn can open mock account chooser modal
     }
+  };
+
+  const loginWithMicrosoft = async (email?: string, name?: string, role?: UserRole) => {
+    // For local Microsoft login, we simulate using mock credentials
+    await mockGoogleLogin(email || 'farmer@farmsync.com', name || 'Ravi Kumar', role || 'farmer');
   };
 
   const register = async (name: string, email: string, password: string, role: UserRole, metadata: any = {}) => {
@@ -219,6 +228,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         loginWithToken,
         loginWithOtp,
         loginWithGoogle,
+        loginWithMicrosoft,
         register,
         logout,
         updateUser,

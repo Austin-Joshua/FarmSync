@@ -123,13 +123,17 @@ const Login = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-3">
+            <form onSubmit={handleSubmit} className="space-y-3" autoComplete="off">
               <div>
                 <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1 block mb-1">{t('emailAddress')}</label>
                 <div className="relative group">
                   <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
                   <input
                     type="email" value={email} onChange={e => setEmail(e.target.value)}
+                    id="fs-email-input"
+                    name="fs_email_addr"
+                    autoComplete="off"
+                    data-lpignore="true"
                     className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
                     placeholder="name@farm.com" />
                 </div>
@@ -143,6 +147,10 @@ const Login = () => {
                   <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
                   <input
                     type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
+                    id="fs-password-input"
+                    name="fs_password"
+                    autoComplete="new-password"
+                    data-lpignore="true"
                     className="block w-full pl-9 pr-10 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
                     placeholder="••••••••" />
                   <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-500">

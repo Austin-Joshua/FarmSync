@@ -12,7 +12,7 @@ import { useLocation as useGpsLocation } from '../hooks/useLocation';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
-  MapPin, LandPlot, IndianRupee, TrendingUp, Package, Users, Sprout,
+  MapPin, LandPlot, IndianRupee, TrendingUp, Package, Sprout,
   Droplets, Bug, ExternalLink, AlertTriangle, ArrowRight,
   CloudRain, Wind, Thermometer,
 } from 'lucide-react';
@@ -22,7 +22,7 @@ import {
   CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import DetailModal from '../components/DetailModal';
-import { translateCrop, translateDistrict, translateCategory } from '../utils/translations';
+import { translateCrop, translateCategory } from '../utils/translations';
 import { getCropIcon } from '../utils/cropIcons';
 import api from '../services/api';
 import { DataCache } from '../utils/dataCache';
@@ -255,11 +255,6 @@ const Dashboard = () => {
     return acc;
   }, {} as Record<string, { total: number; items: any[] }>);
 
-  const totalFarmers = data.farmerStats.reduce((sum, stat) => sum + (stat.count || 0), 0);
-  const farmerChartData = data.farmerStats.map((stat) => ({
-    name: translateDistrict(stat.district),
-    farmers: stat.count,
-  }));
 
   // Colors for charts
   const COLORS = ['#16a34a', '#22c55e', '#4ade80', '#86efac', '#bbf7d0', '#dcfce7'];
@@ -290,6 +285,38 @@ const Dashboard = () => {
         >
           <TrendingUp size={18} className="text-primary-600" />
         </button>
+      </div>
+
+      {/* Quick Stats Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 animate-in fade-in duration-700 delay-75">
+        <StatCard
+          title={t('dashboard.totalFields')}
+          value={data.farms.length}
+          icon={LandPlot}
+          color="green"
+          onClick={() => setDetailModal({ type: 'totalFields', data: data.farms })}
+        />
+        <StatCard
+          title={t('dashboard.activeCrops')}
+          value={data.crops.filter((c) => c.status === 'active').length}
+          icon={Sprout}
+          color="blue"
+          onClick={() => setDetailModal({ type: 'activeCrops', data: data.crops.filter((c) => c.status === 'active') })}
+        />
+        <StatCard
+          title={t('dashboard.totalYield')}
+          value={`${totalYield.toLocaleString()} kg`}
+          icon={TrendingUp}
+          color="purple"
+          onClick={() => setDetailModal({ type: 'totalYield', data: { totalYield, crops: data.crops, yields: data.yields } })}
+        />
+        <StatCard
+          title={t('dashboard.netProfit')}
+          value={`₹${netProfit.toLocaleString()}`}
+          icon={IndianRupee}
+          color={netProfit >= 0 ? 'green' : 'orange'}
+          onClick={() => setDetailModal({ type: 'netProfit', data: { netProfit, totalIncome, totalInputInvestment, expenses: data.expenses, transactions: data.transactions } })}
+        />
       </div>
 
       {/* AI ML Insights Section */}
@@ -804,81 +831,6 @@ const Dashboard = () => {
                     })}
           </div>
         </div>
-      </div>
-
-      {/* 5. Farmer Registration Statistics */}
-      <div className="glass-card p-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Users className="text-primary-600 dark:text-primary-400" size={24} />
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.farmerRegistration')}</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <div className="bg-primary-50 dark:bg-primary-900/20 p-6 rounded-lg mb-4 border border-primary-200 dark:border-primary-800">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.totalRegisteredFarmers')}</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{totalFarmers.toLocaleString()}</p>
-            </div>
-            <div className="space-y-2 max-h-64 overflow-y-auto">
-              {data.farmerStats.map((stat: any) => (
-                <div key={stat.district} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded border border-gray-200 dark:border-gray-600">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="text-primary-600 dark:text-primary-400" size={16} />
-                    <span className="font-medium text-gray-900 dark:text-gray-100">{translateDistrict(stat.district)}</span>
-                  </div>
-                  <span className="font-bold text-gray-900 dark:text-gray-100">{stat.count.toLocaleString()}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">{t('dashboard.districtWiseDistribution')}</h3>
-            <ResponsiveContainer width="100%" height={350}>
-              <BarChart data={farmerChartData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={100} />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', border: '1px solid #ccc', borderRadius: '4px' }}
-                  formatter={(value: any) => [value, t('dashboard.farmers')]}
-                />
-                <Legend />
-                <Bar dataKey="farmers" fill="#16a34a" name={t('dashboard.farmers')} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatCard
-          title={t('dashboard.totalFields')}
-          value={data.farms.length}
-          icon={LandPlot}
-          color="green"
-          onClick={() => setDetailModal({ type: 'totalFields', data: data.farms })}
-        />
-        <StatCard
-          title={t('dashboard.activeCrops')}
-          value={data.crops.filter((c) => c.status === 'active').length}
-          icon={Sprout}
-          color="blue"
-          onClick={() => setDetailModal({ type: 'activeCrops', data: data.crops.filter((c) => c.status === 'active') })}
-        />
-        <StatCard
-          title={t('dashboard.totalYield')}
-          value={`${totalYield.toLocaleString()} kg`}
-          icon={TrendingUp}
-          color="purple"
-          onClick={() => setDetailModal({ type: 'totalYield', data: { totalYield, crops: data.crops, yields: data.yields } })}
-        />
-        <StatCard
-          title={t('dashboard.netProfit')}
-          value={`₹${netProfit.toLocaleString()}`}
-          icon={IndianRupee}
-          color={netProfit >= 0 ? 'green' : 'orange'}
-          onClick={() => setDetailModal({ type: 'netProfit', data: { netProfit, totalIncome, totalInputInvestment, expenses: data.expenses, transactions: data.transactions } })}
-        />
       </div>
 
       {/* Detail Modals */}

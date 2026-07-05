@@ -330,15 +330,16 @@ const Layout = ({ children }: LayoutProps) => {
           >
             <Menu size={20} />
           </button>
-          <h1 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white capitalize truncate max-w-[140px] sm:max-w-none">
-            {(() => {
-              for (const group of navGroups) {
-                const found = group.items.find(i => i.path === location.pathname);
-                if (found) return t('navigation.' + found.translationKey, { defaultValue: found.label });
-              }
-              return t('common.appName');
-            })()}
+          <h1 
+            onClick={() => navigate('/dashboard')}
+            className="hidden md:block text-base sm:text-lg font-bold text-gray-900 dark:text-white capitalize truncate cursor-pointer hover:opacity-80 transition-all select-none"
+            title={t('navigation.home') || 'Go to Dashboard'}
+          >
+            FarmSync
           </h1>
+          <div className="md:hidden flex items-center">
+            <Logo size="small" />
+          </div>
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-3">

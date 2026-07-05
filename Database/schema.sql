@@ -207,11 +207,28 @@ CREATE TABLE IF NOT EXISTS monthly_stock_usage (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 18. Calendar Events Table
+CREATE TABLE IF NOT EXISTS calendar_events (
+    id UUID PRIMARY KEY,
+    event_type VARCHAR(50) NOT NULL, -- 'planting', 'harvest', 'fertilizer', 'pesticide', 'irrigation', 'other'
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    event_date DATE NOT NULL,
+    reminder_days INTEGER DEFAULT 7,
+    is_completed BOOLEAN DEFAULT FALSE,
+    user_id UUID NOT NULL REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- ══════════════════════════════════════════════════════
 -- PERFORMANCE INDEXES
 -- Phase 7 optimization: cover all high-frequency query
 -- patterns in the multi-tenant FarmSync architecture.
 -- ══════════════════════════════════════════════════════
+
+-- Calendar events query index
+CREATE INDEX IF NOT EXISTS idx_calendar_events_user_date ON calendar_events(user_id, event_date);
 
 -- User lookups (login, profile, JWT validation)
 CREATE INDEX IF NOT EXISTS idx_users_email       ON users(email);

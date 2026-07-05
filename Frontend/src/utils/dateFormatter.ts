@@ -6,10 +6,11 @@ import i18n from '../i18n/config';
 /**
  * Format date as "DD MMMM YYYY" (e.g., "18 November 2024")
  */
-export const formatDateDisplay = (date: Date | string): string => {
+export const formatDateDisplay = (date: Date | string | null | undefined): string => {
+  if (!date) return '';
   const d = typeof date === 'string' ? new Date(date) : date;
   
-  if (isNaN(d.getTime())) {
+  if (!(d instanceof Date) || isNaN(d.getTime())) {
     return '';
   }
 
@@ -25,10 +26,11 @@ export const formatDateDisplay = (date: Date | string): string => {
 /**
  * Format date as "DD MMM YYYY" (e.g., "18 Nov 2024") - shorter version
  */
-export const formatDateShort = (date: Date | string): string => {
+export const formatDateShort = (date: Date | string | null | undefined): string => {
+  if (!date) return '';
   const d = typeof date === 'string' ? new Date(date) : date;
   
-  if (isNaN(d.getTime())) {
+  if (!(d instanceof Date) || isNaN(d.getTime())) {
     return '';
   }
 
@@ -44,10 +46,11 @@ export const formatDateShort = (date: Date | string): string => {
 /**
  * Format date with weekday: "DD MMMM YYYY, Weekday" (e.g., "18 November 2024, Monday")
  */
-export const formatDateWithWeekday = (date: Date | string): string => {
+export const formatDateWithWeekday = (date: Date | string | null | undefined): string => {
+  if (!date) return '';
   const d = typeof date === 'string' ? new Date(date) : date;
   
-  if (isNaN(d.getTime())) {
+  if (!(d instanceof Date) || isNaN(d.getTime())) {
     return '';
   }
 
@@ -66,10 +69,11 @@ export const formatDateWithWeekday = (date: Date | string): string => {
 /**
  * Format date for input fields (YYYY-MM-DD)
  */
-export const formatDateForInput = (date: Date | string): string => {
+export const formatDateForInput = (date: Date | string | null | undefined): string => {
+  if (!date) return '';
   const d = typeof date === 'string' ? new Date(date) : date;
   
-  if (isNaN(d.getTime())) {
+  if (!(d instanceof Date) || isNaN(d.getTime())) {
     return '';
   }
 
