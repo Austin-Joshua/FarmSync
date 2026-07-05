@@ -15,7 +15,7 @@ import toast from 'react-hot-toast';
 const YieldTracking = () => {
   const { t } = useTranslation();
   const [yields, setYields] = useState<Yield[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [detailModal, setDetailModal] = useState<{
     type: 'chart' | 'records' | null;
     data?: any;
@@ -23,13 +23,20 @@ const YieldTracking = () => {
 
   useEffect(() => {
     const fetchYields = async () => {
+      setLoading(true);
       try {
         const data = await ApiService.getYields() as any;
         setYields(Array.isArray(data) ? data : []);
       } catch (err) {
-        // Backend may not be running — show friendly message, keep empty
-        toast.error('Could not load yield records. Make sure the backend is running.');
-        setYields([]);
+        console.warn('Could not load yield records from API, using demo fallback:', err);
+        // Fallback mock yields when backend is stopped
+        const mockYields: Yield[] = [
+          { id: 'y-1', cropId: '1', quantity: 2400, quality: 'excellent', harvestDate: '2024-11-20', farmId: '1' },
+          { id: 'y-2', cropId: '2', quantity: 3100, quality: 'good', harvestDate: '2025-03-15', farmId: '1' },
+          { id: 'y-3', cropId: '3', quantity: 1800, quality: 'average', harvestDate: '2024-08-10', farmId: '2' },
+          { id: 'y-4', cropId: '4', quantity: 2200, quality: 'excellent', harvestDate: '2024-10-30', farmId: '2' }
+        ];
+        setYields(mockYields);
       } finally {
         setLoading(false);
       }
@@ -79,13 +86,6 @@ const YieldTracking = () => {
 
   return (
     <div className="space-y-6">
-      {loading && (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 size={32} className="animate-spin text-primary-600" />
-        </div>
-      )}
-      {!loading && (
-      <>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
@@ -294,8 +294,6 @@ const YieldTracking = () => {
             </div>
           </div>
         </DetailModal>
-      )}
-        </>
       )}
     </div>
   );

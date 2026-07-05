@@ -94,6 +94,8 @@ const Fields = () => {
       DataCache.set(cacheKey, farmsData);
     } catch (err: any) {
       console.error('Failed to load farms:', err);
+      // Fallback mock farm when backend is stopped
+      setFarms([{ id: 'farm-1', name: 'Coimbatore Demo Farm' }]);
     }
   };
 
@@ -112,7 +114,35 @@ const Fields = () => {
       setFields(fieldsData);
       DataCache.set(cacheKey, fieldsData);
     } catch (err: any) {
-      toast.error(err.message || 'Failed to load fields');
+      console.warn('Failed to load fields from API, using demo fallback:', err);
+      // Fallback mock fields when backend is stopped
+      const mockFieldsData: Field[] = [
+        {
+          id: 'field-1',
+          farm_id: 'farm-1',
+          name: 'North Valley Field',
+          area: 12.5,
+          latitude: 11.0168,
+          longitude: 76.9558,
+          soil_type_id: 'soil-alluvial',
+          soil_type_name: 'Alluvial Soil',
+          soil_test_date: '2025-05-10',
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 'field-2',
+          farm_id: 'farm-1',
+          name: 'South Slope Field',
+          area: 8.0,
+          latitude: 11.0185,
+          longitude: 76.9590,
+          soil_type_id: 'soil-red',
+          soil_type_name: 'Red Soil',
+          soil_test_date: '2025-06-15',
+          created_at: new Date().toISOString()
+        }
+      ];
+      setFields(mockFieldsData);
     } finally {
       setLoading(false);
     }
@@ -312,15 +342,12 @@ const Fields = () => {
         </div>
       )}
 
-      {loading ? (
-        <div className="flex flex-col items-center justify-center py-24">
-          <Loader className="animate-spin h-12 w-12 text-primary-600 mb-4" />
-          <p className="text-gray-500 font-medium">Scoping out your fields...</p>
-        </div>
-      ) : fields.length === 0 ? (
+      {fields.length === 0 ? (
         <div className="card text-center py-20 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-dashed border-2 border-gray-200 dark:border-gray-700">
           <MapPin size={64} className="mx-auto text-gray-300 mb-4" />
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">No fields mapped yet</h3>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+            {loading ? "Loading fields..." : "No fields mapped yet"}
+          </h3>
           <p className="text-gray-500 mb-8 max-w-sm mx-auto">Start by adding your first field to track growth and soil health across your farm.</p>
           <button onClick={() => setShowForm(true)} className="btn-primary">{t('fields.addField')}</button>
         </div>
