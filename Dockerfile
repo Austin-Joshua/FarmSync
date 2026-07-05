@@ -3,11 +3,11 @@
 FROM eclipse-temurin:17-jdk-jammy AS build
 WORKDIR /app
 
-COPY backend/.mvn/wrapper/ .mvn/wrapper/
-COPY backend/mvnw backend/pom.xml ./
+COPY Backend/.mvn/wrapper/ .mvn/wrapper/
+COPY Backend/mvnw Backend/pom.xml ./
 RUN sed -i 's/\r$//' mvnw && chmod +x mvnw
 
-COPY backend/src ./src
+COPY Backend/src ./src
 RUN ./mvnw -B clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-jammy
