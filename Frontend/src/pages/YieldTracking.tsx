@@ -4,18 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { getCropName } from '../data/mockData';
 import { translateCrop } from '../utils/translations';
 import { getCropIcon } from '../utils/cropIcons';
-import { Plus, TrendingUp, Award, Eye, Loader2 } from 'lucide-react';
+import { Plus, TrendingUp, Award, Eye } from 'lucide-react';
 import { Yield } from '../types';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import DetailModal from '../components/DetailModal';
 import { formatDateDisplay } from '../utils/dateFormatter';
 import ApiService from '../services/api';
-import toast from 'react-hot-toast';
 
 const YieldTracking = () => {
   const { t } = useTranslation();
   const [yields, setYields] = useState<Yield[]>([]);
-  const [loading, setLoading] = useState(false);
   const [detailModal, setDetailModal] = useState<{
     type: 'chart' | 'records' | null;
     data?: any;
@@ -23,22 +21,19 @@ const YieldTracking = () => {
 
   useEffect(() => {
     const fetchYields = async () => {
-      setLoading(true);
       try {
         const data = await ApiService.getYields() as any;
         setYields(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.warn('Could not load yield records from API, using demo fallback:', err);
+        console.warn("Could not load yield records from API, using demo fallback:", err);
         // Fallback mock yields when backend is stopped
         const mockYields: Yield[] = [
-          { id: 'y-1', cropId: '1', quantity: 2400, quality: 'excellent', harvestDate: '2024-11-20', farmId: '1' },
-          { id: 'y-2', cropId: '2', quantity: 3100, quality: 'good', harvestDate: '2025-03-15', farmId: '1' },
-          { id: 'y-3', cropId: '3', quantity: 1800, quality: 'average', harvestDate: '2024-08-10', farmId: '2' },
-          { id: 'y-4', cropId: '4', quantity: 2200, quality: 'excellent', harvestDate: '2024-10-30', farmId: '2' }
+          { id: 'y-1', cropId: '1', quantity: 2400, quality: 'excellent', date: '2024-11-20' },
+          { id: 'y-2', cropId: '2', quantity: 3100, quality: 'good', date: '2025-03-15' },
+          { id: 'y-3', cropId: '3', quantity: 1800, quality: 'average', date: '2024-08-10' },
+          { id: 'y-4', cropId: '4', quantity: 2200, quality: 'excellent', date: '2024-10-30' }
         ];
         setYields(mockYields);
-      } finally {
-        setLoading(false);
       }
     };
     fetchYields();

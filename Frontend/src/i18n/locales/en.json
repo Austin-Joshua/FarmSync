@@ -747,5 +747,32 @@
     "footerAbout": "FarmSync is a global precision agritech platform designed to optimize yield metrics, track inputs, log chemical use, and mitigate crop risks.",
     "newsletterSuccess": "Successfully subscribed to FarmSync Weekly! 🌾",
     "newsletterError": "Please enter a valid email address."
+  },
+  "marketPrices": {
+    "title": "Market Prices",
+    "subtitle": "Track real-time crop prices and get selling recommendations",
+    "selectCrop": "Select Crop",
+    "setPriceAlert": "Set Price Alert",
+    "targetPrice": "Target Price",
+    "above": "Above",
+    "below": "Below",
+    "setAlert": "Set Alert",
+    "currentPrice": "Current Price",
+    "market": "Market",
+    "lastUpdated": "Last updated",
+    "priceRange": "Price Range",
+    "min": "Min",
+    "max": "Max",
+    "avg": "Avg",
+    "bestTimeToSell": "Best Time to Sell",
+    "recommendedDate": "Recommended Date",
+    "expectedPrice": "Expected Price",
+    "confidence": "Confidence",
+    "priceHistory": "Price History (30 Days)",
+    "date": "Date",
+    "price": "Price",
+    "change": "Change",
+    "trend": "Trend",
+    "selectCropMessage": "Select a crop to view market prices"
   }
 }

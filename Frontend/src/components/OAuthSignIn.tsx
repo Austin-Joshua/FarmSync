@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import { useAuth } from './../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { X, Loader2, User as UserIcon, Shield, Globe } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
 import { UserRole } from '../types';
 
 interface OAuthLoginProps {
@@ -255,7 +255,7 @@ const MockOAuthModal: React.FC<MockOAuthModalProps> = ({ isOpen, onClose, provid
   );
 };
 
-export const GoogleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError }) => {
+export const GoogleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError: _onError }) => {
   const { loginWithGoogle } = useAuth();
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);

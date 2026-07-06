@@ -6,15 +6,17 @@ import CropFormModal from '../components/CropFormModal';
 import CropDetailModal from '../components/CropDetailModal';
 import { mockCrops } from '../data/mockData';
 import { Crop } from '../types';
-import { Plus, Search, Filter, Edit2, Trash2, Eye } from 'lucide-react';
-import { getCropIcon } from '../utils/cropIcons';
-import { translateCrop } from '../utils/translations';
-import DetailModal from '../components/DetailModal';
-import { formatDateDisplay } from '../utils/dateFormatter';
-
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import toast from 'react-hot-toast';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import EmptyState from '../components/ui/EmptyState';
+import DetailModal from '../components/DetailModal';
+import { getCropIcon } from '../utils/cropIcons';
+import { translateCrop } from '../utils/translations';
+import { formatDateDisplay } from '../utils/dateFormatter';
+import { Plus, Search, Filter, Edit2, Trash2, Eye, Sprout } from 'lucide-react';
 
 const CropManagement = () => {
   const { t } = useTranslation();
@@ -130,17 +132,16 @@ const CropManagement = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{t('crops.title')}</h1>
-          <p className="text-gray-600 mt-1">{t('crops.subtitle')}</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('crops.title')}</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">{t('crops.subtitle')}</p>
         </div>
-        <button onClick={handleAddCrop} className="btn-primary flex items-center gap-2 transition-all duration-150 ease-in-out hover:scale-105 active:scale-95">
-          <Plus size={20} />
+        <Button onClick={handleAddCrop} variant="primary" leftIcon={<Plus size={20} />}>
           {t('crops.addNewCrop')}
-        </button>
+        </Button>
       </div>
 
       {/* Search and Filter */}
-      <div className="card">
+      <Card className="p-4 sm:p-6 mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -153,7 +154,7 @@ const CropManagement = () => {
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter size={20} className="text-gray-600" />
+            <Filter size={20} className="text-gray-600 dark:text-gray-400" />
             <label htmlFor="status-filter" className="sr-only">{t('crops.status')}</label>
             <select
               id="status-filter"
@@ -169,7 +170,7 @@ const CropManagement = () => {
             </select>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Crops Grid */}
       {filteredCrops.length > 0 ? (
@@ -218,14 +219,13 @@ const CropManagement = () => {
           })}
         </div>
       ) : (
-        <div className="card text-center py-12">
-          <div className="text-6xl mb-4">🌾</div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">{t('crops.noCropsFound')}</h3>
-          <p className="text-gray-600 mb-4">{t('crops.adjustSearch')}</p>
-          <button onClick={handleAddCrop} className="btn-primary">
-            {t('crops.addFirstCrop')}
-          </button>
-        </div>
+        <EmptyState
+          title={t('crops.noCropsFound')}
+          description={t('crops.adjustSearch')}
+          icon={Sprout}
+          actionText={t('crops.addFirstCrop')}
+          onActionClick={handleAddCrop}
+        />
       )}
 
       {/* Crop Form Modal */}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Plus, Trash2, Check, X, Sprout, Droplets, Bug, Droplet, Package, Loader, Save } from 'lucide-react';
 import api from '../services/api';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from 'date-fns';
+import { format, eachDayOfInterval, isSameDay, isToday } from 'date-fns';
 import { Crop } from '../types';
 import { getCropIcon } from '../utils/cropIcons';
 import toast from 'react-hot-toast';
@@ -207,8 +207,14 @@ const CropCalendar = () => {
                   <div
                     key={day.toISOString()}
                     onClick={() => {
-                      setNewEvent({ ...newEvent, event_date: format(day, 'yyyy-MM-dd') });
-                      setShowAddModal(true);
+                      const dayEvents = getEventsForDate(day);
+                      if (dayEvents.length > 0) {
+                        setSelectedEvent(dayEvents[0]);
+                        setShowEventModal(true);
+                      } else {
+                        setNewEvent({ ...newEvent, event_date: format(day, 'yyyy-MM-dd') });
+                        setShowAddModal(true);
+                      }
                     }}
                     className={`aspect-square rounded-lg flex flex-col items-center justify-center text-xs relative cursor-pointer group hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all ${
                       isTodayDate 
@@ -342,7 +348,6 @@ const CropCalendar = () => {
                 const startPercent = getYearPercent(crop.sowingDate);
                 
                 // End date logic: if harvested, use harvestDate. If active, track it to today/now.
-                const hasHarvest = !!crop.harvestDate;
                 const endPercent = getYearPercent(
                   crop.harvestDate || 
                   (crop.status === 'active' ? format(new Date(), 'yyyy-MM-dd') : format(new Date(crop.sowingDate).getTime() + (crop.growthPeriod || 120) * 86400000, 'yyyy-MM-dd'))
