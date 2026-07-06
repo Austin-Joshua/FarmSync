@@ -10,7 +10,7 @@ import {
 import Logo from '../components/Logo';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import OAuthSignIn from '../components/OAuthSignIn';
-import api from '../services/api';
+
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -24,34 +24,9 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  // null = checking, true = online, false = offline
-  const [isApiOnline, setIsApiOnline] = useState<boolean | null>(null);
-
   useEffect(() => {
     if (isAuthenticated) navigate('/dashboard', { replace: true });
   }, [isAuthenticated, navigate]);
-
-  useEffect(() => {
-    let cancelled = false;
-    const check = async () => {
-      const MAX_ATTEMPTS = 3;
-      const RETRY_DELAY_MS = 3000;
-      for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-        try {
-          await api.getHealth();
-          if (!cancelled) setIsApiOnline(true);
-          return;
-        } catch {
-          if (attempt < MAX_ATTEMPTS - 1) {
-            await new Promise(r => setTimeout(r, RETRY_DELAY_MS));
-          }
-        }
-      }
-      if (!cancelled) setIsApiOnline(false);
-    };
-    check();
-    return () => { cancelled = true; };
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,12 +104,6 @@ const Login = () => {
             </div>
 
             {/* Status banners */}
-            {isApiOnline === false && (
-              <div className="mb-3 p-2 bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30 rounded-lg flex items-center gap-2 text-red-600 dark:text-red-400">
-                <AlertCircle size={14} className="shrink-0" />
-                <p className="text-[11px] font-bold uppercase tracking-wide">Server offline — system running in offline fallback mode</p>
-              </div>
-            )}
             {error && (
               <div className="mb-3 p-2 bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30 rounded-lg flex items-center gap-2 text-red-600 dark:text-red-400">
                 <AlertCircle size={14} className="shrink-0" />
