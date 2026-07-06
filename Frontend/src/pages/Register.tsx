@@ -71,8 +71,8 @@ const Register = () => {
       setError('Please fill in all required fields');
       return;
     }
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters');
       return;
     }
     setError('');

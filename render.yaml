@@ -1,6 +1,11 @@
-# Optional: connect this repo in Render → Blueprints → New Blueprint Instance
-# Or create a Web Service manually: Environment = Docker, Root = Backend, Dockerfile path below.
+# Render Blueprint — connect this repo in Render → Blueprints → New Blueprint Instance.
+# Both the Spring Boot backend and the FastAPI ML service are defined here.
+# Set all sync:false env vars manually in the Render dashboard.
+
 services:
+  # ──────────────────────────────────────────────────────────────
+  # 1. Spring Boot Backend
+  # ──────────────────────────────────────────────────────────────
   - type: web
     name: farmsync-backend
     runtime: docker
@@ -9,10 +14,15 @@ services:
     plan: free
     envVars:
       - key: PORT
-        sync: false
+        value: 9090
       - key: JWT_SECRET
         sync: false
       - key: FRONTEND_URL
+        sync: false
+      - key: ML_SERVICE_URL
+        # Set to the live Render URL of farmsync-ml below, e.g.: https://farmsync-ml.onrender.com
+        sync: false
+      - key: ML_SERVICE_SECRET
         sync: false
       - key: SPRING_DATASOURCE_URL
         sync: false
@@ -21,4 +31,26 @@ services:
       - key: SPRING_DATASOURCE_PASSWORD
         sync: false
       - key: FIREBASE_SERVICE_ACCOUNT_JSON
+        sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SEED_DEMO_DATA
+        value: "false"
+
+  # ──────────────────────────────────────────────────────────────
+  # 2. FastAPI ML Service
+  # ──────────────────────────────────────────────────────────────
+  - type: web
+    name: farmsync-ml
+    runtime: docker
+    dockerfilePath: ./ml-service/Dockerfile
+    dockerContext: ./ml-service
+    plan: free
+    envVars:
+      - key: ML_PORT
+        value: 8000
+      - key: ML_SERVICE_SECRET
+        # Must match ML_SERVICE_SECRET set on farmsync-backend above
+        sync: false
+      - key: FRONTEND_URL
         sync: false

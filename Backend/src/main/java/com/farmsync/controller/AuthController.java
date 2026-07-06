@@ -127,8 +127,8 @@ public class AuthController {
         try {
             String token = body.get("token");
             String newPassword = body.get("newPassword");
-            if (token == null || newPassword == null || newPassword.length() < 6) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Valid token and password (min 6 chars) required"));
+            if (token == null || newPassword == null || newPassword.length() < 8) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Valid token and password (min 8 chars) required"));
             }
             authService.resetPassword(token, newPassword);
             return ResponseEntity.ok(Map.of("message", "Password reset successfully. Please log in."));

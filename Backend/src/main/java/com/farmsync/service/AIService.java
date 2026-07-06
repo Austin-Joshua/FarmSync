@@ -2,6 +2,8 @@ package com.farmsync.service;
 
 import com.farmsync.model.DiseaseScan;
 import com.farmsync.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -11,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,6 +21,8 @@ import java.util.Map;
 
 @Service
 public class AIService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AIService.class);
 
     @Autowired
     private WebClient.Builder webClientBuilder;
@@ -28,7 +33,7 @@ public class AIService {
     @Autowired
     private DiseaseScanService diseaseScanService;
 
-    @Value("${ml.service.url:http://localhost:8000}")
+    @Value("${farmsync.ml-service.url:http://localhost:8000}")
     private String mlServiceUrl;
 
     @Value("${farmsync.ml-service.secret:}")
@@ -73,23 +78,24 @@ public class AIService {
                     }
                     return Mono.just(fallback);
                 })
-                .flatMap(prediction -> {
-                    try {
+                .flatMap(prediction -> Mono.fromCallable(() -> {
                         // 1. Upload image to Firebase Storage if available
                         String imageUrl;
                         if (!com.google.firebase.FirebaseApp.getApps().isEmpty()) {
                             imageUrl = firebaseService.uploadImage(file, "disease-scans");
                         } else {
                             imageUrl = "mock-scans/" + java.util.UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
-                            System.err.println("Firebase not initialized. Using local/mock path for image: " + imageUrl);
+                            logger.warn("Firebase not initialized. Using local/mock path for image: {}", imageUrl);
                         }
                         
-                        // 2. Save result to Firestore/DB via DiseaseScanService
+                        // 2. Save result to DB via DiseaseScanService
                         DiseaseScan scan = DiseaseScan.builder()
-                                .cropName("Unknown") // In a real app, user might specify or ML detects
+                                .cropName("Unknown")
                                 .diseaseName((String) prediction.get("disease"))
                                 .confidence((Double) prediction.get("confidence"))
-                                .severity("Medium") // Default or calculated
+                                .severity("Medium")
+                                .latitude(0.0)
+                                .longitude(0.0)
                                 .imageUrl(imageUrl)
                                 .notes((String) prediction.get("solution"))
                                 .user(user)
@@ -106,11 +112,9 @@ public class AIService {
                             );
                         }
 
-                        return Mono.just(prediction);
-                    } catch (IOException e) {
-                        return Mono.error(e);
-                    }
-                });
+                        return prediction;
+                    }).subscribeOn(Schedulers.boundedElastic())
+                );
     }
 
     public Mono<Map<String, String>> getChatbotResponse(String userMessage, User user) {

@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             );
 
-        http.addFilterBefore(rateLimitFilter, JwtAuthenticationFilter.class);
+        http.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(firebaseTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

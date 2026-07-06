@@ -4,11 +4,11 @@ on:
   push:
     branches: [ main, develop ]
     paths:
-      - 'backend/**'
+      - 'Backend/**'
   pull_request:
     branches: [ main ]
     paths:
-      - 'backend/**'
+      - 'Backend/**'
 
 jobs:
   test:
@@ -27,10 +27,11 @@ jobs:
           cache: maven
 
       - name: Run tests
-        working-directory: backend
+        working-directory: Backend
         env:
           JWT_SECRET: ci-test-secret-minimum-64-characters-long-for-testing-purposes-only
           ML_SERVICE_SECRET: ci-test-ml-secret
+          ML_SERVICE_URL: http://localhost:8000
         run: ./mvnw test --no-transfer-progress
 
       - name: Upload test reports
@@ -38,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: surefire-reports
-          path: backend/target/surefire-reports/
+          path: Backend/target/surefire-reports/
