@@ -6,6 +6,7 @@ import com.farmsync.model.User;
 import com.farmsync.service.CropService;
 import com.farmsync.service.CropTypeService;
 import com.farmsync.service.FarmService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -47,7 +48,7 @@ public class CropController {
     }
 
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createCrop(@RequestBody CropRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Map<String, Object>> createCrop(@Valid @RequestBody CropRequest request, @AuthenticationPrincipal User user) {
         Crop crop = Crop.builder()
                 .name(request.getName())
                 .sowingDate(request.getSowingDate())

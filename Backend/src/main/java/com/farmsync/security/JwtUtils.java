@@ -4,6 +4,7 @@ import com.farmsync.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,14 @@ public class JwtUtils {
 
     @Value("${farmsync.jwt.secret}")
     private String jwtSecret;
+
+    @PostConstruct
+    private void validateSecret() {
+        if (jwtSecret == null || jwtSecret.isBlank() || jwtSecret.length() < 64) {
+            throw new IllegalStateException(
+                    "JWT_SECRET env var is missing or too short (need 64+ chars). Refusing to start.");
+        }
+    }
 
     private SecretKey getSigningKey() {
         try {

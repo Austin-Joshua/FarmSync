@@ -5,6 +5,7 @@ import com.farmsync.dto.StockResponse;
 import com.farmsync.model.StockItem;
 import com.farmsync.model.User;
 import com.farmsync.service.StockService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,7 +50,7 @@ public class StockController {
     }
 
     @PostMapping
-    public ResponseEntity<StockResponse> createStockItem(@RequestBody StockRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<StockResponse> createStockItem(@Valid @RequestBody StockRequest request, @AuthenticationPrincipal User user) {
         StockItem item = StockItem.builder()
                 .itemName(request.getItemName())
                 .itemType(request.getItemType())
@@ -63,7 +64,7 @@ public class StockController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StockResponse> updateStockItem(@PathVariable @org.springframework.lang.NonNull UUID id, @RequestBody StockRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<StockResponse> updateStockItem(@PathVariable @org.springframework.lang.NonNull UUID id, @Valid @RequestBody StockRequest request, @AuthenticationPrincipal User user) {
         StockItem itemDetails = StockItem.builder()
                 .itemName(request.getItemName())
                 .itemType(request.getItemType())

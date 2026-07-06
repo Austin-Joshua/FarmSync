@@ -5,6 +5,7 @@ import com.farmsync.dto.DiseaseScanResponse;
 import com.farmsync.model.DiseaseScan;
 import com.farmsync.model.User;
 import com.farmsync.service.DiseaseScanService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,7 +39,7 @@ public class DiseaseScanController {
     }
 
     @PostMapping
-    public ResponseEntity<DiseaseScanResponse> createDiseaseScan(@RequestBody DiseaseScanRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<DiseaseScanResponse> createDiseaseScan(@Valid @RequestBody DiseaseScanRequest request, @AuthenticationPrincipal User user) {
         DiseaseScan scan = DiseaseScan.builder()
                 .cropName(request.getCropName())
                 .diseaseName(request.getDiseaseName())
@@ -57,7 +58,7 @@ public class DiseaseScanController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DiseaseScanResponse> updateDiseaseScan(@PathVariable @org.springframework.lang.NonNull UUID id, @RequestBody DiseaseScanRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<DiseaseScanResponse> updateDiseaseScan(@PathVariable @org.springframework.lang.NonNull UUID id, @Valid @RequestBody DiseaseScanRequest request, @AuthenticationPrincipal User user) {
         DiseaseScan scanDetails = DiseaseScan.builder()
                 .cropName(request.getCropName())
                 .diseaseName(request.getDiseaseName())

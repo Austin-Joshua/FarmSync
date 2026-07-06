@@ -31,6 +31,9 @@ public class AIService {
     @Value("${ml.service.url:http://localhost:8000}")
     private String mlServiceUrl;
 
+    @Value("${farmsync.ml-service.secret:}")
+    private String mlServiceSecret;
+
     @Value("${openai.api.key:}")
     private String openAiKey;
 
@@ -41,6 +44,7 @@ public class AIService {
         return webClientBuilder.build()
                 .post()
                 .uri(mlServiceUrl + "/ml/disease-detect")
+                .header("X-Internal-Secret", mlServiceSecret)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .body(BodyInserters.fromMultipartData(builder.build()))
                 .retrieve()

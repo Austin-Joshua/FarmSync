@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Header, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -104,9 +104,15 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 _ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:3000",
-    "https://farm-sync-seven.vercel.app",
+    "https://farm-sync-sepia.vercel.app",
     os.getenv("FRONTEND_URL", "http://localhost:5173"),
 ]
+
+ML_SERVICE_SECRET = os.getenv("ML_SERVICE_SECRET")
+
+async def verify_internal_secret(x_internal_secret: str = Header(None)):
+    if not ML_SERVICE_SECRET or x_internal_secret != ML_SERVICE_SECRET:
+        raise HTTPException(status_code=403, detail="Forbidden")
 
 app = FastAPI(
     title="FarmSync ML Intelligence Service",
@@ -297,7 +303,7 @@ async def cache_stats_endpoint():
     return {"enabled": True, **prediction_cache.stats}
 
 
-@app.post("/ml/disease-detect")
+@app.post("/ml/disease-detect", dependencies=[Depends(verify_internal_secret)])
 async def detect_disease(image: UploadFile = File(...)):
     """Detects diseases in crop leaves via image analysis (Gradient Boosting Classifier)."""
     try:
@@ -346,7 +352,7 @@ async def detect_disease(image: UploadFile = File(...)):
             "error": str(e)
         }
 
-@app.post("/ml/crop-recommend")
+@app.post("/ml/crop-recommend", dependencies=[Depends(verify_internal_secret)])
 async def recommend_crop(data: CropRecommendationRequest):
     """Recommends the best crop (async, cached, non-blocking)."""
     if not predictor:
@@ -366,7 +372,7 @@ async def recommend_crop(data: CropRecommendationRequest):
         prediction_cache.set(cache_key, result, ttl=PredictionCache.DEFAULT_TTL)
     return result
 
-@app.post("/ml/yield-predict")
+@app.post("/ml/yield-predict", dependencies=[Depends(verify_internal_secret)])
 async def predict_crop_yield(data: YieldPredictionRequest):
     """Predicts crop yield (async, cached — QAOA result cached 10min)."""
     if not predictor:
@@ -385,7 +391,7 @@ async def predict_crop_yield(data: YieldPredictionRequest):
         prediction_cache.set(cache_key, result, ttl=PredictionCache.YIELD_TTL)
     return result
 
-@app.post("/ml/pest-predict")
+@app.post("/ml/pest-predict", dependencies=[Depends(verify_internal_secret)])
 async def predict_pest_risk(data: PestPredictionRequest):
     """Predicts risk of pest outbreak (Low, Medium, High) — async, non-blocking."""
     if not predictor:
@@ -396,7 +402,7 @@ async def predict_pest_risk(data: PestPredictionRequest):
         raise HTTPException(status_code=500, detail=result.get('error'))
     return result
 
-@app.post("/ml/quantum-recommend")
+@app.post("/ml/quantum-recommend", dependencies=[Depends(verify_internal_secret)])
 async def quantum_recommend_crop(data: CropRecommendationRequest):
     """Hybrid VQC+RF crop recommendation — async, non-blocking."""
     if not predictor:
@@ -423,7 +429,7 @@ class QuantumOptimizeRequest(BaseModel):
     water: float
     pesticide: float
 
-@app.post("/ml/quantum-optimize")
+@app.post("/ml/quantum-optimize", dependencies=[Depends(verify_internal_secret)])
 async def quantum_optimize_resources(data: QuantumOptimizeRequest):
     """Optimizes operational resources (fertilizer, water, pesticide) using QAOA/QUBO."""
     if not predictor or not predictor._QUANTUM_ENGINE:

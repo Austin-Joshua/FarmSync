@@ -11,12 +11,16 @@ import com.farmsync.repository.SoilTypeRepository;
 import com.farmsync.repository.CropTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
+@Profile("dev")
+@ConditionalOnProperty(name = "farmsync.seed-demo-data", havingValue = "true", matchIfMissing = false)
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired

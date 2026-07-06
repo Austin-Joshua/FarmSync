@@ -6,6 +6,7 @@ import com.farmsync.model.Farm;
 import com.farmsync.model.User;
 import com.farmsync.service.FarmService;
 import com.farmsync.service.SoilTypeService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -48,7 +49,7 @@ public class FarmController {
     }
 
     @PostMapping
-    public ResponseEntity<FarmResponse> createFarm(@RequestBody FarmRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<FarmResponse> createFarm(@Valid @RequestBody FarmRequest request, @AuthenticationPrincipal User user) {
         Farm farm = Farm.builder()
                 .name(request.getName())
                 .location(request.getLocation())
@@ -74,7 +75,7 @@ public class FarmController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FarmResponse> updateFarm(@PathVariable @org.springframework.lang.NonNull UUID id, @RequestBody FarmRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<FarmResponse> updateFarm(@PathVariable @org.springframework.lang.NonNull UUID id, @Valid @RequestBody FarmRequest request, @AuthenticationPrincipal User user) {
         Farm farmDetails = Farm.builder()
                 .name(request.getName())
                 .location(request.getLocation())

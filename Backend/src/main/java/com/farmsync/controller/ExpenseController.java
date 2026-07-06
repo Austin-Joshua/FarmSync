@@ -6,6 +6,7 @@ import com.farmsync.model.Expense;
 import com.farmsync.model.User;
 import com.farmsync.service.ExpenseService;
 import com.farmsync.service.FarmService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -56,7 +57,7 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public ResponseEntity<ExpenseResponse> createExpense(@RequestBody ExpenseRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<ExpenseResponse> createExpense(@Valid @RequestBody ExpenseRequest request, @AuthenticationPrincipal User user) {
         Expense expense = Expense.builder()
                 .category(request.getCategory())
                 .description(request.getDescription())
@@ -70,7 +71,7 @@ public class ExpenseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ExpenseResponse> updateExpense(@PathVariable @org.springframework.lang.NonNull UUID id, @RequestBody ExpenseRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<ExpenseResponse> updateExpense(@PathVariable @org.springframework.lang.NonNull UUID id, @Valid @RequestBody ExpenseRequest request, @AuthenticationPrincipal User user) {
         Expense expenseDetails = Expense.builder()
                 .category(request.getCategory())
                 .description(request.getDescription())

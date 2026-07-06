@@ -6,7 +6,11 @@ import com.farmsync.model.User;
 import com.farmsync.service.AuthService;
 import com.farmsync.service.UserService;
 
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,14 +21,19 @@ import java.util.HashMap;
 @RequestMapping("/api/auth")
 public class AuthController {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
     @Autowired
     private AuthService authService;
 
     @Autowired
     private UserService userService;
 
+    @Value("${farmsync.seed-demo-data:false}")
+    private boolean seedDemoDataEnabled;
+
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<LoginResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
@@ -64,10 +73,13 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(Map.of("error", "Phone number is required"));
             }
             String otp = authService.generateAndSendOtp(phone);
-            // In production this would be sent via SMS; in dev we return it for testing
+            logger.debug("OTP generated for phone {} (not returned in production)", phone);
+
             Map<String, Object> response = new HashMap<>();
             response.put("message", "OTP sent successfully");
-            response.put("debug_otp", otp); // Remove in production
+            if (seedDemoDataEnabled) {
+                response.put("debug_otp", otp);
+            }
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -98,11 +110,13 @@ public class AuthController {
                 return ResponseEntity.badRequest().body(Map.of("error", "Email is required"));
             }
             String token = authService.generatePasswordResetToken(email);
-            // In production this would be sent via email
-            return ResponseEntity.ok(Map.of(
-                "message", "Password reset link sent to your email",
-                "debug_token", token // Remove in production
-            ));
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Password reset link sent to your email");
+            if (seedDemoDataEnabled) {
+                response.put("debug_token", token);
+            }
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }

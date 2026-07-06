@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -18,6 +20,8 @@ import java.util.Random;
 
 @Service
 public class AuthService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -101,7 +105,7 @@ public class AuthService {
         otpExpiry.put(phone, LocalDateTime.now().plusMinutes(10));
 
         // In production: integrate with SMS gateway (Twilio, MSG91, etc.)
-        System.out.println("[FarmSync OTP] Phone: " + phone + " | OTP: " + otp + " (expires in 10 min)");
+        logger.debug("OTP for phone {} expires in 10 min", phone);
 
         return otp;
     }
@@ -157,7 +161,7 @@ public class AuthService {
         userRepository.save(user);
 
         // In production: send email with link containing this token
-        System.out.println("[FarmSync Password Reset] Email: " + email + " | Token: " + token);
+        logger.debug("Password reset token generated for email {}", email);
 
         return token;
     }

@@ -6,6 +6,7 @@ import com.farmsync.model.Yield;
 import com.farmsync.model.User;
 import com.farmsync.service.YieldService;
 import com.farmsync.service.CropService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -52,7 +53,7 @@ public class YieldController {
     }
 
     @PostMapping
-    public ResponseEntity<YieldResponse> createYield(@RequestBody YieldRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<YieldResponse> createYield(@Valid @RequestBody YieldRequest request, @AuthenticationPrincipal User user) {
         final UUID cropId = request.getCropId();
         if (cropId == null) {
             throw new RuntimeException("Crop ID is required");
@@ -70,7 +71,7 @@ public class YieldController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<YieldResponse> updateYield(@PathVariable @org.springframework.lang.NonNull UUID id, @RequestBody YieldRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<YieldResponse> updateYield(@PathVariable @org.springframework.lang.NonNull UUID id, @Valid @RequestBody YieldRequest request, @AuthenticationPrincipal User user) {
         Yield yieldDetails = Yield.builder()
                 .quantity(request.getQuantity())
                 .date(request.getDate())
