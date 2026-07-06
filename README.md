@@ -95,8 +95,11 @@ App: http://localhost:5173
 | VQC Quantum Ensemble (4-qubit AerSimulator, multiclass) | ~9.5% (2.2x better than random guess) |
 | Hybrid Dynamic Confidence Fusion (Real-world contribution split) | 92% Classical RF + 8% Quantum VQC |
 | Yield Regression (Random Forest Regressor) | R² = 0.998 |
+| Disease Detection GBC (6 classes) | 100.00% (CV: 99.79%) ⚠️ synthetic-only — see caveat |
 
 > **Quantum note:** All quantum components run on Qiskit AerSimulator (classical simulation) or a high-fidelity NumPy emulator. No real quantum hardware is required. In the production crop prediction flow, the quantum classifier operates as a small dynamic confidence modifier contributing ~8% of the final prediction weight alongside the strong classical model.
+
+> **Disease model caveat:** The 100.00% accuracy figure is measured on synthetically augmented data derived from only 12 real seed feature rows via random perturbation. This number reflects how separable the synthetic augmentation is, not validated accuracy on real, unseen leaf photographs. Evaluation against a held-out photographic dataset (e.g. PlantVillage) is required before production diagnostic use.
 
 ---
 

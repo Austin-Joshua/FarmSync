@@ -26,6 +26,8 @@ The FarmSync ML service provides four core prediction capabilities, each backed 
 - **Dataset:** Authentic disease feature maps (12-row seed baseline mapping 14 color/texture channels for 6 leaf diseases) expanded using synthetic augmentation (normal/uniform perturbation) to 2,400+ samples.
 - **Split:** 80% train / 20% test (stratified)
 
+> **Caveat:** This accuracy is measured on data synthetically augmented from 12 real seed feature rows via random perturbation. Because the augmented samples cluster tightly around those 12 originals, this number reflects how separable the synthetic augmentation is, not validated accuracy on real, unseen leaf photographs. Before relying on this model for real diagnostic use, it should be evaluated against an actual held-out photographic dataset (e.g. PlantVillage).
+
 ---
 
 ## Quantum ML: Scope & Honest Claims
@@ -53,8 +55,11 @@ The final crop recommendation blends classical (RF) and quantum (VQC) via **Conf
 | Classical RF Crop Rec (24 classes) | CV (5-fold) | 96.20% ± 0.45% |
 | VQC QML Ensemble (multiclass) | Accuracy | ~9.50% |
 | Hybrid Confidence Fusion (dynamic) | Real contribution | 92% Classical / 8% Quantum |
+| Disease Detection GBC (6 classes) | Accuracy | 100.00% (CV: 99.79%) |
 | Yield Regression | R² | 0.9980 |
 | Yield Regression | Model size | 9.3 MB |
+
+> **Disease model caveat:** The 100.00% accuracy figure is measured on synthetically augmented data derived from 12 real seed feature rows. It reflects separability of the synthetic distribution, not validated performance on real leaf photographs.
 
 ### Latency Benchmarks (AerSimulator):
 | Endpoint | Latency |
