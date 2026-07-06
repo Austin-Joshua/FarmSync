@@ -115,24 +115,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Race a promise against a timeout — prevents backend cold-start from blocking login
+  const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> =>
+    Promise.race([
+      promise,
+      new Promise<T>((_, reject) =>
+        setTimeout(() => reject(new Error('Request timed out')), ms)
+      ),
+    ]);
+
   const mockGoogleLogin = async (mockEmail?: string, mockName?: string, mockRole?: UserRole) => {
     const email = mockEmail || 'farmer@farmsync.com';
     const name = mockName || 'Ravi Kumar';
     const role = mockRole || 'farmer';
-    try {
-      await ApiService.register(name, email, 'oauth2_user', role);
-    } catch (err) {
-      console.log('Mock registration skipped (user may already exist on backend).');
-    }
-    const response: any = await ApiService.login(email, 'oauth2_user');
-    if (response && response.token && response.user) {
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
-      if (response.refreshToken) localStorage.setItem('refreshToken', response.refreshToken);
-      setUser(response.user);
-    } else {
-      throw new Error('Could not sync mock credentials with the backend server database');
-    }
+
+    // Build an optimistic user immediately so the UI can navigate instantly
+    const optimisticUser: User = {
+      id: crypto.randomUUID() as any,
+      name,
+      email,
+      role,
+      createdAt: new Date().toISOString(),
+    } as any;
+    localStorage.setItem('user', JSON.stringify(optimisticUser));
+    setUser(optimisticUser); // ← dashboard redirect fires immediately
+
+    // Backend sync in background — don't await this before navigating
+    (async () => {
+      try {
+        await withTimeout(ApiService.register(name, email, 'oauth2_user', role), 8000);
+      } catch { /* already exists or timed out — fine */ }
+      try {
+        const response: any = await withTimeout(ApiService.login(email, 'oauth2_user'), 8000);
+        if (response?.token && response?.user) {
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('user', JSON.stringify(response.user));
+          if (response.refreshToken) localStorage.setItem('refreshToken', response.refreshToken);
+          setUser(response.user);
+        }
+      } catch { /* backend unreachable — stay on optimistic user */ }
+    })();
   };
 
   const loginWithGoogle = async (email?: string, name?: string, role?: UserRole) => {
@@ -154,21 +176,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const fEmail = firebaseUser.email || '';
       const fName = firebaseUser.displayName || 'Google User';
 
-      try {
-        await ApiService.register(fName, fEmail, 'oauth2_user', 'farmer');
-      } catch (err) {
-        console.log('Registration skipped (user may already exist on backend).');
-      }
+      // Set optimistic user immediately from Firebase data — navigates to dashboard instantly
+      const optimisticUser: User = {
+        id: crypto.randomUUID() as any,
+        name: fName,
+        email: fEmail,
+        role: 'farmer',
+        createdAt: new Date().toISOString(),
+      } as any;
+      localStorage.setItem('user', JSON.stringify(optimisticUser));
+      setUser(optimisticUser); // ← triggers immediate dashboard redirect
 
-      const response: any = await ApiService.login(fEmail, 'oauth2_user');
-      if (response && response.token && response.user) {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        if (response.refreshToken) localStorage.setItem('refreshToken', response.refreshToken);
-        setUser(response.user);
-      } else {
-        throw new Error('Could not sync user credentials with the backend server database');
-      }
+      // Backend sync happens in background — doesn't block navigation
+      (async () => {
+        try {
+          await withTimeout(ApiService.register(fName, fEmail, 'oauth2_user', 'farmer'), 8000);
+        } catch { /* already exists or timed out */ }
+        try {
+          const response: any = await withTimeout(ApiService.login(fEmail, 'oauth2_user'), 8000);
+          if (response?.token && response?.user) {
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('user', JSON.stringify(response.user));
+            if (response.refreshToken) localStorage.setItem('refreshToken', response.refreshToken);
+            setUser(response.user);
+          }
+        } catch { /* backend unreachable — stay on optimistic user */ }
+      })();
     } catch (err: any) {
       console.error('Google login failed:', err);
       throw err; // Propagate error so OAuthSignIn can open mock account chooser modal
