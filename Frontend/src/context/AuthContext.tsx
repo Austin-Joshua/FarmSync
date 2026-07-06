@@ -20,6 +20,17 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Race a promise against a timeout — prevents backend cold-start from blocking login.
+// Must be outside the component to avoid TSX generic <T> ambiguity.
+function withTimeout<T,>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error('Request timed out')), ms)
+    ),
+  ]);
+}
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -28,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const initializeAuth = async () => {
       const savedToken = localStorage.getItem('token');
       const savedUser = localStorage.getItem('user');
-      
+
       if (savedToken && savedUser) {
         try {
           setUser(JSON.parse(savedUser));
@@ -39,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(null);
         }
       }
-      
+
       // Stop blocking initial mount immediately
       setLoading(false);
 
@@ -115,15 +126,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Race a promise against a timeout — prevents backend cold-start from blocking login
-  const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> =>
-    Promise.race([
-      promise,
-      new Promise<T>((_, reject) =>
-        setTimeout(() => reject(new Error('Request timed out')), ms)
-      ),
-    ]);
-
   const mockGoogleLogin = async (mockEmail?: string, mockName?: string, mockRole?: UserRole) => {
     const email = mockEmail || 'farmer@farmsync.com';
     const name = mockName || 'Ravi Kumar';
@@ -164,8 +166,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (!auth) {
-      console.warn("Firebase not initialized, throwing configuration error");
-      throw new Error("FIREBASE_NOT_INITIALIZED");
+      console.warn('Firebase not initialized, throwing configuration error');
+      throw new Error('FIREBASE_NOT_INITIALIZED');
     }
 
     try {
