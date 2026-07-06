@@ -13,6 +13,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Handles OAuth2 user resolution for all configured providers (Google, Microsoft/Azure).
+ *
+ * <p><strong>Design note — why there is no AuthProviderStrategy interface here:</strong><br>
+ * Provider differences are resolved purely through Spring Security's standard attribute-map
+ * abstraction: Google populates {@code "email"} and {@code "picture"}; Microsoft/Azure populates
+ * {@code "preferred_username"} and typically omits a picture URL. Both cases are handled by
+ * a two-line attribute fallback chain (lines below) — there is no per-provider branching logic
+ * in application code, and therefore no repeating structure that a strategy interface would
+ * simplify. If a third provider is added that requires substantially different user-mapping
+ * logic, introduce an {@code OAuthAttributeMapper} interface at that point.
+ */
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
@@ -28,9 +40,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         
+        // Provider attribute fallback:
+        //   Google  → "email" (always present)
+        //   Microsoft/Azure → "preferred_username" (used when "email" is absent)
+        // This two-line fallback is the complete extent of per-provider handling in
+        // application code. No AuthProviderStrategy interface is needed.
         String email = (String) attributes.get("email");
         if (email == null) {
-            // Microsoft might use "preferred_username" or "mail"
             email = (String) attributes.get("preferred_username");
         }
         
@@ -54,10 +70,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setEmail(email);
         user.setName((String) attributes.getOrDefault("name", "OAuth User"));
         user.setRole("farmer"); // Default role
-        user.setPictureUrl((String) attributes.get("picture")); // Google uses "picture"
-        if (user.getPictureUrl() == null) {
-            // Microsoft might use something else or none
-        }
+        user.setPictureUrl((String) attributes.get("picture")); // Google uses "picture"; Microsoft omits it — null is acceptable here
         user.setPassword(""); // No password for OAuth users
         return userRepository.save(user);
     }
