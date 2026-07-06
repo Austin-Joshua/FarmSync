@@ -23,8 +23,6 @@ MODEL_PATH = BASE_DIR / 'models' / 'crop_recommendation_model.pkl'
 MODEL_INFO_PATH = BASE_DIR / 'models' / 'model_info.json'
 YIELD_MODEL_PATH = BASE_DIR / 'models' / 'yield_model.pkl'
 YIELD_INFO_PATH = BASE_DIR / 'models' / 'yield_info.json'
-YDISEASE_MODEL_PATH = BASE_DIR / "models" / "disease_model.h5"
-DISEASE_CLASSES_PATH = BASE_DIR / "models" / "disease_classes.json"
 
 PEST_MODEL_PATH = BASE_DIR / "models" / "pest_model.pkl"
 PEST_LE_PATH = BASE_DIR / "models" / "pest_label_encoder.pkl"

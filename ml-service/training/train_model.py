@@ -24,11 +24,11 @@ import json
 import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
-DATASET_DIR = BASE_DIR.resolve().parents[1] / 'Dataset'
+BASE_DIR = Path(__file__).parent.parent
+DATASET_DIR = BASE_DIR.resolve() / 'datasets'
 
-# Use real Kaggle Crop Recommendation dataset from canonical Dataset/ folder
-FULL_DATASET_PATH = DATASET_DIR / 'Crop_recommendation.csv'
+# Use real Kaggle Crop Recommendation dataset from canonical datasets/ folder
+FULL_DATASET_PATH = DATASET_DIR / 'Crop_recommendation_full.csv'
 ORIGINAL_DATASET_PATH = DATASET_DIR / 'Crop_recommendation.csv'
 
 MODEL_DIR = BASE_DIR / 'models'

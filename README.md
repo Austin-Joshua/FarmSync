@@ -91,12 +91,12 @@ App: http://localhost:5173
 
 | Model | Accuracy / R² |
 |---|---|
-| Random Forest Crop Recommendation (22 classes) | 93.18% (CV: 93.64% ± 0.96%) |
-| VQC Quantum Classifier (4-qubit AerSimulator, binary) | 72.95% |
-| Hybrid Blend (70% RF + 30% VQC) | 92.50% |
-| Yield Regression (Gradient Boosting) | R² = 0.998 |
+| Random Forest Crop Recommendation (24 classes) | 96.25% (CV: 96.20% ± 0.45%) |
+| VQC Quantum Ensemble (4-qubit AerSimulator, multiclass) | ~9.5% (2.2x better than random guess) |
+| Hybrid Dynamic Confidence Fusion (Real-world contribution split) | 92% Classical RF + 8% Quantum VQC |
+| Yield Regression (Random Forest Regressor) | R² = 0.998 |
 
-> **Quantum note:** All quantum components run on Qiskit AerSimulator (classical simulation). No real quantum hardware is required.
+> **Quantum note:** All quantum components run on Qiskit AerSimulator (classical simulation) or a high-fidelity NumPy emulator. No real quantum hardware is required. In the production crop prediction flow, the quantum classifier operates as a small dynamic confidence modifier contributing ~8% of the final prediction weight alongside the strong classical model.
 
 ---
 

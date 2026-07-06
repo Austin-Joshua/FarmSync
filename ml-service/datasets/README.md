@@ -5,12 +5,12 @@ This directory contains real-world and agronomically calibrated datasets used fo
 ---
 
 ## 1. Crop Recommendation Dataset (`Crop_recommendation_full.csv`)
-* **Description:** Continuous soil and weather features (N, P, K, temperature, humidity, pH, rainfall) for 22 crops.
-* **Size:** 2,200 rows (100 per crop class).
-* **Origin:** Calibrated from the published Kaggle Crop Recommendation Dataset (2020) by Atharva Ingle.
-* **Acquisition Date:** 2026-07-04 (via statistical distribution mapping).
+* **Description:** Continuous soil and weather features (N, P, K, temperature, humidity, pH, rainfall) for 24 crops.
+* **Size:** 6,000 rows (250 per crop class) plus additional baseline rows.
+* **Origin:** Synthetically generated using agronomic ranges informed by published ICAR / FAO research, combined with a 20-row baseline from tests/fixtures.
+* **Acquisition Date:** 2026-07-04.
 * **License:** CC BY-SA 4.0.
-* **Preprocessing:** Bounded clipping for realistic ranges (e.g. soil pH [3, 9], humidity [10%, 100%]).
+* **Preprocessing:** Bounded clipping for realistic ranges (e.g. soil pH [3.5, 7.8], humidity [30%, 95%]).
 
 ---
 

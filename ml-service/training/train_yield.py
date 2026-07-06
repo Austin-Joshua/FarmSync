@@ -27,8 +27,8 @@ import json
 import os
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
-DATASET_PATH = BASE_DIR.resolve() / 'Dataset' / 'agriculture_dataset.csv'
+BASE_DIR = Path(__file__).parent.parent
+DATASET_PATH = BASE_DIR.resolve() / 'datasets' / 'agriculture_dataset.csv'
 MODEL_DIR = BASE_DIR / 'models'
 os.makedirs(MODEL_DIR, exist_ok=True)
 

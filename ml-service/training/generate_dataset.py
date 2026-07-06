@@ -126,10 +126,14 @@ def enrich_from_agriculture_dataset(base_df: pd.DataFrame, ag_path: Path) -> pd.
     return base_df
 
 def main():
-    BASE_DIR = Path(__file__).parent
-    DATASET_DIR = BASE_DIR.resolve().parents[1] / 'Dataset'
+    BASE_DIR = Path(__file__).parent.parent
+    DATASET_DIR = BASE_DIR.resolve() / 'datasets'
+    os.makedirs(DATASET_DIR, exist_ok=True)
     OUTPUT_PATH = DATASET_DIR / 'Crop_recommendation_full.csv'
     EXISTING_PATH = DATASET_DIR / 'Crop_recommendation.csv'
+    if not EXISTING_PATH.exists():
+        # Fallback to tests/fixtures if not copied yet
+        EXISTING_PATH = BASE_DIR / 'tests' / 'fixtures' / 'Crop_recommendation.csv'
     AG_PATH = DATASET_DIR / 'agriculture_dataset.csv'
     
     print("=" * 60)

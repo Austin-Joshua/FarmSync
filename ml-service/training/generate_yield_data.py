@@ -79,7 +79,7 @@ df = pd.DataFrame({
 })
 
 # Save to Dataset folder
-dataset_path = Path(__file__).resolve().parent / "datasets" / 'agriculture_dataset.csv'
+dataset_path = Path(__file__).resolve().parent.parent / "datasets" / 'agriculture_dataset.csv'
 dataset_path.parent.mkdir(parents=True, exist_ok=True)
 df.to_csv(dataset_path, index=False)
 print(f"Generated {num_samples} rows of yield data at {dataset_path}")

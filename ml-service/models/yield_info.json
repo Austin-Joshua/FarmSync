@@ -1,17 +1,48 @@
 {
-  "r2_score": 0.9979595005027072,
-  "rmse": 104.43568934599756,
-  "mae": 70.98358348521445,
-  "n_estimators": 100,
-  "max_depth": 12,
+  "model_type": "RandomForestRegressor",
+  "r2_score": 0.9903932114950966,
+  "rmse": 232.92851219292103,
   "features": [
-    "Farm_Area(acres)",
-    "Fertilizer_Used(tons)",
-    "Pesticide_Used(kg)",
-    "Water_Usage(cubic meters)",
-    "Crop_Type",
-    "Irrigation_Type",
-    "Soil_Type",
-    "Season"
-  ]
+    "crop",
+    "irrigation",
+    "soil",
+    "season",
+    "area",
+    "fertilizer",
+    "pesticide",
+    "water"
+  ],
+  "encoders": {
+    "crop": {
+      "barley": 0,
+      "carrot": 1,
+      "cotton": 2,
+      "maize": 3,
+      "potato": 4,
+      "rice": 5,
+      "soybean": 6,
+      "sugarcane": 7,
+      "tomato": 8,
+      "wheat": 9
+    },
+    "irrigation": {
+      "drip": 0,
+      "flood": 1,
+      "manual": 2,
+      "rain-fed": 3,
+      "sprinkler": 4
+    },
+    "soil": {
+      "clay": 0,
+      "loamy": 1,
+      "peaty": 2,
+      "sandy": 3,
+      "silty": 4
+    },
+    "season": {
+      "kharif": 0,
+      "rabi": 1,
+      "zaid": 2
+    }
+  }
 }

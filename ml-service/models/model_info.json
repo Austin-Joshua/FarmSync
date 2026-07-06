@@ -1,10 +1,10 @@
 {
   "model_type": "RandomForestClassifier",
   "n_estimators": 200,
-  "accuracy": 1.0,
-  "accuracy_percent": 100.0,
-  "cv_accuracy": 75.0,
-  "cv_std": 5.000000000000004,
+  "accuracy": 0.9579901153212521,
+  "accuracy_percent": 95.7990115321252,
+  "cv_accuracy": 96.14497528830313,
+  "cv_std": 0.19769357495881046,
   "features": [
     "N",
     "P",
@@ -15,24 +15,40 @@
     "rainfall"
   ],
   "classes": [
+    "apple",
     "banana",
     "barley",
+    "blackgram",
     "chickpea",
+    "coconut",
     "coffee",
     "cotton",
+    "grapes",
+    "jute",
+    "kidneybeans",
+    "lentil",
     "maize",
+    "mango",
+    "mothbeans",
+    "mungbean",
+    "muskmelon",
+    "orange",
+    "papaya",
     "peas",
+    "pigeonpeas",
+    "pomegranate",
     "rice",
     "sugarcane",
+    "watermelon",
     "wheat"
   ],
   "feature_importances": {
-    "N": 0.18487348650483998,
-    "ph": 0.15738048105093538,
-    "humidity": 0.15172260764028364,
-    "temperature": 0.14575477669383863,
-    "P": 0.13116672401832624,
-    "K": 0.11550676063856448,
-    "rainfall": 0.11359516345321173
+    "humidity": 0.19209479864566995,
+    "N": 0.18438800591907797,
+    "temperature": 0.16285013374804294,
+    "rainfall": 0.1567081048505006,
+    "P": 0.13106745385938354,
+    "K": 0.10589843112463918,
+    "ph": 0.06699307185268588
   }
 }

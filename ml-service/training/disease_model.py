@@ -32,7 +32,7 @@ import joblib
 import json
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
+BASE_DIR = Path(__file__).parent.parent
 MODEL_DIR = BASE_DIR / 'models'
 MODEL_DIR.mkdir(exist_ok=True)
 
@@ -121,6 +121,50 @@ def load_real_disease_features(n_per_class: int = 500) -> tuple:
     import os
     import random
     
+    # Check if authentic features CSV exists
+    authentic_path = BASE_DIR / 'datasets' / 'disease_features_authentic.csv'
+    all_features = []
+    all_labels = []
+    
+    if authentic_path.exists():
+        print(f"Loading and augmenting baseline features from {authentic_path}...")
+        df_auth = pd.read_csv(authentic_path)
+        np.random.seed(42)
+        random.seed(42)
+        
+        # Augment by bootstrapping/adding normal/uniform noise to each feature
+        for cls in DISEASE_CLASSES:
+            cls_rows = df_auth[df_auth['label'] == cls]
+            if len(cls_rows) == 0:
+                continue
+            
+            for _ in range(n_per_class):
+                # Pick a random row of this class
+                row = cls_rows.sample(n=1, random_state=random.randint(0, 100000)).iloc[0]
+                
+                # Add dynamic perturbations to features
+                feat = [
+                    float(np.clip(row['R_mean'] + np.random.normal(0, 5.0), 0, 255)),
+                    float(np.clip(row['G_mean'] + np.random.normal(0, 5.0), 0, 255)),
+                    float(np.clip(row['B_mean'] + np.random.normal(0, 5.0), 0, 255)),
+                    float(np.clip(row['R_std'] + np.random.normal(0, 1.5), 1, 50)),
+                    float(np.clip(row['G_std'] + np.random.normal(0, 1.5), 1, 50)),
+                    float(np.clip(row['B_std'] + np.random.normal(0, 1.5), 1, 50)),
+                    float(np.clip(row['H_mean'] + np.random.normal(0, 4.0), 0, 180)),
+                    float(np.clip(row['S_mean'] + np.random.normal(0, 0.03), 0.0, 1.0)),
+                    float(np.clip(row['V_mean'] + np.random.normal(0, 0.03), 0.0, 1.0)),
+                    float(np.clip(row['H_std'] + np.random.normal(0, 1.0), 1, 30)),
+                    float(np.clip(row['S_std'] + np.random.normal(0, 0.01), 0.0, 0.2)),
+                    float(np.clip(row['V_std'] + np.random.normal(0, 0.01), 0.0, 0.2)),
+                    float(np.clip(row['lesion_density'] + np.random.normal(0, 0.02), 0.0, 1.0)),
+                    float(np.clip(row['texture_variance'] + np.random.normal(0, 2.0), 0.0, 100.0))
+                ]
+                all_features.append(feat)
+                all_labels.append(cls)
+        
+        return np.array(all_features), np.array(all_labels)
+    
+    # Fallback to image loading if CSV is missing and folder exists
     dataset_dir = BASE_DIR / 'Dataset' / 'PlantVillage'
     
     # Map the folder names to our DISEASE_CLASSES
@@ -141,9 +185,6 @@ def load_real_disease_features(n_per_class: int = 500) -> tuple:
         'Tomato__Tomato_mosaic_virus': 'Leaf Curl Virus',
         'Tomato_Leaf_Mold': 'Powdery Mildew'
     }
-    
-    all_features = []
-    all_labels = []
     
     # group files by our target class
     class_files = {cls: [] for cls in DISEASE_CLASSES}

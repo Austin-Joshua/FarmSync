@@ -33,8 +33,15 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 # Copy source
 COPY . .
 
-# Pre-create model dir
-RUN mkdir -p models/vqc_ensemble datasets
+# Pre-create directories and run the automated data generation and model training pipeline at build time
+RUN mkdir -p models/vqc_ensemble datasets && \
+    python training/generate_dataset.py && \
+    python training/generate_yield_data.py && \
+    python training/generate_pest_data.py && \
+    python training/train_model.py && \
+    python training/train_yield.py && \
+    python training/train_pest.py && \
+    python training/disease_model.py
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=45s --retries=3 \

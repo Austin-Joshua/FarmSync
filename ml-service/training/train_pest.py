@@ -7,8 +7,8 @@ import os
 from pathlib import Path
 
 def train_pest_model():
-    dataset_path = Path(__file__).resolve().parents[2] / 'Dataset' / 'pest_data.csv'
-    model_dir = Path(__file__).parent / 'models'
+    dataset_path = Path(__file__).resolve().parents[1] / 'datasets' / 'pest_data.csv'
+    model_dir = Path(__file__).resolve().parents[1] / 'models'
     model_dir.mkdir(parents=True, exist_ok=True)
     
     print(f"Loading data from {dataset_path}...")

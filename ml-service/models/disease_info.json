@@ -2,7 +2,7 @@
   "model_type": "GradientBoostingClassifier",
   "accuracy": 1.0,
   "accuracy_percent": 100.0,
-  "cv_accuracy": 83.33333333333334,
+  "cv_accuracy": 99.79166666666669,
   "features": [
     "R_mean",
     "G_mean",

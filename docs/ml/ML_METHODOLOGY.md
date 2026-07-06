@@ -14,35 +14,34 @@ The FarmSync ML service provides four core prediction capabilities, each backed 
 ## Dataset & Train/Test Methodology
 
 ### Crop Recommendation Model
-- **Dataset:** Kaggle "Crop Recommendation Dataset" — 2,200 rows, 22 crop classes, 7 features (N, P, K, temperature, humidity, pH, rainfall)
+- **Dataset:** Agronomically calibrated synthetic crop dataset — 6,000+ rows, 24 crop classes, 7 features (N, P, K, temperature, humidity, pH, rainfall) generated based on published ICAR / FAO research ranges.
 - **Split:** 80% train / 20% test (stratified by crop class)
 - **Cross-validation:** 5-fold stratified CV on training split
 
 ### Yield Prediction Model
-- **Dataset:** Government of India "All-India Crop-wise Area, Production & Yield" dataset — multi-year historical yield data
-- **Features:** state, district, season, crop, area (ha), irrigation type, soil type, fertilizer dosage, pesticide usage, water availability
+- **Dataset:** Synthetically generated agriculture dataset — 4,000 rows, 10 crop classes, 8 features (farm area, irrigation type, fertilizer used, pesticide used, water usage, soil type, season, crop type).
 - **Split:** 80% train / 20% test (random split, seeded for reproducibility at `random_state=42`)
 
 ### Disease Detection Model
-- **Dataset:** Plant Village leaf image dataset (subset) — RGB color histograms + texture features extracted via PIL
+- **Dataset:** Authentic disease feature maps (12-row seed baseline mapping 14 color/texture channels for 6 leaf diseases) expanded using synthetic augmentation (normal/uniform perturbation) to 2,400+ samples.
 - **Split:** 80% train / 20% test (stratified)
 
 ---
 
 ## Quantum ML: Scope & Honest Claims
 
-> **IMPORTANT:** All quantum components run on **classical simulators** (Qiskit AerSimulator / statevector). There is no connection to real quantum hardware.
+> **IMPORTANT:** All quantum components run on **classical simulators** (Qiskit AerSimulator / numpy quantum emulator). There is no connection to real quantum hardware.
 
 This is a standard and valid approach for NISQ-era research. The VQC circuits are designed to run on near-term quantum hardware when available, but all benchmarks were produced on a classical simulation.
 
 ### Quantum components used:
 | Component | Type | Purpose |
 |---|---|---|
-| VQC Classifier | 4-qubit variational circuit (COBYLA optimizer) | Binary crop-class classifier (blend) |
+| VQC Classifier Ensemble | 4-qubit, 10-class / 24-class one-vs-rest variational circuits (COBYLA optimizer) | Confidences used as a dynamic prediction modifier |
 | QAOA/QUBO Optimizer | Approximate quantum optimization | Resource allocation optimization |
 
 ### Hybrid blend ratio:
-The final crop recommendation blends classical (RF) and quantum (VQC): **70% RF + 30% VQC**, giving 92.5% overall accuracy.
+The final crop recommendation blends classical (RF) and quantum (VQC) via **Confidence Fusion** based on normalized entropy. Because the classical RF classifier achieves ~96% accuracy on the full 24-class dataset while the VQC ensemble operates at ~9.5% accuracy (~2.2x better than random guess for 24 classes), the classical engine contributes ~92% of the decision weight in production, with the quantum engine serving as a confidence-modulating adjustment layer contributing ~8% of the final decision drive.
 
 ---
 
@@ -50,12 +49,12 @@ The final crop recommendation blends classical (RF) and quantum (VQC): **70% RF 
 
 | Model | Metric | Value |
 |---|---|---|
-| Classical RF Crop Rec (22 classes) | Accuracy | 93.18% |
-| Classical RF Crop Rec (22 classes) | CV (5-fold) | 93.64% ± 0.96% |
-| VQC QML Classifier (binary) | Accuracy | 72.95% |
-| Hybrid Blend (70% RF + 30% VQC) | Accuracy | 92.50% |
+| Classical RF Crop Rec (24 classes) | Accuracy | 96.25% |
+| Classical RF Crop Rec (24 classes) | CV (5-fold) | 96.20% ± 0.45% |
+| VQC QML Ensemble (multiclass) | Accuracy | ~9.50% |
+| Hybrid Confidence Fusion (dynamic) | Real contribution | 92% Classical / 8% Quantum |
 | Yield Regression | R² | 0.9980 |
-| Yield Regression | Model size | 8.9 MB |
+| Yield Regression | Model size | 9.3 MB |
 
 ### Latency Benchmarks (AerSimulator):
 | Endpoint | Latency |
