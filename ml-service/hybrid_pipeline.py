@@ -222,3 +222,142 @@ class ExplainabilityLayer:
             "classical_contribution_pct": round(c_contrib * 100, 1),
             "quantum_contribution_pct": round(q_contrib * 100, 1)
         }
+
+
+# ─── 8. HYBRID PREDICTION PIPELINE ABSTRACTION ─────────────────
+import time
+
+class HybridPredictionPipeline:
+    def __init__(self, classical_model, quantum_engine, model_info=None):
+        self.classical_model = classical_model
+        self.quantum_engine = quantum_engine
+        self.model_info = model_info
+
+    def predict(self, input_data: Dict[str, float]) -> Dict[str, Any]:
+        """Runs validation -> feature engineering -> classical -> quantum -> fusion -> explainability."""
+        try:
+            t_start = time.perf_counter()
+            
+            # 1. Validation Stage
+            is_valid, msg = DataValidator.validate_crop_input(input_data)
+            if not is_valid:
+                return {'success': False, 'error': msg}
+                
+            if self.classical_model is None:
+                return {
+                    'success': False,
+                    'error': 'Model not loaded. Please train or load classical model first.'
+                }
+                
+            # Dynamic imports to prevent circular dependencies
+            from predict_logic import FEATURES, CROP_ADVICE
+
+            # 2. Feature Engineering Stage
+            X_classical = FeatureEngineer.normalize_for_classical(input_data, FEATURES)
+            
+            # Retrieve normalization statistics from quantum engine
+            norm_stats = {}
+            if self.quantum_engine and getattr(self.quantum_engine, 'norm_stats', None) is not None:
+                norm_stats = self.quantum_engine.norm_stats
+            elif self.quantum_engine and getattr(self.quantum_engine, 'vqc_ensemble_loaded', False) and getattr(self.quantum_engine, 'vqc_ensemble_stats', None) is not None:
+                norm_stats = self.quantum_engine.vqc_ensemble_stats
+                
+            q_angles = FeatureEngineer.encode_quantum_angles(input_data, norm_stats)
+            
+            # 3. Classical ML Prediction (Calibrated probabilities)
+            t_classical_start = time.perf_counter()
+            # Platt scaled probabilities
+            classical_predictor = ClassicalPredictor(self.classical_model)
+            classical_probs = classical_predictor.predict_calibrated_proba(X_classical)
+            t_classical = time.perf_counter() - t_classical_start
+            
+            # 4. Quantum ML Prediction Stage
+            quantum_active = False
+            t_quantum_start = time.perf_counter()
+            t_quantum = 0.0
+            
+            if self.quantum_engine is not None:
+                try:
+                    quantum_predictor = QuantumPredictor(self.quantum_engine)
+                    q_probs = quantum_predictor.predict_vqc_proba(q_angles, list(self.classical_model.classes_))
+                    quantum_active = True
+                    t_quantum = time.perf_counter() - t_quantum_start
+                except Exception as q_err:
+                    print(f"Quantum VQC prediction failed: {q_err}")
+                    q_probs = classical_probs.copy()
+            else:
+                q_probs = classical_probs.copy()
+                
+            # 5. Confidence Estimation Stage
+            conf_estimator = ConfidenceEstimator()
+            classical_conf = conf_estimator.calculate_confidence(classical_probs)
+            quantum_conf = conf_estimator.calculate_confidence(q_probs)
+            
+            # 6. Hybrid Decision Fusion Stage
+            p_avg = DecisionFusion.weighted_average(classical_probs, q_probs, alpha=0.7)
+            p_conf = DecisionFusion.confidence_fusion(classical_probs, q_probs, classical_conf, quantum_conf)
+            p_bayes = DecisionFusion.bayesian_fusion(classical_probs, q_probs)
+            p_stack = DecisionFusion.meta_learner_stack(classical_probs, q_probs)
+            
+            strategies = {
+                "weighted_average": p_avg,
+                "confidence_fusion": p_conf,
+                "bayesian_fusion": p_bayes,
+                "meta_learner_stack": p_stack
+            }
+            
+            chosen_strategy = "confidence_fusion"
+            hybrid_probs = strategies[chosen_strategy]
+            
+            # Top 3 recommendations based on chosen hybrid probabilities
+            top_indices = np.argsort(hybrid_probs)[::-1][:3]
+            recommendations: List[Dict] = []
+            for idx in top_indices:
+                crop = str(self.classical_model.classes_[idx])
+                prob = float(hybrid_probs[idx])
+                recommendations.append({
+                    'crop': crop,
+                    'confidence': prob,
+                    'confidence_percent': round(prob * 100, 1),
+                    'advice': CROP_ADVICE.get(crop, 'Consult your local Krishi Vigyan Kendra for specific advice.')
+                })
+                
+            # Final recommendation
+            best_crop_idx = top_indices[0]
+            best_crop = str(self.classical_model.classes_[best_crop_idx])
+            best_confidence = float(hybrid_probs[best_crop_idx])
+            
+            # 7. Explainability Layer
+            explain_layer = ExplainabilityLayer()
+            explain_payload = explain_layer.calculate_explainability(
+                input_data, self.classical_model, best_crop, classical_probs, q_probs, list(self.classical_model.classes_)
+            )
+            
+            t_total = time.perf_counter() - t_start
+            
+            return {
+                'success': True,
+                'recommended_crop': best_crop,
+                'confidence': best_confidence,
+                'confidence_percent': round(best_confidence * 100, 1),
+                'recommendations': recommendations,
+                'advice': CROP_ADVICE.get(best_crop, ''),
+                'model_accuracy': self.model_info.get('accuracy_percent') if self.model_info else None,
+                'cv_accuracy': self.model_info.get('cv_accuracy') if self.model_info else None,
+                'quantum_active': quantum_active,
+                'vqc_is_trained': getattr(self.quantum_engine, 'vqc_ensemble_loaded', False) or getattr(self.quantum_engine, 'vqc_is_trained', False),
+                'vqc_param_source': 'multiclass_ensemble' if getattr(self.quantum_engine, 'vqc_ensemble_loaded', False) else ('cobyla_trained' if getattr(self.quantum_engine, 'vqc_is_trained', False) else 'fixed_default'),
+                'quantum_vqc_probabilities': q_probs.tolist(),
+                'classical_probabilities': classical_probs.tolist(),
+                'classical_confidence_percent': round(classical_conf * 100, 1),
+                'quantum_confidence_percent': round(quantum_conf * 100, 1),
+                'fusion_strategy': chosen_strategy,
+                'explainability': explain_payload,
+                'telemetry': {
+                    'classical_latency_ms': round(t_classical * 1000, 2),
+                    'quantum_latency_ms': round(t_quantum * 1000, 2),
+                    'total_latency_ms': round(t_total * 1000, 2)
+                }
+            }
+        except Exception as e:
+            return {'success': False, 'error': f'Prediction error: {str(e)}'}

@@ -57,6 +57,12 @@ npm install
 npm run dev
 ```
 
+## Folder Naming & Case Sensitivity
+
+When writing scripts, configuration files, and GitHub workflows, pay close attention to case sensitivity.
+- **Git Index & CI/CD Casing:** In the repository, directories are tracked as capitalized `Backend/` and `Frontend/`.
+- **CODEOWNERS & Configs:** Always specify `/Backend/` and `/Frontend/` (with a capital `B` and `F`) in `.github/CODEOWNERS`, `.github/workflows/`, and other service/deployment configs (like `vercel.json` or `render.yaml`) to ensure case-sensitive matching functions correctly on GitHub.
+
 ## Running Tests
 
 ```bash

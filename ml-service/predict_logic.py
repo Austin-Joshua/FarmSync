@@ -83,131 +83,16 @@ def load_model():
 def predict(input_data: Dict[str, float]) -> Dict[str, Any]:
     """Make crop recommendation prediction (Hybrid Classical + Quantum VQC) with telemetry."""
     try:
-        t_start = time.perf_counter()
-        
-        # 1. Validation Stage
-        from hybrid_pipeline import DataValidator, FeatureEngineer, ClassicalPredictor, QuantumPredictor, ConfidenceEstimator, DecisionFusion, ExplainabilityLayer
-        
-        is_valid, msg = DataValidator.validate_crop_input(input_data)
-        if not is_valid:
-            return {'success': False, 'error': msg}
-            
         model, model_info = load_model()
         if model is None:
             return {
                 'success': False,
                 'error': 'Model not found. Please run train_model.py first.'
             }
-            
-        # 2. Feature Engineering Stage
-        X_classical = FeatureEngineer.normalize_for_classical(input_data, FEATURES)
         
-        # Check if quantum engine is available for normalizing stats
-        norm_stats = {}
-        if _QUANTUM_ENGINE and getattr(_QUANTUM_ENGINE, 'norm_stats', None) is not None:
-            norm_stats = _QUANTUM_ENGINE.norm_stats
-        elif _QUANTUM_ENGINE and getattr(_QUANTUM_ENGINE, 'vqc_ensemble_loaded', False) and getattr(_QUANTUM_ENGINE, 'vqc_ensemble_stats', None) is not None:
-            norm_stats = _QUANTUM_ENGINE.vqc_ensemble_stats
-            
-        q_angles = FeatureEngineer.encode_quantum_angles(input_data, norm_stats)
-        
-        # 3. Classical ML Prediction (Calibrated)
-        t_classical_start = time.perf_counter()
-        prediction = model.predict(X_classical)[0]
-        # Platt scaled probabilities
-        classical_predictor = ClassicalPredictor(model)
-        classical_probs = classical_predictor.predict_calibrated_proba(X_classical)
-        t_classical = time.perf_counter() - t_classical_start
-        
-        # 4. Quantum ML Prediction Stage
-        quantum_active = False
-        t_quantum_start = time.perf_counter()
-        t_quantum = 0.0
-        
-        if _QUANTUM_ENGINE is not None:
-            try:
-                quantum_predictor = QuantumPredictor(_QUANTUM_ENGINE)
-                q_probs = quantum_predictor.predict_vqc_proba(q_angles, list(model.classes_))
-                quantum_active = True
-                t_quantum = time.perf_counter() - t_quantum_start
-            except Exception as q_err:
-                print(f"Quantum VQC prediction failed: {q_err}")
-                q_probs = classical_probs.copy() # fallback
-        else:
-            q_probs = classical_probs.copy() # fallback
-            
-        # 5. Confidence Estimation Stage
-        conf_estimator = ConfidenceEstimator()
-        classical_conf = conf_estimator.calculate_confidence(classical_probs)
-        quantum_conf = conf_estimator.calculate_confidence(q_probs)
-        
-        # 6. Hybrid Decision Fusion Stage (Compare and Select)
-        p_avg = DecisionFusion.weighted_average(classical_probs, q_probs, alpha=0.7)
-        p_conf = DecisionFusion.confidence_fusion(classical_probs, q_probs, classical_conf, quantum_conf)
-        p_bayes = DecisionFusion.bayesian_fusion(classical_probs, q_probs)
-        p_stack = DecisionFusion.meta_learner_stack(classical_probs, q_probs)
-        
-        strategies = {
-            "weighted_average": p_avg,
-            "confidence_fusion": p_conf,
-            "bayesian_fusion": p_bayes,
-            "meta_learner_stack": p_stack
-        }
-        
-        chosen_strategy = "confidence_fusion"
-        hybrid_probs = strategies[chosen_strategy]
-        
-        # Top 3 recommendations based on chosen hybrid probabilities
-        top_indices = np.argsort(hybrid_probs)[::-1][:3]
-        recommendations: List[Dict] = []
-        for idx in top_indices:
-            crop = str(model.classes_[idx])
-            prob = float(hybrid_probs[idx])
-            recommendations.append({
-                'crop': crop,
-                'confidence': prob,
-                'confidence_percent': round(prob * 100, 1),
-                'advice': CROP_ADVICE.get(crop, 'Consult your local Krishi Vigyan Kendra for specific advice.')
-            })
-            
-        # Final recommendation
-        best_crop_idx = top_indices[0]
-        best_crop = str(model.classes_[best_crop_idx])
-        best_confidence = float(hybrid_probs[best_crop_idx])
-        
-        # 7. Explainability Layer
-        explain_layer = ExplainabilityLayer()
-        explain_payload = explain_layer.calculate_explainability(
-            input_data, model, best_crop, classical_probs, q_probs, list(model.classes_)
-        )
-        
-        t_total = time.perf_counter() - t_start
-        
-        return {
-            'success': True,
-            'recommended_crop': best_crop,
-            'confidence': best_confidence,
-            'confidence_percent': round(best_confidence * 100, 1),
-            'recommendations': recommendations,
-            'advice': CROP_ADVICE.get(best_crop, ''),
-            'model_accuracy': model_info.get('accuracy_percent') if model_info else None,
-            'cv_accuracy': model_info.get('cv_accuracy') if model_info else None,
-            'quantum_active': quantum_active,
-            'vqc_is_trained': getattr(_QUANTUM_ENGINE, 'vqc_ensemble_loaded', False) or getattr(_QUANTUM_ENGINE, 'vqc_is_trained', False),
-            'vqc_param_source': 'multiclass_ensemble' if getattr(_QUANTUM_ENGINE, 'vqc_ensemble_loaded', False) else ('cobyla_trained' if getattr(_QUANTUM_ENGINE, 'vqc_is_trained', False) else 'fixed_default'),
-            'quantum_vqc_probabilities': q_probs.tolist(),
-            'classical_probabilities': classical_probs.tolist(),
-            'classical_confidence_percent': round(classical_conf * 100, 1),
-            'quantum_confidence_percent': round(quantum_conf * 100, 1),
-            'fusion_strategy': chosen_strategy,
-            'explainability': explain_payload,
-            'telemetry': {
-                'classical_latency_ms': round(t_classical * 1000, 2),
-                'quantum_latency_ms': round(t_quantum * 1000, 2),
-                'total_latency_ms': round(t_total * 1000, 2)
-            }
-        }
-
+        from hybrid_pipeline import HybridPredictionPipeline
+        pipeline = HybridPredictionPipeline(model, _QUANTUM_ENGINE, model_info)
+        return pipeline.predict(input_data)
     except Exception as e:
         return {'success': False, 'error': f'Prediction error: {str(e)}'}
 

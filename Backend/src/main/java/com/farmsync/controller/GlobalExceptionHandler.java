@@ -46,7 +46,13 @@ public class GlobalExceptionHandler {
         errors.put("message", message);
         
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        if ("User not found".equals(message)) {
+        if ("User not found".equals(message) ||
+            "Farm not found".equals(message) ||
+            "Crop not found".equals(message) ||
+            "Expense not found".equals(message) ||
+            "Stock item not found".equals(message) ||
+            "Yield record not found".equals(message) ||
+            "Disease scan not found".equals(message)) {
             status = HttpStatus.NOT_FOUND;
         } else if ("Email already exists".equals(message) || 
                    "User with this email already exists".equals(message) ||

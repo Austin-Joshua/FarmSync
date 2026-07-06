@@ -18,41 +18,26 @@ public class StockService {
     private StockItemRepository stockItemRepository;
 
     public List<StockItem> findByUserId(UUID userId, User user) {
-        // Security check
-        if (!userId.equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
+        if (!userId.equals(user.getId()) && !"admin".equalsIgnoreCase(user.getRole())) {
+            throw new org.springframework.security.access.AccessDeniedException("Unauthorized access");
         }
         return stockItemRepository.findByUserId(userId);
     }
 
     public Optional<StockItem> findById(@org.springframework.lang.NonNull UUID id, User user) {
-        StockItem item = stockItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Stock item not found"));
-        
-        // Security check
-        if (!item.getUser().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
-        
+        StockItem item = com.farmsync.security.OwnershipGuard.requireOwnedStockItem(stockItemRepository, id, user);
         return Optional.of(item);
     }
 
     @Transactional
     public StockItem createStockItem(StockItem item, User user) {
-        // Ensure user is set to current user
         item.setUser(user);
         return stockItemRepository.save(item);
     }
 
     @Transactional
     public StockItem updateStockItem(@org.springframework.lang.NonNull UUID id, StockItem itemDetails, User user) {
-        StockItem item = stockItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Stock item not found"));
-
-        // Security check
-        if (!item.getUser().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
+        StockItem item = com.farmsync.security.OwnershipGuard.requireOwnedStockItem(stockItemRepository, id, user);
 
         if (itemDetails.getItemName() != null) item.setItemName(itemDetails.getItemName());
         if (itemDetails.getItemType() != null) item.setItemType(itemDetails.getItemType());
@@ -64,14 +49,7 @@ public class StockService {
 
     @Transactional
     public void deleteStockItem(@org.springframework.lang.NonNull UUID id, User user) {
-        StockItem item = stockItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Stock item not found"));
-
-        // Security check
-        if (!item.getUser().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
-
+        StockItem item = com.farmsync.security.OwnershipGuard.requireOwnedStockItem(stockItemRepository, id, user);
         stockItemRepository.delete(item);
     }
 }

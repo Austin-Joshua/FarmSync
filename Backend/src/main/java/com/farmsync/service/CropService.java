@@ -4,6 +4,7 @@ import com.farmsync.model.Crop;
 import com.farmsync.model.Farm;
 import com.farmsync.model.User;
 import com.farmsync.repository.CropRepository;
+import com.farmsync.repository.FarmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,17 +20,10 @@ public class CropService {
     private CropRepository cropRepository;
 
     @Autowired
-    private FarmService farmService;
+    private FarmRepository farmRepository;
 
     public List<Crop> findByFarmId(@org.springframework.lang.NonNull UUID farmId, User user) {
-        Farm farm = farmService.findById(farmId)
-                .orElseThrow(() -> new RuntimeException("Farm not found"));
-        
-        // Security check
-        if (!farm.getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
-        
+        com.farmsync.security.OwnershipGuard.requireOwnedFarm(farmRepository, farmId, user);
         return cropRepository.findByFarmId(farmId);
     }
 
@@ -38,39 +32,19 @@ public class CropService {
     }
 
     public Optional<Crop> findById(@org.springframework.lang.NonNull UUID id, User user) {
-        Crop crop = cropRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Crop not found"));
-        
-        // Security check
-        if (!crop.getFarm().getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
-        
+        Crop crop = com.farmsync.security.OwnershipGuard.requireOwnedCrop(cropRepository, id, user);
         return Optional.of(crop);
     }
 
     @Transactional
     public Crop createCrop(Crop crop, User user) {
-        Farm farm = farmService.findById(java.util.Objects.requireNonNull(crop.getFarm().getId()))
-                .orElseThrow(() -> new RuntimeException("Farm not found"));
-        
-        // Security check
-        if (!farm.getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
-        
+        com.farmsync.security.OwnershipGuard.requireOwnedFarm(farmRepository, java.util.Objects.requireNonNull(crop.getFarm().getId()), user);
         return cropRepository.save(crop);
     }
 
     @Transactional
     public Crop updateCrop(@org.springframework.lang.NonNull UUID id, Crop cropDetails, User user) {
-        Crop crop = cropRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Crop not found"));
-
-        // Security check
-        if (!crop.getFarm().getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
+        Crop crop = com.farmsync.security.OwnershipGuard.requireOwnedCrop(cropRepository, id, user);
 
         if (cropDetails.getName() != null) crop.setName(cropDetails.getName());
         if (cropDetails.getSowingDate() != null) crop.setSowingDate(cropDetails.getSowingDate());
@@ -83,14 +57,7 @@ public class CropService {
 
     @Transactional
     public void deleteCrop(@org.springframework.lang.NonNull UUID id, User user) {
-        Crop crop = cropRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Crop not found"));
-
-        // Security check
-        if (!crop.getFarm().getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
-
+        Crop crop = com.farmsync.security.OwnershipGuard.requireOwnedCrop(cropRepository, id, user);
         cropRepository.delete(crop);
     }
 }

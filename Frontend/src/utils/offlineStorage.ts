@@ -1,5 +1,6 @@
 // Offline Storage Utility using IndexedDB
 // This provides offline data storage and sync capabilities
+import { axiosInstance } from '../services/api';
 
 const DB_NAME = 'FarmSyncDB';
 const DB_VERSION = 1;
@@ -231,26 +232,14 @@ export const syncPendingOperations = async (): Promise<void> => {
   
   for (const op of pendingOps) {
     try {
-      // Attempt to sync operation
-      const response = await fetch(op.endpoint, {
+      // Attempt to sync operation using central axiosInstance
+      await axiosInstance({
+        url: op.endpoint,
         method: op.method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(op.data),
+        data: op.data,
       });
 
-      if (response.ok) {
-        await markOperationSynced(op.id!);
-      } else {
-        // Increment retries
-        op.retries++;
-        if (op.retries >= 3) {
-          // Remove after 3 failed retries
-          await markOperationSynced(op.id!);
-        }
-      }
+      await markOperationSynced(op.id!);
     } catch (error) {
       console.error('Failed to sync operation:', error);
       op.retries++;

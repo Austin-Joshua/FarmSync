@@ -18,22 +18,14 @@ public class DiseaseScanService {
     private DiseaseScanRepository diseaseScanRepository;
 
     public List<DiseaseScan> findByUserId(UUID userId, User user) {
-        // Security check
-        if (!userId.equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
+        if (!userId.equals(user.getId()) && !"admin".equalsIgnoreCase(user.getRole())) {
+            throw new org.springframework.security.access.AccessDeniedException("Unauthorized access");
         }
         return diseaseScanRepository.findByUserId(userId);
     }
 
     public Optional<DiseaseScan> findById(@org.springframework.lang.NonNull UUID id, User user) {
-        DiseaseScan scan = diseaseScanRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Disease scan not found"));
-        
-        // Security check
-        if (!scan.getUser().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
-        
+        DiseaseScan scan = com.farmsync.security.OwnershipGuard.requireOwnedDiseaseScan(diseaseScanRepository, id, user);
         return Optional.of(scan);
     }
 
@@ -45,12 +37,7 @@ public class DiseaseScanService {
 
     @Transactional
     public DiseaseScan updateDiseaseScan(@org.springframework.lang.NonNull UUID id, DiseaseScan scanDetails, User user) {
-        DiseaseScan scan = diseaseScanRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Disease scan not found"));
-
-        if (!scan.getUser().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
+        DiseaseScan scan = com.farmsync.security.OwnershipGuard.requireOwnedDiseaseScan(diseaseScanRepository, id, user);
 
         if (scanDetails.getCropName() != null) scan.setCropName(scanDetails.getCropName());
         if (scanDetails.getDiseaseName() != null) scan.setDiseaseName(scanDetails.getDiseaseName());
@@ -62,13 +49,7 @@ public class DiseaseScanService {
 
     @Transactional
     public void deleteDiseaseScan(@org.springframework.lang.NonNull UUID id, User user) {
-        DiseaseScan scan = diseaseScanRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Disease scan not found"));
-
-        if (!scan.getUser().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
-
+        DiseaseScan scan = com.farmsync.security.OwnershipGuard.requireOwnedDiseaseScan(diseaseScanRepository, id, user);
         diseaseScanRepository.delete(scan);
     }
 }

@@ -30,6 +30,7 @@ Frontend/yarn-error.log*
 # Secrets
 .env
 .env.*
+!*.env.example
 Backend/.env
 Frontend/.env
 firebase-service-account.json

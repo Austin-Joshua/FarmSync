@@ -36,13 +36,7 @@ public class FarmService {
 
     @Transactional
     public Farm updateFarm(UUID id, Farm farmDetails, User user) {
-        Farm farm = farmRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Farm not found"));
-
-        // Security: Only owner or admin can update
-        if (!farm.getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
+        Farm farm = com.farmsync.security.OwnershipGuard.requireOwnedFarm(farmRepository, id, user);
 
         if (farmDetails.getName() != null) farm.setName(farmDetails.getName());
         if (farmDetails.getLocation() != null) farm.setLocation(farmDetails.getLocation());
@@ -60,13 +54,7 @@ public class FarmService {
 
     @Transactional
     public void deleteFarm(UUID id, User user) {
-        Farm farm = farmRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Farm not found"));
-
-        if (!farm.getFarmer().getId().equals(user.getId()) && !user.getRole().equals("admin")) {
-            throw new RuntimeException("Unauthorized access");
-        }
-
+        Farm farm = com.farmsync.security.OwnershipGuard.requireOwnedFarm(farmRepository, id, user);
         farmRepository.delete(farm);
     }
 }
