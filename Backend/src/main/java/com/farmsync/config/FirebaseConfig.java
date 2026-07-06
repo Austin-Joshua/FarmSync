@@ -5,6 +5,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
@@ -15,6 +17,8 @@ import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class FirebaseConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(FirebaseConfig.class);
 
     @Value("${firebase.config.path:firebase-service-account.json}")
     private String firebaseConfigPath;
@@ -42,11 +46,12 @@ public class FirebaseConfig {
 
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
-                System.out.println("Firebase initialized successfully with credentials from: " + firebaseConfigPath);
+                logger.info("Firebase initialized successfully");
             }
         } catch (IOException e) {
-            System.err.println("CRITICAL: Error initializing Firebase: " + e.getMessage());
-            // In a real production app, we would handle this more gracefully or fail fast
+            // Log as error — the app will continue but Firebase-dependent features will fail.
+            // In a stricter setup, rethrow here to fail fast on startup.
+            logger.error("CRITICAL: Firebase initialization failed. Firebase-based features (push notifications, Firestore) will be unavailable: {}", e.getMessage());
         }
     }
 }

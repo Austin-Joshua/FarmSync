@@ -1,5 +1,7 @@
 package com.farmsync.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.*;
@@ -9,6 +11,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/market")
 public class MarketController {
+
+    private static final Logger logger = LoggerFactory.getLogger(MarketController.class);
 
     private static final String CSV_PATH = resolveDatasetPath();
 
@@ -46,7 +50,7 @@ public class MarketController {
         }
         File file = new File(CSV_PATH);
         if (!file.exists()) {
-            System.out.println("Market dataset CSV not found at: " + CSV_PATH);
+            logger.warn("Market dataset CSV not found at: {}", CSV_PATH);
             return;
         }
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {

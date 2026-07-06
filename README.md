@@ -1,110 +1,151 @@
-# 🌾 FarmSync Quantum 2.0 — Hybrid Classical AI + Quantum Decision Intelligence Platform
+# 🌾 FarmSync — Precision Agriculture Intelligence Platform
 
-**FarmSync Quantum 2.0** is an enterprise-grade precision agriculture decision support platform. It integrates classical machine learning (Random Forest, Gradient Boosting), quantum machine learning (NISQ-era Variational Quantum Classifiers), and quantum resource optimization (QAOA/QUBO) to provide crop recommendation, yield forecasting, and optimal resource management.
+**FarmSync** combines classical machine learning, simulator-based quantum ML, and a real-time Spring Boot API to help Indian farmers make data-driven decisions about crops, disease, yield, and expenses.
 
 ---
 
-## 📂 Reorganized Repository Architecture
-The repository has been restructured into clean, lowercase modular domains:
+## 🏗️ Architecture
 
-* **[`/frontend`](file:///c:/Users/austi/OneDrive/Desktop/FarmSync/FarmSync/frontend)** — React 18 client application. Uses Zustand for state management and Tailwind CSS for responsive design.
-* **[`/backend`](file:///c:/Users/austi/OneDrive/Desktop/FarmSync/FarmSync/backend)** — Spring Boot 3.2 enterprise facade, handling JWT session security, transactional data operations, and notifications.
-* **[`/ml-service`](file:///c:/Users/austi/OneDrive/Desktop/FarmSync/FarmSync/ml-service)** — Python FastAPI microservice executing QML and classical predictions.
-* **[`/database`](file:///c:/Users/austi/OneDrive/Desktop/FarmSync/FarmSync/database)** — Database initialization script (`schema.sql`) populated with performance-critical indexes.
-* **[`/docs`](file:///c:/Users/austi/OneDrive/Desktop/FarmSync/FarmSync/docs)** — System-wide documentation index (`architecture/`, `ml/`, `quantum/`, `user-guide/`).
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        Browser / Mobile                         │
+│              React 18 + Zustand + TypeScript (Port 5173)        │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ HTTPS / REST
+┌────────────────────────────▼────────────────────────────────────┐
+│              Spring Boot 3.2 Backend (Port 9090)                │
+│    JWT Auth · Rate Limiting · CORS · JPA + H2/PostgreSQL        │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ Internal Secret Auth
+┌────────────────────────────▼────────────────────────────────────┐
+│              FastAPI ML Service (Port 8000)                     │
+│    Random Forest · Gradient Boosting · VQC (AerSimulator)       │
+│    Redis cache · Prometheus metrics                             │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## 🛠️ Technology Stack
-* **Frontend:** React 18.3, Zustand, Tailwind CSS, TypeScript 5.x, React Leaflet 4.x, Recharts 3.6, i18next (8+ regional languages).
-* **Backend:** Java 17, Spring Boot 3.2.4, Spring Security (JWT Access/Refresh tokens), Spring Data JPA.
-* **ML/Quantum Service:** FastAPI, Scikit-Learn 1.4.2, Qiskit 1.x, Qiskit Aer, Redis cache (graceful in-memory fallback), Prometheus monitoring.
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18.3, TypeScript 5, Zustand, Tailwind CSS, React Leaflet, Recharts |
+| Backend | Java 17, Spring Boot 3.2.4, Spring Security (JWT), Spring Data JPA |
+| Database | H2 (dev/MVP) → PostgreSQL (production) |
+| ML Service | Python 3.11, FastAPI, Scikit-Learn 1.4, Qiskit 1.x (AerSimulator), Redis cache |
+| Auth | JWT access tokens + refresh tokens, Firebase Auth (social login) |
+| CI/CD | GitHub Actions (backend, frontend, ML) |
+| Deployment | Render (backend + ML), Vercel (frontend) |
 
 ---
 
-## 🚀 Step-by-Step Running Guide
+## ⚡ Quickstart (3 terminals)
 
-### 📋 Prerequisites
-* **Java 17+ (JDK)** configured on your system environment PATH.
-* **Node.js 18+** with the npm package manager.
-* **Python 3.11+** with virtual environment support.
+### Prerequisites
+- Java 17+, Node.js 20+, Python 3.11+
 
----
+### 1. ML Service (Port 8000)
+```bash
+cd ml-service
+python -m venv .venv
+source .venv/bin/activate   # Linux/macOS
+# .venv\Scripts\activate    # Windows
+pip install -r requirements.txt
+cp .env.example .env        # Edit ML_SERVICE_SECRET
+uvicorn main:app --port 8000 --reload
+```
+Docs: http://localhost:8000/docs
 
-### Step 1: Start the Python ML/Quantum Service (Port 8000)
-1. Navigate to the `ml-service` folder:
-   ```bash
-   cd ml-service
-   ```
-2. Activate the pre-configured virtual environment:
-   ```bash
-   # Windows PowerShell
-   .venv\Scripts\Activate.ps1
-   # Windows Command Prompt
-   .venv\Scripts\activate.bat
-   # Linux/macOS
-   source .venv/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Run the production-grade multi-worker Gunicorn server (starts 4 concurrent workers for 4x single-machine throughput):
-   ```bash
-   # On Linux/macOS
-   ./start.sh
-   # On Windows (runs uvicorn dev mode)
-   .\.venv\Scripts\uvicorn main:app --host 0.0.0.0 --port 8000
-   ```
-   * *FastAPI documentation is available at:* `http://localhost:8000/docs`
-   * *Prometheus metrics are available at:* `http://localhost:8000/metrics`
+### 2. Backend (Port 9090)
+```bash
+cd backend
+cp .env.example .env        # Edit JWT_SECRET and ML_SERVICE_SECRET
+# Windows:
+mvnw.cmd spring-boot:run
+# Linux/macOS:
+./mvnw spring-boot:run
+```
+Swagger: http://localhost:9090/swagger-ui.html  
+Health: http://localhost:9090/api/health
 
----
+### 3. Frontend (Port 5173)
+```bash
+cd frontend
+cp .env.example .env.local  # Edit VITE_API_BASE_URL if needed
+npm install
+npm run dev
+```
+App: http://localhost:5173
 
-### Step 2: Start the Java Spring Boot Backend Facade (Port 9090)
-1. Navigate to the `backend` folder:
-   ```bash
-   cd ../backend
-   ```
-2. Build and boot the server using the Maven wrapper:
-   ```bash
-   # Windows PowerShell
-   .\mvnw.cmd clean spring-boot:run
-   # Linux/macOS
-   ./mvnw clean spring-boot:run
-   ```
-   * *The backend API server runs on port 9090.*
+### Demo credentials (dev mode only)
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@farmsync.com | admin123 |
+| Farmer | farmer@farmsync.com | farmer123 |
+| Citizen | citizen@farmsync.com | citizen123 |
 
 ---
 
-### Step 3: Start the React Frontend Web Portal (Port 5173)
-1. Navigate to the `frontend` folder:
-   ```bash
-   cd ../frontend
-   ```
-2. Install npm packages:
-   ```bash
-   npm install
-   ```
-3. Boot the local development Vite server with Hot Module Replacement (HMR):
-   ```bash
-   npm run dev
-   ```
-   * *Launch the application in your browser at:* `http://localhost:5173`
+## 🧠 ML Performance
+
+| Model | Accuracy / R² |
+|---|---|
+| Random Forest Crop Recommendation (22 classes) | 93.18% (CV: 93.64% ± 0.96%) |
+| VQC Quantum Classifier (4-qubit AerSimulator, binary) | 72.95% |
+| Hybrid Blend (70% RF + 30% VQC) | 92.50% |
+| Yield Regression (Gradient Boosting) | R² = 0.998 |
+
+> **Quantum note:** All quantum components run on Qiskit AerSimulator (classical simulation). No real quantum hardware is required.
 
 ---
 
-## 🧪 Model Performance & Verification Metrics
-All performance and robustness metrics are derived from real execution:
+## 🔒 Security
 
-* **Classical RF Crop Recommendation (22 Classes):** **93.18% Accuracy** (CV: `93.64% ± 0.96%`) on the 2,200-row Kaggle dataset.
-* **Trained VQC QML Classifier (Binary Fallback):** **72.95% Accuracy** (COBYLA-optimized).
-* **Hybrid Model Blend (70% RF + 30% VQC):** **92.50% Accuracy** (maintains high accuracy while incorporating quantum predictions).
-* **Yield Regression Model Size Reduction:** **−78.7%** (tuned to 8.9 MB from 41.7 MB while keeping R²: **0.9980**).
-* **FastAPI Latency Benchmarks:** Classical RF: `0.15 ms/sample` | QML VQC: `0.23 ms/sample` | Cache Hit: `< 1.0 ms`.
+- JWT access tokens (HS256, configurable expiry) + refresh token rotation
+- bcrypt password hashing
+- Rate limiting via Bucket4j (IP-based, configurable burst)
+- CORS restricted to configured frontend origin
+- All service methods enforce owner-only access (IDOR protection)
+- No secrets in code — all via environment variables
+- Internal ML service protected by shared secret header
 
 ---
 
-## ♿ Accessibility & Observability Hardening
-* **Accessibility:** Full compliance with ARIA accessibility labels (`aria-label`) added to all icon-only buttons (floating AI bubble, statistics refresh, notifications, calendar month navigators, and document download icons).
-* **Production Observability:** Integrated Prometheus counters (`farmsync_requests_total`) and latency histograms (`farmsync_request_duration_seconds`) on `/metrics`.
+## 📁 Repository Structure
+
+```
+FarmSync/
+├── backend/          Spring Boot API (Java 17)
+├── frontend/         React 18 web app (TypeScript)
+├── ml-service/       FastAPI ML microservice (Python 3.11)
+├── database/         schema.sql with indexes
+├── docs/
+│   ├── architecture/ CODE_QUALITY_REPORT.md
+│   ├── ml/           ML_METHODOLOGY.md (train/test, quantum claims)
+│   └── STARTUP_READINESS.md
+├── .github/workflows/ CI pipelines (backend, frontend, ml)
+├── CONTRIBUTING.md
+└── render.yaml       One-click Render deployment
+```
+
+---
+
+## 🚀 Running Tests
+
+```bash
+# Backend
+cd backend && ./mvnw test
+
+# Frontend
+cd frontend && npm run test
+
+# ML Service
+cd ml-service && pytest tests/ -v
+```
+
+---
+
+## 📄 Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup instructions, branching strategy, and PR guidelines.

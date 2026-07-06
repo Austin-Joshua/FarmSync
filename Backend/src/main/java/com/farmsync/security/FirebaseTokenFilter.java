@@ -4,6 +4,8 @@ import com.farmsync.model.User;
 import com.farmsync.repository.UserRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,8 @@ import java.util.Optional;
 
 @Component
 public class FirebaseTokenFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(FirebaseTokenFilter.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -54,7 +58,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
                             user.setName(decodedToken.getName() != null ? decodedToken.getName() : "Firebase User");
                             user.setRole("farmer"); // Default role
                             user = userRepository.save(user);
-                            System.out.println("Auto-created local user record for: " + email);
+                            logger.info("Auto-created local user record for Firebase user: {}", email);
                         }
                         
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -65,7 +69,7 @@ public class FirebaseTokenFilter extends OncePerRequestFilter {
 
                 } catch (Exception e) {
                     // If token is invalid, we don't set the authentication and let the security config handle it
-                    System.err.println("Firebase authentication failed: " + e.getMessage());
+                    logger.warn("Firebase token verification failed: {}", e.getMessage());
                 }
             }
         }

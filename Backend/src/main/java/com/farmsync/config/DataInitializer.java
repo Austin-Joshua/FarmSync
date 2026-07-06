@@ -15,6 +15,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
@@ -22,6 +24,8 @@ import java.util.UUID;
 @Profile("dev")
 @ConditionalOnProperty(name = "farmsync.seed-demo-data", havingValue = "true", matchIfMissing = false)
 public class DataInitializer implements CommandLineRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -62,11 +66,11 @@ public class DataInitializer implements CommandLineRunner {
                     .role("admin")
                     .build();
             userRepository.save(admin);
-            System.out.println("Default admin user created: admin@farmsync.com / admin123");
+            logger.info("Demo data: default admin user created: admin@farmsync.com");
         } else {
             admin.setPassword(passwordEncoder.encode("admin123"));
             userRepository.save(admin);
-            System.out.println("Default admin user password verified/reset to admin123");
+            logger.info("Demo data: admin user password reset");
         }
 
         // Seed Soil Types
@@ -119,7 +123,7 @@ public class DataInitializer implements CommandLineRunner {
                 admin.setSoilType("Black (Regur)");
                 userRepository.save(admin);
 
-                System.out.println("Default farm seeded for admin: Admin Primary Estate");
+                logger.info("Demo data: default farm seeded for admin");
             } else {
                 farm = existingFarms.get(0);
             }
@@ -150,7 +154,7 @@ public class DataInitializer implements CommandLineRunner {
                         .build();
                 harvestedCrop = cropRepository.save(harvestedCrop);
                 
-                System.out.println("Default crops seeded for farm");
+                logger.info("Demo data: default crops seeded for farm");
 
                 // Seed Yields for harvested crop
                 yieldRepository.save(com.farmsync.model.Yield.builder()
@@ -159,7 +163,7 @@ public class DataInitializer implements CommandLineRunner {
                         .date(java.time.LocalDate.now().minusDays(20))
                         .quality("excellent")
                         .build());
-                System.out.println("Default yields seeded for crop");
+                logger.info("Demo data: default yields seeded for crop");
                 
                 // Seed expenses
                 expenseRepository.save(com.farmsync.model.Expense.builder()
@@ -190,7 +194,7 @@ public class DataInitializer implements CommandLineRunner {
                         .date(java.time.LocalDate.now().minusDays(15))
                         .farm(farm)
                         .build());
-                System.out.println("Default expenses seeded for farm");
+                logger.info("Demo data: default expenses seeded for farm");
             }
             
             // Seed stock/inventory items if not present
@@ -217,7 +221,7 @@ public class DataInitializer implements CommandLineRunner {
                         .quantity(80.0)
                         .unit("kg")
                         .build());
-                System.out.println("Default stock inventory items seeded for user");
+                logger.info("Demo data: default stock inventory items seeded for user");
             }
         }
 
@@ -235,11 +239,11 @@ public class DataInitializer implements CommandLineRunner {
                     .soilType("Red")
                     .build();
             userRepository.save(farmer);
-            System.out.println("Demo farmer user created: farmer@farmsync.com / farmer123");
+            logger.info("Demo data: demo farmer user created: farmer@farmsync.com");
         } else {
             farmer.setPassword(passwordEncoder.encode("farmer123"));
             userRepository.save(farmer);
-            System.out.println("Demo farmer password reset to farmer123");
+            logger.info("Demo data: demo farmer password reset");
         }
 
         // Seed farmer's farm and crops
@@ -326,7 +330,7 @@ public class DataInitializer implements CommandLineRunner {
                     .quantity(8.0)
                     .unit("liters")
                     .build());
-            System.out.println("Demo farmer farm, crops, and data seeded");
+            logger.info("Demo data: demo farmer farm, crops, and data seeded");
         }
 
         // ===== Seed Citizen Demo User =====
@@ -341,11 +345,11 @@ public class DataInitializer implements CommandLineRunner {
                     .location("Chennai, Tamil Nadu")
                     .build();
             userRepository.save(citizen);
-            System.out.println("Demo citizen user created: citizen@farmsync.com / citizen123");
+            logger.info("Demo data: demo citizen user created: citizen@farmsync.com");
         } else {
             citizen.setPassword(passwordEncoder.encode("citizen123"));
             userRepository.save(citizen);
-            System.out.println("Demo citizen password reset to citizen123");
+            logger.info("Demo data: demo citizen password reset");
         }
     }
 }

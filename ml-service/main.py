@@ -306,8 +306,25 @@ async def cache_stats_endpoint():
 @app.post("/ml/disease-detect", dependencies=[Depends(verify_internal_secret)])
 async def detect_disease(image: UploadFile = File(...)):
     """Detects diseases in crop leaves via image analysis (Gradient Boosting Classifier)."""
+    # ─── Input Validation ───
+    ALLOWED_CONTENT_TYPES = {"image/jpeg", "image/png", "image/jpg"}
+    MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024  # 5 MB
+
+    if image.content_type not in ALLOWED_CONTENT_TYPES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid file type '{image.content_type}'. Only JPEG and PNG images are accepted."
+        )
+
+    image_bytes = await image.read()
+
+    if len(image_bytes) > MAX_FILE_SIZE_BYTES:
+        raise HTTPException(
+            status_code=413,
+            detail=f"File too large ({len(image_bytes) // 1024} KB). Maximum allowed size is 5 MB."
+        )
+    # ─── End Validation ───
     try:
-        image_bytes = await image.read()
         
         if disease_model is None:
             # Fallback to mock selection if not trained
