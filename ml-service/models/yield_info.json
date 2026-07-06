@@ -1,7 +1,7 @@
 {
   "model_type": "RandomForestRegressor",
   "r2_score": 0.9903932114950966,
-  "rmse": 232.92851219292103,
+  "rmse": 232.92851219292106,
   "features": [
     "crop",
     "irrigation",

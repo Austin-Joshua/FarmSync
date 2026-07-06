@@ -37,9 +37,18 @@ Backend/firebase-service-account.json
 Dataset/PlantVillage/
 *.pkl
 *.csv
+!ml-service/datasets/All-India_-Crop-wise-Area,-Production-&-Yield.csv
+!ml-service/datasets/ICRISAT-District Level Data.csv
+!ml-service/datasets/disease_features_authentic.csv
+!ml-service/datasets/soil.csv
+!ml-service/tests/fixtures/Crop_recommendation.csv
+!ml-service/datasets/Crop_recommendation.csv
 
 # Python Virtual Environments
 venv/
 .venv/
 Backend/MLService/venv/
+
+# Local prompt/instruction files
+FarmSync_*_Prompt.md
 

@@ -48,11 +48,22 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         if ("User not found".equals(message)) {
             status = HttpStatus.NOT_FOUND;
-        } else if ("Email already exists".equals(message) || "User with this email already exists".equals(message)) {
+        } else if ("Email already exists".equals(message) || 
+                   "User with this email already exists".equals(message) ||
+                   "Email is required".equals(message) ||
+                   "Phone number is required".equals(message) ||
+                   "Phone and OTP are required".equals(message) ||
+                   "Valid token and password (min 8 chars) required".equals(message) ||
+                   "Invalid password reset token".equals(message) ||
+                   "Password reset token expired".equals(message)) {
             status = HttpStatus.BAD_REQUEST;
         } else if ("Unauthorized access".equals(message)) {
             status = HttpStatus.FORBIDDEN;
-        } else if ("Invalid email or password".equals(message)) {
+        } else if ("Invalid email or password".equals(message) ||
+                   "Invalid OTP".equals(message) ||
+                   "OTP expired".equals(message) ||
+                   "Invalid refresh token".equals(message) ||
+                   "Refresh token expired".equals(message)) {
             status = HttpStatus.UNAUTHORIZED;
         }
         
