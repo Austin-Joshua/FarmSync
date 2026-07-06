@@ -1,7 +1,6 @@
 package com.farmsync.service;
 
 import com.farmsync.model.Expense;
-import com.farmsync.model.Farm;
 import com.farmsync.model.User;
 import com.farmsync.repository.ExpenseRepository;
 import com.farmsync.repository.FarmRepository;

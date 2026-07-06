@@ -50,6 +50,15 @@ venv/
 .venv/
 Backend/MLService/venv/
 
+# Python bytecode & caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Generated ML reports (runtime artifacts, not source)
+ml-service/models/scalability_report.json
+
 # Local prompt/instruction files
 FarmSync_*_Prompt.md
 

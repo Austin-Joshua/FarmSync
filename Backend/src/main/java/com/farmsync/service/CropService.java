@@ -1,7 +1,6 @@
 package com.farmsync.service;
 
 import com.farmsync.model.Crop;
-import com.farmsync.model.Farm;
 import com.farmsync.model.User;
 import com.farmsync.repository.CropRepository;
 import com.farmsync.repository.FarmRepository;
