@@ -10,10 +10,10 @@ const Card: React.FC<CardProps> = ({
   variant = 'default',
   ...props
 }) => {
-  const baseStyle = 'bg-surface border border-border rounded-lg p-6 overflow-hidden';
+  const baseStyle = 'bg-surface border border-border rounded-md overflow-hidden transition-shadow';
   const variants = {
-    default: 'shadow-sm',
-    elevated: 'shadow-md',
+    default: 'shadow-sm p-4',
+    elevated: 'shadow-md p-6',
   };
 
   return (

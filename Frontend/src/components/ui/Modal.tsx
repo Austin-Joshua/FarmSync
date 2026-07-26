@@ -41,22 +41,22 @@ const Modal: React.FC<ModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
-          <div className="flex items-center justify-between border-b border-border p-6">
-            <h2 className="text-xl font-bold text-text">{title}</h2>
+          <div className="flex items-center justify-between border-b border-border px-6 py-4">
+            <h2 className="text-lg font-semibold text-text">{title}</h2>
             <button
               onClick={onClose}
               className="text-text-muted hover:text-text transition-colors p-1"
               aria-label="Close modal"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
         )}
-        <div className="overflow-y-auto max-h-[calc(100vh-16rem)] p-6">
+        <div className="overflow-y-auto max-h-[calc(100vh-16rem)] px-6 py-4">
           {children}
         </div>
         {footer && (
-          <div className="border-t border-border p-6 flex gap-3 justify-end">
+          <div className="border-t border-border px-6 py-3 flex gap-3 justify-end">
             {footer}
           </div>
         )}

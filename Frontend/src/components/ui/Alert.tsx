@@ -56,21 +56,21 @@ const Alert: React.FC<AlertProps> = ({
 
   return (
     <div
-      className={`${config.bg} border ${config.border} rounded-lg p-4 flex gap-3 items-start ${className}`}
+      className={`${config.bg} border ${config.border} rounded-md p-3 flex gap-2 items-start ${className}`}
       {...props}
     >
-      {showIcon && <div className={`flex-shrink-0 ${config.text}`}>{config.icon}</div>}
-      <div className="flex-1">
-        {title && <p className="font-medium text-text mb-1">{title}</p>}
-        <p className="text-text-muted text-sm">{message}</p>
+      {showIcon && <div className={`flex-shrink-0 ${config.text} mt-0.5`}>{config.icon}</div>}
+      <div className="flex-1 min-w-0">
+        {title && <p className="font-medium text-sm text-text mb-0.5">{title}</p>}
+        <p className="text-text-muted text-xs leading-relaxed">{message}</p>
       </div>
       {onClose && (
         <button
           onClick={onClose}
-          className="flex-shrink-0 text-text-muted hover:text-text transition-colors"
+          className="flex-shrink-0 text-text-muted hover:text-text transition-colors p-1"
           aria-label="Close alert"
         >
-          <X size={20} />
+          <X size={16} />
         </button>
       )}
     </div>

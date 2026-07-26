@@ -16,9 +16,9 @@ const Section: React.FC<SectionProps> = ({
     <section className={`space-y-4 ${className}`} {...props}>
       {title && (
         <div className="space-y-1">
-          <h2 className="text-2xl font-bold text-text">{title}</h2>
+          <h2 className="text-lg font-semibold text-text">{title}</h2>
           {description && (
-            <p className="text-text-muted">{description}</p>
+            <p className="text-sm text-text-muted">{description}</p>
           )}
         </div>
       )}

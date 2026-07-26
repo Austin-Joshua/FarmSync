@@ -18,20 +18,20 @@ const StatTile: React.FC<StatTileProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`bg-surface border border-border rounded-lg p-6 ${className}`}>
-      <p className="text-text-muted text-sm font-medium mb-2">{label}</p>
+    <div className={`bg-surface border border-border rounded-md p-4 ${className}`}>
+      <p className="text-text-muted text-xs font-medium mb-2 uppercase tracking-wide">{label}</p>
       <div className="flex items-baseline justify-between">
-        <p className="text-3xl font-bold text-text tabular">{value}</p>
+        <p className="text-2xl font-bold text-text tabular">{value}</p>
         {delta && (
           <div
-            className={`flex items-center gap-1 text-sm font-medium ${
+            className={`flex items-center gap-1 text-xs font-medium ${
               delta.trend === 'up' ? 'text-success' : 'text-danger'
             }`}
           >
             {delta.trend === 'up' ? (
-              <TrendingUp size={16} />
+              <TrendingUp size={14} />
             ) : (
-              <TrendingDown size={16} />
+              <TrendingDown size={14} />
             )}
             <span>{delta.value}%</span>
           </div>
