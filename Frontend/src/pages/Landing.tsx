@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
-import { ArrowRight, Sun, Moon, Menu, X, ChevronDown, Database, TrendingUp, Calendar, PieChart, Shield, Smartphone } from 'lucide-react';
+import { Sun, Moon, Menu, X, ChevronDown, Database, TrendingUp, Calendar, PieChart, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import LanguageSwitcher from '../components/LanguageSwitcher';
