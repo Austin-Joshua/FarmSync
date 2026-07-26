@@ -2,101 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Animations */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slide-down {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-slide-down {
-  animation: slide-down 0.6s ease-out forwards;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out forwards;
-}
-
 @layer base {
   :root {
-    scroll-behavior: smooth;
-    --color-dark-bg: #0f172a;
-    --color-dark-surface: #1e293b;
-    --color-dark-surface-elevated: #334155;
-    --color-dark-text-primary: #f8fafc;
-    --color-dark-text-secondary: #cbd5e1;
-    --color-dark-text-tertiary: #94a3b8;
-    --color-dark-border: #334155;
-    --color-dark-border-hover: #475569;
-    
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-    
-    --glass-dark-bg: rgba(30, 41, 59, 0.7);
-    --glass-dark-border: rgba(255, 255, 255, 0.1);
-    --glass-dark-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    /* Light mode surfaces */
+    --surface: 255 255 255;
+    --surface-raised: 249 250 251;
+    --surface-sunken: 243 244 246;
+
+    /* Light mode borders */
+    --border: 229 231 235;
+    --border-strong: 209 213 219;
+
+    /* Light mode text */
+    --text: 17 24 39;
+    --text-muted: 107 114 128;
+    --text-subtle: 156 163 175;
+
+    /* Light mode accent (agricultural green) */
+    --accent: 47 107 63;
+    --accent-hover: 31 77 46;
+    --accent-contrast: 255 255 255;
+
+    /* Light mode status colors */
+    --success: 34 197 94;
+    --success-surface: 240 253 244;
+    --warning: 217 119 6;
+    --warning-surface: 254 243 224;
+    --danger: 239 68 68;
+    --danger-surface: 254 242 242;
+    --info: 59 130 246;
+    --info-surface: 239 246 255;
   }
 
-  body {
-    @apply bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100;
-  }
-
-  /* Enhanced dark mode text color overrides for better readability */
   .dark {
+    /* Dark mode surfaces */
+    --surface: 17 24 39;
+    --surface-raised: 31 41 55;
+    --surface-sunken: 6 13 28;
+
+    /* Dark mode borders */
+    --border: 55 65 81;
+    --border-strong: 75 85 99;
+
+    /* Dark mode text */
+    --text: 243 244 246;
+    --text-muted: 156 163 175;
+    --text-subtle: 107 114 128;
+
+    /* Dark mode accent */
+    --accent: 79 172 109;
+    --accent-hover: 107 197 132;
+    --accent-contrast: 17 24 39;
+
+    /* Dark mode status colors */
+    --success: 74 222 128;
+    --success-surface: 6 78 59;
+    --warning: 251 146 60;
+    --warning-surface: 120 53 15;
+    --danger: 248 113 113;
+    --danger-surface: 127 29 29;
+    --info: 96 165 250;
+    --info-surface: 30 58 138;
+
     color-scheme: dark;
   }
 
-  /* Dark mode text color overrides using direct CSS values to avoid circular dependencies */
-  .dark .text-gray-900 {
-    color: rgb(248 250 252); /* slate-50 */
+  html {
+    scroll-behavior: smooth;
   }
+
+  body {
+    @apply bg-surface text-text;
+  }
+
+  h1, h2, h3 {
+    @apply font-serif font-bold;
+  }
+
+  h1 {
+    @apply text-4xl leading-tight;
+  }
+
+  h2 {
+    @apply text-3xl leading-snug;
+  }
+
+  h3 {
+    @apply text-2xl leading-snug;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
 
   .dark .text-gray-800 {
     color: rgb(241 245 249); /* slate-100 */

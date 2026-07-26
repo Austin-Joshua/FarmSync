@@ -1,10 +1,10 @@
-# 🌾 FarmSync — Precision Agriculture Intelligence Platform
+# FarmSync — Precision Agriculture Intelligence Platform
 
 **FarmSync** combines classical machine learning, simulator-based quantum ML, and a real-time Spring Boot API to help Indian farmers make data-driven decisions about crops, disease, yield, and expenses.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -26,7 +26,7 @@
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Layer | Technology |
 |---|---|
@@ -40,7 +40,7 @@
 
 ---
 
-## ⚡ Quickstart (3 terminals)
+## Quickstart (3 terminals)
 
 ### Prerequisites
 - Java 17+, Node.js 20+, Python 3.11+
@@ -59,7 +59,7 @@ Docs: http://localhost:8000/docs
 
 ### 2. Backend (Port 9090)
 ```bash
-cd backend
+cd Backend
 cp .env.example .env        # Edit JWT_SECRET and ML_SERVICE_SECRET
 # Windows:
 mvnw.cmd spring-boot:run
@@ -71,8 +71,8 @@ Health: http://localhost:9090/api/health
 
 ### 3. Frontend (Port 5173)
 ```bash
-cd frontend
-cp .env.example .env.local  # Edit VITE_API_BASE_URL if needed
+cd Frontend
+cp .env.example .env.local  # Edit VITE_API_URL if needed
 npm install
 npm run dev
 ```
@@ -87,7 +87,7 @@ App: http://localhost:5173
 
 ---
 
-## 🧠 ML Performance
+## ML Performance
 
 | Model | Accuracy / R² |
 |---|---|
@@ -103,7 +103,7 @@ App: http://localhost:5173
 
 ---
 
-## 🔒 Security
+## Security
 
 - JWT access tokens (HS256, configurable expiry) + refresh token rotation
 - bcrypt password hashing
@@ -115,7 +115,7 @@ App: http://localhost:5173
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 FarmSync/
@@ -134,14 +134,14 @@ FarmSync/
 
 ---
 
-## 🚀 Running Tests
+## Running Tests
 
 ```bash
 # Backend
-cd backend && ./mvnw test
+cd Backend && ./mvnw test
 
 # Frontend
-cd frontend && npm run test
+cd Frontend && npm run test
 
 # ML Service
 cd ml-service && pytest tests/ -v

@@ -2,7 +2,7 @@ import React from 'react';
 import { Loader2 } from 'lucide-react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'destructive';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
@@ -20,14 +20,14 @@ const Button: React.FC<ButtonProps> = ({
   rightIcon,
   ...props
 }) => {
-  const baseStyle = 'inline-flex items-center justify-center font-bold rounded-xl transition-all outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98]';
-  
+  const baseStyle = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
+
   const variants = {
-    primary: 'bg-primary-600 hover:bg-primary-700 text-white shadow-sm focus:ring-primary-500',
-    secondary: 'bg-earth-100 hover:bg-earth-200 text-earth-800 focus:ring-earth-400 dark:bg-earth-900/30 dark:hover:bg-earth-900/50 dark:text-earth-300',
-    outline: 'border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 focus:ring-primary-500',
-    ghost: 'hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 focus:ring-primary-500',
-    destructive: 'bg-red-600 hover:bg-red-700 text-white shadow-sm focus:ring-red-500',
+    primary: 'bg-accent hover:bg-accent-hover text-accent-contrast shadow-sm focus-visible:ring-accent',
+    secondary: 'bg-surface-raised hover:bg-border text-text border border-border focus-visible:ring-accent',
+    outline: 'border border-border hover:border-border-strong text-text focus-visible:ring-accent',
+    ghost: 'hover:bg-surface-raised text-text focus-visible:ring-accent',
+    danger: 'bg-danger hover:bg-danger text-accent-contrast shadow-sm focus-visible:ring-danger',
   };
 
   const sizes = {

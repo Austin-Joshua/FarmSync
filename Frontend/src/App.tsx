@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { useTranslation } from 'react-i18next';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
-import { cleanupAllCaches } from './utils/cacheCleanup';
 import { Toaster } from 'react-hot-toast';
 
 // Pages
@@ -46,6 +45,7 @@ import CropRecommendation from './pages/CropRecommendation';
 import Marketplace from './pages/Marketplace';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 import StockManagement from './pages/StockManagement';
+import NotFound from './pages/NotFound';
 
 // Component to handle document title updates
 const AppContent = () => {
@@ -333,9 +333,9 @@ const AppContent = () => {
             </ProtectedRoute>
           }
         />
-        
-        {/* Default redirect - redirect to landing */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+
+        {/* 404 Not Found */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <SessionTimeoutWarning />
       
@@ -351,12 +351,6 @@ const AppContent = () => {
 };
 
 function App() {
-  // Cleanup caches and service workers on app load
-  useEffect(() => {
-    cleanupAllCaches().catch((error) => {
-      console.warn('Cache cleanup failed:', error);
-    });
-  }, []);
 
   return (
     <ErrorBoundary>

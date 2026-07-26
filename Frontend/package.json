@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@azure/msal-browser": "^4.27.0",
+    "@fontsource-variable/inter": "^5.0.18",
+    "@fontsource-variable/source-serif-4": "^5.0.18",
     "@google-cloud/dialogflow": "^7.4.0",
     "@react-oauth/google": "^0.13.4",
     "axios": "^1.14.0",
