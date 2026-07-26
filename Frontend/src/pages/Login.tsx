@@ -3,14 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useTranslation } from 'react-i18next';
-import {
-  Eye, EyeOff, Moon, Sun, Mail, Lock, LogIn,
-  AlertCircle, Loader2, Zap
-} from 'lucide-react';
+import { Eye, EyeOff, Moon, Sun, Mail, Lock, Loader2, AlertCircle } from 'lucide-react';
 import Logo from '../components/Logo';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import OAuthSignIn from '../components/OAuthSignIn';
-
+import Button from '../components/ui/Button';
 import toast from 'react-hot-toast';
 
 const Login = () => {
@@ -24,22 +21,30 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
   useEffect(() => {
     if (isAuthenticated) navigate('/dashboard', { replace: true });
   }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) { setError(t('auth.fillAllFields')); return; }
-    setLoading(true); setError('');
+    if (!email || !password) {
+      setError(t('auth.fillAllFields'));
+      return;
+    }
+    setLoading(true);
+    setError('');
     try {
       await login(email, password);
       toast.success('Welcome back!');
       navigate('/dashboard');
     } catch (err: any) {
-      const msg = err.code === 'auth/invalid-login-credentials' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found'
-        ? 'Invalid email or password.'
-        : err.message || 'Login failed';
+      const msg =
+        err.code === 'auth/invalid-login-credentials' ||
+        err.code === 'auth/wrong-password' ||
+        err.code === 'auth/user-not-found'
+          ? 'Invalid email or password.'
+          : err.message || 'Login failed';
       setError(msg);
       toast.error(msg);
     } finally {
@@ -48,118 +53,150 @@ const Login = () => {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center relative overflow-hidden transition-colors duration-500 ${
-      theme === 'dark' ? 'bg-[#0f172a]' : 'bg-gradient-to-br from-[#064e3b] to-[#047857]'
-    }`}>
-      {/* Background blobs */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-white/10 blur-[120px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-accent/20 blur-[120px] animate-pulse" style={{ animationDelay: '2s' }} />
-      </div>
-
-      <div className="w-full max-w-6xl mx-auto px-4 z-10 flex flex-col lg:flex-row items-center gap-8 lg:gap-12 py-8">
+    <div className="min-h-screen bg-surface flex items-center justify-center relative overflow-hidden">
+      <div className="w-full max-w-6xl mx-auto px-4 flex flex-col lg:flex-row items-center gap-12">
         {/* Branding Side (desktop only) */}
-        <div className="hidden lg:flex flex-col w-1/2 space-y-6 animate-fade-in">
-          <Link to="/"><Logo size="large" /></Link>
-          <h1 className="text-5xl xl:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
-            Revolutionizing{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-300">
-              Precision Farming
-            </span>{' '}
-            with AI
-          </h1>
-          <p className="text-lg text-emerald-100 max-w-lg leading-relaxed">
-            Harness the power of hyper-local data and predictive analytics to secure your farm's future.
-          </p>
-
-          {/* Feature pills */}
-          <div className="flex flex-wrap gap-3 pt-2">
-            {['AI Disease Detection', 'Market Prices', 'Weather Alerts', 'IoT Sensors'].map(f => (
-              <span key={f} className="px-3 py-1.5 bg-white/10 border border-white/20 rounded-full text-xs font-semibold text-white/90 flex items-center gap-1.5">
-                <Zap size={10} className="text-yellow-300" /> {f}
-              </span>
+        <div className="hidden lg:flex flex-col w-1/2 space-y-8">
+          <Link to="/">
+            <Logo size="large" />
+          </Link>
+          <div>
+            <h1 className="text-5xl lg:text-6xl font-serif font-bold text-text mb-6 leading-tight">
+              Farm Intelligence
+            </h1>
+            <p className="text-xl text-text-muted font-medium mb-8 max-w-lg">
+              Data-driven decisions for healthier crops, better yields, and sustainable farming.
+            </p>
+          </div>
+          <div className="space-y-4">
+            {[
+              'Disease detection with AI',
+              'Weather & crop intelligence',
+              'Expense & yield tracking',
+              'Market price insights'
+            ].map(feature => (
+              <div key={feature} className="flex items-center gap-3">
+                <div className="w-6 h-6 rounded-md bg-accent/10 flex items-center justify-center flex-shrink-0">
+                  <div className="w-2 h-2 rounded-full bg-accent" />
+                </div>
+                <span className="text-text-muted font-medium">{feature}</span>
+              </div>
             ))}
           </div>
         </div>
 
-        {/* Login Card */}
-        <div className="w-full max-w-md mx-auto lg:w-1/2">
-          <div className="glass-card p-6 shadow-2xl">
+        {/* Login Form */}
+        <div className="w-full max-w-md">
+          <div className="bg-surface-raised border border-border rounded-lg p-8 shadow-sm">
             {/* Header controls */}
-            <div className="absolute top-4 right-4 flex items-center gap-2">
-              <LanguageSwitcher />
-              <button onClick={toggleTheme} className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100/50 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 hover:scale-110 transition-transform">
-                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
-              </button>
+            <div className="flex items-center justify-between mb-8">
+              <div className="lg:hidden">
+                <Link to="/">
+                  <Logo size="default" />
+                </Link>
+              </div>
+              <div className="flex items-center gap-2 ml-auto">
+                <LanguageSwitcher />
+                <button
+                  onClick={toggleTheme}
+                  className="w-8 h-8 flex items-center justify-center rounded-md bg-surface hover:bg-surface-sunken transition-colors text-text-muted hover:text-text"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                </button>
+              </div>
             </div>
 
-            {/* Mobile logo */}
-            <div className="lg:hidden mb-5 flex justify-center">
-              <Link to="/"><Logo size="default" variant="light" /></Link>
+            {/* Form Header */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-serif font-bold text-text mb-2">{t('auth.welcomeBack')}</h2>
+              <p className="text-sm text-text-muted">{t('auth.signInAccount')}</p>
             </div>
 
-            <div className="mb-4">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">{t('auth.welcomeBack')}</h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('auth.signInAccount')}</p>
-            </div>
-
-            {/* Status banners */}
+            {/* Error Banner */}
             {error && (
-              <div className="mb-3 p-2 bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30 rounded-lg flex items-center gap-2 text-red-600 dark:text-red-400">
-                <AlertCircle size={14} className="shrink-0" />
-                <p className="text-[11px] font-bold uppercase tracking-wide">{error}</p>
+              <div className="mb-6 p-4 bg-danger-surface border border-danger rounded-md flex items-center gap-3">
+                <AlertCircle size={16} className="text-danger flex-shrink-0" />
+                <p className="text-sm text-danger font-medium">{error}</p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-3" autoComplete="off">
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-5" autoComplete="off">
               <div>
-                <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1 block mb-1">{t('auth.emailAddress')}</label>
-                <div className="relative group">
-                  <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                <label className="text-sm font-medium text-text block mb-2">{t('auth.emailAddress')}</label>
+                <div className="relative">
+                  <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
-                    type="email" value={email} onChange={e => setEmail(e.target.value)}
-                    id="fs-email-input"
-                    name="fs_email_addr"
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                     autoComplete="off"
-                    data-lpignore="true"
-                    className="block w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
-                    placeholder="name@farm.com" />
+                    className="w-full pl-10 pr-4 py-2.5 border border-border rounded-md bg-surface text-text focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all text-sm"
+                    placeholder="you@farm.com"
+                  />
                 </div>
               </div>
+
               <div>
-                <div className="flex justify-between mb-1">
-                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-300 ml-1">{t('auth.password')}</label>
-                  <Link to="/forgot-password" className="text-xs font-bold text-primary-600 dark:text-primary-400 hover:text-primary-500">{t('auth.forgotPassword')}</Link>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-sm font-medium text-text">{t('auth.password')}</label>
+                  <Link
+                    to="/forgot-password"
+                    className="text-xs font-medium text-accent hover:text-accent-hover transition-colors"
+                  >
+                    {t('auth.forgotPassword')}
+                  </Link>
                 </div>
-                <div className="relative group">
-                  <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors" />
+                <div className="relative">
+                  <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
                   <input
-                    type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
-                    id="fs-password-input"
-                    name="fs_password"
-                    autoComplete="new-password"
-                    data-lpignore="true"
-                    className="block w-full pl-9 pr-10 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none transition-all text-sm"
-                    placeholder="••••••••" />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-primary-500">
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                    className="w-full pl-10 pr-10 py-2.5 border border-border rounded-md bg-surface text-text focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all text-sm"
+                    placeholder="••••••••"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text transition-colors"
+                  >
                     {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
               </div>
-              <button type="submit" disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-6 rounded-xl shadow-lg shadow-primary-500/20 text-sm font-bold text-white bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50">
-                {loading ? <Loader2 size={18} className="animate-spin" /> : <LogIn size={18} />}
+
+              <Button
+                variant="primary"
+                size="md"
+                type="submit"
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2"
+              >
+                {loading ? <Loader2 size={16} className="animate-spin" /> : <></>}
                 {t('auth.signIn')}
-              </button>
+              </Button>
             </form>
 
-            <div className="mt-4 text-center space-y-3">
-              <OAuthSignIn />
-              <p className="font-semibold text-gray-700 dark:text-gray-300 text-xs">
-                {t('auth.dontHaveAccount')}{' '}
-                <Link to="/register" className="font-extrabold text-primary-600 dark:text-primary-400 hover:underline">{t('auth.createAccount')}</Link>
-              </p>
+            {/* Divider */}
+            <div className="my-6 flex items-center gap-3">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-xs text-text-muted font-medium">or</span>
+              <div className="flex-1 h-px bg-border" />
             </div>
+
+            {/* OAuth */}
+            <OAuthSignIn />
+
+            {/* Register Link */}
+            <p className="mt-6 text-center text-sm text-text-muted">
+              {t('auth.dontHaveAccount')}{' '}
+              <Link to="/register" className="font-medium text-accent hover:text-accent-hover transition-colors">
+                {t('auth.createAccount')}
+              </Link>
+            </p>
           </div>
         </div>
       </div>
