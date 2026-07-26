@@ -85,7 +85,7 @@ const SessionTimeoutWarning: React.FC = () => {
         <div className="flex flex-col gap-3">
            <button 
              onClick={() => window.location.reload()} 
-             className="w-full py-4 bg-primary-600 text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-xl shadow-primary-500/20 hover:scale-[1.02] active:scale-95 transition-all"
+             className="w-full py-4 bg-primary-600 text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-xl shadow-primary-500/20 hover:scale-[1.02] active:scale-100 transition-all"
            >
              <RefreshCw size={20} />
              Renew Handshake

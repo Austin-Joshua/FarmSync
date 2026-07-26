@@ -227,7 +227,7 @@ const LocationMap = ({
               key={`vertex-${idx}`}
               position={point}
               icon={L.divIcon({
-                className: 'bg-emerald-500 w-3 h-3 rounded-full border-2 border-white shadow-md',
+                className: 'bg-accent w-3 h-3 rounded-full border-2 border-white shadow-md',
                 iconSize: [12, 12]
               })}
             />
@@ -250,7 +250,7 @@ const LocationMap = ({
 
         {/* Float drawing indicators */}
         {isEditable && drawMode && (
-          <div className="absolute top-4 left-14 z-[400] bg-white/90 dark:bg-[#0b130e]/95 backdrop-blur border border-emerald-500/30 px-4 py-2 rounded-xl text-xs font-black text-emerald-600 uppercase tracking-widest animate-pulse shadow-md">
+          <div className="absolute top-4 left-14 z-[400] bg-white/90 dark:bg-[#0b130e]/95 backdrop-blur border border-accent/30 px-4 py-2 rounded-xl text-xs font-black text-emerald-600 uppercase tracking-widest animate-pulse shadow-md">
             📍 Boundary Mode: Click Map to Place Vertices
           </div>
         )}
@@ -261,14 +261,14 @@ const LocationMap = ({
         <div className="w-full lg:w-80 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 p-6 rounded-[2rem] shadow-xl flex flex-col justify-between gap-6">
           <div className="space-y-5">
             <div className="flex items-center gap-2 border-b border-gray-100 dark:border-white/5 pb-3">
-              <Compass className="text-emerald-500" size={20} />
+              <Compass className="text-accent" size={20} />
               <h3 className="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">Mapping Controls</h3>
             </div>
 
             {/* GPS Trigger */}
             <button
               onClick={triggerGPS}
-              className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 hover:scale-[1.02] active:scale-[0.98] transition-all"
+              className="w-full py-3 bg-accent hover:bg-accent text-white rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
               <Navigation size={14} className="animate-pulse" />
               Use My GPS Coordinates
@@ -299,7 +299,7 @@ const LocationMap = ({
                   step="0.000001"
                   value={lat}
                   onChange={(e) => setLat(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent"
                 />
               </div>
               <div className="space-y-1">
@@ -309,7 +309,7 @@ const LocationMap = ({
                   step="0.000001"
                   value={lng}
                   onChange={(e) => setLng(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent"
                 />
               </div>
             </div>
@@ -323,7 +323,7 @@ const LocationMap = ({
                   value={villageVal}
                   onChange={(e) => setVillageVal(e.target.value)}
                   placeholder="e.g. Igatpuri"
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-accent"
                 />
               </div>
               <div className="space-y-1">
@@ -333,7 +333,7 @@ const LocationMap = ({
                   value={districtVal}
                   onChange={(e) => setDistrictVal(e.target.value)}
                   placeholder="e.g. Nashik"
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-accent"
                 />
               </div>
               <div className="space-y-1">
@@ -343,7 +343,7 @@ const LocationMap = ({
                   value={stateVal}
                   onChange={(e) => setStateVal(e.target.value)}
                   placeholder="e.g. Maharashtra"
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-emerald-500"
+                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-accent"
                 />
               </div>
             </div>
@@ -372,7 +372,7 @@ const LocationMap = ({
           {/* Action triggers */}
           <button
             onClick={saveMapData}
-            className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="w-full py-4 bg-accent hover:bg-accent text-white rounded-2xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10 hover:scale-[1.02] active:scale-[0.98] transition-all"
           >
             <Save size={14} />
             Apply Coordinates

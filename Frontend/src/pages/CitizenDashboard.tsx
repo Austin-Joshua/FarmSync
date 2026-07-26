@@ -134,7 +134,7 @@ const CitizenDashboard = () => {
         </div>
         <button
           onClick={() => navigate('/marketplace')}
-          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all hover:scale-105 shadow-lg shadow-emerald-500/20 relative"
+          className="flex items-center gap-2 bg-accent hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all hover:scale-100 shadow-lg shadow-emerald-500/20 relative"
         >
           <ShoppingCart size={18} />
           Browse Marketplace
@@ -156,7 +156,7 @@ const CitizenDashboard = () => {
             <div
               key={cat.name}
               onClick={() => navigate(cat.path)}
-              className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-4 border border-transparent hover:border-emerald-500/20 hover:bg-white dark:hover:bg-gray-700 hover:shadow-md cursor-pointer transition-all flex flex-col items-center text-center"
+              className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-4 border border-transparent hover:border-accent/20 hover:bg-white dark:hover:bg-gray-700 hover:shadow-md cursor-pointer transition-all flex flex-col items-center text-center"
             >
               <span className="text-4xl mb-2">{cat.icon}</span>
               <h3 className="font-bold text-sm text-gray-800 dark:text-white">{cat.name}</h3>
@@ -201,7 +201,7 @@ const CitizenDashboard = () => {
                 </div>
                 <button
                   onClick={() => addToCart({ ...item, quantity: 1 })}
-                  className="flex items-center justify-center p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs transition-all hover:scale-105 active:scale-95 shadow-md shadow-emerald-500/10"
+                  className="flex items-center justify-center p-2 bg-accent hover:bg-emerald-700 text-white rounded-xl font-bold text-xs transition-all hover:scale-100 active:scale-100 shadow-md shadow-emerald-500/10"
                 >
                   <ShoppingCart size={13} className="mr-1" /> Reorder
                 </button>

@@ -158,7 +158,7 @@ const ExpenseManagement = () => {
           <h1 className="text-3xl font-bold text-gray-900">{t('expenses.title')}</h1>
           <p className="text-gray-600 mt-1">{t('expenses.subtitle')}</p>
         </div>
-        <button onClick={handleAddExpense} className="btn-primary flex items-center gap-2 transition-all duration-150 ease-in-out hover:scale-105 active:scale-95">
+        <button onClick={handleAddExpense} className="btn-primary flex items-center gap-2 transition-all duration-150 ease-in-out hover:scale-100 active:scale-100">
           <Plus size={20} />
           {t('expenses.addExpense')}
         </button>

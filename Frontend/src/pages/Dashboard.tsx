@@ -329,7 +329,7 @@ const Dashboard = () => {
           <div>
             <div className="flex items-center justify-between mb-4 border-b border-gray-100 dark:border-white/5 pb-3">
               <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                <LandPlot size={20} className="text-emerald-500" />
+                <LandPlot size={20} className="text-accent" />
                 My Farms & Estates
               </h2>
               <span className="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-black">
@@ -347,14 +347,14 @@ const Dashboard = () => {
             ) : (
               <div className="space-y-4 max-h-[280px] overflow-y-auto pr-1">
                 {data.farms.map((farm) => (
-                  <div key={farm.id} className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-200/50 dark:border-white/5 hover:border-emerald-500/20 transition-all flex items-center justify-between gap-4">
+                  <div key={farm.id} className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-200/50 dark:border-white/5 hover:border-accent/20 transition-all flex items-center justify-between gap-4">
                     <div className="space-y-1 flex-1">
                       <h4 className="font-black text-sm text-gray-900 dark:text-white uppercase tracking-tight">{farm.name}</h4>
                       <p className="text-xs text-gray-500 flex items-center gap-1">
                         <MapPin size={12} /> {farm.location || 'Location not mapped'}
                       </p>
                       <div className="flex flex-wrap gap-2 pt-1.5">
-                        <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[10px] px-2 py-0.5 rounded font-bold">
+                        <span className="bg-accent/10 text-emerald-600 dark:text-emerald-400 text-[10px] px-2 py-0.5 rounded font-bold">
                           {farm.landSize || farm.area || 0} acres
                         </span>
                         <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] px-2 py-0.5 rounded font-bold">
@@ -365,7 +365,7 @@ const Dashboard = () => {
                     
                     <button 
                       onClick={() => navigate('/fields')}
-                      className="px-3 py-2 bg-white dark:bg-white/10 text-gray-700 dark:text-white border border-gray-200 dark:border-white/5 rounded-xl text-xs font-black uppercase hover:bg-emerald-50 hover:text-white dark:hover:bg-emerald-600 transition-all shrink-0"
+                      className="px-3 py-2 bg-white dark:bg-white/10 text-gray-700 dark:text-white border border-gray-200 dark:border-white/5 rounded-xl text-xs font-black uppercase hover:bg-emerald-50 hover:text-white dark:hover:bg-accent transition-all shrink-0"
                     >
                       Quick Nav
                     </button>
@@ -381,7 +381,7 @@ const Dashboard = () => {
           <div>
             <div className="flex items-center justify-between mb-4 border-b border-gray-100 dark:border-white/5 pb-3">
               <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                <Sprout size={20} className="text-emerald-500" />
+                <Sprout size={20} className="text-accent" />
                 Active Crop Growth Tracker
               </h2>
               <span className="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-black">
@@ -408,7 +408,7 @@ const Dashboard = () => {
                   
                   // Stage selection based on progress
                   let stageLabel = "Sowing";
-                  let stageColor = "text-emerald-500 bg-emerald-500/10";
+                  let stageColor = "text-accent bg-accent/10";
                   if (progress > 85) {
                     stageLabel = "Harvesting";
                     stageColor = "text-teal-500 bg-teal-500/10";
@@ -426,7 +426,7 @@ const Dashboard = () => {
                   const daysRemaining = Math.max(0, Math.ceil((harvestTime - nowTime) / (1000 * 60 * 60 * 24)));
 
                   return (
-                    <div key={crop.id} className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-200/50 dark:border-white/5 hover:border-emerald-500/20 transition-all space-y-3">
+                    <div key={crop.id} className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-200/50 dark:border-white/5 hover:border-accent/20 transition-all space-y-3">
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-2">
                           <span className="text-xl" title={crop.name}>{getCropIcon(crop.name)}</span>

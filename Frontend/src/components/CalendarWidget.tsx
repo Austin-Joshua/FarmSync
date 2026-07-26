@@ -158,7 +158,7 @@ const CalendarWidget = ({
               <button
                 type="button"
                 onClick={handlePrevMonth}
-                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-all duration-150 ease-in-out hover:scale-110 active:scale-95"
+                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-all duration-150 ease-in-out hover:scale-110 active:scale-100"
                 aria-label="Previous month"
                 title="Previous month"
               >
@@ -176,7 +176,7 @@ const CalendarWidget = ({
                   return nextMonth.getFullYear() > today.getFullYear() || 
                          (nextMonth.getFullYear() === today.getFullYear() && nextMonth.getMonth() > today.getMonth());
                 })()}
-                className={`p-1 rounded transition-all duration-150 ease-in-out hover:scale-110 active:scale-95 ${
+                className={`p-1 rounded transition-all duration-150 ease-in-out hover:scale-110 active:scale-100 ${
                   (() => {
                     const today = new Date();
                     const nextMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
@@ -230,8 +230,8 @@ const CalendarWidget = ({
                               : isDisabled
                               ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed opacity-50'
                               : isToday && showToday
-                              ? 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-semibold hover:bg-primary-200 dark:hover:bg-primary-800 hover:scale-105 active:scale-95'
-                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-105 active:scale-95'
+                              ? 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-semibold hover:bg-primary-200 dark:hover:bg-primary-800 hover:scale-100 active:scale-100'
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:scale-100 active:scale-100'
                           }`}
                 >
                   {date.getDate()}

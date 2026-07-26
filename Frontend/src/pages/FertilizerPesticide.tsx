@@ -91,7 +91,7 @@ const FertilizerPesticide = () => {
           <h1 className="text-3xl font-bold text-gray-900">{t('fertilizers.title')}</h1>
           <p className="text-gray-600 mt-1">{t('fertilizers.subtitle')}</p>
         </div>
-        <button onClick={handleAdd} className="btn-primary flex items-center gap-2 transition-all duration-150 ease-in-out hover:scale-105 active:scale-95">
+        <button onClick={handleAdd} className="btn-primary flex items-center gap-2 transition-all duration-150 ease-in-out hover:scale-100 active:scale-100">
           <Plus size={20} />
           {activeTab === 'fertilizer' ? t('fertilizers.addFertilizer') : t('fertilizers.addPesticide')}
         </button>
@@ -173,14 +173,14 @@ const FertilizerPesticide = () => {
                       <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 ease-out">
                         <button
                           onClick={() => handleEdit(fertilizer)}
-                          className="p-1.5 bg-primary-600 text-white rounded hover:bg-primary-700 transition-all duration-150 hover:scale-110 active:scale-95"
+                          className="p-1.5 bg-primary-600 text-white rounded hover:bg-primary-700 transition-all duration-150 hover:scale-110 active:scale-100"
                           title={t('common.edit')}
                         >
                           <Edit2 size={14} />
                         </button>
                         <button
                           onClick={() => handleDelete(fertilizer.id)}
-                          className="p-1.5 bg-red-600 text-white rounded hover:bg-red-700 transition-all duration-150 hover:scale-110 active:scale-95"
+                          className="p-1.5 bg-red-600 text-white rounded hover:bg-red-700 transition-all duration-150 hover:scale-110 active:scale-100"
                           title={t('common.delete')}
                         >
                           <Trash2 size={14} />
@@ -233,14 +233,14 @@ const FertilizerPesticide = () => {
                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 ease-out">
                       <button
                         onClick={() => handleEdit(pesticide)}
-                        className="p-1.5 bg-primary-600 text-white rounded hover:bg-primary-700 transition-all duration-150 hover:scale-110 active:scale-95"
+                        className="p-1.5 bg-primary-600 text-white rounded hover:bg-primary-700 transition-all duration-150 hover:scale-110 active:scale-100"
                         title={t('common.edit')}
                       >
                         <Edit2 size={14} />
                       </button>
                       <button
                         onClick={() => handleDelete(pesticide.id)}
-                        className="p-1.5 bg-red-600 text-white rounded hover:bg-red-700 transition-all duration-150 hover:scale-110 active:scale-95"
+                        className="p-1.5 bg-red-600 text-white rounded hover:bg-red-700 transition-all duration-150 hover:scale-110 active:scale-100"
                         title={t('common.delete')}
                       >
                         <Trash2 size={14} />

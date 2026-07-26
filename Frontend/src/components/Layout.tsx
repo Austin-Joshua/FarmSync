@@ -270,7 +270,7 @@ const Layout = ({ children }: LayoutProps) => {
       >
         <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0 flex items-center justify-center min-h-[60px]">
           {sidebarExpanded ? <Logo /> : (
-            <RoleIcon size={20} className="text-emerald-600 dark:text-emerald-500 mx-auto" />
+            <RoleIcon size={20} className="text-emerald-600 dark:text-accent mx-auto" />
           )}
         </div>
         {sidebarExpanded ? <NavContent /> : <NavContent compact />}

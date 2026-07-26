@@ -211,7 +211,7 @@ const ExpenseFormModal = ({ isOpen, onClose, onSave, expense = null, mode = 'add
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all duration-150 ease-in-out hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
               <Save size={18} />
               {mode === 'edit' ? t('common.save') || 'Save Changes' : t('expenses.addExpense') || 'Add Expense'}

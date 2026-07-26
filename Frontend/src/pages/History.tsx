@@ -184,7 +184,7 @@ const History = () => {
           </div>
           <button
             onClick={exportData}
-            className="btn-primary flex items-center gap-2 shadow-lg bg-emerald-600 hover:bg-emerald-700 text-white border-0"
+            className="btn-primary flex items-center gap-2 shadow-lg bg-accent hover:bg-emerald-700 text-white border-0"
           >
             <Download size={18} />
             Export Order History
@@ -296,7 +296,7 @@ const History = () => {
                   </div>
                   <button
                     onClick={() => addToCart({ ...item, quantity: 1 })}
-                    className="p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs hover:scale-105 active:scale-95 transition-transform"
+                    className="p-2 bg-accent hover:bg-emerald-700 text-white rounded-xl font-bold text-xs hover:scale-100 active:scale-100 transition-transform"
                   >
                     Reorder
                   </button>
@@ -319,7 +319,7 @@ const History = () => {
         </div>
         <button
           onClick={exportData}
-          className="btn-primary flex items-center gap-2 shadow-lg bg-emerald-600 hover:bg-emerald-700 text-white border-0"
+          className="btn-primary flex items-center gap-2 shadow-lg bg-accent hover:bg-emerald-700 text-white border-0"
         >
           <Download size={18} />
           {t('history.exportData')}
@@ -410,7 +410,7 @@ const History = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div 
-          className="card group hover:bg-emerald-600 cursor-pointer transition-all duration-300 overflow-hidden relative" 
+          className="card group hover:bg-accent cursor-pointer transition-all duration-300 overflow-hidden relative" 
           onClick={() => setDetailModal({ type: 'income', data: monthlyIncome })}
         >
           <div className="absolute -right-8 -bottom-8 opacity-10 group-hover:scale-150 transition-transform">

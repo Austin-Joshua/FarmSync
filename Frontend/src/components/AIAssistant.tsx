@@ -100,7 +100,7 @@ const AIAssistant: React.FC = () => {
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-primary-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         <MessageSquare size={28} />
-        <div className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 border-4 border-white dark:border-gray-900 rounded-full" />
+        <div className="absolute -top-1 -right-1 w-5 h-5 bg-accent border-4 border-white dark:border-gray-900 rounded-full" />
       </button>
     );
   }
@@ -157,7 +157,7 @@ const AIAssistant: React.FC = () => {
                 key={msg.id} 
                 className={`flex gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
               >
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${msg.sender === 'user' ? 'bg-primary-100 text-primary-600' : 'bg-gray-100 dark:bg-white/5 text-emerald-500'}`}>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${msg.sender === 'user' ? 'bg-primary-100 text-primary-600' : 'bg-gray-100 dark:bg-white/5 text-accent'}`}>
                   {msg.sender === 'user' ? <User size={16} /> : <Sparkles size={16} />}
                 </div>
                 <div className={`
@@ -172,7 +172,7 @@ const AIAssistant: React.FC = () => {
             ))}
             {isLoading && (
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/5 text-emerald-500 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/5 text-accent flex items-center justify-center">
                   <Bot size={16} />
                 </div>
                 <div className="bg-white dark:bg-white/5 p-4 rounded-2xl rounded-tl-none border border-gray-100 dark:border-white/5 flex items-center gap-2">

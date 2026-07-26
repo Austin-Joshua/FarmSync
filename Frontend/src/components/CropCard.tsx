@@ -165,7 +165,7 @@ const CropCard = ({ crop, onView }: CropCardProps) => {
               e.stopPropagation();
               onView(crop);
             }}
-            className="w-full btn-primary text-sm transition-all duration-150 ease-in-out hover:scale-105 active:scale-95"
+            className="w-full btn-primary text-sm transition-all duration-150 ease-in-out hover:scale-100 active:scale-100"
           >
             {t('common.viewDetails')}
           </button>

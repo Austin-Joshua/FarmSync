@@ -124,7 +124,7 @@ const Register = () => {
       <div className="container max-w-7xl mx-auto px-4 z-10 flex flex-col lg:flex-row items-center gap-12 py-12">
         {/* Branding Side */}
         <div className="hidden lg:flex flex-col w-1/2 space-y-8 animate-fade-in">
-          <Link to="/" className="inline-block hover:scale-105 transition-transform">
+          <Link to="/" className="inline-block hover:scale-100 transition-transform">
             <Logo size="large" />
           </Link>
           <h1 className="text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight drop-shadow-lg">
@@ -167,7 +167,7 @@ const Register = () => {
             </div>
 
             <div className="mb-4 pt-1">
-              <div className="lg:hidden mb-4 flex justify-center hover:scale-105 transition-transform">
+              <div className="lg:hidden mb-4 flex justify-center hover:scale-100 transition-transform">
                 <Link to="/"><Logo size="default" variant="light" /></Link>
               </div>
               {/* Mobile step indicators */}

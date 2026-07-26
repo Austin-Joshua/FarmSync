@@ -209,13 +209,13 @@ const IrrigationModal = ({ isOpen, onClose, onSave, irrigation = null, mode = 'a
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 ease-in-out hover:scale-105 active:scale-95 text-gray-900 dark:text-white"
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 text-gray-900 dark:text-white"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all duration-150 ease-in-out hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
               <Save size={18} />
               {mode === 'edit' ? t('common.save') : t('irrigation.scheduleIrrigation')}

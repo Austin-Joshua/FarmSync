@@ -201,14 +201,14 @@ const CropManagement = () => {
               <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 ease-out">
                 <button
                   onClick={(e) => handleEditCrop(crop, e)}
-                  className="p-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all duration-150 shadow-lg hover:scale-110 active:scale-95"
+                  className="p-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all duration-150 shadow-lg hover:scale-110 active:scale-100"
                   title={t('common.edit')}
                 >
                   <Edit2 size={16} />
                 </button>
                 <button
                   onClick={(e) => handleDeleteCrop(crop.id, e)}
-                  className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-150 shadow-lg hover:scale-110 active:scale-95"
+                  className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all duration-150 shadow-lg hover:scale-110 active:scale-100"
                   title={t('common.delete')}
                 >
                   <Trash2 size={16} />

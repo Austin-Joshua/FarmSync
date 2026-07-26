@@ -212,11 +212,11 @@ const Onboarding = () => {
             </button>
           )}
           {step < totalSteps ? (
-            <button onClick={handleNext} className="flex-1 py-4 bg-primary-600 text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-xl shadow-primary-500/30 hover:scale-105 active:scale-95 transition-all">
+            <button onClick={handleNext} className="flex-1 py-4 bg-primary-600 text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-xl shadow-primary-500/30 hover:scale-100 active:scale-100 transition-all">
               Initialize Next Stage <ChevronRight size={20} />
             </button>
           ) : (
-            <button onClick={handleSubmit} disabled={loading} className="flex-1 py-4 bg-primary-600 text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-xl shadow-primary-500/30 hover:scale-105 active:scale-95 transition-all">
+            <button onClick={handleSubmit} disabled={loading} className="flex-1 py-4 bg-primary-600 text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-xl shadow-primary-500/30 hover:scale-100 active:scale-100 transition-all">
               {loading ? <Loader className="animate-spin" size={24} /> : <><Save size={20} /> Complete Sync</>}
             </button>
           )}

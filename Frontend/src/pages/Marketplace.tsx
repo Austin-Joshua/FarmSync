@@ -489,7 +489,7 @@ const Marketplace = () => {
                 <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800/30 rounded-2xl p-6 shadow-sm relative overflow-hidden group">
                   <div className="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-32 h-32 bg-emerald-400/10 rounded-full blur-2xl animate-pulse"></div>
                   <div className="flex items-start gap-4 relative z-10">
-                    <div className="p-3 bg-emerald-500 dark:bg-emerald-600 rounded-2xl text-white shadow-lg shadow-emerald-500/20">
+                    <div className="p-3 bg-accent dark:bg-accent rounded-2xl text-white shadow-lg shadow-emerald-500/20">
                       <Sparkles size={24} />
                     </div>
                     <div className="space-y-2 flex-1">
@@ -503,7 +503,7 @@ const Marketplace = () => {
                             They are selling {selectedProduct} at the lowest price of <span className="font-extrabold text-emerald-600 dark:text-emerald-400 text-base">₹{recommendedVendor.price}/{recommendedVendor.unit}</span>.
                           </p>
                           {aiRecommendation.lowestPrice < aiRecommendation.averagePrice && (
-                            <p className="text-xs font-bold text-emerald-600 dark:text-emerald-500 mt-1">
+                            <p className="text-xs font-bold text-emerald-600 dark:text-accent mt-1">
                               🔥 Saving you {Math.round((1 - (aiRecommendation.lowestPrice / aiRecommendation.averagePrice)) * 100)}% compared to the local marketplace average of ₹{aiRecommendation.averagePrice}!
                             </p>
                           )}

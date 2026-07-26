@@ -44,7 +44,7 @@ const AboutUs = () => {
               {/* Item 1 */}
               <div className="relative flex flex-col md:flex-row items-start md:items-center">
                 <div className="w-full md:w-1/2 pr-0 md:pr-8 pl-12 md:pl-0 text-left md:text-right order-2 md:order-1">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
                     <div className="flex items-center justify-start md:justify-end mb-3">
                       <Calendar className="w-6 h-6 text-green-600 mr-2" />
                       <span className="text-sm font-semibold text-green-600 dark:text-green-400">2024 - Inception</span>
@@ -66,7 +66,7 @@ const AboutUs = () => {
                 <div className="hidden md:block w-1/2"></div>
                 <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10 top-6 md:top-auto"></div>
                 <div className="w-full md:w-1/2 pl-12 md:pl-8">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
                     <div className="flex items-center mb-3">
                       <Code className="w-6 h-6 text-green-600 mr-2" />
                       <span className="text-sm font-semibold text-green-600 dark:text-green-400">2024 - Development</span>
@@ -84,7 +84,7 @@ const AboutUs = () => {
               {/* Item 3 */}
               <div className="relative flex flex-col md:flex-row items-start md:items-center">
                 <div className="w-full md:w-1/2 pr-0 md:pr-8 pl-12 md:pl-0 text-left md:text-right order-2 md:order-1">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
                     <div className="flex items-center justify-start md:justify-end mb-3">
                       <Target className="w-6 h-6 text-green-600 mr-2" />
                       <span className="text-sm font-semibold text-green-600 dark:text-green-400">2024 - Launch</span>
@@ -106,7 +106,7 @@ const AboutUs = () => {
                 <div className="hidden md:block w-1/2"></div>
                 <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10 top-6 md:top-auto"></div>
                 <div className="w-full md:w-1/2 pl-12 md:pl-8">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
                     <div className="flex items-center mb-3">
                       <Award className="w-6 h-6 text-green-600 mr-2" />
                       <span className="text-sm font-semibold text-green-600 dark:text-green-400">2025 - Present</span>
@@ -126,7 +126,7 @@ const AboutUs = () => {
 
         {/* Mission & Vision */}
         <div className="grid md:grid-cols-2 gap-8 mb-16">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
             <div className="flex items-center mb-4">
               <Target className="w-8 h-8 text-green-600 mr-3" />
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Our Mission</h3>
@@ -137,7 +137,7 @@ const AboutUs = () => {
             </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
             <div className="flex items-center mb-4">
               <Heart className="w-8 h-8 text-green-600 mr-3" />
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Our Vision</h3>
@@ -174,7 +174,7 @@ const AboutUs = () => {
             ].map((feature, index) => (
               <div 
                 key={index}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl"
               >
                 <feature.icon className="w-10 h-10 text-green-600 mb-4" />
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
@@ -197,13 +197,13 @@ const AboutUs = () => {
           <div className="flex justify-center gap-4">
             <Link
               to="/register"
-              className="px-8 py-3 bg-white text-green-600 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
+              className="px-8 py-3 bg-white text-green-600 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-100 shadow-lg inline-block"
             >
               Get Started
             </Link>
             <Link
               to="/dashboard"
-              className="px-8 py-3 bg-green-700 text-white rounded-lg font-semibold hover:bg-green-800 transition-all duration-300 transform hover:scale-105 shadow-lg inline-block"
+              className="px-8 py-3 bg-green-700 text-white rounded-lg font-semibold hover:bg-green-800 transition-all duration-300 transform hover:scale-100 shadow-lg inline-block"
             >
               Explore Features
             </Link>

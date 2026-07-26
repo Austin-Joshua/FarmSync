@@ -113,7 +113,7 @@ const IoTDashboard = () => {
             <button
               key={sensor.id}
               onClick={() => setSelectedSensor(sensor.id)}
-              className={`relative p-3 sm:p-4 rounded-2xl border-2 transition-all text-left hover:scale-105 active:scale-95 ${sensor.bg} ${
+              className={`relative p-3 sm:p-4 rounded-2xl border-2 transition-all text-left hover:scale-100 active:scale-100 ${sensor.bg} ${
                 isSelected ? sensor.border + ' shadow-lg' : 'border-transparent'
               }`}
             >

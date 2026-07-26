@@ -23,7 +23,7 @@ const StatCard = ({ title, value, icon: Icon, color = 'green', trend, onClick }:
 
   return (
     <div 
-      className={`card hover:scale-105 transition-transform duration-300 ${onClick ? 'cursor-pointer hover:shadow-lg' : ''}`}
+      className={`card hover:scale-100 transition-transform duration-300 ${onClick ? 'cursor-pointer hover:shadow-lg' : ''}`}
       onClick={onClick}
     >
       <div className="flex items-center justify-between">

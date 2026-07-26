@@ -51,7 +51,7 @@ const Clock = () => {
     <div className="relative">
       <button
         onClick={() => setShowDate(!showDate)}
-        className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out text-gray-700 dark:text-gray-300 hover:scale-105 active:scale-95"
+        className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out text-gray-700 dark:text-gray-300 hover:scale-100 active:scale-100"
         title={formatDate(currentTime)}
       >
         <ClockIcon size={16} className="flex-shrink-0 animate-pulse" />

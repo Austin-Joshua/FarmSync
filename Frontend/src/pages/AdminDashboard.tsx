@@ -237,8 +237,8 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="card border-l-4 border-emerald-500 relative overflow-hidden group">
-          <div className="absolute right-[-20px] bottom-[-20px] text-emerald-500/10 group-hover:scale-150 transition-transform"><IndianRupee size={100} /></div>
+        <div className="card border-l-4 border-accent relative overflow-hidden group">
+          <div className="absolute right-[-20px] bottom-[-20px] text-accent/10 group-hover:scale-150 transition-transform"><IndianRupee size={100} /></div>
           <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Aggregate Revenue</p>
           <p className="text-4xl font-black text-emerald-600 dark:text-emerald-400">₹{totalRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
           <div className="mt-4 flex items-center gap-2 text-[10px] font-bold text-emerald-600/60 bg-emerald-50 dark:bg-emerald-900/20 w-fit px-2 py-0.5 rounded">

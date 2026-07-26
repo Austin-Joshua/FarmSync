@@ -119,7 +119,7 @@ const DiseaseDetection: React.FC = () => {
               <button
                 onClick={handleUpload}
                 disabled={isAnalyzing}
-                className="flex-1 bg-primary-600 hover:bg-primary-500 disabled:bg-gray-400 text-white py-5 rounded-2xl text-lg font-black uppercase italic tracking-tighter shadow-2xl shadow-primary-500/20 transition-all active:scale-95 flex items-center justify-center gap-3"
+                className="flex-1 bg-primary-600 hover:bg-primary-500 disabled:bg-gray-400 text-white py-5 rounded-2xl text-lg font-black uppercase italic tracking-tighter shadow-2xl shadow-primary-500/20 transition-all active:scale-100 flex items-center justify-center gap-3"
               >
                 {isAnalyzing ? (
                   <>
@@ -164,7 +164,7 @@ const DiseaseDetection: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-[10px] font-black uppercase tracking-widest text-primary-500">Neural Network Status</span>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Active</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-accent">Active</span>
                 </div>
                 <div className="h-2 w-full bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden">
                   <div className="h-full bg-primary-500 animate-analysis-progress" />
@@ -180,7 +180,7 @@ const DiseaseDetection: React.FC = () => {
 
           {result && (
             <div className="glass-card overflow-hidden shadow-xl animate-in zoom-in-95 duration-500">
-              <div className={`p-8 ${result.disease === 'Healthy' ? 'bg-emerald-500' : 'bg-amber-500'} text-white`}>
+              <div className={`p-8 ${result.disease === 'Healthy' ? 'bg-accent' : 'bg-amber-500'} text-white`}>
                 <div className="flex justify-between items-start mb-4">
                   <div className="p-3 bg-white/20 rounded-2xl">
                     {result.disease === 'Healthy' ? <CheckCircle size={32} /> : <AlertTriangle size={32} />}

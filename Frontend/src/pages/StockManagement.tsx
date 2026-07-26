@@ -124,7 +124,7 @@ const StockManagement = () => {
           </button>
           <button
             onClick={() => { setEditItem(null); setForm({ name: '', category: 'seeds', quantity: 0, unit: 'kg', minQuantity: 10, pricePerUnit: 0 }); setShowModal(true); }}
-            className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all hover:scale-105 shadow-lg shadow-primary-500/20"
+            className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all hover:scale-100 shadow-lg shadow-primary-500/20"
           >
             <Plus size={18} /> Add Item
           </button>
