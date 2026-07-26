@@ -236,7 +236,7 @@ const WeatherCard = ({ onAlertsDetected, latitude, longitude }: WeatherCardProps
         </div>
         <div className="text-center py-6">
           <MapPin size={48} className="mx-auto text-gray-400 dark:text-gray-500 mb-3" />
-          <p className="text-gray-600 dark:text-gray-400 mb-4">{t('weather.enableLocationMessage')}</p>
+          <p className="text-text-muted mb-4">{t('weather.enableLocationMessage')}</p>
           <button
             onClick={requestLocation}
             className="btn-primary flex items-center gap-2 mx-auto shadow-lg hover:shadow-xl transition-all duration-200"
@@ -245,7 +245,7 @@ const WeatherCard = ({ onAlertsDetected, latitude, longitude }: WeatherCardProps
             {t('weather.enableLocation')}
           </button>
           {location.error && (
-            <p className="text-red-600 dark:text-red-400 text-sm mt-2">{location.error}</p>
+            <p className="text-danger dark:text-red-400 text-sm mt-2">{location.error}</p>
           )}
         </div>
       </div>
@@ -290,7 +290,7 @@ const WeatherCard = ({ onAlertsDetected, latitude, longitude }: WeatherCardProps
       {weather && (
         <>
           <div className="mb-4">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1 flex items-center gap-1">
+            <p className="text-sm text-text-muted mb-1 flex items-center gap-1">
               <MapPin size={14} className="text-orange-600 dark:text-orange-400" />
               {locationName || `${activeLat.toFixed(4)}, ${activeLng.toFixed(4)}`}
             </p>
@@ -308,7 +308,7 @@ const WeatherCard = ({ onAlertsDetected, latitude, longitude }: WeatherCardProps
                 <div className="text-4xl font-bold text-gray-900 dark:text-gray-100">
                   {Math.round(weather.temperature)}°C
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 capitalize">{weather.condition}</div>
+                <div className="text-sm text-text-muted capitalize">{weather.condition}</div>
                 <div className="text-xs text-gray-500 dark:text-gray-500">
                   {t('weather.feelsLike')} {Math.round(weather.feelsLike)}°C
                 </div>
@@ -318,16 +318,16 @@ const WeatherCard = ({ onAlertsDetected, latitude, longitude }: WeatherCardProps
 
           <div className="grid grid-cols-2 gap-3 mt-4">
             <div className="bg-white/60 dark:bg-gray-700/60 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
-              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
-                <Droplet size={16} className="text-blue-500 dark:text-blue-400" />
+              <div className="flex items-center gap-2 text-text-muted mb-1">
+                <Droplet size={16} className="text-info dark:text-blue-400" />
                 <span className="text-xs">{t('weather.humidity')}</span>
               </div>
               <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">{weather.humidity}%</div>
             </div>
 
             <div className="bg-white/60 dark:bg-gray-700/60 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
-              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
-                <CloudRain size={16} className="text-blue-600 dark:text-blue-400" />
+              <div className="flex items-center gap-2 text-text-muted mb-1">
+                <CloudRain size={16} className="text-info dark:text-blue-400" />
                 <span className="text-xs">{t('weather.rainfall')}</span>
               </div>
               <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -336,8 +336,8 @@ const WeatherCard = ({ onAlertsDetected, latitude, longitude }: WeatherCardProps
             </div>
 
             <div className="bg-white/60 dark:bg-gray-700/60 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
-              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
-                <Wind size={16} className="text-gray-500 dark:text-gray-400" />
+              <div className="flex items-center gap-2 text-text-muted mb-1">
+                <Wind size={16} className="text-text-muted" />
                 <span className="text-xs">{t('weather.windSpeed')}</span>
               </div>
               <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -346,7 +346,7 @@ const WeatherCard = ({ onAlertsDetected, latitude, longitude }: WeatherCardProps
             </div>
 
             <div className="bg-white/60 dark:bg-gray-700/60 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
-              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 mb-1">
+              <div className="flex items-center gap-2 text-text-muted mb-1">
                 <Thermometer size={16} className="text-orange-500 dark:text-orange-400" />
                 <span className="text-xs">{t('weather.pressure')}</span>
               </div>

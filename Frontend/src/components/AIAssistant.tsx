@@ -96,7 +96,7 @@ const AIAssistant: React.FC = () => {
       <button
         onClick={() => setIsOpen(true)}
         aria-label="Open AI Assistant"
-        className="fixed bottom-24 right-8 w-16 h-16 rounded-full bg-primary-600 hover:bg-primary-500 text-white shadow-2xl shadow-primary-500/40 flex items-center justify-center animate-bounce hover:animate-none transition-all z-50 group"
+        className="fixed bottom-24 right-8 w-16 h-16 rounded-full bg-accent hover:bg-accent text-white shadow-2xl shadow-accent/40 flex items-center justify-center hover:animate-none transition-all z-50 group"
       >
         <div className="absolute inset-0 bg-gradient-to-tr from-primary-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         <MessageSquare size={28} />
@@ -108,21 +108,21 @@ const AIAssistant: React.FC = () => {
   return (
     <div 
       className={`
-        fixed bottom-24 right-8 w-[380px] sm:w-[420px] max-w-[calc(100vw-2rem)] flex flex-col bg-white dark:bg-[#0d1510] rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] border border-gray-100 dark:border-white/5 overflow-hidden transition-all duration-500 z-50
+        fixed bottom-24 right-8 w-[380px] sm:w-[420px] max-w-[calc(100vw-2rem)] flex flex-col bg-white dark:bg-[#0d1510] rounded-[2rem] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] border border-border overflow-hidden transition-all duration-500 z-50
         ${isMinimized ? 'h-[80px]' : 'h-[600px] max-h-[80vh]'}
       `}
     >
       {/* Header */}
-      <div className="bg-primary-600 p-5 flex items-center justify-between text-white relative">
+      <div className="bg-accent p-5 flex items-center justify-between text-white relative">
         <div className="absolute inset-0 bg-gradient-to-r from-primary-500/50 to-emerald-500/50 opacity-30" />
         <div className="flex items-center gap-3 relative z-10">
           <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
             <Bot size={22} className="animate-pulse" />
           </div>
           <div>
-            <h3 className="font-black uppercase tracking-tighter italic text-sm">FarmSync AI</h3>
+            <h3 className="font-black font-medium text-sm">FarmSync AI</h3>
             <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               <span className="text-[10px] font-black uppercase tracking-widest opacity-80">Assistant Online</span>
             </div>
           </div>
@@ -157,14 +157,14 @@ const AIAssistant: React.FC = () => {
                 key={msg.id} 
                 className={`flex gap-3 ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
               >
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${msg.sender === 'user' ? 'bg-primary-100 text-primary-600' : 'bg-gray-100 dark:bg-white/5 text-accent'}`}>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${msg.sender === 'user' ? 'bg-primary-100 text-accent' : 'bg-gray-100 dark:bg-white/5 text-accent'}`}>
                   {msg.sender === 'user' ? <User size={16} /> : <Sparkles size={16} />}
                 </div>
                 <div className={`
                   max-w-[80%] p-4 rounded-2xl text-sm font-medium leading-relaxed
                   ${msg.sender === 'user' 
-                    ? 'bg-primary-600 text-white rounded-tr-none shadow-lg shadow-primary-500/10' 
-                    : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 rounded-tl-none border border-gray-100 dark:border-white/5'}
+                    ? 'bg-accent text-white rounded-tr-none shadow-lg shadow-accent/10' 
+                    : 'bg-white dark:bg-white/5 text-gray-700 dark:text-gray-300 rounded-tl-none border border-border'}
                 `}>
                   {msg.text}
                 </div>
@@ -175,19 +175,19 @@ const AIAssistant: React.FC = () => {
                 <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-white/5 text-accent flex items-center justify-center">
                   <Bot size={16} />
                 </div>
-                <div className="bg-white dark:bg-white/5 p-4 rounded-2xl rounded-tl-none border border-gray-100 dark:border-white/5 flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-primary-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                  <div className="w-1.5 h-1.5 bg-primary-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                  <div className="w-1.5 h-1.5 bg-primary-500 rounded-full animate-bounce" />
+                <div className="bg-white dark:bg-white/5 p-4 rounded-2xl rounded-tl-none border border-border flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 bg-accent rounded-full [animation-delay:-0.3s]" />
+                  <div className="w-1.5 h-1.5 bg-accent rounded-full [animation-delay:-0.15s]" />
+                  <div className="w-1.5 h-1.5 bg-accent rounded-full" />
                 </div>
               </div>
             )}
           </div>
 
           {/* Input Area */}
-          <div className="p-5 bg-white dark:bg-[#0d1510] border-t border-gray-100 dark:border-white/5">
-            <div className="bg-gray-50 dark:bg-white/5 rounded-2xl p-2 flex items-center gap-2 border border-gray-100 dark:border-white/5">
-              <button aria-label="Voice input" className="p-2.5 text-gray-400 hover:text-primary-500 transition-all">
+          <div className="p-5 bg-white dark:bg-[#0d1510] border-t border-border">
+            <div className="bg-gray-50 dark:bg-white/5 rounded-2xl p-2 flex items-center gap-2 border border-border">
+              <button aria-label="Voice input" className="p-2.5 text-gray-400 hover:text-accent transition-all">
                 <Mic size={20} />
               </button>
               <input 
@@ -202,7 +202,7 @@ const AIAssistant: React.FC = () => {
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
                 aria-label="Send message"
-                className="p-2.5 bg-primary-600 hover:bg-primary-500 disabled:bg-gray-400 text-white rounded-xl shadow-lg shadow-primary-500/20 transition-all flex items-center justify-center active:scale-90"
+                className="p-2.5 bg-accent hover:bg-accent disabled:bg-gray-400 text-white rounded-xl shadow-lg shadow-accent/20 transition-all flex items-center justify-center active:scale-90"
               >
                 <Send size={18} />
               </button>

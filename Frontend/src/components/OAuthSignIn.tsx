@@ -94,7 +94,7 @@ const MockOAuthModal: React.FC<MockOAuthModalProps> = ({ isOpen, onClose, provid
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-800 w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-200 border border-gray-100 dark:border-gray-700">
+      <div className="bg-surface w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in duration-200 border border-gray-100 dark:border-gray-700">
         
         {/* Google / Microsoft styled header */}
         <div className={`p-6 ${isGoogle ? 'bg-gray-50 border-b border-gray-100 dark:bg-gray-800/50 dark:border-gray-700' : 'bg-[#2F2F2F] text-white'} flex justify-between items-center`}>
@@ -114,7 +114,7 @@ const MockOAuthModal: React.FC<MockOAuthModalProps> = ({ isOpen, onClose, provid
                 <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
               </svg>
             )}
-            <h3 className={`text-md font-bold ${isGoogle ? 'text-gray-900 dark:text-white' : 'text-white'}`}>
+            <h3 className={`text-md font-bold ${isGoogle ? 'text-text' : 'text-white'}`}>
               {isGoogle ? 'Sign in with Google' : 'Microsoft Account'}
             </h3>
           </div>
@@ -134,7 +134,7 @@ const MockOAuthModal: React.FC<MockOAuthModalProps> = ({ isOpen, onClose, provid
           {!showCustom ? (
             <div className="space-y-4">
               <div className="text-center mb-6">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-text-muted">
                   {isGoogle 
                     ? 'Choose an account to continue to FarmSync' 
                     : 'Select a profile to sign in to your Microsoft workspace'}
@@ -151,14 +151,14 @@ const MockOAuthModal: React.FC<MockOAuthModalProps> = ({ isOpen, onClose, provid
                     className="w-full flex items-center justify-between p-3.5 rounded-2xl border border-gray-100 dark:border-gray-700/50 bg-gray-50/50 dark:bg-gray-900/30 hover:bg-primary-50/50 dark:hover:bg-primary-950/20 hover:border-primary-200 dark:hover:border-primary-800 transition-all text-left group"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center text-lg border border-gray-100 dark:border-gray-700">
+                      <span className="w-10 h-10 rounded-full bg-surface shadow-sm flex items-center justify-center text-lg border border-gray-100 dark:border-gray-700">
                         {acc.icon}
                       </span>
                       <div>
-                        <h4 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                        <h4 className="text-sm font-bold text-text group-hover:text-accent dark:group-hover:text-accent transition-colors">
                           {acc.name}
                         </h4>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">{acc.email}</p>
+                        <p className="text-xs text-text-muted">{acc.email}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -166,7 +166,7 @@ const MockOAuthModal: React.FC<MockOAuthModalProps> = ({ isOpen, onClose, provid
                         {acc.badge}
                       </span>
                       {loading === acc.email && (
-                        <Loader2 className="animate-spin text-primary-500 w-4 h-4" />
+                        <Loader2 className="animate-spin text-accent w-4 h-4" />
                       )}
                     </div>
                   </button>
@@ -176,7 +176,7 @@ const MockOAuthModal: React.FC<MockOAuthModalProps> = ({ isOpen, onClose, provid
               <div className="pt-2">
                 <button
                   onClick={() => setShowCustom(true)}
-                  className="w-full py-2.5 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-xs font-bold text-gray-500 transition-all text-center"
+                  className="w-full py-2.5 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 hover:border-accent hover:text-accent dark:hover:text-accent text-xs font-bold text-gray-500 transition-all text-center"
                 >
                   + Use another mock account
                 </button>
@@ -185,40 +185,40 @@ const MockOAuthModal: React.FC<MockOAuthModalProps> = ({ isOpen, onClose, provid
           ) : (
             <form onSubmit={handleCustomSubmit} className="space-y-4">
               <div className="text-center mb-4">
-                <h4 className="text-sm font-bold text-gray-900 dark:text-white">Custom Mock Credentials</h4>
+                <h4 className="text-sm font-bold text-text">Custom Mock Credentials</h4>
                 <p className="text-xs text-gray-500">Create a temporary session with custom name and role</p>
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-600 dark:text-gray-400">Display Name</label>
+                <label className="text-xs font-bold text-text-muted">Display Name</label>
                 <input
                   type="text"
                   required
                   value={customName}
                   onChange={e => setCustomName(e.target.value)}
                   placeholder="e.g. John Doe"
-                  className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50"
+                  className="w-full px-3 py-2 text-sm border border-border rounded-xl bg-surface text-text outline-none focus:ring-2 focus:ring-accent/50"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-600 dark:text-gray-400">Email Address</label>
+                <label className="text-xs font-bold text-text-muted">Email Address</label>
                 <input
                   type="email"
                   required
                   value={customEmail}
                   onChange={e => setCustomEmail(e.target.value)}
                   placeholder="john@farmsync.com"
-                  className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50"
+                  className="w-full px-3 py-2 text-sm border border-border rounded-xl bg-surface text-text outline-none focus:ring-2 focus:ring-accent/50"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-600 dark:text-gray-400">Target Role Dashboard</label>
+                <label className="text-xs font-bold text-text-muted">Target Role Dashboard</label>
                 <select
                   value={customRole}
                   onChange={e => setCustomRole(e.target.value as UserRole)}
-                  className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50"
+                  className="w-full px-3 py-2 text-sm border border-border rounded-xl bg-surface text-text outline-none focus:ring-2 focus:ring-accent/50"
                 >
                   <option value="farmer">🧑‍🌾 Farmer Dashboard</option>
                   <option value="citizen">🏡 Citizen Hub</option>
@@ -230,14 +230,14 @@ const MockOAuthModal: React.FC<MockOAuthModalProps> = ({ isOpen, onClose, provid
                 <button
                   type="button"
                   onClick={() => setShowCustom(false)}
-                  className="w-1/2 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-xs font-bold text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all"
+                  className="w-1/2 py-2.5 rounded-xl border border-border text-xs font-bold text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all"
                 >
                   Back
                 </button>
                 <button
                   type="submit"
                   disabled={loading !== null}
-                  className="w-1/2 py-2.5 rounded-xl bg-primary-600 text-white font-bold text-xs hover:bg-primary-700 flex items-center justify-center gap-1.5 transition-all shadow-lg shadow-primary-500/10"
+                  className="w-1/2 py-2.5 rounded-xl bg-accent text-white font-bold text-xs hover:bg-accent-hover flex items-center justify-center gap-1.5 transition-all shadow-lg shadow-accent/10"
                 >
                   {loading === 'custom' ? (
                     <Loader2 size={14} className="animate-spin" />
@@ -305,7 +305,7 @@ export const GoogleSignIn: React.FC<OAuthLoginProps> = ({ onSuccess, onError: _o
       <button
         onClick={handleGoogleLogin}
         type="button"
-        className="h-12 w-full px-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all flex items-center justify-center gap-3 shadow-sm group"
+        className="h-12 w-full px-4 rounded-xl border border-border bg-surface hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all flex items-center justify-center gap-3 shadow-sm group"
       >
         <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>

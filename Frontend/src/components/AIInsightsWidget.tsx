@@ -42,9 +42,9 @@ export default function AIInsightsWidget() {
 
   if (loading) {
     return (
-      <div className="glass-card p-6 animate-pulse">
+      <div className="glass-card p-6">
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4 flex items-center gap-2">
-          <Sprout size={24} className="text-primary-600" /> AI Insights Loading...
+          <Sprout size={24} className="text-accent" /> AI Insights Loading...
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="h-24 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
@@ -56,15 +56,15 @@ export default function AIInsightsWidget() {
   }
 
   return (
-    <div className="glass-card p-6 mb-6 border-l-4 border-primary-500">
+    <div className="glass-card p-6 mb-6 border-l-4 border-accent">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
           <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-            <Sprout size={20} className="text-primary-600 dark:text-primary-400" />
+            <Sprout size={20} className="text-accent dark:text-accent" />
           </div>
           AI Farm Insights
         </h2>
-        {error && <span className="text-xs text-red-500 flex items-center gap-1"><AlertTriangle size={12}/> ML Service Offline</span>}
+        {error && <span className="text-xs text-danger flex items-center gap-1"><AlertTriangle size={12}/> ML Service Offline</span>}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -73,7 +73,7 @@ export default function AIInsightsWidget() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Sprout size={18} className="text-green-600 dark:text-green-400" />
-              <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Crop Advisory</h3>
+              <h3 className="font-semibold text-text text-sm">Crop Advisory</h3>
             </div>
             {recommendation?.recommended_crop ? (
               <>
@@ -81,7 +81,7 @@ export default function AIInsightsWidget() {
                   <span className="text-3xl">{getCropIcon(recommendation.recommended_crop)}</span>
                   {recommendation.recommended_crop}
                 </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 line-clamp-2">
+                <p className="text-xs text-text-muted mt-2 line-clamp-2">
                   {recommendation.advice || `Recommended for current soil conditions with ${recommendation.confidence_percent?.toFixed(1)}% confidence.`}
                 </p>
               </>
@@ -95,15 +95,15 @@ export default function AIInsightsWidget() {
         <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 flex flex-col justify-between hover:shadow-md transition-all">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <TrendingUp size={18} className="text-blue-600 dark:text-blue-400" />
-              <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Yield Projection (Rice)</h3>
+              <TrendingUp size={18} className="text-info dark:text-blue-400" />
+              <h3 className="font-semibold text-text text-sm">Yield Projection (Rice)</h3>
             </div>
             {yieldPrediction?.success ? (
               <>
                 <p className="text-2xl font-black text-blue-700 dark:text-blue-400">
                   {yieldPrediction.predicted_yield.toLocaleString()} <span className="text-sm font-medium">kg total</span>
                 </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
+                <p className="text-xs text-text-muted mt-2">
                   Expected yield for 5 acres in Kharif season based on historical ML data.
                 </p>
               </>
@@ -117,8 +117,8 @@ export default function AIInsightsWidget() {
         <div className={`bg-gradient-to-br ${pestRisk?.risk_level === 'High' ? 'from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-red-200 dark:border-red-800' : 'from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-200 dark:border-yellow-800'} rounded-xl p-4 flex flex-col justify-between border hover:shadow-md transition-all`}>
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Bug size={18} className={pestRisk?.risk_level === 'High' ? 'text-red-600 dark:text-red-400' : 'text-yellow-600 dark:text-yellow-400'} />
-              <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Pest Risk (Rice)</h3>
+              <Bug size={18} className={pestRisk?.risk_level === 'High' ? 'text-danger dark:text-red-400' : 'text-yellow-600 dark:text-yellow-400'} />
+              <h3 className="font-semibold text-text text-sm">Pest Risk (Rice)</h3>
             </div>
             {pestRisk?.success ? (
               <>
@@ -129,11 +129,11 @@ export default function AIInsightsWidget() {
                   <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${pestRisk?.risk_level === 'High' ? 'bg-red-200 text-red-800 dark:bg-red-900/50 dark:text-red-300' : 'bg-yellow-200 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300'}`}>
                     {pestRisk.risk_level} Risk
                   </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                  <span className="text-xs text-text-muted ml-1">
                     {(pestRisk.confidence * 100).toFixed(1)}% prob.
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 line-clamp-1">
+                <p className="text-xs text-text-muted mt-2 line-clamp-1">
                   {pestRisk.recommendation}
                 </p>
               </>

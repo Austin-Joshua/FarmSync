@@ -45,7 +45,7 @@ const LanguageSwitcher = ({ variant = 'desktop' }: LanguageSwitcherProps) => {
   }, []);
 
   const buttonClassName = variant === 'mobile'
-    ? 'flex items-center gap-2 px-3 py-2 text-white hover:bg-primary-600 rounded-lg transition-colors'
+    ? 'flex items-center gap-2 px-3 py-2 text-white hover:bg-accent rounded-lg transition-colors'
     : 'flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors';
 
   return (
@@ -59,7 +59,7 @@ const LanguageSwitcher = ({ variant = 'desktop' }: LanguageSwitcherProps) => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-48 bg-surface rounded-lg shadow-lg border border-border z-50 overflow-hidden">
           {languages.map((lang) => (
             <button
               key={lang.code}
@@ -71,7 +71,7 @@ const LanguageSwitcher = ({ variant = 'desktop' }: LanguageSwitcherProps) => {
               <span className="text-xl">{lang.flag}</span>
               <span className="flex-1 text-sm font-medium text-gray-900 dark:text-gray-100">{lang.name}</span>
               {i18n.language === lang.code && (
-                <Check size={18} className="text-primary-600 dark:text-primary-400 flex-shrink-0" />
+                <Check size={18} className="text-accent dark:text-accent flex-shrink-0" />
               )}
             </button>
           ))}

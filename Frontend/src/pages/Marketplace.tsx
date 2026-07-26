@@ -336,22 +336,22 @@ const Marketplace = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-text tracking-tight">
             🍏 Community Marketplace
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 font-medium text-sm">
+          <p className="text-text-muted mt-1 font-medium text-sm">
             Browse fresh crops from local farmers and buy direct.
           </p>
         </div>
       </div>
 
       {/* Unified Tab Bar */}
-      <div className="flex border-b border-gray-200 dark:border-gray-700 overflow-x-auto scrollbar-none">
+      <div className="flex border-b border-border overflow-x-auto scrollbar-none">
         <button
           onClick={() => { setActiveMarketTab('buy'); setSelectedProduct(null); }}
           className={`px-4 sm:px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
             activeMarketTab === 'buy'
-              ? 'border-primary-600 text-primary-600 dark:text-primary-400'
+              ? 'border-accent text-accent dark:text-accent'
               : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
           }`}
         >
@@ -362,7 +362,7 @@ const Marketplace = () => {
             onClick={() => setActiveMarketTab('sell')}
             className={`px-4 sm:px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
               activeMarketTab === 'sell'
-                ? 'border-primary-600 text-primary-600 dark:text-primary-400'
+                ? 'border-accent text-accent dark:text-accent'
                 : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
             }`}
           >
@@ -374,7 +374,7 @@ const Marketplace = () => {
             onClick={() => setActiveMarketTab('history')}
             className={`px-4 sm:px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
               activeMarketTab === 'history'
-                ? 'border-primary-600 text-primary-600 dark:text-primary-400'
+                ? 'border-accent text-accent dark:text-accent'
                 : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
             }`}
           >
@@ -386,7 +386,7 @@ const Marketplace = () => {
             onClick={() => setActiveMarketTab('moderate')}
             className={`px-4 sm:px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all whitespace-nowrap ${
               activeMarketTab === 'moderate'
-                ? 'border-primary-600 text-primary-600 dark:text-primary-400'
+                ? 'border-accent text-accent dark:text-accent'
                 : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400'
             }`}
           >
@@ -403,15 +403,15 @@ const Marketplace = () => {
           {!selectedProduct ? (
             <>
               {/* Controls: Search and Categories */}
-              <div className="flex flex-col md:flex-row gap-4 bg-white dark:bg-gray-800 p-4 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div className="flex flex-col md:flex-row gap-4 bg-surface p-4 rounded-2xl border border-border shadow-sm">
                 <div className="relative flex-1 group">
-                  <Search className="absolute left-3.5 top-3 text-gray-400 dark:text-gray-500 group-focus-within:text-primary-600 transition-colors" size={20} />
+                  <Search className="absolute left-3.5 top-3 text-gray-400 dark:text-gray-500 group-focus-within:text-accent transition-colors" size={20} />
                   <input
                     type="text"
                     placeholder="Search fruits, vegetables, grains..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-11 pr-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm"
+                    className="w-full pl-11 pr-4 py-2 rounded-xl border border-border bg-white/50 dark:bg-gray-900/50 text-text outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all text-sm"
                   />
                 </div>
                 <div className="flex gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
@@ -421,8 +421,8 @@ const Marketplace = () => {
                       onClick={() => setSelectedCategory(category)}
                       className={`px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition-all whitespace-nowrap ${
                         selectedCategory === category
-                          ? 'bg-primary-600 text-white shadow-md shadow-primary-600/30'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                          ? 'bg-accent text-white shadow-md shadow-primary-600/30'
+                          : 'bg-gray-100 dark:bg-gray-700 text-text-muted hover:bg-gray-200 dark:hover:bg-gray-600'
                       }`}
                     >
                       {category === 'all' ? 'All Items' : category + 's'}
@@ -441,14 +441,14 @@ const Marketplace = () => {
                   >
                     <div className="p-6">
                       <span className="text-5xl group-hover:animate-bounce inline-block mb-4 transition-transform">{item.emoji}</span>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{item.name}</h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{item.desc}</p>
+                      <h3 className="text-xl font-bold text-text mb-2">{item.name}</h3>
+                      <p className="text-sm text-text-muted line-clamp-2">{item.desc}</p>
                     </div>
                     <div className="p-4 bg-gray-50/50 dark:bg-gray-800/50 border-t border-gray-100 dark:border-gray-700/50 flex items-center justify-between">
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400 px-2 py-0.5 bg-primary-100/50 dark:bg-primary-900/20 rounded-full">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-accent dark:text-accent px-2 py-0.5 bg-primary-100/50 dark:bg-primary-900/20 rounded-full">
                         {item.category}
                       </span>
-                      <span className="text-xs font-bold text-gray-400 group-hover:text-primary-600 transition-colors flex items-center gap-1">
+                      <span className="text-xs font-bold text-gray-400 group-hover:text-accent transition-colors flex items-center gap-1">
                         Compare Vendors →
                       </span>
                     </div>
@@ -457,7 +457,7 @@ const Marketplace = () => {
 
                 {filteredCatalog.length === 0 && (
                   <div className="col-span-full text-center py-12">
-                    <p className="text-gray-500 dark:text-gray-400">No goods match your search query.</p>
+                    <p className="text-text-muted">No goods match your search query.</p>
                   </div>
                 )}
               </div>
@@ -468,26 +468,26 @@ const Marketplace = () => {
               {/* Back button */}
               <button 
                 onClick={() => setSelectedProduct(null)} 
-                className="flex items-center gap-2 text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                className="flex items-center gap-2 text-sm font-bold text-text-muted hover:text-accent dark:hover:text-accent transition-colors"
               >
                 <ArrowLeft size={16} />
                 Back to Produce Catalog
               </button>
 
-              <div className="flex items-center gap-4 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+              <div className="flex items-center gap-4 bg-surface p-6 rounded-2xl border border-border shadow-sm">
                 <span className="text-4xl">
                   {catalog.find(c => c.name === selectedProduct)?.emoji || '🍎'}
                 </span>
                 <div>
-                  <h2 className="text-2xl font-black text-gray-900 dark:text-white">{selectedProduct} Vendors</h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Compare pricing and stock from local farms.</p>
+                  <h2 className="text-2xl font-black text-text">{selectedProduct} Vendors</h2>
+                  <p className="text-sm text-text-muted">Compare pricing and stock from local farms.</p>
                 </div>
               </div>
 
               {/* AI recommendations widget */}
               {aiRecommendation && (
                 <div className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 border border-emerald-200 dark:border-emerald-800/30 rounded-2xl p-6 shadow-sm relative overflow-hidden group">
-                  <div className="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-32 h-32 bg-emerald-400/10 rounded-full blur-2xl animate-pulse"></div>
+                  <div className="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-32 h-32 bg-emerald-400/10 rounded-full blur-2xl"></div>
                   <div className="flex items-start gap-4 relative z-10">
                     <div className="p-3 bg-accent dark:bg-accent rounded-2xl text-white shadow-lg shadow-emerald-500/20">
                       <Sparkles size={24} />
@@ -499,7 +499,7 @@ const Marketplace = () => {
                       {recommendedVendor ? (
                         <div>
                           <p className="text-sm text-emerald-800 dark:text-emerald-400 leading-relaxed">
-                            We recommend buying from <span className="font-bold text-gray-900 dark:text-white">{recommendedVendor.farmer.name}</span> located in <span className="font-bold text-gray-900 dark:text-white">{recommendedVendor.farmer.location || 'Coimbatore'}</span>.
+                            We recommend buying from <span className="font-bold text-text">{recommendedVendor.farmer.name}</span> located in <span className="font-bold text-text">{recommendedVendor.farmer.location || 'Coimbatore'}</span>.
                             They are selling {selectedProduct} at the lowest price of <span className="font-extrabold text-emerald-600 dark:text-emerald-400 text-base">₹{recommendedVendor.price}/{recommendedVendor.unit}</span>.
                           </p>
                           {aiRecommendation.lowestPrice < aiRecommendation.averagePrice && (
@@ -521,15 +521,15 @@ const Marketplace = () => {
               {/* Vendors list */}
               {loadingVendors ? (
                 <div className="flex flex-col items-center justify-center py-12">
-                  <div className="w-10 h-10 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mb-2"></div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Scanning local farms...</p>
+                  <div className="w-10 h-10 border-4 border-accent border-t-transparent rounded-full animate-spin mb-2"></div>
+                  <p className="text-sm text-text-muted font-medium">Scanning local farms...</p>
                 </div>
               ) : (
-                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm">
+                <div className="bg-surface border border-border rounded-2xl overflow-hidden shadow-sm">
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-500 text-[10px] font-black uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
+                        <tr className="bg-surface-sunken text-gray-400 dark:text-gray-500 text-[10px] font-black uppercase tracking-wider border-b border-border">
                           <th className="px-6 py-4">Farmer / Vendor</th>
                           <th className="px-6 py-4">Location</th>
                           <th className="px-6 py-4">Stock Available</th>
@@ -548,7 +548,7 @@ const Marketplace = () => {
                                     <User size={14} />
                                   </div>
                                   <div>
-                                    <p className="font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
+                                    <p className="font-bold text-text flex items-center gap-1.5">
                                       {vendor.farmer.name}
                                       {isBestPrice && (
                                         <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded">
@@ -561,7 +561,7 @@ const Marketplace = () => {
                                 </div>
                               </td>
                               <td className="px-6 py-4">
-                                <div className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
+                                <div className="flex items-center gap-1.5 text-sm text-text-muted">
                                   <MapPin size={14} className="text-gray-400" />
                                   {vendor.farmer.location || 'Coimbatore, TN'}
                                 </div>
@@ -572,14 +572,14 @@ const Marketplace = () => {
                                 </p>
                               </td>
                               <td className="px-6 py-4">
-                                <p className="text-base font-black text-gray-900 dark:text-white">
+                                <p className="text-base font-black text-text">
                                   ₹{vendor.price} <span className="text-xs font-medium text-gray-400">/ {vendor.unit}</span>
                                 </p>
                               </td>
                               <td className="px-6 py-4 text-right">
                                 <button
                                   onClick={() => handleOpenCheckout(vendor)}
-                                  className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white font-bold text-xs rounded-xl shadow-md shadow-primary-600/10 active:scale-[0.98] transition-all flex items-center gap-1.5 ml-auto"
+                                  className="px-4 py-2 bg-accent hover:bg-accent-hover text-white font-bold text-xs rounded-xl shadow-md shadow-primary-600/10 active:scale-[0.98] transition-all flex items-center gap-1.5 ml-auto"
                                 >
                                   <ShoppingBag size={14} />
                                   Buy Now
@@ -591,7 +591,7 @@ const Marketplace = () => {
 
                         {vendors.length === 0 && (
                           <tr>
-                            <td colSpan={5} className="text-center py-12 text-gray-500 dark:text-gray-400 text-sm">
+                            <td colSpan={5} className="text-center py-12 text-text-muted text-sm">
                               No active farmer listings found for {selectedProduct} right now.
                             </td>
                           </tr>
@@ -614,8 +614,8 @@ const Marketplace = () => {
           {/* Add listing form */}
           <div className="lg:col-span-1">
             <div className="glass-card p-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                <Plus className="text-primary-600" />
+              <h2 className="text-xl font-bold text-text mb-4 flex items-center gap-2">
+                <Plus className="text-accent" />
                 Publish Produce Offer
               </h2>
               <form onSubmit={handleListingSubmit} className="space-y-4">
@@ -626,7 +626,7 @@ const Marketplace = () => {
                   <select
                     value={sellName}
                     onChange={(e) => handleProductChange(e.target.value)}
-                    className="block w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm"
+                    className="block w-full px-4 py-2 border border-border rounded-xl bg-white/50 dark:bg-gray-800/50 text-text outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all text-sm"
                     required
                   >
                     {productOptions.map(p => (
@@ -644,7 +644,7 @@ const Marketplace = () => {
                     value={sellCategory}
                     readOnly
                     disabled
-                    className="block w-full px-4 py-2 border border-gray-100 dark:border-gray-800 rounded-xl bg-gray-100/50 dark:bg-gray-900/50 text-gray-400 outline-none capitalize text-sm cursor-not-allowed"
+                    className="block w-full px-4 py-2 border border-border rounded-xl bg-gray-100/50 dark:bg-gray-900/50 text-gray-400 outline-none capitalize text-sm cursor-not-allowed"
                   />
                 </div>
 
@@ -664,7 +664,7 @@ const Marketplace = () => {
                         step="any"
                         value={sellQuantity}
                         onChange={(e) => setSellQuantity(e.target.value)}
-                        className="block w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm"
+                        className="block w-full pl-10 pr-4 py-2 border border-border rounded-xl bg-white/50 dark:bg-gray-800/50 text-text outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all text-sm"
                         required
                       />
                     </div>
@@ -677,7 +677,7 @@ const Marketplace = () => {
                     <select
                       value={sellUnit}
                       onChange={(e) => setSellUnit(e.target.value)}
-                      className="block w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm"
+                      className="block w-full px-4 py-2 border border-border rounded-xl bg-white/50 dark:bg-gray-800/50 text-text outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all text-sm"
                       required
                     >
                       <option value="kg">kg</option>
@@ -697,7 +697,7 @@ const Marketplace = () => {
                       type="button"
                       onClick={handleCheckPrice}
                       disabled={checkingPrice}
-                      className="text-xs font-bold text-primary-600 dark:text-primary-400 hover:text-primary-500 flex items-center gap-1"
+                      className="text-xs font-bold text-accent dark:text-accent hover:text-accent flex items-center gap-1"
                     >
                       <Sparkles size={12} className={checkingPrice ? 'animate-spin' : ''} />
                       AI Price Check
@@ -714,7 +714,7 @@ const Marketplace = () => {
                       step="any"
                       value={sellPrice}
                       onChange={(e) => setSellPrice(e.target.value)}
-                      className="block w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-sm"
+                      className="block w-full pl-10 pr-4 py-2 border border-border rounded-xl bg-white/50 dark:bg-gray-800/50 text-text outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all text-sm"
                       required
                     />
                   </div>
@@ -727,7 +727,7 @@ const Marketplace = () => {
                       <Sparkles size={14} />
                       AI Pricing Insight
                     </div>
-                    <div className="space-y-1 text-primary-700 dark:text-primary-400 leading-normal">
+                    <div className="space-y-1 text-primary-700 dark:text-accent leading-normal">
                       <p>• Lowest active listed price: <b>₹{sellPriceRec.lowestPrice}</b> / {sellPriceRec.unit}</p>
                       <p>• Estimated market average: <b>₹{sellPriceRec.averagePrice}</b> / {sellPriceRec.unit}</p>
                       <p className="italic opacity-80 mt-1 font-medium">Source: {sellPriceRec.source === 'listings' ? 'Active local listings' : 'Historical district market data'}</p>
@@ -735,7 +735,7 @@ const Marketplace = () => {
                     <button
                       type="button"
                       onClick={handleApplySuggestedPrice}
-                      className="w-full py-1.5 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-lg mt-1 transition-colors"
+                      className="w-full py-1.5 bg-accent hover:bg-accent-hover text-white font-bold rounded-lg mt-1 transition-colors"
                     >
                       Use Recommended Price
                   </button>
@@ -745,7 +745,7 @@ const Marketplace = () => {
                 <button
                   type="submit"
                   disabled={submittingListing}
-                  className="w-full py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white font-bold rounded-xl shadow-lg shadow-primary-500/20 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                  className="w-full py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white font-bold rounded-xl shadow-lg shadow-accent/20 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
                 >
                   Publish Listing
                 </button>
@@ -757,15 +757,15 @@ const Marketplace = () => {
           <div className="lg:col-span-2">
             <div className="glass-card p-6 h-full flex flex-col justify-between">
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <Package className="text-primary-600" />
+                <h2 className="text-xl font-bold text-text mb-4 flex items-center gap-2">
+                  <Package className="text-accent" />
                   Active Sales Listings ({listings.length})
                 </h2>
 
                 {loadingListings ? (
                   <div className="flex flex-col items-center justify-center py-24">
-                    <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mb-2"></div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Hydrating items...</p>
+                    <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin mb-2"></div>
+                    <p className="text-sm text-text-muted">Hydrating items...</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -776,19 +776,19 @@ const Marketplace = () => {
                       >
                         <button
                           onClick={() => handleDeleteListing(item.id)}
-                          className="absolute top-4 right-4 p-1.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-all"
+                          className="absolute top-4 right-4 p-1.5 text-danger hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg transition-all"
                           title="Delete Listing"
                         >
                           <Trash2 size={16} />
                         </button>
 
                         <div>
-                          <span className="text-xs font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400 px-2 py-0.5 bg-primary-100/50 dark:bg-primary-900/20 rounded-full w-fit inline-block mb-3">
+                          <span className="text-xs font-bold uppercase tracking-wider text-accent dark:text-accent px-2 py-0.5 bg-primary-100/50 dark:bg-primary-900/20 rounded-full w-fit inline-block mb-3">
                             {item.category}
                           </span>
-                          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{item.name}</h3>
+                          <h3 className="text-lg font-bold text-text mb-2">{item.name}</h3>
                           
-                          <div className="space-y-1.5 text-xs text-gray-500 dark:text-gray-400">
+                          <div className="space-y-1.5 text-xs text-text-muted">
                             <p className="flex items-center gap-1.5">
                               <Scale size={14} className="text-gray-400" />
                               Stock: <span className="font-semibold text-gray-800 dark:text-gray-200">{item.quantity} {item.unit}</span>
@@ -807,8 +807,8 @@ const Marketplace = () => {
                     ))}
 
                     {listings.length === 0 && (
-                      <div className="col-span-full text-center py-20 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
-                        <Plus className="text-gray-450 mb-2 animate-pulse" size={32} />
+                      <div className="col-span-full text-center py-20 flex flex-col items-center justify-center text-text-muted">
+                        <Plus className="text-gray-450 mb-2" size={32} />
                         <p className="font-medium text-sm">No active listings published for sale.</p>
                         <p className="text-xs text-gray-400 mt-1">Use the panel on the left to publish your first produce offer!</p>
                       </div>
@@ -831,23 +831,23 @@ const Marketplace = () => {
           ---------------------------------------- */}
       {activeMarketTab === 'moderate' && user?.role?.toLowerCase() === 'admin' && (
         <div className="glass-card p-6">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <Lock size={20} className="text-primary-600" />
+          <h2 className="text-xl font-bold text-text mb-4 flex items-center gap-2">
+            <Lock size={20} className="text-accent" />
             Marketplace Moderation Dashboard
           </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Moderate or remove non-compliant crop listings from the FarmSync network.</p>
+          <p className="text-sm text-text-muted mb-6">Moderate or remove non-compliant crop listings from the FarmSync network.</p>
 
           {loadingAllListings ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mb-2"></div>
+              <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin mb-2"></div>
               <p className="text-sm text-gray-500">Hydrating listings...</p>
             </div>
           ) : (
-            <div className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm">
+            <div className="border border-border rounded-2xl overflow-hidden shadow-sm">
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-500 text-[10px] font-black uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
+                    <tr className="bg-surface-sunken text-gray-400 dark:text-gray-500 text-[10px] font-black uppercase tracking-wider border-b border-border">
                       <th className="px-6 py-4">Produce Name</th>
                       <th className="px-6 py-4">Category</th>
                       <th className="px-6 py-4">Vendor Farmer</th>
@@ -859,11 +859,11 @@ const Marketplace = () => {
                   <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                     {allListings.map((item) => (
                       <tr key={item.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
-                        <td className="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                        <td className="px-6 py-4 font-bold text-text">
                           {item.name}
                         </td>
                         <td className="px-6 py-4">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400 px-2 py-0.5 bg-primary-100/50 dark:bg-primary-900/20 rounded-full">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-accent dark:text-accent px-2 py-0.5 bg-primary-100/50 dark:bg-primary-900/20 rounded-full">
                             {item.category}
                           </span>
                         </td>
@@ -873,13 +873,13 @@ const Marketplace = () => {
                         <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
                           {item.quantity} {item.unit}
                         </td>
-                        <td className="px-6 py-4 text-base font-black text-gray-900 dark:text-white">
+                        <td className="px-6 py-4 text-base font-black text-text">
                           ₹{item.price} / {item.unit}
                         </td>
                         <td className="px-6 py-4 text-right">
                           <button
                             onClick={() => handleAdminDeleteListing(item.id)}
-                            className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 font-bold text-xs rounded-lg active:scale-[0.98] transition-all flex items-center gap-1 ml-auto"
+                            className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-900/30 text-danger dark:text-red-400 font-bold text-xs rounded-lg active:scale-[0.98] transition-all flex items-center gap-1 ml-auto"
                           >
                             <Trash2 size={13} />
                             Moderate & Delete
@@ -890,7 +890,7 @@ const Marketplace = () => {
 
                     {allListings.length === 0 && (
                       <tr>
-                        <td colSpan={6} className="text-center py-12 text-gray-500 dark:text-gray-400 text-sm">
+                        <td colSpan={6} className="text-center py-12 text-text-muted text-sm">
                           No listings currently active in the marketplace.
                         </td>
                       </tr>
@@ -906,7 +906,7 @@ const Marketplace = () => {
       {/* Checkout Modal */}
       {checkoutItem && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl max-w-md w-full border border-gray-100 dark:border-gray-700 shadow-2xl p-6 relative overflow-hidden animate-in zoom-in-95 duration-200">
+          <div className="bg-surface rounded-3xl max-w-md w-full border border-gray-100 dark:border-gray-700 shadow-2xl p-6 relative overflow-hidden animate-in zoom-in-95 duration-200">
             <button 
               onClick={() => setCheckoutItem(null)} 
               className="absolute top-4 right-4 p-1.5 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-all"
@@ -914,26 +914,26 @@ const Marketplace = () => {
               <X size={18} />
             </button>
 
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-              <ShoppingBag className="text-primary-600" />
+            <h3 className="text-2xl font-black text-text mb-2 flex items-center gap-2">
+              <ShoppingBag className="text-accent" />
               Checkout Review
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Confirm your simulated purchase.</p>
+            <p className="text-sm text-text-muted mb-6">Confirm your simulated purchase.</p>
 
-            <div className="bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-700/50 rounded-2xl p-4 space-y-4 mb-6">
+            <div className="bg-surface-sunken/50 border border-gray-100 dark:border-gray-700/50 rounded-2xl p-4 space-y-4 mb-6">
               <div className="flex justify-between items-center pb-3 border-b border-gray-200/50 dark:border-gray-700/50">
-                <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">Produce Item</span>
-                <span className="font-extrabold text-gray-900 dark:text-white text-base">
+                <span className="text-sm text-text-muted font-medium">Produce Item</span>
+                <span className="font-extrabold text-text text-base">
                   {catalog.find(c => c.name === checkoutItem.name)?.emoji || '🍎'} {checkoutItem.name}
                 </span>
               </div>
               <div className="flex justify-between items-center pb-3 border-b border-gray-200/50 dark:border-gray-700/50">
-                <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">Vendor Farmer</span>
+                <span className="text-sm text-text-muted font-medium">Vendor Farmer</span>
                 <span className="font-semibold text-gray-800 dark:text-gray-200 text-sm">{checkoutItem.farmer.name}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">Price per unit</span>
-                <span className="font-black text-gray-900 dark:text-white">₹{checkoutItem.price} / {checkoutItem.unit}</span>
+                <span className="text-sm text-text-muted font-medium">Price per unit</span>
+                <span className="font-black text-text">₹{checkoutItem.price} / {checkoutItem.unit}</span>
               </div>
             </div>
 
@@ -949,13 +949,13 @@ const Marketplace = () => {
                     max={checkoutItem.quantity}
                     value={buyQuantity}
                     onChange={(e) => setBuyQuantity(Math.min(checkoutItem.quantity, Math.max(1, parseInt(e.target.value) || 1)))}
-                    className="block w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/50 dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-base font-bold text-center"
+                    className="block w-full px-4 py-2 border border-border rounded-xl bg-white/50 dark:bg-gray-900/50 text-text outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all text-base font-bold text-center"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setBuyQuantity(checkoutItem.quantity)}
-                    className="px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl font-bold text-xs uppercase text-gray-600 dark:text-gray-300 transition-all shrink-0"
+                    className="px-3 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-xl font-bold text-xs uppercase text-text-muted transition-all shrink-0"
                   >
                     Buy All
                   </button>
@@ -970,7 +970,7 @@ const Marketplace = () => {
                 <span className="text-sm font-bold text-primary-900 dark:text-primary-300 flex items-center gap-1">
                   <Coins size={16} /> Total Due
                 </span>
-                <span className="text-2xl font-black text-primary-600 dark:text-primary-400">
+                <span className="text-2xl font-black text-accent dark:text-accent">
                   ₹{(checkoutItem.price * buyQuantity).toFixed(2)}
                 </span>
               </div>
@@ -979,14 +979,14 @@ const Marketplace = () => {
                 <button
                   type="button"
                   onClick={() => setCheckoutItem(null)}
-                  className="w-full py-3 rounded-xl border border-gray-200 dark:border-gray-700 font-bold text-gray-600 dark:text-gray-300 text-sm hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all"
+                  className="w-full py-3 rounded-xl border border-border font-bold text-text-muted text-sm hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={buying}
-                  className="w-full py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white font-bold text-sm rounded-xl shadow-lg shadow-primary-500/20 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="w-full py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white font-bold text-sm rounded-xl shadow-lg shadow-accent/20 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {buying ? (
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -1006,18 +1006,18 @@ const Marketplace = () => {
       {activeMarketTab === 'history' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">My Orders ({cartHistory.length})</h2>
+            <h2 className="text-xl font-bold text-text">My Orders ({cartHistory.length})</h2>
             {cartHistory.length > 0 && (
               <button
                 onClick={() => { localStorage.removeItem('citizen_cart'); setCartHistory([]); toast.success('Cart cleared!'); }}
-                className="text-xs font-bold text-red-500 hover:text-red-700 hover:underline"
+                className="text-xs font-bold text-danger hover:text-red-700 hover:underline"
               >
                 Clear All
               </button>
             )}
           </div>
           {cartHistory.length === 0 ? (
-            <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+            <div className="text-center py-16 bg-surface rounded-2xl border border-border">
               <ShoppingBag size={40} className="mx-auto text-gray-300 dark:text-gray-600 mb-3" />
               <p className="text-gray-500 font-medium">No orders yet</p>
               <button onClick={() => setActiveMarketTab('buy')} className="mt-3 btn-primary text-sm py-2 px-5">Browse Marketplace</button>
@@ -1025,26 +1025,26 @@ const Marketplace = () => {
           ) : (
             <div className="space-y-3">
               {cartHistory.map((item: any, i: number) => (
-                <div key={i} className="flex items-center justify-between p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all">
+                <div key={i} className="flex items-center justify-between p-3 sm:p-4 bg-surface rounded-xl border border-border hover:shadow-md transition-all">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-xl">
                       🧺
                     </div>
                     <div>
-                      <p className="font-bold text-gray-900 dark:text-white">{item.name}</p>
+                      <p className="font-bold text-text">{item.name}</p>
                       <p className="text-xs text-gray-500">{item.quantity} {item.unit} • Added {new Date(item.addedAt).toLocaleDateString()}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-black text-primary-600 dark:text-primary-400">₹{item.price}/{item.unit}</p>
+                    <p className="font-black text-accent dark:text-accent">₹{item.price}/{item.unit}</p>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300">In Cart</span>
                   </div>
                 </div>
               ))}
               <div className="p-4 bg-primary-50 dark:bg-primary-900/20 rounded-2xl border border-primary-200 dark:border-primary-800">
                 <div className="flex justify-between items-center">
-                  <p className="font-bold text-gray-900 dark:text-white">Total Estimated</p>
-                  <p className="text-2xl font-black text-primary-600 dark:text-primary-400">
+                  <p className="font-bold text-text">Total Estimated</p>
+                  <p className="text-2xl font-black text-accent dark:text-accent">
                     ₹{cartHistory.reduce((sum: number, item: any) => sum + item.price, 0).toFixed(0)}
                   </p>
                 </div>

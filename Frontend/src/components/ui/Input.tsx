@@ -17,7 +17,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
 }, ref) => {
   const inputId = id || React.useId();
   
-  const baseInputStyle = 'w-full px-4 py-3 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all disabled:opacity-50 disabled:bg-gray-50 dark:disabled:bg-gray-950';
+  const baseInputStyle = 'w-full px-4 py-3 text-sm border border-border rounded-xl bg-surface text-text placeholder-gray-400 outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all disabled:opacity-50 disabled:bg-gray-50 dark:disabled:bg-gray-950';
   const errorInputStyle = error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : '';
 
   return (
@@ -38,7 +38,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
         {...props}
       />
       {error && (
-        <span className="text-xs text-red-500 font-medium">
+        <span className="text-xs text-danger font-medium">
           {error}
         </span>
       )}

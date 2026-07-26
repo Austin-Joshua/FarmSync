@@ -84,14 +84,14 @@ export default function CropRecommendation() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 dark:text-white flex items-center gap-3">
+          <h1 className="text-3xl font-black text-text flex items-center gap-3">
             <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
               <Sprout size={22} className="text-white" />
             </div>
             AI Crop Advisor
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
-            Enter your soil & climate parameters — our <span className="font-bold text-primary-600">96.5% accurate</span> Random Forest model recommends the optimal crop
+          <p className="text-text-muted mt-1">
+            Enter your soil & climate parameters — our <span className="font-bold text-accent">96.5% accurate</span> Random Forest model recommends the optimal crop
           </p>
         </div>
         {result && (
@@ -107,8 +107,8 @@ export default function CropRecommendation() {
         {/* Input Form */}
         <div className="lg:col-span-2">
           <form onSubmit={handleSubmit} className="glass-card p-6 space-y-4">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-4">
-              <BarChart2 size={20} className="text-primary-500" />
+            <h2 className="text-lg font-bold text-text flex items-center gap-2 mb-4">
+              <BarChart2 size={20} className="text-accent" />
               Soil & Climate Parameters
             </h2>
 
@@ -135,7 +135,7 @@ export default function CropRecommendation() {
                     step={field.step}
                     value={values[field.key]}
                     onChange={(e) => handleChange(field.key, e.target.value)}
-                    className="w-20 px-2 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-center font-mono"
+                    className="w-20 px-2 py-1 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-surface text-text text-center font-mono"
                   />
                 </div>
                 <p className="text-xs text-gray-400 mt-0.5">{field.hint}</p>
@@ -158,7 +158,7 @@ export default function CropRecommendation() {
               <button
                 type="button"
                 onClick={handleReset}
-                className="px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all font-medium"
+                className="px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-xl text-text-muted hover:bg-gray-50 dark:hover:bg-gray-700 transition-all font-medium"
               >
                 Reset
               </button>
@@ -174,8 +174,8 @@ export default function CropRecommendation() {
                 <Leaf size={40} className="text-green-500" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Ready to Analyze</h3>
-                <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm max-w-sm">
+                <h3 className="text-xl font-bold text-text">Ready to Analyze</h3>
+                <p className="text-text-muted mt-1 text-sm max-w-sm">
                   Adjust the soil and climate sliders on the left, then click "Recommend Crop" to get AI-powered recommendations.
                 </p>
               </div>
@@ -185,8 +185,8 @@ export default function CropRecommendation() {
                   { icon: <Zap size={16} />, label: '26 Crops', sub: 'Rice, Wheat, Cotton, Fruits...' },
                   { icon: <BarChart2 size={16} />, label: '96.5% Accuracy', sub: '6,000+ training samples' },
                 ].map((item, i) => (
-                  <div key={i} className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3 text-center">
-                    <div className="text-primary-500 flex justify-center mb-1">{item.icon}</div>
+                  <div key={i} className="bg-surface-sunken/50 rounded-xl p-3 text-center">
+                    <div className="text-accent flex justify-center mb-1">{item.icon}</div>
                     <p className="text-xs font-bold text-gray-700 dark:text-gray-300">{item.label}</p>
                     <p className="text-[10px] text-gray-400">{item.sub}</p>
                   </div>
@@ -198,7 +198,7 @@ export default function CropRecommendation() {
           {loading && (
             <div className="glass-card p-10 text-center flex flex-col items-center justify-center gap-4">
               <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin" />
-              <p className="text-gray-600 dark:text-gray-400 font-medium">Analyzing soil parameters with Random Forest model...</p>
+              <p className="text-text-muted font-medium">Analyzing soil parameters with Random Forest model...</p>
             </div>
           )}
 
@@ -210,7 +210,7 @@ export default function CropRecommendation() {
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <span className="text-xs font-bold text-green-600 bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded-full uppercase tracking-wider">Top Recommendation</span>
-                    <h2 className="text-4xl font-black text-gray-900 dark:text-white mt-2 capitalize">
+                    <h2 className="text-4xl font-black text-text mt-2 capitalize">
                       {CROP_EMOJIS[result.recommended_crop] || '🌱'} {result.recommended_crop}
                     </h2>
                   </div>
@@ -283,13 +283,13 @@ export default function CropRecommendation() {
 
               {/* Explainability Insights Card */}
               {result.explainability && (
-                <div className="glass-card p-6 bg-white dark:bg-gray-800/80 border border-gray-150 dark:border-gray-700/80 shadow-md space-y-4 animate-in fade-in slide-in-from-bottom duration-700">
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <div className="glass-card p-6 bg-surface/80 border border-gray-150 dark:border-gray-700/80 shadow-md space-y-4 animate-in fade-in slide-in-from-bottom duration-700">
+                  <h3 className="text-lg font-bold text-text flex items-center gap-2">
                     <span>📊</span> Decision Diagnostics & Influence
                   </h3>
                   
                   {/* Primary Driver */}
-                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-surface-sunken/50 rounded-xl">
                     <div>
                       <p className="text-[10px] text-gray-400 uppercase font-black tracking-wider">Primary Driver</p>
                       <p className="text-sm font-extrabold text-gray-800 dark:text-gray-200 mt-0.5">{result.explainability.primary_driver}</p>
@@ -302,7 +302,7 @@ export default function CropRecommendation() {
 
                   {/* Soil vs Weather breakdown */}
                   <div className="space-y-2">
-                    <div className="flex justify-between text-xs font-bold text-gray-600 dark:text-gray-400">
+                    <div className="flex justify-between text-xs font-bold text-text-muted">
                       <span>Soil Chemistry Influence ({result.explainability.soil_influence_pct}%)</span>
                       <span>Weather Influence ({result.explainability.weather_influence_pct}%)</span>
                     </div>
@@ -343,8 +343,8 @@ export default function CropRecommendation() {
 
               {/* Top 3 Recommendations */}
               <div className="glass-card p-6">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <ChevronRight size={20} className="text-primary-500" />
+                <h3 className="text-lg font-bold text-text mb-4 flex items-center gap-2">
+                  <ChevronRight size={20} className="text-accent" />
                   All Recommendations
                 </h3>
                 <div className="space-y-3">
@@ -354,24 +354,24 @@ export default function CropRecommendation() {
                         <div className="flex items-center gap-2">
                           <span className="text-2xl">{CROP_EMOJIS[rec.crop] || '🌱'}</span>
                           <div>
-                            <span className="font-bold text-gray-900 dark:text-white capitalize">{rec.crop}</span>
+                            <span className="font-bold text-text capitalize">{rec.crop}</span>
                             {i === 0 && <span className="ml-2 text-xs bg-green-500 text-white px-1.5 py-0.5 rounded-full">Best</span>}
-                            {i === 1 && <span className="ml-2 text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">2nd</span>}
+                            {i === 1 && <span className="ml-2 text-xs bg-info text-white px-1.5 py-0.5 rounded-full">2nd</span>}
                             {i === 2 && <span className="ml-2 text-xs bg-gray-400 text-white px-1.5 py-0.5 rounded-full">3rd</span>}
                           </div>
                         </div>
-                        <span className={`font-black text-lg ${i === 0 ? 'text-green-600' : 'text-gray-600 dark:text-gray-300'}`}>
+                        <span className={`font-black text-lg ${i === 0 ? 'text-green-600' : 'text-text-muted'}`}>
                           {rec.confidence_percent.toFixed(1)}%
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full transition-all duration-1000 ${i === 0 ? 'bg-green-500' : i === 1 ? 'bg-blue-500' : 'bg-gray-400'}`}
+                          className={`h-2 rounded-full transition-all duration-1000 ${i === 0 ? 'bg-green-500' : i === 1 ? 'bg-info' : 'bg-gray-400'}`}
                           style={{ width: `${rec.confidence_percent}%` }}
                         />
                       </div>
                       {i === 0 && rec.advice && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">{rec.advice}</p>
+                        <p className="text-xs text-text-muted mt-2 leading-relaxed">{rec.advice}</p>
                       )}
                     </div>
                   ))}
@@ -380,10 +380,10 @@ export default function CropRecommendation() {
 
               {/* Input Summary */}
               <div className="glass-card p-4">
-                <h4 className="text-sm font-bold text-gray-600 dark:text-gray-400 mb-3 uppercase tracking-wider">Input Parameters Used</h4>
+                <h4 className="text-sm font-bold text-text-muted mb-3 uppercase tracking-wider">Input Parameters Used</h4>
                 <div className="grid grid-cols-4 gap-2">
                   {FIELD_CONFIGS.map(f => (
-                    <div key={f.key} className="text-center bg-gray-50 dark:bg-gray-800/50 rounded-lg p-2">
+                    <div key={f.key} className="text-center bg-surface-sunken/50 rounded-lg p-2">
                       <div className="text-lg">{f.icon}</div>
                       <div className="text-xs text-gray-400">{f.key}</div>
                       <div className="text-sm font-bold text-gray-700 dark:text-gray-300">{values[f.key]}{f.unit === '°C' ? '°' : f.unit === '%' ? '%' : ''}</div>
@@ -395,10 +395,10 @@ export default function CropRecommendation() {
               {/* Kaggle Dataset Info */}
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
                 <div className="flex items-start gap-3">
-                  <Thermometer size={18} className="text-blue-500 mt-0.5 flex-shrink-0" />
+                  <Thermometer size={18} className="text-info mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="text-sm font-bold text-blue-800 dark:text-blue-300">To Improve Accuracy Above 98%</p>
-                    <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                    <p className="text-xs text-info dark:text-blue-400 mt-1">
                       Download the <strong>Crop Recommendation Dataset</strong> from Kaggle (2200 rows, 22 crops) and place it in{' '}
                       <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">Backend/MLService/Dataset/Crop_recommendation_full.csv</code>.
                       Then run <code className="bg-blue-100 dark:bg-blue-900 px-1 rounded">python train_model.py</code>.

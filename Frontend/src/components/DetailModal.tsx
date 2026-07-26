@@ -46,17 +46,17 @@ const DetailModal = ({
       }}
     >
       <div
-        className={`bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-2 duration-200`}
+        className={`bg-surface rounded-lg shadow-xl w-full ${maxWidthClasses[maxWidth]} max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-2 duration-200`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex items-center justify-between z-10">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{title}</h2>
+        <div className="sticky top-0 bg-surface border-b border-border px-6 py-4 flex items-center justify-between z-10">
+          <h2 className="text-2xl font-bold text-text">{title}</h2>
           <div className="flex items-center gap-3">
             {onViewFull && (
               <button
                 onClick={onViewFull}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
+                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-accent hover:text-primary-700 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors"
               >
                 <ExternalLink size={16} />
                 {viewFullLabel || t('common.viewDetails')}

@@ -18,7 +18,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({
 }, ref) => {
   const selectId = id || React.useId();
   
-  const baseSelectStyle = 'w-full px-4 py-3 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all disabled:opacity-50';
+  const baseSelectStyle = 'w-full px-4 py-3 text-sm border border-border rounded-xl bg-surface text-text outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all disabled:opacity-50';
   const errorSelectStyle = error ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : '';
 
   return (
@@ -44,7 +44,7 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(({
         ))}
       </select>
       {error && (
-        <span className="text-xs text-red-500 font-medium">
+        <span className="text-xs text-danger font-medium">
           {error}
         </span>
       )}

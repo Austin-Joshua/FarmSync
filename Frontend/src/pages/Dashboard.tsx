@@ -268,8 +268,8 @@ const Dashboard = () => {
       {/* Header */}
       <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in fade-in duration-700">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">{t('dashboard.title')}</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1 font-medium text-sm sm:text-base">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-text tracking-tight">{t('dashboard.title')}</h1>
+          <p className="text-text-muted mt-1 font-medium text-sm sm:text-base">
             {t('dashboard.subtitle')}
             {lastUpdated && (
               <span className="ml-2 text-xs opacity-60">
@@ -280,10 +280,10 @@ const Dashboard = () => {
         </div>
         <button
           onClick={() => fetchDashboardData(true)}
-          className="self-start sm:self-auto p-2.5 sm:p-3 rounded-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all"
+          className="self-start sm:self-auto p-2.5 sm:p-3 rounded-2xl bg-surface border border-border shadow-sm hover:shadow-md transition-all"
           title="Force Sync"
         >
-          <TrendingUp size={18} className="text-primary-600" />
+          <TrendingUp size={18} className="text-accent" />
         </button>
       </div>
 
@@ -327,7 +327,7 @@ const Dashboard = () => {
         {/* My Farms Widget */}
         <div className="glass-card p-4 sm:p-6 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-4 border-b border-gray-100 dark:border-white/5 pb-3">
+            <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
               <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                 <LandPlot size={20} className="text-accent" />
                 My Farms & Estates
@@ -339,7 +339,7 @@ const Dashboard = () => {
             
             {data.farms.length === 0 ? (
               <div className="text-center py-6">
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No farms registered yet.</p>
+                <p className="text-sm text-text-muted mb-4">No farms registered yet.</p>
                 <button onClick={() => navigate('/profile')} className="btn-primary py-2 px-4 text-xs font-black uppercase">
                   Register Primary Farm
                 </button>
@@ -349,7 +349,7 @@ const Dashboard = () => {
                 {data.farms.map((farm) => (
                   <div key={farm.id} className="p-4 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-200/50 dark:border-white/5 hover:border-accent/20 transition-all flex items-center justify-between gap-4">
                     <div className="space-y-1 flex-1">
-                      <h4 className="font-black text-sm text-gray-900 dark:text-white uppercase tracking-tight">{farm.name}</h4>
+                      <h4 className="font-black text-sm text-text uppercase tracking-tight">{farm.name}</h4>
                       <p className="text-xs text-gray-500 flex items-center gap-1">
                         <MapPin size={12} /> {farm.location || 'Location not mapped'}
                       </p>
@@ -357,7 +357,7 @@ const Dashboard = () => {
                         <span className="bg-accent/10 text-emerald-600 dark:text-emerald-400 text-[10px] px-2 py-0.5 rounded font-bold">
                           {farm.landSize || farm.area || 0} acres
                         </span>
-                        <span className="bg-blue-500/10 text-blue-600 dark:text-blue-400 text-[10px] px-2 py-0.5 rounded font-bold">
+                        <span className="bg-info/10 text-info dark:text-blue-400 text-[10px] px-2 py-0.5 rounded font-bold">
                           {farm.soilTypeName || farm.soilType || 'Soil not tested'}
                         </span>
                       </div>
@@ -379,7 +379,7 @@ const Dashboard = () => {
         {/* Crop Growth tracker */}
         <div className="glass-card p-4 sm:p-6 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between mb-4 border-b border-gray-100 dark:border-white/5 pb-3">
+            <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
               <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                 <Sprout size={20} className="text-accent" />
                 Active Crop Growth Tracker
@@ -391,7 +391,7 @@ const Dashboard = () => {
 
             {data.crops.filter(c => c.status === 'active').length === 0 ? (
               <div className="text-center py-6">
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">No active crops currently tracked.</p>
+                <p className="text-sm text-text-muted mb-4">No active crops currently tracked.</p>
                 <button onClick={() => navigate('/crop-management')} className="btn-primary py-2 px-4 text-xs font-black uppercase">
                   Add Crop Profile
                 </button>
@@ -417,10 +417,10 @@ const Dashboard = () => {
                     stageColor = "text-indigo-500 bg-indigo-500/10";
                   } else if (progress > 30) {
                     stageLabel = "Vegetative Growth";
-                    stageColor = "text-amber-500 bg-amber-500/10";
+                    stageColor = "text-warning bg-amber-500/10";
                   } else if (progress > 10) {
                     stageLabel = "Germination";
-                    stageColor = "text-blue-500 bg-blue-500/10";
+                    stageColor = "text-info bg-info/10";
                   }
                   
                   const daysRemaining = Math.max(0, Math.ceil((harvestTime - nowTime) / (1000 * 60 * 60 * 24)));
@@ -431,7 +431,7 @@ const Dashboard = () => {
                         <div className="flex items-center gap-2">
                           <span className="text-xl" title={crop.name}>{getCropIcon(crop.name)}</span>
                           <div>
-                            <h4 className="font-bold text-sm text-gray-900 dark:text-white">{translateCrop(crop.name)}</h4>
+                            <h4 className="font-bold text-sm text-text">{translateCrop(crop.name)}</h4>
                             <span className="text-[10px] text-gray-400 font-bold block mt-0.5">
                               Sown on: {formatDateDisplay(crop.sowingDate)}
                             </span>
@@ -474,13 +474,13 @@ const Dashboard = () => {
           <div className="glass-card p-4 sm:p-6 flex flex-col">
             <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 sm:mb-4 flex items-center justify-between">
               <span className="flex items-center gap-2">
-                <MapPin size={20} className="text-primary-600 dark:text-primary-400" />
+                <MapPin size={20} className="text-accent dark:text-accent" />
                 {t('dashboard.farmLocation')}
               </span>
               {data.farms.length > 0 && (
                 <button
                   onClick={() => setIsEditingMap(!isEditingMap)}
-                  className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl border transition-all ${isEditingMap ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-primary-500/15 border-primary-500/20 text-primary-600 hover:bg-primary-500/20'}`}
+                  className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-xl border transition-all ${isEditingMap ? 'bg-red-500/10 border-red-500/20 text-danger' : 'bg-accent/15 border-accent/20 text-accent hover:bg-accent/20'}`}
                 >
                   {isEditingMap ? 'Close Edit' : 'Edit Location & Boundary'}
                 </button>
@@ -512,7 +512,7 @@ const Dashboard = () => {
             <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mt-4">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="text-amber-600 dark:text-amber-400" size={20} />
+                  <AlertTriangle className="text-warning dark:text-amber-400" size={20} />
                   <h3 className="font-semibold text-amber-900 dark:text-amber-100">
                     Low Stock Alert
                   </h3>
@@ -539,7 +539,7 @@ const Dashboard = () => {
                   lowStockItems.slice(0, 3).map((item) => (
                     <div
                       key={item.id}
-                      className="flex items-center justify-between bg-white dark:bg-gray-800 rounded p-2 text-sm"
+                      className="flex items-center justify-between bg-surface rounded p-2 text-sm"
                     >
                       <span className="font-medium text-gray-900 dark:text-gray-100">
                         {item.name}
@@ -564,7 +564,7 @@ const Dashboard = () => {
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-4">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <CloudRain className="text-red-600 dark:text-red-400" size={20} />
+                  <CloudRain className="text-danger dark:text-red-400" size={20} />
                   <h3 className="font-semibold text-red-900 dark:text-red-100">
                     Weather Alerts
                   </h3>
@@ -617,11 +617,11 @@ const Dashboard = () => {
                   return (
                     <div
                       key={alert.id}
-                      className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-red-200 dark:border-red-800"
+                      className="bg-surface rounded-lg p-3 border border-red-200 dark:border-red-800"
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <Icon size={16} className="text-red-600 dark:text-red-400" />
+                          <Icon size={16} className="text-danger dark:text-red-400" />
                           <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
                             {alert.title}
                           </span>
@@ -634,7 +634,7 @@ const Dashboard = () => {
                         {alert.message}
                       </p>
                       {alert.recommendation && (
-                        <p className="text-xs text-gray-600 dark:text-gray-400 italic">
+                        <p className="text-xs text-text-muted italic">
                           💡 {alert.recommendation}
                         </p>
                       )}
@@ -649,7 +649,7 @@ const Dashboard = () => {
                             console.error('Failed to mark alert as read:', error);
                           }
                         }}
-                        className="mt-2 text-xs text-red-600 dark:text-red-400 hover:underline"
+                        className="mt-2 text-xs text-danger dark:text-red-400 hover:underline"
                       >
                         Mark as read
                       </button>
@@ -665,20 +665,20 @@ const Dashboard = () => {
       {/* 1. Land Properties Summary with glass effect */}
       <div className="glass-card p-6">
         <div className="flex items-center gap-2 mb-4">
-          <LandPlot className="text-primary-600 dark:text-primary-400" size={24} />
+          <LandPlot className="text-accent dark:text-accent" size={24} />
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.landPropertiesSummary')}</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div className="bg-primary-50 dark:bg-primary-900/20 p-4 rounded-lg border border-primary-200 dark:border-primary-800">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.totalLandArea')}</p>
+            <p className="text-sm text-text-muted mb-1">{t('dashboard.totalLandArea')}</p>
             <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{totalLandArea.toFixed(1)} {t('common.acres')}</p>
           </div>
           <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.totalFields')}</p>
+            <p className="text-sm text-text-muted mb-1">{t('dashboard.totalFields')}</p>
             <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{totalFields}</p>
           </div>
           <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.averageFieldSize')}</p>
+            <p className="text-sm text-text-muted mb-1">{t('dashboard.averageFieldSize')}</p>
             <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               {(totalLandArea / (totalFields || 1)).toFixed(1)} {t('common.acres')}
             </p>
@@ -713,15 +713,15 @@ const Dashboard = () => {
       <div className="glass-card p-6 cursor-pointer hover:shadow-xl dark:hover:shadow-primary-900/10 transition-all duration-300" onClick={() => navigate('/expenses')}>
         <div className="flex items-center gap-2 mb-6">
           <div className="p-2 bg-primary-100 dark:bg-primary-900/30 rounded-lg">
-            <IndianRupee className="text-primary-600 dark:text-primary-400" size={24} />
+            <IndianRupee className="text-accent dark:text-accent" size={24} />
           </div>
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">{t('dashboard.investmentOverview')}</h2>
+          <h2 className="text-xl font-bold text-text uppercase tracking-wider text-sm">{t('dashboard.investmentOverview')}</h2>
           <ExternalLink size={18} className="text-gray-400 dark:text-gray-500 ml-auto" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-lg mb-4 border border-orange-200 dark:border-orange-800">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.totalInvestment')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('dashboard.totalInvestment')}</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t('common.currency')}{totalInputInvestment.toLocaleString()}</p>
               <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
                 {t('dashboard.includes')}
@@ -733,14 +733,14 @@ const Dashboard = () => {
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t(`expenses.${category}`) || t(`dashboard.category${category.charAt(0).toUpperCase() + category.slice(1)}`) || category.charAt(0).toUpperCase() + category.slice(1)}
                   </span>
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">{t('common.currency')}{(amount as number).toLocaleString()}</span>
+                  <span className="text-sm font-bold text-text">{t('common.currency')}{(amount as number).toLocaleString()}</span>
                 </div>
               ))}
             </div>
           </div>
           <div className="cursor-pointer" onClick={(e) => { e.stopPropagation(); navigate('/expenses'); }}>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('dashboard.investmentByCategory')}</h3>
+              <h3 className="text-lg font-semibold text-text">{t('dashboard.investmentByCategory')}</h3>
               <ExternalLink size={16} className="text-gray-400" />
             </div>
             <ResponsiveContainer width="100%" height={300}>
@@ -761,22 +761,22 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="text-primary-600 dark:text-primary-400" size={24} />
+            <TrendingUp className="text-accent dark:text-accent" size={24} />
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.profitSummary')}</h2>
           </div>
           <div className="space-y-4">
             <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.totalIncome')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('dashboard.totalIncome')}</p>
               <p className="text-2xl font-bold text-green-700 dark:text-green-400">{t('common.currency')}{totalIncome.toLocaleString()}</p>
               <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{t('dashboard.fromHarvested')}</p>
             </div>
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.totalYield')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('dashboard.totalYield')}</p>
               <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">{totalYield.toLocaleString()} {t('common.kg')}</p>
               <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{t('dashboard.cropProduction')}</p>
             </div>
             <div className={`p-4 rounded-lg border ${netProfit >= 0 ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800' : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800'}`}>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.netProfit')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('dashboard.netProfit')}</p>
               <p
                 className={`text-2xl font-bold ${netProfit >= 0 ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}
               >
@@ -790,7 +790,7 @@ const Dashboard = () => {
         {/* 4. Stock & Materials Status */}
         <div className="glass-card p-6">
           <div className="flex items-center gap-2 mb-4">
-            <Package className="text-primary-600 dark:text-primary-400" size={24} />
+            <Package className="text-accent dark:text-accent" size={24} />
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{t('dashboard.stockMaterialsStatus')}</h2>
           </div>
           <div className="space-y-4">
@@ -805,7 +805,7 @@ const Dashboard = () => {
                         <div key={category} className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
-                              <Icon className="text-primary-600 dark:text-primary-400" size={20} />
+                              <Icon className="text-accent dark:text-accent" size={20} />
                               <span className="font-semibold text-gray-900 dark:text-gray-100">
                                 {t(`expenses.${category}`) || category.charAt(0).toUpperCase() + category.slice(1)}
                               </span>
@@ -816,7 +816,7 @@ const Dashboard = () => {
                           </div>
                           <div className="mt-2 space-y-1">
                             {catData.items.slice(0, 3).map((item: any) => (
-                              <div key={item.id} className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                              <div key={item.id} className="flex justify-between text-sm text-text-muted">
                                 <span>{item.name}</span>
                                 <span className="font-medium">
                                   {item.quantity} {item.unit}
@@ -846,25 +846,25 @@ const Dashboard = () => {
         >
           <div className="space-y-6">
             <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('common.total')}</p>
               <p className="text-2xl font-bold text-green-600">{detailModal.data.length} {t('dashboard.totalFields')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {detailModal.data.map((farm: any) => (
                 <div
                   key={farm.id}
-                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                  className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                 >
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{farm.name}</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  <h4 className="font-semibold text-text mb-2">{farm.name}</h4>
+                  <p className="text-sm text-text-muted mb-1">
                     <MapPin size={14} className="inline mr-1" />
                     {farm.location}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  <p className="text-sm text-text-muted mb-1">
                     <LandPlot size={14} className="inline mr-1" />
                     {farm.landSize} {t('common.acres')}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-text-muted">
                     {t('settings.soilType')}: {farm.soilType}
                   </p>
                 </div>
@@ -883,29 +883,29 @@ const Dashboard = () => {
         >
           <div className="space-y-6">
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')}</p>
-              <p className="text-2xl font-bold text-blue-600">{detailModal.data.length} {t('dashboard.activeCrops')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('common.total')}</p>
+              <p className="text-2xl font-bold text-info">{detailModal.data.length} {t('dashboard.activeCrops')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {detailModal.data.map((crop: any) => (
                 <div
                   key={crop.id}
-                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                  className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-3xl" title={translateCrop(crop.name)}>{getCropIcon(crop.name)}</span>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">{translateCrop(crop.name)}</h4>
+                    <h4 className="font-semibold text-text">{translateCrop(crop.name)}</h4>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  <p className="text-sm text-text-muted mb-1">
                     {t('crops.category')}: {crop.category}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  <p className="text-sm text-text-muted mb-1">
                     {t('crops.season')}: {crop.season}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  <p className="text-sm text-text-muted mb-1">
                     {t('crops.sowingDate')}: {formatDateDisplay(crop.sowingDate)}
                   </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-text-muted">
                     {t('crops.harvestDate')}: {formatDateDisplay(crop.harvestDate)}
                   </p>
                 </div>
@@ -924,11 +924,11 @@ const Dashboard = () => {
         >
           <div className="space-y-6">
             <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.totalYield')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('dashboard.totalYield')}</p>
               <p className="text-2xl font-bold text-purple-600">{detailModal.data.totalYield.toLocaleString()} {t('common.kg')}</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('dashboard.cropProduction')}</h3>
+              <h3 className="text-lg font-semibold text-text mb-4">{t('dashboard.cropProduction')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {detailModal.data.yields.map((yield_: any) => {
                   const crop = detailModal.data.crops.find((c: any) => c.id === yield_.cropId);
@@ -936,20 +936,20 @@ const Dashboard = () => {
                   return (
                     <div
                       key={yield_.id}
-                      className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                      className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-3xl" title={translateCrop(crop.name)}>{getCropIcon(crop.name)}</span>
-                        <h4 className="font-semibold text-gray-900 dark:text-white">{translateCrop(crop.name)}</h4>
+                        <h4 className="font-semibold text-text">{translateCrop(crop.name)}</h4>
                       </div>
                       <p className="text-2xl font-bold text-purple-600">{yield_.quantity.toLocaleString()} {t('common.kg')}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      <p className="text-sm text-text-muted mt-1">
                         {t('crops.averageYield')}: {crop.averageYield?.toLocaleString() || 'N/A'} {t('common.kg')}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      <p className="text-sm text-text-muted mt-1">
                         {t('yield.harvestDate')}: {formatDateDisplay(yield_.date)}
                       </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                      <p className="text-sm text-text-muted mt-1">
                         {t('yield.quality')}: {yield_.quality === 'excellent' ? t('yield.excellent') : yield_.quality === 'good' ? t('yield.good') : t('yield.average')}
                       </p>
                     </div>
@@ -970,29 +970,29 @@ const Dashboard = () => {
         >
           <div className="space-y-6">
             <div className={`p-4 rounded-lg mb-4 ${detailModal.data.netProfit >= 0 ? 'bg-green-50 dark:bg-green-900/20' : 'bg-red-50 dark:bg-red-900/20'}`}>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.netProfit')}</p>
-              <p className={`text-2xl font-bold ${detailModal.data.netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <p className="text-sm text-text-muted mb-1">{t('dashboard.netProfit')}</p>
+              <p className={`text-2xl font-bold ${detailModal.data.netProfit >= 0 ? 'text-green-600' : 'text-danger'}`}>
                 {t('common.currency')}{detailModal.data.netProfit.toLocaleString()}
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.totalIncome')}</p>
+                <p className="text-sm text-text-muted mb-1">{t('dashboard.totalIncome')}</p>
                 <p className="text-2xl font-bold text-green-600">
                   {t('common.currency')}{detailModal.data.totalIncome.toLocaleString()}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{t('dashboard.fromHarvested')}</p>
+                <p className="text-xs text-text-muted mt-2">{t('dashboard.fromHarvested')}</p>
               </div>
               <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('dashboard.totalInvestment')}</p>
-                <p className="text-2xl font-bold text-red-600">
+                <p className="text-sm text-text-muted mb-1">{t('dashboard.totalInvestment')}</p>
+                <p className="text-2xl font-bold text-danger">
                   {t('common.currency')}{detailModal.data.totalInputInvestment.toLocaleString()}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">{t('dashboard.includes')}</p>
+                <p className="text-xs text-text-muted mt-2">{t('dashboard.includes')}</p>
               </div>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('dashboard.investmentByCategory')}</h3>
+              <h3 className="text-lg font-semibold text-text mb-4">{t('dashboard.investmentByCategory')}</h3>
               <div className="space-y-2">
                 {(Object.entries(
                   detailModal.data.expenses.reduce((acc: Record<string, number>, exp: any) => {
@@ -1001,10 +1001,10 @@ const Dashboard = () => {
                   }, {} as Record<string, number>)
                 ) as [string, number][]).map(([category, amount]) => (
                   <div key={category} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <span className="font-medium text-gray-900 dark:text-white">
+                    <span className="font-medium text-text">
                       {t(`expenses.${category}`) || t(`dashboard.category${category.charAt(0).toUpperCase() + category.slice(1)}`) || category}
                     </span>
-                    <span className="font-bold text-gray-900 dark:text-white">{t('common.currency')}{amount.toLocaleString()}</span>
+                    <span className="font-bold text-text">{t('common.currency')}{amount.toLocaleString()}</span>
                   </div>
                 ))}
               </div>

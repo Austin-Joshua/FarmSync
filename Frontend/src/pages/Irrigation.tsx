@@ -144,7 +144,7 @@ const Irrigation = () => {
       {/* Irrigation Schedule - Calendar View */}
       <div className="card">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Calendar size={24} className="text-primary-600" />
+            <Calendar size={24} className="text-accent" />
             {t('irrigation.irrigationSchedule')}
           </h2>
         <div className="space-y-4">
@@ -168,7 +168,7 @@ const Irrigation = () => {
               return (
               <div
                 key={irrigation.id}
-                className={`p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg transition-all duration-200 ease-out group cursor-pointer bg-white dark:bg-gray-800 animate-in fade-in slide-in-from-right-4 ${getDelayClass(index)}`}
+                className={`p-4 border border-border rounded-lg hover:shadow-lg transition-all duration-200 ease-out group cursor-pointer bg-surface animate-in fade-in slide-in-from-right-4 ${getDelayClass(index)}`}
                 onClick={() => handleEditIrrigation(irrigation)}
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -209,7 +209,7 @@ const Irrigation = () => {
                           e.stopPropagation();
                           handleEditIrrigation(irrigation);
                         }}
-                        className="p-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all duration-150 hover:scale-110 active:scale-100 shadow-lg"
+                        className="p-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-all duration-150 hover:scale-110 active:scale-100 shadow-lg"
                         title={t('common.edit')}
                       >
                         <Edit2 size={16} />
@@ -304,34 +304,34 @@ const Irrigation = () => {
         >
           <div className="space-y-6">
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')}</p>
-              <p className="text-2xl font-bold text-blue-600">{methodDetailModal.data.length} {t('irrigation.drip')} {t('navigation.irrigation')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('common.total')}</p>
+              <p className="text-2xl font-bold text-info">{methodDetailModal.data.length} {t('irrigation.drip')} {t('navigation.irrigation')}</p>
             </div>
             <div className="space-y-3">
               {methodDetailModal.data.map((irrigation) => (
                 <div
                   key={irrigation.id}
-                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                  className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <div className="text-4xl">💧</div>
                       <div>
-                        <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1">
+                        <h3 className="font-bold text-text text-lg mb-1">
                           {translateCrop(getCropName(irrigation.cropId))}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-sm text-text-muted">
                           {t('irrigation.date')}: {formatDateDisplay(irrigation.date)}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-6">
                       <div className="text-right">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('irrigation.duration')}</p>
-                        <p className="text-xl font-bold text-gray-900 dark:text-white">{irrigation.duration} {t('irrigation.hours')}</p>
+                        <p className="text-sm text-text-muted mb-1">{t('irrigation.duration')}</p>
+                        <p className="text-xl font-bold text-text">{irrigation.duration} {t('irrigation.hours')}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('irrigation.method')}</p>
+                        <p className="text-sm text-text-muted mb-1">{t('irrigation.method')}</p>
                         <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
                           {t('irrigation.drip')}
                         </span>
@@ -354,34 +354,34 @@ const Irrigation = () => {
         >
           <div className="space-y-6">
             <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('common.total')}</p>
               <p className="text-2xl font-bold text-green-600">{methodDetailModal.data.length} {t('irrigation.sprinkler')}</p>
             </div>
             <div className="space-y-3">
               {methodDetailModal.data.map((irrigation) => (
                 <div
                   key={irrigation.id}
-                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                  className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <div className="text-4xl">🌧️</div>
                       <div>
-                        <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1">
+                        <h3 className="font-bold text-text text-lg mb-1">
                           {translateCrop(getCropName(irrigation.cropId))}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-sm text-text-muted">
                           {t('irrigation.date')}: {formatDateDisplay(irrigation.date)}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-6">
                       <div className="text-right">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('irrigation.duration')}</p>
-                        <p className="text-xl font-bold text-gray-900 dark:text-white">{irrigation.duration} {t('irrigation.hours')}</p>
+                        <p className="text-sm text-text-muted mb-1">{t('irrigation.duration')}</p>
+                        <p className="text-xl font-bold text-text">{irrigation.duration} {t('irrigation.hours')}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('irrigation.method')}</p>
+                        <p className="text-sm text-text-muted mb-1">{t('irrigation.method')}</p>
                         <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300">
                           {t('irrigation.sprinkler')}
                         </span>
@@ -404,34 +404,34 @@ const Irrigation = () => {
         >
           <div className="space-y-6">
             <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('common.total')}</p>
               <p className="text-2xl font-bold text-orange-600">{methodDetailModal.data.length} {t('irrigation.manual')}</p>
             </div>
             <div className="space-y-3">
               {methodDetailModal.data.map((irrigation) => (
                 <div
                   key={irrigation.id}
-                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                  className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <div className="text-4xl">🚿</div>
                       <div>
-                        <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1">
+                        <h3 className="font-bold text-text text-lg mb-1">
                           {translateCrop(getCropName(irrigation.cropId))}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-sm text-text-muted">
                           {t('irrigation.date')}: {formatDateDisplay(irrigation.date)}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-6">
                       <div className="text-right">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('irrigation.duration')}</p>
-                        <p className="text-xl font-bold text-gray-900 dark:text-white">{irrigation.duration} {t('irrigation.hours')}</p>
+                        <p className="text-sm text-text-muted mb-1">{t('irrigation.duration')}</p>
+                        <p className="text-xl font-bold text-text">{irrigation.duration} {t('irrigation.hours')}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('irrigation.method')}</p>
+                        <p className="text-sm text-text-muted mb-1">{t('irrigation.method')}</p>
                         <span className="px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/20 dark:text-orange-300">
                           {t('irrigation.manual')}
                         </span>

@@ -15,8 +15,8 @@ interface StatCardProps {
 
 const StatCard = ({ title, value, icon: Icon, color = 'green', trend, onClick }: StatCardProps) => {
   const colorClasses = {
-    green: 'bg-primary-100 text-primary-600',
-    blue: 'bg-blue-100 text-blue-600',
+    green: 'bg-primary-100 text-accent',
+    blue: 'bg-blue-100 text-info',
     orange: 'bg-orange-100 text-orange-600',
     purple: 'bg-purple-100 text-purple-600',
   };
@@ -33,7 +33,7 @@ const StatCard = ({ title, value, icon: Icon, color = 'green', trend, onClick }:
           {trend && (
             <p
               className={`text-sm mt-2 ${
-                trend.isPositive ? 'text-green-600' : 'text-red-600'
+                trend.isPositive ? 'text-green-600' : 'text-danger'
               }`}
             >
               {trend.isPositive ? '↑' : '↓'} {Math.abs(trend.value)}%

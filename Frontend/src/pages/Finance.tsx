@@ -66,24 +66,24 @@ const Finance = () => {
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <Landmark size={28} className="text-primary-600" /> Finance & Projections
+        <h1 className="text-2xl sm:text-3xl font-bold text-text flex items-center gap-2">
+          <Landmark size={28} className="text-accent" /> Finance & Projections
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Revenue forecasting, loan calculator, and agri-finance schemes</p>
+        <p className="text-text-muted text-sm mt-1">Revenue forecasting, loan calculator, and agri-finance schemes</p>
       </div>
 
       {/* Summary KPIs */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         {[
           { label: 'Annual Revenue', value: `₹${(baseIncome * 1.2).toLocaleString()}`, icon: TrendingUp, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
-          { label: 'Total Expenses', value: `₹${(baseIncome * 0.6).toLocaleString()}`, icon: TrendingDown, color: 'text-red-500', bg: 'bg-red-50 dark:bg-red-900/20' },
-          { label: 'Net Profit', value: `₹${(baseIncome * 0.6).toLocaleString()}`, icon: IndianRupee, color: 'text-primary-600', bg: 'bg-primary-50 dark:bg-primary-900/20' },
-          { label: 'Growth Rate', value: `${growthRate}%`, icon: BarChart2, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+          { label: 'Total Expenses', value: `₹${(baseIncome * 0.6).toLocaleString()}`, icon: TrendingDown, color: 'text-danger', bg: 'bg-red-50 dark:bg-red-900/20' },
+          { label: 'Net Profit', value: `₹${(baseIncome * 0.6).toLocaleString()}`, icon: IndianRupee, color: 'text-accent', bg: 'bg-primary-50 dark:bg-primary-900/20' },
+          { label: 'Growth Rate', value: `${growthRate}%`, icon: BarChart2, color: 'text-info', bg: 'bg-blue-50 dark:bg-blue-900/20' },
         ].map(kpi => (
           <div key={kpi.label} className={`rounded-2xl p-3 sm:p-4 ${kpi.bg} border border-transparent`}>
             <div className={`${kpi.color} mb-1`}><kpi.icon size={18} /></div>
             <p className={`text-lg sm:text-2xl font-black ${kpi.color}`}>{kpi.value}</p>
-            <p className="text-[10px] sm:text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5">{kpi.label}</p>
+            <p className="text-[10px] sm:text-xs font-bold text-text-muted uppercase tracking-wide mt-0.5">{kpi.label}</p>
           </div>
         ))}
       </div>
@@ -93,7 +93,7 @@ const Finance = () => {
         {(['projection', 'loan', 'schemes'] as const).map(tab => (
           <button key={tab} onClick={() => setActiveTab(tab)}
             className={`flex-1 min-w-fit px-4 py-2 rounded-lg text-xs sm:text-sm font-bold capitalize transition-all whitespace-nowrap ${
-              activeTab === tab ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+              activeTab === tab ? 'bg-white dark:bg-gray-700 text-text shadow-sm' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
             }`}>
             {tab === 'projection' ? '📈 Revenue Projection' : tab === 'loan' ? '🏦 Loan Calculator' : '💰 Loan Schemes'}
           </button>
@@ -103,8 +103,8 @@ const Finance = () => {
       {/* Revenue Projection Tab */}
       {activeTab === 'projection' && (
         <div className="card border-none shadow-xl space-y-4 sm:space-y-6">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <TrendingUp className="text-primary-600" size={20} /> Annual Revenue Projection
+          <h2 className="text-lg font-bold text-text flex items-center gap-2">
+            <TrendingUp className="text-accent" size={20} /> Annual Revenue Projection
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -117,7 +117,7 @@ const Finance = () => {
               />
               <div className="flex justify-between text-xs text-gray-400 mt-1">
                 <span>₹20K</span>
-                <span className="font-black text-primary-600">₹{baseIncome.toLocaleString()}</span>
+                <span className="font-black text-accent">₹{baseIncome.toLocaleString()}</span>
                 <span>₹5L</span>
               </div>
             </div>
@@ -130,7 +130,7 @@ const Finance = () => {
               />
               <div className="flex justify-between text-xs text-gray-400 mt-1">
                 <span>0%</span>
-                <span className="font-black text-primary-600">{growthRate}%</span>
+                <span className="font-black text-accent">{growthRate}%</span>
                 <span>50%</span>
               </div>
             </div>
@@ -165,8 +165,8 @@ const Finance = () => {
       {/* Loan Calculator Tab */}
       {activeTab === 'loan' && (
         <div className="card border-none shadow-xl space-y-4 sm:space-y-6">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Calculator className="text-primary-600" size={20} /> EMI Calculator
+          <h2 className="text-lg font-bold text-text flex items-center gap-2">
+            <Calculator className="text-accent" size={20} /> EMI Calculator
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -184,7 +184,7 @@ const Finance = () => {
                 />
                 <div className="flex justify-between text-xs text-gray-400 mt-1">
                   <span>{item.lo}</span>
-                  <span className="font-black text-primary-600">{item.format(item.value)}</span>
+                  <span className="font-black text-accent">{item.format(item.value)}</span>
                   <span>{item.hi}</span>
                 </div>
               </div>
@@ -229,19 +229,19 @@ const Finance = () => {
               <div className="p-4 sm:p-5">
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div>
-                    <h3 className="font-bold text-gray-900 dark:text-white sm:text-lg">{scheme.name}</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{scheme.description}</p>
+                    <h3 className="font-bold text-text sm:text-lg">{scheme.name}</h3>
+                    <p className="text-sm text-text-muted mt-0.5">{scheme.description}</p>
                   </div>
                   <span className={`text-xs font-black px-2.5 py-1 rounded-full whitespace-nowrap ${scheme.badge}`}>{scheme.rate}% p.a.</span>
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3">
+                  <div className="bg-surface-sunken/50 rounded-xl p-3">
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Max Amount</p>
-                    <p className="font-black text-gray-900 dark:text-white mt-0.5">₹{scheme.maxAmount.toLocaleString()}</p>
+                    <p className="font-black text-text mt-0.5">₹{scheme.maxAmount.toLocaleString()}</p>
                   </div>
-                  <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3">
+                  <div className="bg-surface-sunken/50 rounded-xl p-3">
                     <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Tenure</p>
-                    <p className="font-black text-gray-900 dark:text-white mt-0.5">{scheme.tenure}</p>
+                    <p className="font-black text-text mt-0.5">{scheme.tenure}</p>
                   </div>
                 </div>
                 <button

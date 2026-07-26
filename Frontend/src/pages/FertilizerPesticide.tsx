@@ -103,7 +103,7 @@ const FertilizerPesticide = () => {
           onClick={() => setActiveTab('fertilizer')}
           className={`px-6 py-3 font-medium transition-colors border-b-2 flex items-center gap-2 ${
             activeTab === 'fertilizer'
-              ? 'border-primary-600 text-primary-600'
+              ? 'border-accent text-accent'
               : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
           }`}
         >
@@ -114,7 +114,7 @@ const FertilizerPesticide = () => {
           onClick={() => setActiveTab('pesticide')}
           className={`px-6 py-3 font-medium transition-colors border-b-2 flex items-center gap-2 ${
             activeTab === 'pesticide'
-              ? 'border-primary-600 text-primary-600'
+              ? 'border-accent text-accent'
               : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
           }`}
         >
@@ -161,7 +161,7 @@ const FertilizerPesticide = () => {
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-2">
                         <span className="text-xl" title={t('fertilizers.fertilizer')}>💧</span>
-                        <span className="font-medium text-gray-900 dark:text-white">{translateFertilizer(fertilizer.type)}</span>
+                        <span className="font-medium text-text">{translateFertilizer(fertilizer.type)}</span>
                       </div>
                     </td>
                     <td className="py-4 px-4 text-gray-600">{fertilizer.quantity} {t('common.kg')}</td>
@@ -173,7 +173,7 @@ const FertilizerPesticide = () => {
                       <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 ease-out">
                         <button
                           onClick={() => handleEdit(fertilizer)}
-                          className="p-1.5 bg-primary-600 text-white rounded hover:bg-primary-700 transition-all duration-150 hover:scale-110 active:scale-100"
+                          className="p-1.5 bg-accent text-white rounded hover:bg-accent-hover transition-all duration-150 hover:scale-110 active:scale-100"
                           title={t('common.edit')}
                         >
                           <Edit2 size={14} />
@@ -192,7 +192,7 @@ const FertilizerPesticide = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-gray-500 dark:text-gray-400">
+                  <td colSpan={5} className="py-12 text-center text-text-muted">
                     {t('fertilizers.noFertilizers')}
                   </td>
                 </tr>
@@ -221,7 +221,7 @@ const FertilizerPesticide = () => {
                   <td className="py-4 px-4">
                     <div className="flex items-center gap-2">
                       <span className="text-xl" title={t('fertilizers.pesticide')}>🦠</span>
-                      <span className="font-medium text-gray-900 dark:text-white">{translateFertilizer(pesticide.type)}</span>
+                      <span className="font-medium text-text">{translateFertilizer(pesticide.type)}</span>
                     </div>
                   </td>
                   <td className="py-4 px-4 text-gray-600">{pesticide.quantity} {t('common.l')}</td>
@@ -233,7 +233,7 @@ const FertilizerPesticide = () => {
                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 ease-out">
                       <button
                         onClick={() => handleEdit(pesticide)}
-                        className="p-1.5 bg-primary-600 text-white rounded hover:bg-primary-700 transition-all duration-150 hover:scale-110 active:scale-100"
+                        className="p-1.5 bg-accent text-white rounded hover:bg-accent-hover transition-all duration-150 hover:scale-110 active:scale-100"
                         title={t('common.edit')}
                       >
                         <Edit2 size={14} />
@@ -252,7 +252,7 @@ const FertilizerPesticide = () => {
               })
             ) : (
               <tr>
-                <td colSpan={5} className="py-12 text-center text-gray-500 dark:text-gray-400">
+                <td colSpan={5} className="py-12 text-center text-text-muted">
                   {t('fertilizers.noPesticides')}
                 </td>
               </tr>
@@ -309,25 +309,25 @@ const FertilizerPesticide = () => {
         >
           <div className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')}</p>
-              <p className="text-2xl font-bold text-blue-600">
+              <p className="text-sm text-text-muted mb-1">{t('common.total')}</p>
+              <p className="text-2xl font-bold text-info">
                 {(statDetailModal.data as Fertilizer[]).reduce((sum, f) => sum + f.quantity, 0)} {t('common.kg')}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('common.total')} {(statDetailModal.data as Fertilizer[]).length} {t('fertilizers.fertilizers')}</p>
+              <p className="text-xs text-text-muted mt-1">{t('common.total')} {(statDetailModal.data as Fertilizer[]).length} {t('fertilizers.fertilizers')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {(statDetailModal.data as Fertilizer[]).map((item) => (
                 <div
                   key={item.id}
-                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                  className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-2xl">💧</span>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">{translateFertilizer(item.type)}</h4>
+                    <h4 className="font-semibold text-text">{translateFertilizer(item.type)}</h4>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('fertilizers.quantity')}: {item.quantity} {item.unit}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('fertilizers.dateOfUsage')}: {new Date(item.dateOfUsage).toLocaleDateString()}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('fertilizers.crop')}: {getCropName(item.cropId)}</p>
+                  <p className="text-sm text-text-muted">{t('fertilizers.quantity')}: {item.quantity} {item.unit}</p>
+                  <p className="text-sm text-text-muted">{t('fertilizers.dateOfUsage')}: {new Date(item.dateOfUsage).toLocaleDateString()}</p>
+                  <p className="text-sm text-text-muted">{t('fertilizers.crop')}: {getCropName(item.cropId)}</p>
                 </div>
               ))}
             </div>
@@ -343,25 +343,25 @@ const FertilizerPesticide = () => {
         >
           <div className="space-y-4">
             <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')}</p>
-              <p className="text-2xl font-bold text-red-600">
+              <p className="text-sm text-text-muted mb-1">{t('common.total')}</p>
+              <p className="text-2xl font-bold text-danger">
                 {(statDetailModal.data as Pesticide[]).reduce((sum, p) => sum + p.quantity, 0)} {t('common.l')}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{t('common.total')} {(statDetailModal.data as Pesticide[]).length} {t('fertilizers.pesticides')}</p>
+              <p className="text-xs text-text-muted mt-1">{t('common.total')} {(statDetailModal.data as Pesticide[]).length} {t('fertilizers.pesticides')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {(statDetailModal.data as Pesticide[]).map((item) => (
                 <div
                   key={item.id}
-                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                  className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-2xl">🦠</span>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">{translateFertilizer(item.type)}</h4>
+                    <h4 className="font-semibold text-text">{translateFertilizer(item.type)}</h4>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('fertilizers.quantity')}: {item.quantity} {item.unit}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('fertilizers.dateOfUsage')}: {new Date(item.dateOfUsage).toLocaleDateString()}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('fertilizers.crop')}: {getCropName(item.cropId)}</p>
+                  <p className="text-sm text-text-muted">{t('fertilizers.quantity')}: {item.quantity} {item.unit}</p>
+                  <p className="text-sm text-text-muted">{t('fertilizers.dateOfUsage')}: {new Date(item.dateOfUsage).toLocaleDateString()}</p>
+                  <p className="text-sm text-text-muted">{t('fertilizers.crop')}: {getCropName(item.cropId)}</p>
                 </div>
               ))}
             </div>

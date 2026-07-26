@@ -22,17 +22,17 @@ const AboutUs = () => {
               <path d="M10 16L12 18L14 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
             </svg>
           </div>
-          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-5xl font-bold text-text mb-4">
             About FarmSync
           </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-text-muted max-w-2xl mx-auto">
             Empowering farmers with digital tools to manage their farms efficiently and sustainably
           </p>
         </div>
 
         {/* History Timeline */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+          <h2 className="text-3xl font-bold text-text mb-8 text-center">
             Our Journey
           </h2>
           <div className="relative">
@@ -44,13 +44,13 @@ const AboutUs = () => {
               {/* Item 1 */}
               <div className="relative flex flex-col md:flex-row items-start md:items-center">
                 <div className="w-full md:w-1/2 pr-0 md:pr-8 pl-12 md:pl-0 text-left md:text-right order-2 md:order-1">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
+                  <div className="bg-surface rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
                     <div className="flex items-center justify-start md:justify-end mb-3">
                       <Calendar className="w-6 h-6 text-green-600 mr-2" />
                       <span className="text-sm font-semibold text-green-600 dark:text-green-400">2024 - Inception</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">The Beginning</h3>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <h3 className="text-xl font-bold text-text mb-2">The Beginning</h3>
+                    <p className="text-text-muted">
                       FarmSync was born from a vision to bridge the gap between traditional farming practices and modern technology. 
                       Recognizing the challenges farmers face in managing their operations, we set out to create a comprehensive 
                       digital solution.
@@ -66,13 +66,13 @@ const AboutUs = () => {
                 <div className="hidden md:block w-1/2"></div>
                 <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10 top-6 md:top-auto"></div>
                 <div className="w-full md:w-1/2 pl-12 md:pl-8">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
+                  <div className="bg-surface rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
                     <div className="flex items-center mb-3">
                       <Code className="w-6 h-6 text-green-600 mr-2" />
                       <span className="text-sm font-semibold text-green-600 dark:text-green-400">2024 - Development</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Building the Foundation</h3>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <h3 className="text-xl font-bold text-text mb-2">Building the Foundation</h3>
+                    <p className="text-text-muted">
                       We developed FarmSync using cutting-edge technologies including React, TypeScript, Node.js, and MySQL. 
                       The platform was designed with scalability, security, and user experience at its core. Our team worked 
                       tirelessly to create features that truly serve farmers' needs.
@@ -84,13 +84,13 @@ const AboutUs = () => {
               {/* Item 3 */}
               <div className="relative flex flex-col md:flex-row items-start md:items-center">
                 <div className="w-full md:w-1/2 pr-0 md:pr-8 pl-12 md:pl-0 text-left md:text-right order-2 md:order-1">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
+                  <div className="bg-surface rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
                     <div className="flex items-center justify-start md:justify-end mb-3">
                       <Target className="w-6 h-6 text-green-600 mr-2" />
                       <span className="text-sm font-semibold text-green-600 dark:text-green-400">2024 - Launch</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Version 1.0 Release</h3>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <h3 className="text-xl font-bold text-text mb-2">Version 1.0 Release</h3>
+                    <p className="text-text-muted">
                       FarmSync V1.0 was launched with a comprehensive suite of features including farm management, 
                       crop tracking, expense management, yield analysis, weather alerts, and AI-powered crop recommendations. 
                       This marked a significant milestone in our mission to digitize agriculture.
@@ -106,13 +106,13 @@ const AboutUs = () => {
                 <div className="hidden md:block w-1/2"></div>
                 <div className="absolute left-4 md:left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-600 rounded-full border-4 border-white dark:border-gray-800 shadow-lg z-10 top-6 md:top-auto"></div>
                 <div className="w-full md:w-1/2 pl-12 md:pl-8">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
+                  <div className="bg-surface rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
                     <div className="flex items-center mb-3">
                       <Award className="w-6 h-6 text-green-600 mr-2" />
                       <span className="text-sm font-semibold text-green-600 dark:text-green-400">2025 - Present</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Continuous Innovation</h3>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <h3 className="text-xl font-bold text-text mb-2">Continuous Innovation</h3>
+                    <p className="text-text-muted">
                       Today, FarmSync continues to evolve with regular updates, new features, and improvements based on 
                       user feedback. We remain committed to empowering farmers worldwide with tools that make farming 
                       more efficient, profitable, and sustainable.
@@ -126,23 +126,23 @@ const AboutUs = () => {
 
         {/* Mission & Vision */}
         <div className="grid md:grid-cols-2 gap-8 mb-16">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
+          <div className="bg-surface rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
             <div className="flex items-center mb-4">
               <Target className="w-8 h-8 text-green-600 mr-3" />
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Our Mission</h3>
+              <h3 className="text-2xl font-bold text-text">Our Mission</h3>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p className="text-text-muted leading-relaxed">
               To revolutionize agriculture by providing farmers with accessible, intuitive, and powerful digital tools 
               that streamline farm management, increase productivity, and promote sustainable farming practices.
             </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
+          <div className="bg-surface rounded-xl shadow-lg p-8 transform transition-all duration-300 hover:scale-100 hover:shadow-xl">
             <div className="flex items-center mb-4">
               <Heart className="w-8 h-8 text-green-600 mr-3" />
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Our Vision</h3>
+              <h3 className="text-2xl font-bold text-text">Our Vision</h3>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+            <p className="text-text-muted leading-relaxed">
               To become the leading digital platform for farm management, empowering millions of farmers globally to 
               make data-driven decisions, optimize their operations, and contribute to food security worldwide.
             </p>
@@ -151,7 +151,7 @@ const AboutUs = () => {
 
         {/* Key Features */}
         <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
+          <h2 className="text-3xl font-bold text-text mb-8 text-center">
             What Makes FarmSync Special
           </h2>
           <div className="grid md:grid-cols-3 gap-6">
@@ -174,13 +174,13 @@ const AboutUs = () => {
             ].map((feature, index) => (
               <div 
                 key={index}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl"
+                className="bg-surface rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:scale-100 hover:shadow-xl"
               >
                 <feature.icon className="w-10 h-10 text-green-600 mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-xl font-bold text-text mb-2">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-text-muted">
                   {feature.description}
                 </p>
               </div>

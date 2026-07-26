@@ -59,16 +59,16 @@ const DiseaseDetection: React.FC = () => {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-black uppercase italic tracking-tighter text-gray-900 dark:text-white">
-            AI Crop <span className="text-primary-600">Health Scanner</span>
+          <h1 className="text-3xl font-black uppercase italic tracking-tighter text-text">
+            AI Crop <span className="text-accent">Health Scanner</span>
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 font-medium">
+          <p className="text-text-muted font-medium">
             Upload a photo of your crop to detect diseases with 99% precision.
           </p>
         </div>
         <div className="flex items-center gap-4 px-6 py-3 bg-primary-100 dark:bg-primary-900/20 rounded-2xl border border-primary-200 dark:border-primary-800/30">
-          <Zap className="text-primary-600 animate-pulse" size={20} />
-          <span className="text-sm font-black uppercase tracking-widest text-primary-700 dark:text-primary-400">
+          <Zap className="text-accent" size={20} />
+          <span className="text-sm font-black uppercase tracking-widest text-primary-700 dark:text-accent">
             Powered by FarmSync ML v4.2
           </span>
         </div>
@@ -81,7 +81,7 @@ const DiseaseDetection: React.FC = () => {
             onClick={() => !isAnalyzing && fileInputRef.current?.click()}
             className={`
               relative aspect-square md:aspect-video rounded-[2.5rem] border-4 border-dashed transition-all duration-500 cursor-pointer overflow-hidden
-              ${previewUrl ? 'border-primary-500 bg-gray-900' : 'border-gray-200 dark:border-gray-800 hover:border-primary-400 hover:bg-gray-50 dark:hover:bg-white/5'}
+              ${previewUrl ? 'border-accent bg-gray-900' : 'border-border hover:border-primary-400 hover:bg-gray-50 dark:hover:bg-white/5'}
             `}
           >
             {previewUrl ? (
@@ -96,7 +96,7 @@ const DiseaseDetection: React.FC = () => {
               </>
             ) : (
               <div className="absolute inset-0 flex flex-col items-center justify-center p-10 text-center space-y-4">
-                <div className="w-20 h-20 rounded-3xl bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center text-primary-600">
+                <div className="w-20 h-20 rounded-3xl bg-primary-100 dark:bg-primary-900/20 flex items-center justify-center text-accent">
                   <Upload size={32} />
                 </div>
                 <div className="space-y-2">
@@ -119,7 +119,7 @@ const DiseaseDetection: React.FC = () => {
               <button
                 onClick={handleUpload}
                 disabled={isAnalyzing}
-                className="flex-1 bg-primary-600 hover:bg-primary-500 disabled:bg-gray-400 text-white py-5 rounded-2xl text-lg font-black uppercase italic tracking-tighter shadow-2xl shadow-primary-500/20 transition-all active:scale-100 flex items-center justify-center gap-3"
+                className="flex-1 bg-accent hover:bg-accent disabled:bg-gray-400 text-white py-5 rounded-2xl text-lg font-black uppercase italic tracking-tighter shadow-2xl shadow-accent/20 transition-all active:scale-100 flex items-center justify-center gap-3"
               >
                 {isAnalyzing ? (
                   <>
@@ -137,7 +137,7 @@ const DiseaseDetection: React.FC = () => {
             {previewUrl && (
               <button
                 onClick={reset}
-                className="p-5 rounded-2xl border-2 border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-white/5 transition-all"
+                className="p-5 rounded-2xl border-2 border-border hover:bg-gray-100 dark:hover:bg-white/5 transition-all"
               >
                 <RefreshCw size={24} />
               </button>
@@ -160,19 +160,19 @@ const DiseaseDetection: React.FC = () => {
           )}
 
           {isAnalyzing && (
-            <div className="glass-card p-10 border border-primary-500/30 space-y-10">
+            <div className="glass-card p-10 border border-accent/30 space-y-10">
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary-500">Neural Network Status</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-accent">Neural Network Status</span>
                   <span className="text-[10px] font-black uppercase tracking-widest text-accent">Active</span>
                 </div>
                 <div className="h-2 w-full bg-gray-100 dark:bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-primary-500 animate-analysis-progress" />
+                  <div className="h-full bg-accent animate-analysis-progress" />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {[1,2,3,4].map(i => (
-                  <div key={i} className="h-20 rounded-2xl bg-gray-50 dark:bg-white/5 animate-pulse" />
+                  <div key={i} className="h-20 rounded-2xl bg-gray-50 dark:bg-white/5" />
                 ))}
               </div>
             </div>
@@ -198,7 +198,7 @@ const DiseaseDetection: React.FC = () => {
 
               <div className="p-8 space-y-8">
                 <div className="space-y-4">
-                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary-500">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-accent">
                     <ShieldCheck size={14} />
                     Recommended Treatment
                   </div>
@@ -207,7 +207,7 @@ const DiseaseDetection: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100 dark:border-white/5">
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border">
                   <button className="flex items-center justify-center gap-2 p-4 rounded-xl bg-gray-50 dark:bg-white/5 font-black uppercase tracking-widest text-[10px] hover:bg-gray-100 dark:hover:bg-white/10 transition-all">
                     Search Registry <ChevronRight size={14} />
                   </button>

@@ -247,7 +247,7 @@ const Fields = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t('fields.title')}</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">{t('fields.subtitle')}</p>
+          <p className="text-text-muted mt-1">{t('fields.subtitle')}</p>
         </div>
         <button onClick={() => { setShowForm(true); resetForm(); }} className="btn-primary flex items-center gap-2">
           <Plus size={20} />
@@ -257,9 +257,9 @@ const Fields = () => {
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
+          <div className="bg-surface rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/50">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-xl font-bold text-text">
                 {editingField ? t('fields.editField') : t('fields.addField')}
               </h2>
               <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors">
@@ -319,7 +319,7 @@ const Fields = () => {
                   <label className="label">Latitude</label>
                   <div className="relative">
                     <input className="input pr-10" value={formData.latitude} onChange={e => setFormData({...formData, latitude: e.target.value})} />
-                    <button type="button" onClick={getCurrentLocation} className="absolute right-2 top-2 text-primary-600 hover:text-primary-700">
+                    <button type="button" onClick={getCurrentLocation} className="absolute right-2 top-2 text-accent hover:text-primary-700">
                       <Navigation size={18} />
                     </button>
                   </div>
@@ -343,9 +343,9 @@ const Fields = () => {
       )}
 
       {fields.length === 0 ? (
-        <div className="card text-center py-20 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-dashed border-2 border-gray-200 dark:border-gray-700">
+        <div className="card text-center py-20 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border-dashed border-2 border-border">
           <MapPin size={64} className="mx-auto text-gray-300 mb-4" />
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+          <h3 className="text-xl font-bold text-text mb-2">
             {loading ? "Loading fields..." : "No fields mapped yet"}
           </h3>
           <p className="text-gray-500 mb-8 max-w-sm mx-auto">Start by adding your first field to track growth and soil health across your farm.</p>
@@ -356,11 +356,11 @@ const Fields = () => {
           {fields.map(field => {
             const stats = getSoilStats(field.id);
             return (
-              <div key={field.id} className="card group hover:shadow-2xl transition-all duration-300 border-t-4 border-primary-600 relative overflow-hidden bg-white dark:bg-gray-800">
+              <div key={field.id} className="card group hover:shadow-2xl transition-all duration-300 border-t-4 border-accent relative overflow-hidden bg-surface">
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="text-xl font-black text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">{field.name}</h3>
+                      <h3 className="text-xl font-black text-text group-hover:text-accent transition-colors">{field.name}</h3>
                       <span className={`text-[9px] font-black px-2 py-0.5 rounded-full ${stats.healthColor}`}>
                         {stats.health}
                       </span>
@@ -370,10 +370,10 @@ const Fields = () => {
                     </p>
                   </div>
                   <div className="flex gap-1">
-                    <button onClick={() => handleEdit(field)} className="p-1.5 text-gray-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition-all" title={t('common.edit') || 'Edit'}>
+                    <button onClick={() => handleEdit(field)} className="p-1.5 text-gray-400 hover:text-accent hover:bg-primary-50 dark:hover:bg-primary-900/30 rounded-lg transition-all" title={t('common.edit') || 'Edit'}>
                       <Edit size={16} />
                     </button>
-                    <button onClick={() => handleDelete(field.id, field.name)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all" title={t('common.delete') || 'Delete'}>
+                    <button onClick={() => handleDelete(field.id, field.name)} className="p-1.5 text-gray-400 hover:text-danger hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg transition-all" title={t('common.delete') || 'Delete'}>
                       <Trash2 size={16} />
                     </button>
                   </div>
@@ -383,13 +383,13 @@ const Fields = () => {
                   
                   {/* Basic Metadata (Area & Position) */}
                   <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                      <Map size={14} className="text-primary-600 shrink-0" />
+                    <div className="flex items-center gap-2 text-text-muted">
+                      <Map size={14} className="text-accent shrink-0" />
                       <span className="font-bold">{field.area} {t('common.acres')}</span>
                     </div>
                     {field.latitude && (
-                      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-                        <Navigation size={14} className="text-blue-500 shrink-0" />
+                      <div className="flex items-center gap-2 text-text-muted">
+                        <Navigation size={14} className="text-info shrink-0" />
                         <span className="font-mono text-[10px]">{field.latitude.toFixed(4)}, {field.longitude?.toFixed(4)}</span>
                       </div>
                     )}
@@ -399,28 +399,28 @@ const Fields = () => {
                   <div className="space-y-1.5 bg-blue-50/30 dark:bg-blue-950/10 p-3 rounded-xl border border-blue-100/50 dark:border-blue-900/20">
                     <div className="flex justify-between items-center text-xs">
                       <span className="font-bold text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                        <Droplet size={14} className="text-blue-500" />
+                        <Droplet size={14} className="text-info" />
                         Soil Moisture
                       </span>
-                      <span className="font-black text-blue-600 dark:text-blue-400">{stats.moisture}%</span>
+                      <span className="font-black text-info dark:text-blue-400">{stats.moisture}%</span>
                     </div>
                     <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                       <div 
                         style={{ width: `${stats.moisture}%` }} 
                         className={`h-full rounded-full transition-all duration-500 ${
-                          stats.moisture < 55 ? 'bg-amber-500' : 'bg-blue-500'
+                          stats.moisture < 55 ? 'bg-amber-500' : 'bg-info'
                         }`}
                       ></div>
                     </div>
                   </div>
 
                   {/* Soil Chemistry (NPK Grid) */}
-                  <div className="grid grid-cols-3 gap-2 text-center bg-gray-50/50 dark:bg-gray-900/20 p-2.5 rounded-xl border border-gray-100 dark:border-gray-800">
-                    <div className="border-r border-gray-100 dark:border-gray-800">
+                  <div className="grid grid-cols-3 gap-2 text-center bg-gray-50/50 dark:bg-gray-900/20 p-2.5 rounded-xl border border-border">
+                    <div className="border-r border-border">
                       <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Nitrogen (N)</p>
                       <p className="text-xs font-black text-gray-800 dark:text-gray-200 mt-0.5">{stats.n} ppm</p>
                     </div>
-                    <div className="border-r border-gray-100 dark:border-gray-800">
+                    <div className="border-r border-border">
                       <p className="text-[8px] font-black text-gray-400 uppercase tracking-widest">Phosphorus (P)</p>
                       <p className="text-xs font-black text-gray-800 dark:text-gray-200 mt-0.5">{stats.p} ppm</p>
                     </div>
@@ -431,28 +431,28 @@ const Fields = () => {
                   </div>
 
                   {/* Telemetry Metrics */}
-                  <div className="grid grid-cols-3 gap-2 text-xs py-1 border-t border-b border-gray-100 dark:border-gray-800/80">
-                    <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
-                      <Thermometer size={14} className="text-red-500 shrink-0" />
+                  <div className="grid grid-cols-3 gap-2 text-xs py-1 border-t border-b border-border/80">
+                    <div className="flex items-center gap-1.5 text-text-muted">
+                      <Thermometer size={14} className="text-danger shrink-0" />
                       <span>{stats.temp}°C</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-1.5 text-text-muted">
                       <Gauge size={14} className="text-purple-500 shrink-0" />
                       <span>{stats.humidity}% RH</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
-                      <Activity size={14} className="text-amber-500 shrink-0" />
+                    <div className="flex items-center gap-1.5 text-text-muted">
+                      <Activity size={14} className="text-warning shrink-0" />
                       <span>pH {stats.ph}</span>
                     </div>
                   </div>
 
                   {/* Current Active Crop or Suitability */}
                   <div className="flex items-center justify-between text-xs pt-1">
-                    <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-1.5 text-text-muted">
                       <Sprout size={14} className="text-green-500 shrink-0" />
                       <span className="font-bold">Active Crop:</span>
                     </div>
-                    <span className="bg-primary-50 dark:bg-primary-950/30 text-primary-700 dark:text-primary-400 px-2.5 py-0.5 rounded-full font-black text-[10px] uppercase tracking-wider">
+                    <span className="bg-primary-50 dark:bg-primary-950/30 text-primary-700 dark:text-accent px-2.5 py-0.5 rounded-full font-black text-[10px] uppercase tracking-wider">
                       {stats.crop}
                     </span>
                   </div>
@@ -460,7 +460,7 @@ const Fields = () => {
                   {/* Soil Test Date */}
                   {field.soil_test_date && (
                     <div className="flex items-center gap-2 text-[10px] text-gray-400 pt-1 border-t border-gray-50 dark:border-gray-800">
-                      <TestTube size={12} className="text-amber-500 shrink-0" />
+                      <TestTube size={12} className="text-warning shrink-0" />
                       <span>Soil report certified on {formatDateDisplay(field.soil_test_date)}</span>
                     </div>
                   )}

@@ -159,7 +159,7 @@ const Reports = () => {
                 ₹{mockExpenses.reduce((sum, exp) => sum + exp.amount, 0).toLocaleString()}
               </p>
             </div>
-            <IndianRupee className="text-blue-600" size={32} />
+            <IndianRupee className="text-info" size={32} />
           </div>
         </div>
         <div className="card bg-purple-50">
@@ -191,7 +191,7 @@ const Reports = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-900">{t('reports.monthlyExpensesTrend')}</h2>
             <div className="flex items-center gap-2">
-              <IndianRupee className="text-primary-600" size={24} />
+              <IndianRupee className="text-accent" size={24} />
               <Eye size={18} className="text-gray-400" />
             </div>
           </div>
@@ -218,7 +218,7 @@ const Reports = () => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-gray-900">{t('reports.cropStatusDistribution')}</h2>
             <div className="flex items-center gap-2">
-              <Sprout className="text-primary-600" size={24} />
+              <Sprout className="text-accent" size={24} />
               <Eye size={18} className="text-gray-400" />
             </div>
           </div>
@@ -249,7 +249,7 @@ const Reports = () => {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900">{t('reports.expenseByCategory')}</h2>
           <div className="flex items-center gap-2">
-            <IndianRupee className="text-primary-600" size={24} />
+            <IndianRupee className="text-accent" size={24} />
             <Eye size={18} className="text-gray-400" />
           </div>
         </div>
@@ -269,7 +269,7 @@ const Reports = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="card hover:shadow-xl transition-shadow">
           <div className="text-center">
-            <FileText className="mx-auto mb-4 text-primary-600" size={48} />
+            <FileText className="mx-auto mb-4 text-accent" size={48} />
             <h3 className="text-xl font-bold text-gray-900 mb-2">{t('reports.monthlyReport')}</h3>
             <p className="text-gray-600 mb-4">{t('reports.monthlyReportDesc')}</p>
             <div className="flex gap-2">
@@ -287,7 +287,7 @@ const Reports = () => {
         </div>
         <div className="card hover:shadow-xl transition-shadow">
           <div className="text-center">
-            <TrendingUp className="mx-auto mb-4 text-primary-600" size={48} />
+            <TrendingUp className="mx-auto mb-4 text-accent" size={48} />
             <h3 className="text-xl font-bold text-gray-900 mb-2">{t('reports.seasonalReport')}</h3>
             <p className="text-gray-600 mb-4">{t('reports.seasonalReportDesc')}</p>
             <div className="flex gap-2">
@@ -305,7 +305,7 @@ const Reports = () => {
         </div>
         <div className="card hover:shadow-xl transition-shadow">
           <div className="text-center">
-            <IndianRupee className="mx-auto mb-4 text-primary-600" size={48} />
+            <IndianRupee className="mx-auto mb-4 text-accent" size={48} />
             <h3 className="text-xl font-bold text-gray-900 mb-2">{t('reports.financialReport')}</h3>
             <p className="text-gray-600 mb-4">{t('reports.financialReportDesc')}</p>
             <div className="flex gap-2">
@@ -335,23 +335,23 @@ const Reports = () => {
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('reports.totalYield')}</p>
+                <p className="text-sm text-text-muted mb-1">{t('reports.totalYield')}</p>
                 <p className="text-xl font-bold text-green-600">{getTotalYield().toLocaleString()} {t('common.kg')}</p>
               </div>
               <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('reports.totalExpenses')}</p>
-                <p className="text-xl font-bold text-blue-600">
+                <p className="text-sm text-text-muted mb-1">{t('reports.totalExpenses')}</p>
+                <p className="text-xl font-bold text-info">
                   ₹{mockExpenses.reduce((sum, exp) => sum + exp.amount, 0).toLocaleString()}
                 </p>
               </div>
               <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('reports.activeCrops')}</p>
+                <p className="text-sm text-text-muted mb-1">{t('reports.activeCrops')}</p>
                 <p className="text-xl font-bold text-purple-600">
                   {mockCrops.filter((c) => c.status === 'active').length}
                 </p>
               </div>
               <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('reports.totalFarms')}</p>
+                <p className="text-sm text-text-muted mb-1">{t('reports.totalFarms')}</p>
                 <p className="text-xl font-bold text-orange-600">2</p>
               </div>
             </div>
@@ -359,7 +359,7 @@ const Reports = () => {
             {/* Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('reports.monthlyExpensesTrend')}</h3>
+                <h3 className="text-lg font-semibold text-text mb-4">{t('reports.monthlyExpensesTrend')}</h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={detailModal.data?.monthlyExpenseData || monthlyExpenseData}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -378,7 +378,7 @@ const Reports = () => {
                 </ResponsiveContainer>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('reports.cropStatusDistribution')}</h3>
+                <h3 className="text-lg font-semibold text-text mb-4">{t('reports.cropStatusDistribution')}</h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
@@ -403,7 +403,7 @@ const Reports = () => {
 
             {/* Expense Category Chart */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('reports.expenseByCategory')}</h3>
+              <h3 className="text-lg font-semibold text-text mb-4">{t('reports.expenseByCategory')}</h3>
               <ResponsiveContainer width="100%" height={350}>
                 <BarChart data={detailModal.data?.expenseCategoryData || expenseCategoryData}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -418,7 +418,7 @@ const Reports = () => {
 
             {/* Data Table */}
             <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('reports.monthlyReport')}</h3>
+              <h3 className="text-lg font-semibold text-text mb-4">{t('reports.monthlyReport')}</h3>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                   <thead className="bg-gray-50 dark:bg-gray-700">
@@ -427,11 +427,11 @@ const Reports = () => {
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">{t('reports.expenses')} (₹)</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <tbody className="bg-surface divide-y divide-gray-200 dark:divide-gray-700">
                     {(detailModal.data?.monthlyExpenseData || monthlyExpenseData).map((item: any, index: number) => (
                       <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{item.month}</td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">₹{item.expenses.toLocaleString()}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-text">{item.month}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-text-muted">₹{item.expenses.toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>

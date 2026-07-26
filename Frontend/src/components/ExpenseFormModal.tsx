@@ -85,12 +85,12 @@ const ExpenseFormModal = ({ isOpen, onClose, onSave, expense = null, mode = 'add
       }}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-300"
+        className="bg-surface rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <IndianRupee size={24} className="text-primary-600" />
+        <div className="flex items-center justify-between p-6 border-b border-border">
+          <h2 className="text-2xl font-bold text-text flex items-center gap-2">
+            <IndianRupee size={24} className="text-accent" />
             {mode === 'edit' ? t('expenses.editExpense') || 'Edit Expense' : t('expenses.addExpense') || 'Add Expense'}
           </h2>
           <button
@@ -117,12 +117,12 @@ const ExpenseFormModal = ({ isOpen, onClose, onSave, expense = null, mode = 'add
                   onClick={() => setFormData({ ...formData, category: cat.value })}
                   className={`p-4 border-2 rounded-lg transition-all ${
                     formData.category === cat.value
-                      ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                      ? 'border-accent bg-primary-50 dark:bg-primary-900/20'
+                      : 'border-border hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
                   <div className="text-2xl mb-2">{cat.icon}</div>
-                  <div className="font-medium text-gray-900 dark:text-white text-sm">{cat.label}</div>
+                  <div className="font-medium text-text text-sm">{cat.label}</div>
                 </button>
               ))}
             </div>
@@ -201,7 +201,7 @@ const ExpenseFormModal = ({ isOpen, onClose, onSave, expense = null, mode = 'add
             </select>
           </div>
 
-          <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-3 pt-4 border-t border-border">
             <button
               type="button"
               onClick={onClose}
@@ -211,7 +211,7 @@ const ExpenseFormModal = ({ isOpen, onClose, onSave, expense = null, mode = 'add
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
               <Save size={18} />
               {mode === 'edit' ? t('common.save') || 'Save Changes' : t('expenses.addExpense') || 'Add Expense'}

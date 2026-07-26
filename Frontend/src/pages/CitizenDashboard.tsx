@@ -124,10 +124,10 @@ const CitizenDashboard = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-text">
             {greeting()}, {user?.name?.split(' ')[0]}! 👋
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm flex items-center gap-1.5">
+          <p className="text-text-muted mt-1 text-sm flex items-center gap-1.5">
             <MapPin size={14} />
             {user?.location || 'Chennai, Tamil Nadu'}
           </p>
@@ -148,7 +148,7 @@ const CitizenDashboard = () => {
 
       {/* Browse by Category (Vegetables, Fruits, Grains, etc.) */}
       <div className="glass-card p-4 sm:p-6">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-text mb-4 flex items-center gap-2">
           <Package size={20} className="text-emerald-600" /> Browse by Fresh Category
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -156,7 +156,7 @@ const CitizenDashboard = () => {
             <div
               key={cat.name}
               onClick={() => navigate(cat.path)}
-              className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-4 border border-transparent hover:border-accent/20 hover:bg-white dark:hover:bg-gray-700 hover:shadow-md cursor-pointer transition-all flex flex-col items-center text-center"
+              className="bg-surface-sunken/50 rounded-2xl p-4 border border-transparent hover:border-accent/20 hover:bg-white dark:hover:bg-gray-700 hover:shadow-md cursor-pointer transition-all flex flex-col items-center text-center"
             >
               <span className="text-4xl mb-2">{cat.icon}</span>
               <h3 className="font-bold text-sm text-gray-800 dark:text-white">{cat.name}</h3>
@@ -168,14 +168,14 @@ const CitizenDashboard = () => {
 
       {/* Frequently Bought Food and Related Items */}
       <div className="glass-card p-4 sm:p-6">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <Flame size={20} className="text-orange-500 animate-pulse" /> Frequently Bought Food & Items
+        <h2 className="text-lg font-bold text-text mb-4 flex items-center gap-2">
+          <Flame size={20} className="text-orange-500" /> Frequently Bought Food & Items
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {FREQUENT_ITEMS.map(item => (
             <div
               key={item.id}
-              className="bg-gray-50 dark:bg-gray-800/50 rounded-2xl p-4 border border-gray-100 dark:border-gray-800 flex flex-col justify-between hover:shadow-lg transition-all"
+              className="bg-surface-sunken/50 rounded-2xl p-4 border border-border flex flex-col justify-between hover:shadow-lg transition-all"
             >
               <div>
                 <div className="flex justify-between items-start mb-2">
@@ -184,9 +184,9 @@ const CitizenDashboard = () => {
                     {item.category}
                   </span>
                 </div>
-                <h3 className="font-bold text-sm text-gray-900 dark:text-white mb-1 truncate">{item.name}</h3>
+                <h3 className="font-bold text-sm text-text mb-1 truncate">{item.name}</h3>
                 <div className="flex items-center gap-1 mb-3 text-[10px] text-gray-400">
-                  <div className="flex items-center text-amber-500">
+                  <div className="flex items-center text-warning">
                     <Star size={10} fill="currentColor" />
                     <span className="font-bold text-gray-700 dark:text-gray-300 ml-0.5">{item.rating}</span>
                   </div>
@@ -194,10 +194,10 @@ const CitizenDashboard = () => {
                   <span>{item.sales}</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100 dark:border-gray-800">
+              <div className="flex items-center justify-between mt-2 pt-2 border-t border-border">
                 <div>
                   <span className="text-xs text-gray-400 block">Price</span>
-                  <span className="font-black text-gray-900 dark:text-white">₹{item.price}/{item.unit}</span>
+                  <span className="font-black text-text">₹{item.price}/{item.unit}</span>
                 </div>
                 <button
                   onClick={() => addToCart({ ...item, quantity: 1 })}
@@ -214,7 +214,7 @@ const CitizenDashboard = () => {
       {/* Market Prices */}
       <div className="glass-card p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <h2 className="text-lg font-bold text-text flex items-center gap-2">
             <BarChart2 size={20} className="text-emerald-600" /> Today's Market Prices
           </h2>
           <button onClick={() => navigate('/market')} className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 hover:gap-2 transition-all">
@@ -223,13 +223,13 @@ const CitizenDashboard = () => {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
           {MARKET_PRICES.map(item => (
-            <div key={item.name} className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-3 text-center hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-md cursor-pointer" onClick={() => navigate('/market')}>
+            <div key={item.name} className="bg-surface-sunken/50 rounded-xl p-3 text-center hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-md cursor-pointer" onClick={() => navigate('/market')}>
               <div className="text-2xl mb-1">{item.icon}</div>
               <p className="text-xs font-bold text-gray-700 dark:text-gray-300">{item.name}</p>
-              <p className="text-sm font-black text-gray-900 dark:text-white">₹{item.price.toLocaleString()}</p>
+              <p className="text-sm font-black text-text">₹{item.price.toLocaleString()}</p>
               <p className="text-[9px] text-gray-400">{item.unit}</p>
               <div className={`flex items-center justify-center gap-0.5 mt-1 text-[9px] font-bold ${
-                item.trend === 'up' ? 'text-green-600' : item.trend === 'down' ? 'text-red-500' : 'text-gray-400'
+                item.trend === 'up' ? 'text-green-600' : item.trend === 'down' ? 'text-danger' : 'text-gray-400'
               }`}>
                 {item.trend === 'up' && <TrendingUp size={10} />}
                 {item.trend === 'down' && <TrendingDown size={10} />}
@@ -244,7 +244,7 @@ const CitizenDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="lg:col-span-2 glass-card overflow-hidden flex flex-col">
           <div className="p-4 sm:p-6 flex-grow flex flex-col">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-bold text-text mb-4 flex items-center gap-2">
               <MapPin size={20} className="text-emerald-600" /> Your Location
             </h2>
             <div className="flex-grow min-h-[220px]">
@@ -267,7 +267,7 @@ const CitizenDashboard = () => {
         {/* Marketplace listings */}
         <div className="glass-card p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-text flex items-center gap-2">
               <ShoppingCart size={20} className="text-emerald-600" /> Buy Fresh Produce
             </h2>
             <button onClick={() => navigate('/marketplace')} className="text-xs font-bold text-emerald-600 flex items-center gap-1 hover:gap-2 transition-all">
@@ -283,13 +283,13 @@ const CitizenDashboard = () => {
           ) : (
             <div className="space-y-2.5">
               {nearbyItems.slice(0, 4).map(item => (
-                <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
+                <div key={item.id} className="flex items-center justify-between p-3 bg-surface-sunken/50 rounded-xl hover:bg-white dark:hover:bg-gray-700 transition-all border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-gray-900 dark:text-white text-sm truncate">{item.name}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{item.quantity} {item.unit} • {item.farmer?.name || 'Local Farmer'}</p>
+                    <p className="font-bold text-text text-sm truncate">{item.name}</p>
+                    <p className="text-xs text-text-muted">{item.quantity} {item.unit} • {item.farmer?.name || 'Local Farmer'}</p>
                   </div>
                   <div className="flex items-center gap-2 ml-3">
-                    <span className="font-black text-gray-900 dark:text-white text-sm">₹{item.price}/{item.unit}</span>
+                    <span className="font-black text-text text-sm">₹{item.price}/{item.unit}</span>
                     <button
                       onClick={() => addToCart(item)}
                       className="p-1.5 bg-emerald-100 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-all"
@@ -306,7 +306,7 @@ const CitizenDashboard = () => {
         {/* Community discussions */}
         <div className="glass-card p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-text flex items-center gap-2">
               <MessageSquare size={20} className="text-emerald-600" /> Farmer Discussions
             </h2>
             <button onClick={() => navigate('/community')} className="text-xs font-bold text-emerald-600 flex items-center gap-1 hover:gap-2 transition-all">
@@ -320,8 +320,8 @@ const CitizenDashboard = () => {
                 { title: 'How to deal with brown spot disease in rice?', author: 'Anbu Selvan', likes: 8, time: '5h ago' },
                 { title: 'Market prices dropping for onion — should I wait?', author: 'Murugesan', likes: 22, time: '1d ago' },
               ].map((post, i) => (
-                <div key={i} onClick={() => navigate('/community')} className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-white dark:hover:bg-gray-700 transition-all cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
-                  <p className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">{post.title}</p>
+                <div key={i} onClick={() => navigate('/community')} className="p-3 bg-surface-sunken/50 rounded-xl hover:bg-white dark:hover:bg-gray-700 transition-all cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-600">
+                  <p className="font-semibold text-text text-sm leading-tight">{post.title}</p>
                   <div className="flex items-center gap-3 mt-1.5 text-[10px] text-gray-500">
                     <span className="font-bold text-emerald-600">{post.author}</span>
                     <span>👍 {post.likes}</span>
@@ -333,8 +333,8 @@ const CitizenDashboard = () => {
           ) : (
             <div className="space-y-2.5">
               {communityPosts.map(post => (
-                <div key={post.id} onClick={() => navigate('/community')} className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl hover:bg-white dark:hover:bg-gray-700 transition-all cursor-pointer">
-                  <p className="font-semibold text-gray-900 dark:text-white text-sm">{post.title}</p>
+                <div key={post.id} onClick={() => navigate('/community')} className="p-3 bg-surface-sunken/50 rounded-xl hover:bg-white dark:hover:bg-gray-700 transition-all cursor-pointer">
+                  <p className="font-semibold text-text text-sm">{post.title}</p>
                   <p className="text-[10px] text-gray-500 mt-1">by {post.author?.name || 'Farmer'} • 👍 {post.likesCount || 0}</p>
                 </div>
               ))}
@@ -345,17 +345,17 @@ const CitizenDashboard = () => {
 
       {/* Community FAQs */}
       <div className="glass-card p-4 sm:p-6">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+        <h2 className="text-lg font-bold text-text mb-6 flex items-center gap-2">
           <HelpCircle size={20} className="text-emerald-600" /> Buyer & Marketplace FAQs
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {FAQS.map((faq, i) => (
-            <div key={i} className="p-4 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-800 hover:shadow-sm transition-all">
-              <h3 className="font-extrabold text-sm text-gray-900 dark:text-white mb-2 flex items-start gap-2">
+            <div key={i} className="p-4 bg-surface-sunken/40 rounded-2xl border border-border hover:shadow-sm transition-all">
+              <h3 className="font-extrabold text-sm text-text mb-2 flex items-start gap-2">
                 <span className="text-emerald-600 shrink-0">Q:</span>
                 <span>{faq.q}</span>
               </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 font-medium pl-5 leading-relaxed">
+              <p className="text-xs text-text-muted font-medium pl-5 leading-relaxed">
                 {faq.a}
               </p>
             </div>

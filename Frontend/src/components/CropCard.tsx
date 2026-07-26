@@ -29,11 +29,11 @@ const CropCard = ({ crop, onView }: CropCardProps) => {
   const getWaterRequirementColor = (requirement?: string) => {
     switch (requirement) {
       case 'low':
-        return 'text-blue-600';
+        return 'text-info';
       case 'medium':
         return 'text-green-600';
       case 'high':
-        return 'text-red-600';
+        return 'text-danger';
       default:
         return 'text-gray-600';
     }
@@ -47,7 +47,7 @@ const CropCard = ({ crop, onView }: CropCardProps) => {
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white">{translateCrop(crop.name)}</h3>
+            <h3 className="text-xl font-bold text-text">{translateCrop(crop.name)}</h3>
             {crop.category && (
               <span className="px-2 py-0.5 bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 text-xs font-medium rounded">
                 {translateCategory(crop.category)}
@@ -61,28 +61,28 @@ const CropCard = ({ crop, onView }: CropCardProps) => {
         <div className="text-4xl" title={translateCrop(crop.name)}>{getCropIcon(crop.name)}</div>
       </div>
 
-      <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400 mb-4">
+      <div className="space-y-2 text-sm text-text-muted mb-4">
         <div className="flex items-center gap-2">
-          <Calendar size={16} className="text-primary-600" />
+          <Calendar size={16} className="text-accent" />
           <span>
             <strong>{t('crops.season')}:</strong> {translateSeason(crop.season)}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <Calendar size={16} className="text-primary-600" />
+          <Calendar size={16} className="text-accent" />
           <span>
             <strong>{t('crops.sowing')}:</strong> {formatDateDisplay(crop.sowingDate)}
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <Calendar size={16} className="text-primary-600" />
+          <Calendar size={16} className="text-accent" />
           <span>
             <strong>{t('crops.harvest')}:</strong> {formatDateDisplay(crop.harvestDate)}
           </span>
         </div>
         {crop.growthPeriod && (
           <div className="flex items-center gap-2">
-            <Leaf size={16} className="text-primary-600" />
+            <Leaf size={16} className="text-accent" />
             <span>
               <strong>{t('crops.growthPeriod')}:</strong> {crop.growthPeriod} {t('crops.days')}
             </span>
@@ -98,43 +98,43 @@ const CropCard = ({ crop, onView }: CropCardProps) => {
             {crop.temperature && (
               <div className="flex items-center gap-1">
                 <Thermometer size={12} className="text-orange-500" />
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-text-muted">
                   <strong>{t('crops.temp')}:</strong> {crop.temperature}°C
                 </span>
               </div>
             )}
             {crop.humidity && (
               <div className="flex items-center gap-1">
-                <Droplet size={12} className="text-blue-500" />
-                <span className="text-gray-600 dark:text-gray-400">
+                <Droplet size={12} className="text-info" />
+                <span className="text-text-muted">
                   <strong>{t('crops.humidity')}:</strong> {crop.humidity}%
                 </span>
               </div>
             )}
             {crop.ph && (
               <div className="flex items-center gap-1">
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-text-muted">
                   <strong>{t('crops.ph')}:</strong> {crop.ph}
                 </span>
               </div>
             )}
             {crop.rainfall && (
               <div className="flex items-center gap-1">
-                <CloudRain size={12} className="text-blue-600" />
-                <span className="text-gray-600 dark:text-gray-400">
+                <CloudRain size={12} className="text-info" />
+                <span className="text-text-muted">
                   <strong>{t('crops.rainfall')}:</strong> {crop.rainfall}mm
                 </span>
               </div>
             )}
             {crop.n && crop.p && crop.k && (
               <>
-                <div className="text-gray-600 dark:text-gray-400">
+                <div className="text-text-muted">
                   <strong>N:</strong> {crop.n}
                 </div>
-                <div className="text-gray-600 dark:text-gray-400">
+                <div className="text-text-muted">
                   <strong>P:</strong> {crop.p}
                 </div>
-                <div className="text-gray-600 dark:text-gray-400">
+                <div className="text-text-muted">
                   <strong>K:</strong> {crop.k}
                 </div>
               </>
@@ -151,7 +151,7 @@ const CropCard = ({ crop, onView }: CropCardProps) => {
             </div>
           )}
           {crop.averageYield && (
-            <div className="mt-2 text-xs text-gray-600 dark:text-gray-400">
+            <div className="mt-2 text-xs text-text-muted">
               <strong>{t('crops.avgYield')}:</strong> {crop.averageYield.toLocaleString()} {t('common.kg')}/acre
             </div>
           )}
@@ -159,7 +159,7 @@ const CropCard = ({ crop, onView }: CropCardProps) => {
       )}
 
       {onView && (
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700" onClick={(e) => e.stopPropagation()}>
+        <div className="mt-4 pt-4 border-t border-border" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={(e) => {
               e.stopPropagation();

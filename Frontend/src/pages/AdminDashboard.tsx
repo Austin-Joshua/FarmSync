@@ -132,10 +132,10 @@ const AdminDashboard = () => {
   if (user?.role !== 'admin') {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="w-24 h-24 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-600 mb-6">
+        <div className="w-24 h-24 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-danger mb-6">
           <AlertCircle size={48} />
         </div>
-        <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-2 uppercase tracking-tight">Access Restricted</h2>
+        <h2 className="text-3xl font-black text-text mb-2 uppercase tracking-tight">Access Restricted</h2>
         <p className="text-gray-500 max-w-sm">This terminal is reserved for administrative personnel only. Unauthorized access has been logged.</p>
       </div>
     );
@@ -144,7 +144,7 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-24">
-        <Loader className="animate-spin h-12 w-12 text-primary-600 mb-4" />
+        <Loader className="animate-spin h-12 w-12 text-accent mb-4" />
         <p className="text-gray-500 font-medium font-mono uppercase tracking-widest">Hydrating global analytics...</p>
       </div>
     );
@@ -153,9 +153,9 @@ const AdminDashboard = () => {
   if (error || !statistics) {
     return (
       <div className="card border-red-500/20 bg-red-50/10 dark:bg-red-900/10 text-center py-24">
-        <AlertCircle size={48} className="text-red-500 mx-auto mb-4" />
+        <AlertCircle size={48} className="text-danger mx-auto mb-4" />
         <h2 className="text-xl font-bold text-red-800 dark:text-red-400 mb-2">Service Fault</h2>
-        <p className="text-red-600 dark:text-red-300 mb-8">{error}</p>
+        <p className="text-danger dark:text-red-300 mb-8">{error}</p>
         <button onClick={fetchStatistics} className="btn-primary bg-red-600 hover:bg-red-700">Reconnect Service</button>
       </div>
     );
@@ -188,7 +188,7 @@ const AdminDashboard = () => {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tighter italic">Global Command Center</h1>
+          <h1 className="text-3xl font-black text-text font-medium">Global Command Center</h1>
           <p className="text-gray-500 font-medium">Real-time aggregate data across all Tamil Nadu hubs</p>
         </div>
         <div className="flex items-center gap-3">
@@ -196,17 +196,17 @@ const AdminDashboard = () => {
              <Calendar size={14} />
              {format(new Date(), 'EEEE, MMMM do yyyy')}
            </div>
-           <button onClick={fetchStatistics} aria-label="Refresh statistics" className="p-2 bg-primary-600 text-white rounded-xl hover:rotate-180 transition-transform duration-500"><RefreshCw size={20} /></button>
+           <button onClick={fetchStatistics} aria-label="Refresh statistics" className="p-2 bg-accent text-white rounded-xl hover:rotate-180 transition-transform duration-500"><RefreshCw size={20} /></button>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-gray-200 dark:border-gray-700">
+      <div className="flex border-b border-border">
         <button
           onClick={() => setActiveTab('analytics')}
           className={`px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all ${
             activeTab === 'analytics'
-              ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-black'
+              ? 'border-accent text-accent dark:text-accent font-black'
               : 'border-transparent text-gray-400 hover:text-gray-600 dark:text-gray-500'
           }`}
         >
@@ -216,7 +216,7 @@ const AdminDashboard = () => {
           onClick={() => setActiveTab('marketplace')}
           className={`px-6 py-3 font-bold text-xs uppercase tracking-wider border-b-2 transition-all ${
             activeTab === 'marketplace'
-              ? 'border-primary-600 text-primary-600 dark:text-primary-400 font-black'
+              ? 'border-accent text-accent dark:text-accent font-black'
               : 'border-transparent text-gray-400 hover:text-gray-600 dark:text-gray-500'
           }`}
         >
@@ -229,10 +229,10 @@ const AdminDashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="card border-l-4 border-blue-500 relative overflow-hidden group">
-          <div className="absolute right-[-20px] bottom-[-20px] text-blue-500/10 group-hover:scale-150 transition-transform"><LogIn size={100} /></div>
+          <div className="absolute right-[-20px] bottom-[-20px] text-info/10 group-hover:scale-150 transition-transform"><LogIn size={100} /></div>
           <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Total Farmer Sessions</p>
-          <p className="text-4xl font-black text-blue-600 dark:text-blue-400">{statistics.totalFarmerLogins.toLocaleString()}</p>
-          <div className="mt-4 flex items-center gap-2 text-[10px] font-bold text-blue-600/60 bg-blue-50 dark:bg-blue-900/20 w-fit px-2 py-0.5 rounded">
+          <p className="text-4xl font-black text-info dark:text-blue-400">{statistics.totalFarmerLogins.toLocaleString()}</p>
+          <div className="mt-4 flex items-center gap-2 text-[10px] font-bold text-info/60 bg-blue-50 dark:bg-blue-900/20 w-fit px-2 py-0.5 rounded">
             {statistics.farmerLoginsByDistrict.length} DISTRICTS ACTIVE
           </div>
         </div>
@@ -267,8 +267,8 @@ const AdminDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card border-none shadow-xl">
-          <h2 className="text-xl font-black text-gray-900 dark:text-white uppercase mb-8 flex items-center gap-3">
-            <Activity className="text-primary-600" />
+          <h2 className="text-xl font-black text-text uppercase mb-8 flex items-center gap-3">
+            <Activity className="text-accent" />
             District Utilization Pulse
           </h2>
           <div className="h-[400px] w-full">
@@ -286,7 +286,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="card border-none shadow-xl">
-           <h2 className="text-xl font-black text-gray-900 dark:text-white uppercase mb-8 flex items-center gap-3">
+           <h2 className="text-xl font-black text-text uppercase mb-8 flex items-center gap-3">
             <TrendingUp className="text-emerald-600" />
             Revenue Distribution
           </h2>
@@ -315,8 +315,8 @@ const AdminDashboard = () => {
       </div>
 
       <div className="card border-none shadow-xl">
-        <h2 className="text-xl font-black text-gray-900 dark:text-white uppercase mb-8 flex items-center gap-3">
-          <Activity className="text-blue-600" />
+        <h2 className="text-xl font-black text-text uppercase mb-8 flex items-center gap-3">
+          <Activity className="text-info" />
           Network Growth Activity
         </h2>
         <div className="h-[300px] w-full">
@@ -342,7 +342,7 @@ const AdminDashboard = () => {
          {statistics.revenueByDistrict.map((item) => (
            <div key={item.district} className="card group hover:shadow-2xl transition-all duration-500 border-none bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 overflow-hidden relative">
              <div className="absolute top-0 right-0 p-8 text-gray-500/5 group-hover:scale-150 transition-transform"><MapPin size={80} /></div>
-             <h3 className="text-lg font-black text-gray-900 dark:text-white uppercase mb-4 tracking-wider">{item.district}</h3>
+             <h3 className="text-lg font-black text-text uppercase mb-4 tracking-wider">{item.district}</h3>
              <div className="space-y-4 relative z-10">
                <div className="flex justify-between items-end">
                  <p className="text-[10px] font-black text-gray-400 uppercase">Revenue</p>
@@ -350,14 +350,14 @@ const AdminDashboard = () => {
                </div>
                <div className="flex justify-between items-end">
                  <p className="text-[10px] font-black text-gray-400 uppercase">Net Flow</p>
-                 <p className={`text-lg font-black ${item.netProfit >= 0 ? 'text-blue-600' : 'text-red-500'}`}>
+                 <p className={`text-lg font-black ${item.netProfit >= 0 ? 'text-info' : 'text-danger'}`}>
                    {item.netProfit >= 0 ? <TrendingUp size={14} className="inline mr-1" /> : <TrendingDown size={14} className="inline mr-1" />}
                    ₹{Math.abs(item.netProfit).toLocaleString()}
                  </p>
                </div>
                <div className="w-full bg-gray-200 dark:bg-gray-700 h-1 rounded-full mt-2 overflow-hidden">
                  <div 
-                   className="bg-primary-600 h-full transition-all duration-1000" 
+                   className="bg-accent h-full transition-all duration-1000" 
                    style={{ width: `${(item.totalRevenue / totalRevenue) * 100}%` }}
                  ></div>
                </div>
@@ -370,23 +370,23 @@ const AdminDashboard = () => {
         /* Marketplace Moderation View */
         <div className="space-y-6">
           <div className="glass-card p-6">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-              <Lock size={20} className="text-primary-600" />
+            <h2 className="text-xl font-bold text-text mb-4 flex items-center gap-2">
+              <Lock size={20} className="text-accent" />
               Community Marketplace Moderator
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">Review, moderate, and delete listings published by farmers to maintain marketplace compliance.</p>
+            <p className="text-sm text-text-muted mb-6">Review, moderate, and delete listings published by farmers to maintain marketplace compliance.</p>
 
             {loadingMarket ? (
               <div className="flex flex-col items-center justify-center py-12">
-                <Loader className="animate-spin h-10 w-10 text-primary-600 mb-2" />
+                <Loader className="animate-spin h-10 w-10 text-accent mb-2" />
                 <p className="text-gray-500 font-medium">Hydrating listings database...</p>
               </div>
             ) : (
-              <div className="border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden shadow-sm">
+              <div className="border border-border rounded-2xl overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-500 text-[10px] font-black uppercase tracking-wider border-b border-gray-200 dark:border-gray-700">
+                      <tr className="bg-surface-sunken text-gray-400 dark:text-gray-500 text-[10px] font-black uppercase tracking-wider border-b border-border">
                         <th className="px-6 py-4">Produce Name</th>
                         <th className="px-6 py-4">Category</th>
                         <th className="px-6 py-4">Vendor Farmer</th>
@@ -398,11 +398,11 @@ const AdminDashboard = () => {
                     <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                       {marketplaceItems.map((item) => (
                         <tr key={item.id} className="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors">
-                          <td className="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 font-bold text-text">
                             {item.name}
                           </td>
                           <td className="px-6 py-4">
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400 px-2 py-0.5 bg-primary-100/50 dark:bg-primary-900/20 rounded-full">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-accent dark:text-accent px-2 py-0.5 bg-primary-100/50 dark:bg-primary-900/20 rounded-full">
                               {item.category}
                             </span>
                           </td>
@@ -412,13 +412,13 @@ const AdminDashboard = () => {
                           <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
                             {item.quantity} {item.unit}
                           </td>
-                          <td className="px-6 py-4 text-base font-black text-gray-900 dark:text-white">
+                          <td className="px-6 py-4 text-base font-black text-text">
                             ₹{item.price} / {item.unit}
                           </td>
                           <td className="px-6 py-4 text-right">
                             <button
                               onClick={() => handleAdminDeleteListing(item.id)}
-                              className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 font-bold text-xs rounded-lg active:scale-[0.98] transition-all flex items-center gap-1 ml-auto"
+                              className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-900/30 text-danger dark:text-red-400 font-bold text-xs rounded-lg active:scale-[0.98] transition-all flex items-center gap-1 ml-auto"
                             >
                               <Trash2 size={13} />
                               Moderate & Delete
@@ -429,7 +429,7 @@ const AdminDashboard = () => {
 
                       {marketplaceItems.length === 0 && (
                         <tr>
-                          <td colSpan={6} className="text-center py-12 text-gray-500 dark:text-gray-400 text-sm">
+                          <td colSpan={6} className="text-center py-12 text-text-muted text-sm">
                             No listings currently published in the marketplace.
                           </td>
                         </tr>

@@ -185,7 +185,7 @@ const Layout = ({ children }: LayoutProps) => {
               <button
                 onClick={() => toggleGroup(group.label)}
                 className={`w-full flex items-center justify-between px-3 py-1.5 rounded-lg transition-colors ${
-                  hasActive ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400'
+                  hasActive ? 'text-accent dark:text-accent' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400'
                 }`}
               >
                 <span className="text-[9px] font-black uppercase tracking-widest">
@@ -205,8 +205,8 @@ const Layout = ({ children }: LayoutProps) => {
                       title={compact ? translatedLabel : undefined}
                       className={`w-full flex items-center gap-3 ${compact ? 'justify-center px-2 py-3' : 'px-3 py-2.5'} rounded-xl transition-all text-left ${
                         isActive(item.path)
-                          ? 'bg-primary-600 text-white shadow-md shadow-primary-600/30'
-                          : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'
+                          ? 'bg-accent text-white shadow-md shadow-primary-600/30'
+                          : 'text-text-muted hover:bg-gray-100 dark:hover:bg-gray-700/50'
                       }`}
                     >
                       <item.icon size={compact ? 20 : 17} className="flex-shrink-0" />
@@ -232,7 +232,7 @@ const Layout = ({ children }: LayoutProps) => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+    <div className="min-h-screen bg-surface-sunken transition-colors">
 
       {/* === MOBILE DRAWER OVERLAY === */}
       {mobileOpen && (
@@ -243,18 +243,18 @@ const Layout = ({ children }: LayoutProps) => {
       )}
 
       {/* === MOBILE DRAWER === */}
-      <aside className={`fixed left-0 top-0 h-full w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-[70] flex flex-col transition-transform duration-300 lg:hidden ${
+      <aside className={`fixed left-0 top-0 h-full w-72 bg-surface border-r border-border z-[70] flex flex-col transition-transform duration-300 lg:hidden ${
         mobileOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between flex-shrink-0">
+        <div className="p-4 border-b border-border flex items-center justify-between flex-shrink-0">
           <Logo />
           <button onClick={() => setMobileOpen(false)} aria-label="Close menu" className="p-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-500 hover:text-gray-900 dark:hover:text-white">
             <X size={18} />
           </button>
         </div>
         <NavContent />
-        <div className="p-3 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
-          <button onClick={() => logout()} className="w-full flex items-center gap-3 px-3 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
+        <div className="p-3 border-t border-border flex-shrink-0">
+          <button onClick={() => logout()} className="w-full flex items-center gap-3 px-3 py-2.5 text-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
             <LogOut size={18} /><span className="font-medium text-sm">{t('logout')}</span>
           </button>
         </div>
@@ -262,20 +262,20 @@ const Layout = ({ children }: LayoutProps) => {
 
       {/* === TABLET SIDEBAR (md–lg): collapsible mini sidebar === */}
       <aside
-        className={`hidden md:flex lg:hidden fixed left-0 top-0 h-full flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-50 transition-all duration-300 overflow-hidden ${
+        className={`hidden md:flex lg:hidden fixed left-0 top-0 h-full flex-col bg-surface border-r border-border z-50 transition-all duration-300 overflow-hidden ${
           sidebarExpanded ? 'w-56' : 'w-16'
         }`}
         onMouseEnter={() => setSidebarExpanded(true)}
         onMouseLeave={() => setSidebarExpanded(false)}
       >
-        <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex-shrink-0 flex items-center justify-center min-h-[60px]">
+        <div className="p-3 border-b border-border flex-shrink-0 flex items-center justify-center min-h-[60px]">
           {sidebarExpanded ? <Logo /> : (
             <RoleIcon size={20} className="text-emerald-600 dark:text-accent mx-auto" />
           )}
         </div>
         {sidebarExpanded ? <NavContent /> : <NavContent compact />}
-        <div className="p-2 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
-          <button onClick={() => logout()} className={`w-full flex items-center gap-2 px-2 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all ${!sidebarExpanded ? 'justify-center' : ''}`}>
+        <div className="p-2 border-t border-border flex-shrink-0">
+          <button onClick={() => logout()} className={`w-full flex items-center gap-2 px-2 py-2.5 text-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all ${!sidebarExpanded ? 'justify-center' : ''}`}>
             <LogOut size={17} />
             {sidebarExpanded && <span className="font-medium text-sm">{t('logout')}</span>}
           </button>
@@ -283,13 +283,13 @@ const Layout = ({ children }: LayoutProps) => {
       </aside>
 
       {/* === DESKTOP SIDEBAR (lg+) === */}
-      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-60 flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+      <aside className="hidden lg:flex fixed left-0 top-0 h-full w-60 flex-col bg-surface border-r border-border z-50 overflow-hidden">
+        <div className="p-4 border-b border-border flex-shrink-0">
           <Logo />
         </div>
         <NavContent />
-        <div className="p-3 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2.5 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
+        <div className="p-3 border-t border-border flex-shrink-0">
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-3 py-2.5 text-danger hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all">
             <LogOut size={17} />
             <span className="font-medium text-sm">{t('logout')}</span>
           </button>
@@ -299,18 +299,18 @@ const Layout = ({ children }: LayoutProps) => {
       </aside>
 
       {/* === TOP HEADER === */}
-      <header className={`fixed top-0 right-0 h-14 md:h-16 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 z-40 flex items-center justify-between px-4 sm:px-6 transition-all left-0 md:left-16 lg:left-60`}>
+      <header className={`fixed top-0 right-0 h-14 md:h-16 bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border-b border-border z-40 flex items-center justify-between px-4 sm:px-6 transition-all left-0 md:left-16 lg:left-60`}>
         {/* Mobile hamburger */}
         <div className="flex items-center gap-3">
           <button
             onClick={() => setMobileOpen(true)}
-            className="md:hidden p-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-all"
+            className="md:hidden p-2 rounded-xl bg-gray-100 dark:bg-gray-700 text-text-muted hover:text-gray-900 dark:hover:text-white transition-all"
           >
             <Menu size={20} />
           </button>
           <h1 
             onClick={() => navigate('/dashboard')}
-            className="hidden md:block text-base sm:text-lg font-bold text-gray-900 dark:text-white capitalize truncate cursor-pointer hover:opacity-80 transition-all select-none"
+            className="hidden md:block text-base sm:text-lg font-bold text-text capitalize truncate cursor-pointer hover:opacity-80 transition-all select-none"
             title={t('navigation.home') || 'Go to Dashboard'}
           >
             FarmSync
@@ -343,19 +343,19 @@ const Layout = ({ children }: LayoutProps) => {
               )}
             </button>
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-3 px-4 z-50">
-                <h3 className="font-bold text-gray-900 dark:text-white mb-3 text-sm">{t('navigation.notifications', 'Notifications')}</h3>
+              <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-surface rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-3 px-4 z-50">
+                <h3 className="font-bold text-text mb-3 text-sm">{t('navigation.notifications', 'Notifications')}</h3>
                 {notifications.length > 0 ? (
                   <div className="space-y-3 max-h-64 overflow-y-auto">
                     {notifications.map((notif: any) => (
                       <div key={notif.id} className="text-sm border-b border-gray-100 dark:border-gray-700 pb-2 last:border-0">
                         <p className="font-semibold text-gray-800 dark:text-gray-200 text-xs">{notif.title}</p>
-                        <p className="text-gray-600 dark:text-gray-400 text-xs mt-0.5">{notif.message}</p>
+                        <p className="text-text-muted text-xs mt-0.5">{notif.message}</p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-500 dark:text-gray-400 text-center py-4">{t('navigation.noNewNotifications', 'No new notifications')}</p>
+                  <p className="text-xs text-text-muted text-center py-4">{t('navigation.noNewNotifications', 'No new notifications')}</p>
                 )}
               </div>
             )}
@@ -370,10 +370,10 @@ const Layout = ({ children }: LayoutProps) => {
               {user?.name?.charAt(0) || 'U'}
             </button>
             {showProfile && (
-              <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-2 z-50">
+              <div className="absolute right-0 mt-2 w-52 bg-surface rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 py-2 z-50">
                 <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
-                  <p className="font-bold text-gray-900 dark:text-white text-sm">{user?.name || 'User'}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user?.email || ''}</p>
+                  <p className="font-bold text-text text-sm">{user?.name || 'User'}</p>
+                  <p className="text-xs text-text-muted truncate">{user?.email || ''}</p>
                   <span className={`text-[9px] bg-gradient-to-r ${roleColor} text-white px-2 py-0.5 rounded-full font-bold mt-1 inline-block uppercase`}>
                     {user?.role || 'FARMER'}
                   </span>
@@ -388,7 +388,7 @@ const Layout = ({ children }: LayoutProps) => {
                   )}
                 </div>
                 <div className="py-1 border-t border-gray-100 dark:border-gray-700">
-                  <button onClick={() => { setShowProfile(false); handleLogout(); }} className="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/10 text-xs font-bold text-red-600">{t('navigation.signOut', 'Sign out')}</button>
+                  <button onClick={() => { setShowProfile(false); handleLogout(); }} className="w-full text-left px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/10 text-xs font-bold text-danger">{t('navigation.signOut', 'Sign out')}</button>
                 </div>
               </div>
             )}
@@ -412,12 +412,12 @@ const Layout = ({ children }: LayoutProps) => {
               key={item.path}
               onClick={() => navigate(item.path)}
               className={`flex flex-col items-center justify-center gap-0.5 flex-1 h-12 rounded-2xl transition-all relative ${
-                active ? 'text-primary-600 bg-primary-50 dark:bg-primary-900/30' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                active ? 'text-accent bg-primary-50 dark:bg-primary-900/30' : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
               }`}
             >
               <item.icon size={active ? 22 : 20} className={active ? 'scale-110' : ''} />
               <span className="text-[9px] font-bold">{t('navigation.' + item.translationKey, { defaultValue: item.label })}</span>
-              {active && <span className="absolute -bottom-1 w-1 h-1 bg-primary-600 rounded-full" />}
+              {active && <span className="absolute -bottom-1 w-1 h-1 bg-accent rounded-full" />}
             </button>
           );
         })}

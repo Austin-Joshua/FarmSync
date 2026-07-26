@@ -115,16 +115,16 @@ const StockManagement = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white">Stock & Inventory</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">Manage seeds, fertilizers, and pesticides</p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-text">Stock & Inventory</h1>
+          <p className="text-text-muted mt-1 text-sm">Manage seeds, fertilizers, and pesticides</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={fetchItems} className="p-2.5 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:shadow-md transition-all">
+          <button onClick={fetchItems} className="p-2.5 rounded-xl bg-surface border border-border text-text-muted hover:shadow-md transition-all">
             <RefreshCw size={18} />
           </button>
           <button
             onClick={() => { setEditItem(null); setForm({ name: '', category: 'seeds', quantity: 0, unit: 'kg', minQuantity: 10, pricePerUnit: 0 }); setShowModal(true); }}
-            className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all hover:scale-100 shadow-lg shadow-primary-500/20"
+            className="flex items-center gap-2 bg-accent hover:bg-accent-hover text-white px-4 py-2.5 rounded-xl font-bold text-sm transition-all hover:scale-100 shadow-lg shadow-accent/20"
           >
             <Plus size={18} /> Add Item
           </button>
@@ -134,20 +134,20 @@ const StockManagement = () => {
       {/* Summary cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
         <div className="glass-card p-4 !p-4">
-          <p className="text-xs text-gray-500 dark:text-gray-400">Total Items</p>
-          <p className="text-2xl font-extrabold text-gray-900 dark:text-white">{items.length}</p>
+          <p className="text-xs text-text-muted">Total Items</p>
+          <p className="text-2xl font-extrabold text-text">{items.length}</p>
         </div>
         <div className="glass-card p-4 !p-4">
-          <p className="text-xs text-gray-500 dark:text-gray-400">Total Value</p>
-          <p className="text-2xl font-extrabold text-gray-900 dark:text-white">₹{totalValue.toLocaleString()}</p>
+          <p className="text-xs text-text-muted">Total Value</p>
+          <p className="text-2xl font-extrabold text-text">₹{totalValue.toLocaleString()}</p>
         </div>
         <div className={`glass-card p-4 !p-4 ${lowStockItems.length > 0 ? 'border-amber-300 dark:border-amber-700' : ''}`}>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Low Stock</p>
-          <p className={`text-2xl font-extrabold ${lowStockItems.length > 0 ? 'text-amber-600 dark:text-amber-400' : 'text-gray-900 dark:text-white'}`}>{lowStockItems.length}</p>
+          <p className="text-xs text-text-muted">Low Stock</p>
+          <p className={`text-2xl font-extrabold ${lowStockItems.length > 0 ? 'text-warning dark:text-amber-400' : 'text-text'}`}>{lowStockItems.length}</p>
         </div>
         <div className="glass-card p-4 !p-4">
-          <p className="text-xs text-gray-500 dark:text-gray-400">Categories</p>
-          <p className="text-2xl font-extrabold text-gray-900 dark:text-white">3</p>
+          <p className="text-xs text-text-muted">Categories</p>
+          <p className="text-2xl font-extrabold text-text">3</p>
         </div>
       </div>
 
@@ -155,7 +155,7 @@ const StockManagement = () => {
       {lowStockItems.length > 0 && (
         <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle size={18} className="text-amber-600 dark:text-amber-400" />
+            <AlertTriangle size={18} className="text-warning dark:text-amber-400" />
             <h3 className="font-bold text-amber-900 dark:text-amber-100">Low Stock Alert</h3>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -178,7 +178,7 @@ const StockManagement = () => {
               placeholder="Search items..."
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 outline-none"
+              className="w-full pl-9 pr-4 py-2.5 border border-border rounded-xl bg-surface text-text text-sm focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none"
             />
           </div>
           <div className="flex gap-2 flex-wrap">
@@ -186,7 +186,7 @@ const StockManagement = () => {
               <button
                 key={cat}
                 onClick={() => setFilterCategory(cat)}
-                className={`px-3 py-2 rounded-xl text-xs font-bold capitalize transition-all ${filterCategory === cat ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
+                className={`px-3 py-2 rounded-xl text-xs font-bold capitalize transition-all ${filterCategory === cat ? 'bg-accent text-white' : 'bg-gray-100 dark:bg-gray-700 text-text-muted hover:bg-gray-200 dark:hover:bg-gray-600'}`}
               >
                 {cat}
               </button>
@@ -197,7 +197,7 @@ const StockManagement = () => {
         {/* Stock table/cards */}
         {loading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin" />
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-12 text-gray-400">
@@ -210,14 +210,14 @@ const StockManagement = () => {
             <div className="hidden sm:block mt-4 overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-700">
-                    <th className="text-left py-3 px-2 font-bold text-gray-600 dark:text-gray-400">Item</th>
-                    <th className="text-left py-3 px-2 font-bold text-gray-600 dark:text-gray-400">Category</th>
-                    <th className="text-right py-3 px-2 font-bold text-gray-600 dark:text-gray-400">Quantity</th>
-                    <th className="text-right py-3 px-2 font-bold text-gray-600 dark:text-gray-400">Min Qty</th>
-                    <th className="text-right py-3 px-2 font-bold text-gray-600 dark:text-gray-400">Price/Unit</th>
-                    <th className="text-right py-3 px-2 font-bold text-gray-600 dark:text-gray-400">Total Value</th>
-                    <th className="text-center py-3 px-2 font-bold text-gray-600 dark:text-gray-400">Status</th>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-3 px-2 font-bold text-text-muted">Item</th>
+                    <th className="text-left py-3 px-2 font-bold text-text-muted">Category</th>
+                    <th className="text-right py-3 px-2 font-bold text-text-muted">Quantity</th>
+                    <th className="text-right py-3 px-2 font-bold text-text-muted">Min Qty</th>
+                    <th className="text-right py-3 px-2 font-bold text-text-muted">Price/Unit</th>
+                    <th className="text-right py-3 px-2 font-bold text-text-muted">Total Value</th>
+                    <th className="text-center py-3 px-2 font-bold text-text-muted">Status</th>
                     <th className="py-3 px-2"></th>
                   </tr>
                 </thead>
@@ -226,13 +226,13 @@ const StockManagement = () => {
                     const isLow = item.quantity <= item.minQuantity;
                     const Icon = CATEGORY_ICONS[item.category] || Package;
                     return (
-                      <tr key={item.id} className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
+                      <tr key={item.id} className="border-b border-border hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors">
                         <td className="py-3 px-2">
                           <div className="flex items-center gap-2">
                             <div className="w-8 h-8 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0">
-                              <Icon size={14} className="text-primary-600 dark:text-primary-400" />
+                              <Icon size={14} className="text-accent dark:text-accent" />
                             </div>
-                            <span className="font-semibold text-gray-900 dark:text-white">{item.name}</span>
+                            <span className="font-semibold text-text">{item.name}</span>
                           </div>
                         </td>
                         <td className="py-3 px-2">
@@ -240,10 +240,10 @@ const StockManagement = () => {
                             {item.category}
                           </span>
                         </td>
-                        <td className="py-3 px-2 text-right font-bold text-gray-900 dark:text-white">{item.quantity} {item.unit}</td>
-                        <td className="py-3 px-2 text-right text-gray-500 dark:text-gray-400">{item.minQuantity} {item.unit}</td>
+                        <td className="py-3 px-2 text-right font-bold text-text">{item.quantity} {item.unit}</td>
+                        <td className="py-3 px-2 text-right text-text-muted">{item.minQuantity} {item.unit}</td>
                         <td className="py-3 px-2 text-right text-gray-700 dark:text-gray-300">₹{item.pricePerUnit}</td>
-                        <td className="py-3 px-2 text-right font-bold text-gray-900 dark:text-white">₹{(item.quantity * item.pricePerUnit).toLocaleString()}</td>
+                        <td className="py-3 px-2 text-right font-bold text-text">₹{(item.quantity * item.pricePerUnit).toLocaleString()}</td>
                         <td className="py-3 px-2 text-center">
                           <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${isLow ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'}`}>
                             {isLow ? 'Low' : 'OK'}
@@ -251,10 +251,10 @@ const StockManagement = () => {
                         </td>
                         <td className="py-3 px-2">
                           <div className="flex items-center justify-end gap-1">
-                            <button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all">
+                            <button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-accent hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all">
                               <Pencil size={14} />
                             </button>
-                            <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
+                            <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-danger hover:bg-red-50 dark:hover:bg-red-900/20 transition-all">
                               <Trash2 size={14} />
                             </button>
                           </div>
@@ -272,22 +272,22 @@ const StockManagement = () => {
                 const isLow = item.quantity <= item.minQuantity;
                 const Icon = CATEGORY_ICONS[item.category] || Package;
                 return (
-                  <div key={item.id} className={`p-4 rounded-2xl border-2 ${isLow ? 'border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/10' : 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50'}`}>
+                  <div key={item.id} className={`p-4 rounded-2xl border-2 ${isLow ? 'border-amber-200 dark:border-amber-800 bg-warning-surface' : 'border-border bg-surface-sunken/50'}`}>
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <div className="w-9 h-9 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-                          <Icon size={16} className="text-primary-600 dark:text-primary-400" />
+                          <Icon size={16} className="text-accent dark:text-accent" />
                         </div>
                         <div>
-                          <p className="font-bold text-gray-900 dark:text-white text-sm">{item.name}</p>
+                          <p className="font-bold text-text text-sm">{item.name}</p>
                           <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold capitalize ${CATEGORY_COLORS[item.category] || ''}`}>{item.category}</span>
                         </div>
                       </div>
                       <div className="flex gap-1">
-                        <button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20">
+                        <button onClick={() => handleEdit(item)} className="p-1.5 rounded-lg text-gray-400 hover:text-accent hover:bg-primary-50 dark:hover:bg-primary-900/20">
                           <Pencil size={14} />
                         </button>
-                        <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
+                        <button onClick={() => handleDelete(item.id)} className="p-1.5 rounded-lg text-gray-400 hover:text-danger hover:bg-red-50 dark:hover:bg-red-900/20">
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -295,7 +295,7 @@ const StockManagement = () => {
                     <div className="grid grid-cols-3 gap-2 text-center mt-2">
                       <div>
                         <p className="text-[10px] text-gray-500">Stock</p>
-                        <p className={`font-bold text-sm ${isLow ? 'text-amber-600' : 'text-gray-900 dark:text-white'}`}>{item.quantity} {item.unit}</p>
+                        <p className={`font-bold text-sm ${isLow ? 'text-warning' : 'text-text'}`}>{item.quantity} {item.unit}</p>
                       </div>
                       <div>
                         <p className="text-[10px] text-gray-500">Min Qty</p>
@@ -303,7 +303,7 @@ const StockManagement = () => {
                       </div>
                       <div>
                         <p className="text-[10px] text-gray-500">Value</p>
-                        <p className="font-bold text-sm text-gray-900 dark:text-white">₹{(item.quantity * item.pricePerUnit).toLocaleString()}</p>
+                        <p className="font-bold text-sm text-text">₹{(item.quantity * item.pricePerUnit).toLocaleString()}</p>
                       </div>
                     </div>
                   </div>
@@ -317,21 +317,21 @@ const StockManagement = () => {
       {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{editItem ? 'Edit Stock Item' : 'Add Stock Item'}</h2>
+          <div className="bg-surface rounded-2xl shadow-2xl w-full max-w-md p-6">
+            <h2 className="text-lg font-bold text-text mb-4">{editItem ? 'Edit Stock Item' : 'Add Stock Item'}</h2>
             <div className="space-y-3">
               <div>
-                <label className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1 block">Item Name</label>
+                <label className="text-xs font-bold text-text-muted mb-1 block">Item Name</label>
                 <input
-                  className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-primary-500/50 outline-none"
+                  className="w-full px-3 py-2.5 border border-border rounded-xl bg-white dark:bg-gray-700 text-text text-sm focus:ring-2 focus:ring-accent/50 outline-none"
                   value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Urea Fertilizer"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1 block">Category</label>
+                  <label className="text-xs font-bold text-text-muted mb-1 block">Category</label>
                   <select
-                    className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm outline-none"
+                    className="w-full px-3 py-2.5 border border-border rounded-xl bg-white dark:bg-gray-700 text-text text-sm outline-none"
                     value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
                   >
                     <option value="seeds">Seeds</option>
@@ -340,9 +340,9 @@ const StockManagement = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1 block">Unit</label>
+                  <label className="text-xs font-bold text-text-muted mb-1 block">Unit</label>
                   <select
-                    className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm outline-none"
+                    className="w-full px-3 py-2.5 border border-border rounded-xl bg-white dark:bg-gray-700 text-text text-sm outline-none"
                     value={form.unit} onChange={e => setForm(f => ({ ...f, unit: e.target.value }))}
                   >
                     <option value="kg">kg</option>
@@ -355,23 +355,23 @@ const StockManagement = () => {
               </div>
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1 block">Quantity</label>
+                  <label className="text-xs font-bold text-text-muted mb-1 block">Quantity</label>
                   <input type="number" min={0}
-                    className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm outline-none"
+                    className="w-full px-3 py-2.5 border border-border rounded-xl bg-white dark:bg-gray-700 text-text text-sm outline-none"
                     value={form.quantity} onChange={e => setForm(f => ({ ...f, quantity: Number(e.target.value) }))}
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1 block">Min Qty</label>
+                  <label className="text-xs font-bold text-text-muted mb-1 block">Min Qty</label>
                   <input type="number" min={0}
-                    className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm outline-none"
+                    className="w-full px-3 py-2.5 border border-border rounded-xl bg-white dark:bg-gray-700 text-text text-sm outline-none"
                     value={form.minQuantity} onChange={e => setForm(f => ({ ...f, minQuantity: Number(e.target.value) }))}
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-1 block">Price/Unit (₹)</label>
+                  <label className="text-xs font-bold text-text-muted mb-1 block">Price/Unit (₹)</label>
                   <input type="number" min={0}
-                    className="w-full px-3 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm outline-none"
+                    className="w-full px-3 py-2.5 border border-border rounded-xl bg-white dark:bg-gray-700 text-text text-sm outline-none"
                     value={form.pricePerUnit} onChange={e => setForm(f => ({ ...f, pricePerUnit: Number(e.target.value) }))}
                   />
                 </div>
@@ -380,11 +380,11 @@ const StockManagement = () => {
             <div className="flex gap-3 mt-5">
               <button
                 onClick={() => { setShowModal(false); setEditItem(null); }}
-                className="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-bold text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
+                className="flex-1 py-2.5 rounded-xl border border-border text-gray-700 dark:text-gray-300 font-bold text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
               >Cancel</button>
               <button
                 onClick={handleSave}
-                className="flex-1 py-2.5 rounded-xl bg-primary-600 hover:bg-primary-700 text-white font-bold text-sm transition-all"
+                className="flex-1 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white font-bold text-sm transition-all"
               >{editItem ? 'Update' : 'Add Item'}</button>
             </div>
           </div>

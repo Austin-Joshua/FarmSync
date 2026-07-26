@@ -110,7 +110,7 @@ const YieldTracking = () => {
               <p className="text-sm text-gray-600 mb-1">{t('yield.averageYield')}</p>
               <p className="text-3xl font-bold text-gray-900">{Math.round(averageYield).toLocaleString()} {t('common.kg')}</p>
             </div>
-            <Award className="text-blue-600" size={48} />
+            <Award className="text-info" size={48} />
           </div>
         </div>
         <div className="card bg-purple-50">
@@ -159,7 +159,7 @@ const YieldTracking = () => {
                     <div className="flex items-center gap-4">
                     <div className="text-4xl" title={translateCrop(getCropName(yield_.cropId))}>{getCropIcon(getCropName(yield_.cropId))}</div>
                     <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1">
+                      <h3 className="font-bold text-text text-lg mb-1">
                         {translateCrop(getCropName(yield_.cropId))}
                       </h3>
                       <p className="text-sm text-gray-600">
@@ -203,8 +203,8 @@ const YieldTracking = () => {
         >
           <div className="space-y-4">
             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-3">{t('yield.totalYield')}: {totalYield.toLocaleString()} {t('common.kg')}</h3>
-              <h3 className="font-semibold text-gray-900 dark:text-white">{t('yield.averageYield')}: {Math.round(averageYield).toLocaleString()} {t('common.kg')}</h3>
+              <h3 className="font-semibold text-text mb-3">{t('yield.totalYield')}: {totalYield.toLocaleString()} {t('common.kg')}</h3>
+              <h3 className="font-semibold text-text">{t('yield.averageYield')}: {Math.round(averageYield).toLocaleString()} {t('common.kg')}</h3>
             </div>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={detailModal.data}>
@@ -218,10 +218,10 @@ const YieldTracking = () => {
             </ResponsiveContainer>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
               {detailModal.data?.map((item: any, index: number) => (
-                <div key={index} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg">
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">{item.name}</h4>
+                <div key={index} className="p-4 border border-border rounded-lg">
+                  <h4 className="font-semibold text-text mb-2">{item.name}</h4>
                   <p className="text-2xl font-bold text-green-600">{item.yield.toLocaleString()} {t('common.kg')}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{t('yield.quality')}: {item.quality || 'N/A'}</p>
+                  <p className="text-sm text-text-muted mt-1">{t('yield.quality')}: {item.quality || 'N/A'}</p>
                 </div>
               ))}
             </div>
@@ -239,15 +239,15 @@ const YieldTracking = () => {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('yield.totalYield')}</p>
+                <p className="text-sm text-text-muted mb-1">{t('yield.totalYield')}</p>
                 <p className="text-2xl font-bold text-green-600">{totalYield.toLocaleString()} {t('common.kg')}</p>
               </div>
               <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('yield.averageYield')}</p>
-                <p className="text-2xl font-bold text-blue-600">{Math.round(averageYield).toLocaleString()} {t('common.kg')}</p>
+                <p className="text-sm text-text-muted mb-1">{t('yield.averageYield')}</p>
+                <p className="text-2xl font-bold text-info">{Math.round(averageYield).toLocaleString()} {t('common.kg')}</p>
               </div>
               <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')} {t('common.records')}</p>
+                <p className="text-sm text-text-muted mb-1">{t('common.total')} {t('common.records')}</p>
                 <p className="text-2xl font-bold text-purple-600">{detailModal.data?.length || 0}</p>
               </div>
             </div>
@@ -255,27 +255,27 @@ const YieldTracking = () => {
               {detailModal.data?.map((yield_: Yield) => (
                 <div
                   key={yield_.id}
-                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                  className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <div className="text-4xl" title={translateCrop(getCropName(yield_.cropId))}>{getCropIcon(getCropName(yield_.cropId))}</div>
                       <div>
-                        <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-1">
+                        <h3 className="font-bold text-text text-lg mb-1">
                           {translateCrop(getCropName(yield_.cropId))}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-sm text-text-muted">
                           {t('yield.harvestDate')}: {formatDateDisplay(yield_.date)}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-6">
                       <div className="text-right">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('yield.quantity')}</p>
-                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{yield_.quantity.toLocaleString()} {t('common.kg')}</p>
+                        <p className="text-sm text-text-muted mb-1">{t('yield.quantity')}</p>
+                        <p className="text-2xl font-bold text-text">{yield_.quantity.toLocaleString()} {t('common.kg')}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('yield.quality')}</p>
+                        <p className="text-sm text-text-muted mb-1">{t('yield.quality')}</p>
                         <span
                           className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${getQualityColor(yield_.quality)}`}
                         >

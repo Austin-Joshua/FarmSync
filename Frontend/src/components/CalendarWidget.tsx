@@ -135,10 +135,10 @@ const CalendarWidget = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent flex items-center justify-between bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent flex items-center justify-between bg-white dark:bg-gray-700 text-text"
       >
         <span className="flex items-center gap-2">
-          <CalendarIcon size={18} className="text-gray-500 dark:text-gray-400" />
+          <CalendarIcon size={18} className="text-text-muted" />
           {(() => {
             const day = currentDate.getDate();
             const month = currentDate.toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : i18n.language === 'hi' ? 'hi-IN' : 'en-US', {
@@ -152,7 +152,7 @@ const CalendarWidget = ({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl z-50 p-4 w-full max-w-sm animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 mt-2 bg-surface border border-border rounded-lg shadow-xl z-50 p-4 w-full max-w-sm animate-in fade-in slide-in-from-top-2 duration-200">
           {/* Calendar Header */}
           <div className="flex items-center justify-between mb-4">
               <button
@@ -162,9 +162,9 @@ const CalendarWidget = ({
                 aria-label="Previous month"
                 title="Previous month"
               >
-                <ChevronLeft size={20} className="text-gray-600 dark:text-gray-300" />
+                <ChevronLeft size={20} className="text-text-muted" />
               </button>
-              <h3 className="font-bold text-gray-900 dark:text-white transition-all duration-200">
+              <h3 className="font-bold text-text transition-all duration-200">
                 {monthNames[lang][currentDate.getMonth()]} {currentDate.getFullYear()}
               </h3>
               <button
@@ -189,14 +189,14 @@ const CalendarWidget = ({
                 aria-label="Next month"
                 title="Next month"
               >
-                <ChevronRight size={20} className="text-gray-600 dark:text-gray-300" />
+                <ChevronRight size={20} className="text-text-muted" />
               </button>
           </div>
 
           {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-1 mb-2">
             {weekDays[lang].map((day) => (
-              <div key={day} className="text-center text-xs font-semibold text-gray-600 dark:text-gray-400 py-2">
+              <div key={day} className="text-center text-xs font-semibold text-text-muted py-2">
                 {day}
               </div>
             ))}
@@ -226,7 +226,7 @@ const CalendarWidget = ({
                   disabled={isDisabled}
                           className={`aspect-square text-sm rounded transition-all duration-150 ease-in-out transform ${
                             isSelected
-                              ? 'bg-primary-600 text-white font-bold scale-110 shadow-md'
+                              ? 'bg-accent text-white font-bold scale-110 shadow-md'
                               : isDisabled
                               ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed opacity-50'
                               : isToday && showToday
@@ -242,9 +242,9 @@ const CalendarWidget = ({
 
           {/* Selected Date Display */}
           {selectedDate && (
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-center">
-              <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t('common.selected') || 'Selected'}</p>
-              <p className="font-semibold text-gray-900 dark:text-white text-sm">{formatDate(currentDate)}</p>
+            <div className="mt-4 pt-4 border-t border-border text-center">
+              <p className="text-xs text-text-muted mb-1">{t('common.selected') || 'Selected'}</p>
+              <p className="font-semibold text-text text-sm">{formatDate(currentDate)}</p>
             </div>
           )}
         </div>

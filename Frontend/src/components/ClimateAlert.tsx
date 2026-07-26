@@ -92,8 +92,8 @@ const ClimateAlert = ({ onAlertsChange }: ClimateAlertProps) => {
     return (
       <div className="p-6 text-center">
         <AlertTriangle size={32} className="mx-auto text-gray-400 dark:text-gray-500 mb-2" />
-        <p className="text-gray-600 dark:text-gray-400 font-medium">No location provided</p>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Please set your farm location to receive climate alerts</p>
+        <p className="text-text-muted font-medium">No location provided</p>
+        <p className="text-sm text-text-muted mt-1">Please set your farm location to receive climate alerts</p>
       </div>
     );
   }
@@ -122,7 +122,7 @@ const ClimateAlert = ({ onAlertsChange }: ClimateAlertProps) => {
 
   return (
     <div className="space-y-3 p-6">
-      <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+      <h2 className="text-xl font-bold text-text flex items-center gap-2">
         <AlertTriangle size={24} className="text-orange-500" /> {t('alerts.title')}
       </h2>
       {visibleAlerts.map((alert) => {

@@ -132,8 +132,8 @@ const CropManagement = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('crops.title')}</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">{t('crops.subtitle')}</p>
+          <h1 className="text-3xl font-bold text-text">{t('crops.title')}</h1>
+          <p className="text-text-muted mt-1">{t('crops.subtitle')}</p>
         </div>
         <Button onClick={handleAddCrop} variant="primary" leftIcon={<Plus size={20} />}>
           {t('crops.addNewCrop')}
@@ -154,7 +154,7 @@ const CropManagement = () => {
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter size={20} className="text-gray-600 dark:text-gray-400" />
+            <Filter size={20} className="text-text-muted" />
             <label htmlFor="status-filter" className="sr-only">{t('crops.status')}</label>
             <select
               id="status-filter"
@@ -201,7 +201,7 @@ const CropManagement = () => {
               <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 ease-out">
                 <button
                   onClick={(e) => handleEditCrop(crop, e)}
-                  className="p-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-all duration-150 shadow-lg hover:scale-110 active:scale-100"
+                  className="p-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-all duration-150 shadow-lg hover:scale-110 active:scale-100"
                   title={t('common.edit')}
                 >
                   <Edit2 size={16} />
@@ -313,14 +313,14 @@ const CropManagement = () => {
         >
           <div className="space-y-4">
             <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('common.total')}</p>
               <p className="text-2xl font-bold text-green-600">{statDetailModal.data.length} {t('crops.activeCrops')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {statDetailModal.data.map((crop) => (
                   <div
                     key={crop.id}
-                    className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                    className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow cursor-pointer"
                     onClick={() => {
                       setSelectedCrop(crop);
                       setIsDetailModalOpen(true);
@@ -329,11 +329,11 @@ const CropManagement = () => {
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-3xl" title={translateCrop(crop.name)}>{getCropIcon(crop.name)}</span>
-                      <h4 className="font-semibold text-gray-900 dark:text-white">{translateCrop(crop.name)}</h4>
+                      <h4 className="font-semibold text-text">{translateCrop(crop.name)}</h4>
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.category')}: {crop.category}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.season')}: {crop.season}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.sowingDate')}: {formatDateDisplay(crop.sowingDate)}</p>
+                    <p className="text-sm text-text-muted">{t('crops.category')}: {crop.category}</p>
+                    <p className="text-sm text-text-muted">{t('crops.season')}: {crop.season}</p>
+                    <p className="text-sm text-text-muted">{t('crops.sowingDate')}: {formatDateDisplay(crop.sowingDate)}</p>
                 </div>
               ))}
             </div>
@@ -349,14 +349,14 @@ const CropManagement = () => {
         >
           <div className="space-y-4">
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')}</p>
-              <p className="text-2xl font-bold text-blue-600">{statDetailModal.data.length} {t('crops.harvested')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('common.total')}</p>
+              <p className="text-2xl font-bold text-info">{statDetailModal.data.length} {t('crops.harvested')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {statDetailModal.data.map((crop) => (
                 <div
                   key={crop.id}
-                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                  className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow cursor-pointer"
                   onClick={() => {
                     setSelectedCrop(crop);
                     setIsDetailModalOpen(true);
@@ -365,11 +365,11 @@ const CropManagement = () => {
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <span className="text-3xl" title={translateCrop(crop.name)}>{getCropIcon(crop.name)}</span>
-                    <h4 className="font-semibold text-gray-900 dark:text-white">{translateCrop(crop.name)}</h4>
+                    <h4 className="font-semibold text-text">{translateCrop(crop.name)}</h4>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.category')}: {crop.category}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.season')}: {crop.season}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.harvestDate')}: {formatDateDisplay(crop.harvestDate)}</p>
+                  <p className="text-sm text-text-muted">{t('crops.category')}: {crop.category}</p>
+                  <p className="text-sm text-text-muted">{t('crops.season')}: {crop.season}</p>
+                  <p className="text-sm text-text-muted">{t('crops.harvestDate')}: {formatDateDisplay(crop.harvestDate)}</p>
                 </div>
               ))}
             </div>
@@ -385,14 +385,14 @@ const CropManagement = () => {
         >
           <div className="space-y-4">
             <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')}</p>
+              <p className="text-sm text-text-muted mb-1">{t('common.total')}</p>
               <p className="text-2xl font-bold text-yellow-600">{statDetailModal.data.length} {t('crops.totalCrops')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {statDetailModal.data.map((crop) => (
                   <div
                     key={crop.id}
-                    className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
+                    className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow cursor-pointer"
                     onClick={() => {
                       setSelectedCrop(crop);
                       setIsDetailModalOpen(true);
@@ -401,11 +401,11 @@ const CropManagement = () => {
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-3xl" title={translateCrop(crop.name)}>{getCropIcon(crop.name)}</span>
-                      <h4 className="font-semibold text-gray-900 dark:text-white">{translateCrop(crop.name)}</h4>
+                      <h4 className="font-semibold text-text">{translateCrop(crop.name)}</h4>
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.category')}: {crop.category}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.season')}: {crop.season}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{t('crops.status')}: {t(`crops.${crop.status}`)}</p>
+                    <p className="text-sm text-text-muted">{t('crops.category')}: {crop.category}</p>
+                    <p className="text-sm text-text-muted">{t('crops.season')}: {crop.season}</p>
+                    <p className="text-sm text-text-muted">{t('crops.status')}: {t(`crops.${crop.status}`)}</p>
                   </div>
               ))}
             </div>

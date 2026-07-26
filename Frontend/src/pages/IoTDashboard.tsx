@@ -10,11 +10,11 @@ import {
 } from 'recharts';
 
 const SENSORS = [
-  { id: 'temp', label: 'Soil Temp', unit: '°C', baseValue: 28, min: 15, max: 45, icon: Thermometer, color: '#ef4444', bg: 'bg-red-50 dark:bg-red-900/20', border: 'border-red-200 dark:border-red-800', text: 'text-red-600 dark:text-red-400', optimal: [20, 35] },
-  { id: 'humidity', label: 'Air Humidity', unit: '%', baseValue: 72, min: 20, max: 100, icon: Droplets, color: '#3b82f6', bg: 'bg-blue-50 dark:bg-blue-900/20', border: 'border-blue-200 dark:border-blue-800', text: 'text-blue-600 dark:text-blue-400', optimal: [50, 85] },
+  { id: 'temp', label: 'Soil Temp', unit: '°C', baseValue: 28, min: 15, max: 45, icon: Thermometer, color: '#ef4444', bg: 'bg-red-50 dark:bg-red-900/20', border: 'border-red-200 dark:border-red-800', text: 'text-danger dark:text-red-400', optimal: [20, 35] },
+  { id: 'humidity', label: 'Air Humidity', unit: '%', baseValue: 72, min: 20, max: 100, icon: Droplets, color: '#3b82f6', bg: 'bg-blue-50 dark:bg-blue-900/20', border: 'border-blue-200 dark:border-blue-800', text: 'text-info dark:text-blue-400', optimal: [50, 85] },
   { id: 'soil_moisture', label: 'Soil Moisture', unit: '%', baseValue: 65, min: 0, max: 100, icon: Droplets, color: '#10b981', bg: 'bg-emerald-50 dark:bg-emerald-900/20', border: 'border-emerald-200 dark:border-emerald-800', text: 'text-emerald-600 dark:text-emerald-400', optimal: [40, 80] },
   { id: 'ph', label: 'Soil pH', unit: 'pH', baseValue: 6.8, min: 4, max: 9, icon: Leaf, color: '#8b5cf6', bg: 'bg-purple-50 dark:bg-purple-900/20', border: 'border-purple-200 dark:border-purple-800', text: 'text-purple-600 dark:text-purple-400', optimal: [6, 7.5] },
-  { id: 'light', label: 'Light (PAR)', unit: 'μmol', baseValue: 820, min: 0, max: 2000, icon: Sun, color: '#f59e0b', bg: 'bg-amber-50 dark:bg-amber-900/20', border: 'border-amber-200 dark:border-amber-800', text: 'text-amber-600 dark:text-amber-400', optimal: [400, 1600] },
+  { id: 'light', label: 'Light (PAR)', unit: 'μmol', baseValue: 820, min: 0, max: 2000, icon: Sun, color: '#f59e0b', bg: 'bg-amber-50 dark:bg-amber-900/20', border: 'border-amber-200 dark:border-amber-800', text: 'text-warning dark:text-amber-400', optimal: [400, 1600] },
   { id: 'wind', label: 'Wind Speed', unit: 'km/h', baseValue: 12, min: 0, max: 80, icon: Wind, color: '#06b6d4', bg: 'bg-cyan-50 dark:bg-cyan-900/20', border: 'border-cyan-200 dark:border-cyan-800', text: 'text-cyan-600 dark:text-cyan-400', optimal: [0, 30] },
 ];
 
@@ -79,12 +79,12 @@ const IoTDashboard = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Wifi size={26} className="text-primary-600" /> IoT Sensor Dashboard
+          <h1 className="text-2xl sm:text-3xl font-bold text-text flex items-center gap-2">
+            <Wifi size={26} className="text-accent" /> IoT Sensor Dashboard
           </h1>
           <div className="flex items-center gap-2 mt-1">
             <span className="flex items-center gap-1 text-xs font-bold text-green-600 dark:text-green-400">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="w-2 h-2 bg-green-500 rounded-full" />
               LIVE
             </span>
             <span className="text-xs text-gray-400">— Updates every 2 seconds</span>
@@ -118,17 +118,17 @@ const IoTDashboard = () => {
               }`}
             >
               {/* Status dot */}
-              <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ${optimal ? 'bg-green-500 animate-pulse' : 'bg-red-500 animate-pulse'}`} />
+              <div className={`absolute top-2 right-2 w-2 h-2 rounded-full ${optimal ? 'bg-green-500' : 'bg-red-500'}`} />
               <div className={`${sensor.text} mb-1.5`}><sensor.icon size={18} /></div>
               <p className={`text-xl sm:text-2xl font-black ${sensor.text}`}>
                 {typeof val === 'number' ? (Number.isInteger(sensor.baseValue) ? Math.round(val) : val.toFixed(1)) : '--'}
                 <span className="text-xs font-bold ml-0.5">{sensor.unit}</span>
               </p>
-              <p className="text-[10px] font-bold text-gray-600 dark:text-gray-400 mt-0.5">{sensor.label}</p>
+              <p className="text-[10px] font-bold text-text-muted mt-0.5">{sensor.label}</p>
               <div className="mt-2 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                 <div className={`h-full rounded-full transition-all duration-1000`} style={{ width: `${pct}%`, backgroundColor: sensor.color }} />
               </div>
-              <p className={`text-[9px] font-bold mt-1 ${optimal ? 'text-green-600 dark:text-green-400' : 'text-red-500'}`}>
+              <p className={`text-[9px] font-bold mt-1 ${optimal ? 'text-green-600 dark:text-green-400' : 'text-danger'}`}>
                 {optimal ? '✓ Optimal' : '⚠ Out of Range'}
               </p>
             </button>
@@ -139,7 +139,7 @@ const IoTDashboard = () => {
       {/* Live Chart */}
       <div className="card border-none shadow-xl">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <h2 className="font-bold text-text flex items-center gap-2">
             <selectedSensorObj.icon size={20} style={{ color: selectedSensorObj.color }} />
             {selectedSensorObj.label} — Live History
           </h2>
@@ -151,7 +151,7 @@ const IoTDashboard = () => {
         <div className="h-40 sm:h-56 w-full">
           {chartData.length < 2 ? (
             <div className="h-full flex items-center justify-center text-gray-400 text-sm">
-              <Activity size={20} className="mr-2 animate-pulse" /> Collecting data...
+              <Activity size={20} className="mr-2" /> Collecting data...
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
@@ -178,27 +178,27 @@ const IoTDashboard = () => {
 
       {/* Device List */}
       <div className="card border-none shadow-xl">
-        <h2 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-          <Signal size={20} className="text-primary-600" /> Connected Devices
+        <h2 className="font-bold text-text mb-4 flex items-center gap-2">
+          <Signal size={20} className="text-accent" /> Connected Devices
         </h2>
         <div className="space-y-2.5">
           {DEVICES.map(device => (
             <div key={device.id} className={`flex items-center justify-between p-3 sm:p-4 rounded-xl border transition-all ${
               device.online
-                ? 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700'
+                ? 'bg-surface border-gray-100 dark:border-gray-700'
                 : 'bg-gray-50/50 dark:bg-gray-900/50 border-gray-100 dark:border-gray-700 opacity-60'
             }`}>
               <div className="flex items-center gap-3">
-                <div className={`w-2 h-2 rounded-full ${device.online ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
+                <div className={`w-2 h-2 rounded-full ${device.online ? 'bg-green-500' : 'bg-gray-400'}`} />
                 <div>
-                  <p className="font-bold text-gray-900 dark:text-white text-sm">{device.name}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{device.location}</p>
+                  <p className="font-bold text-text text-sm">{device.name}</p>
+                  <p className="text-xs text-text-muted">{device.location}</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 sm:gap-4">
                 <div className="flex items-center gap-1 text-xs">
-                  <Battery size={14} className={device.battery < 20 ? 'text-red-500' : 'text-gray-400'} />
-                  <span className={device.battery < 20 ? 'text-red-500 font-bold' : 'text-gray-500'}>{device.battery}%</span>
+                  <Battery size={14} className={device.battery < 20 ? 'text-danger' : 'text-gray-400'} />
+                  <span className={device.battery < 20 ? 'text-danger font-bold' : 'text-gray-500'}>{device.battery}%</span>
                 </div>
                 <div className="flex items-center gap-1 text-xs">
                   <Signal size={14} className="text-gray-400" />

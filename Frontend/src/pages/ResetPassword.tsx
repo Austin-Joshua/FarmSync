@@ -82,7 +82,7 @@ const ResetPassword = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary-50 via-green-50 to-earth-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-950 flex items-center justify-center p-4 transition-colors duration-300">
         <div className="max-w-md w-full">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+          <div className="bg-surface rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
             <div className="text-center">
               <div className="flex justify-center mb-4">
                 <div className="bg-green-100 dark:bg-green-900/30 rounded-full p-3">
@@ -92,10 +92,10 @@ const ResetPassword = () => {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 Password Reset Successful!
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-text-muted mb-6">
                 Your password has been reset successfully. You can now login with your new password.
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <p className="text-sm text-text-muted mb-6">
                 Redirecting to login page...
               </p>
               <Link
@@ -122,7 +122,7 @@ const ResetPassword = () => {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Reset Password
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-text-muted">
             Enter your new password below
           </p>
         </div>
@@ -145,7 +145,7 @@ const ResetPassword = () => {
         )}
 
         {/* Reset Form */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+        <div className="bg-surface rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -174,7 +174,7 @@ const ResetPassword = () => {
                   {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                 </button>
               </div>
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-1 text-xs text-text-muted">
                 Must be at least 8 characters with uppercase, lowercase, number, and special character
               </p>
             </div>
@@ -220,7 +220,7 @@ const ResetPassword = () => {
           <div className="mt-6 text-center">
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300"
+              className="inline-flex items-center gap-2 text-sm text-accent dark:text-accent font-medium hover:text-primary-700 dark:hover:text-primary-300"
             >
               <ArrowLeft size={16} />
               Back to Login

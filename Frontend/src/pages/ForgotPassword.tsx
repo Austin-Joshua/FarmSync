@@ -38,7 +38,7 @@ const ForgotPassword = () => {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             Forgot Password?
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-text-muted">
             {success 
               ? 'Check your email for password reset instructions'
               : 'Enter your email address and we\'ll send you a link to reset your password'}
@@ -53,7 +53,7 @@ const ForgotPassword = () => {
         )}
 
         {success ? (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+          <div className="bg-surface rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
             <div className="text-center">
               <div className="flex justify-center mb-4">
                 <div className="bg-green-100 dark:bg-green-900/30 rounded-full p-3">
@@ -63,11 +63,11 @@ const ForgotPassword = () => {
               <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
                 Email Sent!
               </h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-text-muted mb-6">
                 If an account with that email exists, a password reset link has been sent to <strong>{email}</strong>.
                 Please check your inbox and follow the instructions.
               </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+              <p className="text-sm text-text-muted mb-6">
                 The reset link will expire in 30 minutes. If you didn't receive the email, check your spam folder or try again.
               </p>
               <div className="space-y-3">
@@ -90,7 +90,7 @@ const ForgotPassword = () => {
             </div>
           </div>
         ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
+          <div className="bg-surface rounded-2xl shadow-xl p-8 border border-gray-100 dark:border-gray-700">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -122,7 +122,7 @@ const ForgotPassword = () => {
             <div className="mt-6 text-center">
               <Link
                 to="/login"
-                className="inline-flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 font-medium hover:text-primary-700 dark:hover:text-primary-300"
+                className="inline-flex items-center gap-2 text-sm text-accent dark:text-accent font-medium hover:text-primary-700 dark:hover:text-primary-300"
               >
                 <ArrowLeft size={16} />
                 Back to Login

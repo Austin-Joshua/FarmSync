@@ -55,18 +55,18 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
       }}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-300"
+        className="bg-surface rounded-lg shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-primary-50 dark:bg-primary-900/20">
+        <div className="flex items-center justify-between p-6 border-b border-border bg-primary-50 dark:bg-primary-900/20">
           <div className="flex items-center gap-4">
             <div className="text-5xl">{getCropIcon(crop.name)}</div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-text">
                 {translateCrop(crop.name)}
               </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-sm text-text-muted mt-1">
                 {translateCategory(crop.category || '')}
               </p>
             </div>
@@ -77,7 +77,7 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
             aria-label="Close"
             title="Close"
           >
-            <X size={24} className="text-gray-600 dark:text-gray-300" />
+            <X size={24} className="text-text-muted" />
           </button>
         </div>
 
@@ -98,8 +98,8 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
               <div className="flex items-center gap-2 mb-2">
-                <CalendarIcon size={18} className="text-blue-600" />
-                <h3 className="font-semibold text-gray-900 dark:text-white">
+                <CalendarIcon size={18} className="text-info" />
+                <h3 className="font-semibold text-text">
                   {t('crops.sowingDate') || 'Sowing Date'}
                 </h3>
               </div>
@@ -109,7 +109,7 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
             <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
               <div className="flex items-center gap-2 mb-2">
                 <CalendarIcon size={18} className="text-green-600" />
-                <h3 className="font-semibold text-gray-900 dark:text-white">
+                <h3 className="font-semibold text-text">
                   {t('crops.harvestDate') || 'Harvest Date'}
                 </h3>
               </div>
@@ -124,11 +124,11 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
                 <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
                   <div className="flex items-center gap-2 mb-2">
                     <Leaf size={18} className="text-purple-600" />
-                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                    <h3 className="font-semibold text-text">
                       {t('crops.growthPeriod') || 'Growth Period'}
                     </h3>
                   </div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-2xl font-bold text-text">
                     {crop.growthPeriod} {t('crops.days') || 'days'}
                   </p>
                 </div>
@@ -138,11 +138,11 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
                 <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg border border-orange-200 dark:border-orange-800">
                   <div className="flex items-center gap-2 mb-2">
                     <TrendingUp size={18} className="text-orange-600" />
-                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                    <h3 className="font-semibold text-text">
                       {t('crops.averageYield') || 'Average Yield'}
                     </h3>
                   </div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-2xl font-bold text-text">
                     {crop.averageYield.toLocaleString()} {t('common.kg')}/acre
                   </p>
                 </div>
@@ -152,33 +152,33 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
 
           {/* Soil Parameters */}
           {(crop.n || crop.p || crop.k || crop.ph) && (
-            <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg border border-border">
+              <h3 className="text-lg font-semibold text-text mb-4">
                 {t('crops.soilParameters') || 'Soil Parameters'}
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {crop.n && (
                   <div className="text-center">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Nitrogen (N)</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">{crop.n.toFixed(2)}</p>
+                    <p className="text-xs text-text-muted mb-1">Nitrogen (N)</p>
+                    <p className="text-xl font-bold text-text">{crop.n.toFixed(2)}</p>
                   </div>
                 )}
                 {crop.p && (
                   <div className="text-center">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Phosphorus (P)</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">{crop.p.toFixed(2)}</p>
+                    <p className="text-xs text-text-muted mb-1">Phosphorus (P)</p>
+                    <p className="text-xl font-bold text-text">{crop.p.toFixed(2)}</p>
                   </div>
                 )}
                 {crop.k && (
                   <div className="text-center">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Potassium (K)</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">{crop.k.toFixed(2)}</p>
+                    <p className="text-xs text-text-muted mb-1">Potassium (K)</p>
+                    <p className="text-xl font-bold text-text">{crop.k.toFixed(2)}</p>
                   </div>
                 )}
                 {crop.ph && (
                   <div className="text-center">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">pH Level</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">{crop.ph.toFixed(2)}</p>
+                    <p className="text-xs text-text-muted mb-1">pH Level</p>
+                    <p className="text-xl font-bold text-text">{crop.ph.toFixed(2)}</p>
                   </div>
                 )}
               </div>
@@ -188,7 +188,7 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
           {/* Weather Parameters */}
           {(crop.temperature || crop.humidity || crop.rainfall) && (
             <div className="bg-cyan-50 dark:bg-cyan-900/20 p-4 rounded-lg border border-cyan-200 dark:border-cyan-800">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <h3 className="text-lg font-semibold text-text mb-4">
                 {t('crops.weatherParameters') || 'Weather Parameters'}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -198,8 +198,8 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
                       <Thermometer size={24} className="text-orange-600" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{t('weather.temperature') || 'Temperature'}</p>
-                      <p className="text-xl font-bold text-gray-900 dark:text-white">
+                      <p className="text-xs text-text-muted">{t('weather.temperature') || 'Temperature'}</p>
+                      <p className="text-xl font-bold text-text">
                         {crop.temperature.toFixed(1)}°C
                       </p>
                     </div>
@@ -208,11 +208,11 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
                 {crop.humidity && (
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                      <Droplet size={24} className="text-blue-600" />
+                      <Droplet size={24} className="text-info" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{t('weather.humidity') || 'Humidity'}</p>
-                      <p className="text-xl font-bold text-gray-900 dark:text-white">
+                      <p className="text-xs text-text-muted">{t('weather.humidity') || 'Humidity'}</p>
+                      <p className="text-xl font-bold text-text">
                         {crop.humidity.toFixed(1)}%
                       </p>
                     </div>
@@ -224,8 +224,8 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
                       <CloudRain size={24} className="text-cyan-600" />
                     </div>
                     <div>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{t('weather.rainfall') || 'Rainfall'}</p>
-                      <p className="text-xl font-bold text-gray-900 dark:text-white">
+                      <p className="text-xs text-text-muted">{t('weather.rainfall') || 'Rainfall'}</p>
+                      <p className="text-xl font-bold text-text">
                         {crop.rainfall.toFixed(1)} mm
                       </p>
                     </div>
@@ -241,10 +241,10 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
               <div className="flex items-center gap-3">
                 <Droplet size={24} className="text-indigo-600" />
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                  <p className="text-sm text-text-muted">
                     {t('crops.waterRequirement') || 'Water Requirement'}
                   </p>
-                  <p className="text-lg font-semibold text-gray-900 dark:text-white capitalize">
+                  <p className="text-lg font-semibold text-text capitalize">
                     {crop.waterRequirement === 'low' ? t('crops.low') : 
                      crop.waterRequirement === 'medium' ? t('crops.medium') : 
                      t('crops.high')}
@@ -255,7 +255,7 @@ const CropDetailModal = ({ isOpen, onClose, crop }: CropDetailModalProps) => {
           )}
 
           {/* Farm ID */}
-          <div className="text-sm text-gray-600 dark:text-gray-400 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="text-sm text-text-muted pt-4 border-t border-border">
             <strong>{t('crops.farmId') || 'Farm ID'}:</strong> {crop.farmId}
           </div>
         </div>

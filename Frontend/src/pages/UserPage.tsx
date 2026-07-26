@@ -67,7 +67,7 @@ const UserPage = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-24">
-        <Loader className="animate-spin h-12 w-12 text-primary-600" />
+        <Loader className="animate-spin h-12 w-12 text-accent" />
       </div>
     );
   }
@@ -77,10 +77,10 @@ const UserPage = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
-            <User className="text-primary-600" size={32} />
+            <User className="text-accent" size={32} />
             {t('settings.profile') || 'User Profile'}
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-text-muted mt-1">
             System diagnostics and account overview
           </p>
         </div>
@@ -96,14 +96,14 @@ const UserPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Profile Card */}
-        <div className="card hover:shadow-lg transition-shadow border-t-4 border-primary-600">
+        <div className="card hover:shadow-lg transition-shadow border-t-4 border-accent">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 font-bold text-2xl">
+            <div className="w-16 h-16 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-accent font-bold text-2xl">
               {authUser?.name?.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{authUser?.name}</h2>
-              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+              <h2 className="text-xl font-bold text-text">{authUser?.name}</h2>
+              <div className="flex items-center gap-2 text-sm text-text-muted">
                 <Shield size={14} />
                 <span className="capitalize">{authUser?.role}</span>
               </div>
@@ -111,7 +111,7 @@ const UserPage = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+            <div className="flex items-center gap-3 p-3 bg-surface-sunken/50 rounded-lg">
               <Mail className="text-gray-400" size={18} />
               <div>
                 <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">{t('emailAddress')}</p>
@@ -120,7 +120,7 @@ const UserPage = () => {
             </div>
 
             {authUser?.location && (
-              <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+              <div className="flex items-center gap-3 p-3 bg-surface-sunken/50 rounded-lg">
                 <MapPin className="text-gray-400" size={18} />
                 <div>
                   <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">{t('profile.location')}</p>
@@ -130,7 +130,7 @@ const UserPage = () => {
             )}
 
             <div className="flex justify-between items-center p-3 border border-gray-100 dark:border-gray-700 rounded-lg">
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Onboarding Status</span>
+              <span className="text-sm font-medium text-text-muted">Onboarding Status</span>
               {authUser?.is_onboarded ? (
                 <span className="px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs font-bold rounded uppercase">Completed</span>
               ) : (
@@ -142,13 +142,13 @@ const UserPage = () => {
 
         {/* System Health Card */}
         <div className="card hover:shadow-lg transition-shadow border-t-4 border-indigo-600">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-text mb-6 flex items-center gap-2">
             <Database className="text-indigo-600" size={24} />
             System Health
           </h2>
 
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center justify-between p-4 bg-surface-sunken/50 rounded-lg border border-gray-100 dark:border-gray-700">
               <span className="font-medium text-gray-700 dark:text-gray-300">Backend API</span>
               <div className="flex items-center gap-2">
                 {dbStatus?.status === 'connected' ? (
@@ -158,8 +158,8 @@ const UserPage = () => {
                   </>
                 ) : (
                   <>
-                    <span className="text-red-600 dark:text-red-400 font-bold">OFFLINE</span>
-                    <XCircle className="text-red-500" size={18} />
+                    <span className="text-danger dark:text-red-400 font-bold">OFFLINE</span>
+                    <XCircle className="text-danger" size={18} />
                   </>
                 )}
               </div>
@@ -167,7 +167,7 @@ const UserPage = () => {
 
             {dbStatus?.error && (
               <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-xs text-red-600 dark:text-red-400 leading-relaxed font-mono">
+                <p className="text-xs text-danger dark:text-red-400 leading-relaxed font-mono">
                   {dbStatus.error}
                 </p>
               </div>
@@ -183,7 +183,7 @@ const UserPage = () => {
 
       {error && (
         <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl flex items-start gap-3">
-          <AlertCircle className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" size={20} />
+          <AlertCircle className="text-warning dark:text-amber-400 shrink-0 mt-0.5" size={20} />
           <div>
             <h3 className="font-bold text-amber-800 dark:text-amber-300">System Warning</h3>
             <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">

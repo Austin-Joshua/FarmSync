@@ -170,16 +170,16 @@ const ExpenseManagement = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Monthly Expenses</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">₹{monthlyTotal.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-text">₹{monthlyTotal.toLocaleString()}</p>
             </div>
-            <IndianRupee className="text-red-600 dark:text-red-400" size={48} />
+            <IndianRupee className="text-danger dark:text-red-400" size={48} />
           </div>
         </div>
         <div className="card bg-orange-50 dark:bg-orange-900/20">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('expenses.totalExpenses')}</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">
+              <p className="text-3xl font-bold text-text">
                 ₹{expenses.reduce((sum, exp) => sum + exp.amount, 0).toLocaleString()}
               </p>
             </div>
@@ -190,11 +190,11 @@ const ExpenseManagement = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t('expenses.averageExpense')}</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">
+              <p className="text-3xl font-bold text-text">
                 ₹{Math.round(expenses.reduce((sum, exp) => sum + exp.amount, 0) / (expenses.length || 1)).toLocaleString()}
               </p>
             </div>
-            <Calendar className="text-blue-600 dark:text-blue-400" size={48} />
+            <Calendar className="text-info dark:text-blue-400" size={48} />
           </div>
         </div>
       </div>
@@ -224,13 +224,13 @@ const ExpenseManagement = () => {
       {/* Expenses List */}
       <div className="card cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setDetailModal({ type: 'expenses', data: filteredExpenses })}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white">{t('expenses.expenseRecords')}</h2>
+          <h2 className="text-xl font-bold text-text">{t('expenses.expenseRecords')}</h2>
           <Eye size={18} className="text-gray-400" />
         </div>
         <div className="space-y-3">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20">
-              <Loader className="animate-spin h-10 w-10 text-primary-600 mb-2" />
+              <Loader className="animate-spin h-10 w-10 text-accent mb-2" />
               <p className="text-gray-500 font-medium">Crunching the numbers...</p>
             </div>
           ) : filteredExpenses.length > 0 ? (
@@ -253,7 +253,7 @@ const ExpenseManagement = () => {
               return (
               <div
                 key={expense.id}
-                className={`p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-lg transition-all duration-200 ease-out group animate-in fade-in slide-in-from-right-4 bg-white dark:bg-gray-800 ${getDelayClass(index)}`}
+                className={`p-4 border border-border rounded-lg hover:shadow-lg transition-all duration-200 ease-out group animate-in fade-in slide-in-from-right-4 bg-surface ${getDelayClass(index)}`}
                 onClick={(e) => { e.stopPropagation(); }}
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -261,7 +261,7 @@ const ExpenseManagement = () => {
                     <div className="text-3xl">{getCategoryIcon(expense.category)}</div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-bold text-gray-900 dark:text-white">
+                        <h3 className="font-bold text-text">
                           {expense.description === 'Rice seeds (Basmati)' ? t('expenses.riceSeedsBasmati') :
                            expense.description === 'Wheat seeds' ? t('expenses.wheatSeeds') :
                            expense.description === 'Field preparation labor' ? t('expenses.fieldPreparationLabor') :
@@ -276,7 +276,7 @@ const ExpenseManagement = () => {
                           {t(`expenses.${expense.category}`)}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                      <p className="text-sm text-text-muted flex items-center gap-1">
                         <Calendar size={14} />
                         {formatDateDisplay(expense.date)}
                       </p>
@@ -284,12 +284,12 @@ const ExpenseManagement = () => {
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white">₹{expense.amount.toLocaleString()}</p>
+                      <p className="text-2xl font-bold text-text">₹{expense.amount.toLocaleString()}</p>
                     </div>
                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button
                         onClick={() => handleEditExpense(expense)}
-                        className="p-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+                        className="p-2 bg-accent text-white rounded-lg hover:bg-accent-hover transition-colors"
                         title={t('common.edit') || 'Edit'}
                       >
                         <Edit2 size={16} />
@@ -326,8 +326,8 @@ const ExpenseManagement = () => {
           {Object.entries(categoryTotals).map(([category, total]) => (
             <div key={category} className="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg text-center">
               <div className="text-3xl mb-2">{getCategoryIcon(category)}</div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{t(`expenses.${category}`)}</p>
-              <p className="text-lg font-bold text-gray-900 dark:text-white">₹{total.toLocaleString()}</p>
+              <p className="text-xs text-text-muted mb-1">{t(`expenses.${category}`)}</p>
+              <p className="text-lg font-bold text-text">₹{total.toLocaleString()}</p>
             </div>
           ))}
         </div>
@@ -356,15 +356,15 @@ const ExpenseManagement = () => {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
               <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('expenses.totalExpenses')}</p>
-                <p className="text-2xl font-bold text-red-600">₹{detailModal.data?.reduce((sum: number, exp: Expense) => sum + exp.amount, 0).toLocaleString() || 0}</p>
+                <p className="text-sm text-text-muted mb-1">{t('expenses.totalExpenses')}</p>
+                <p className="text-2xl font-bold text-danger">₹{detailModal.data?.reduce((sum: number, exp: Expense) => sum + exp.amount, 0).toLocaleString() || 0}</p>
               </div>
               <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('expenses.averageExpense')}</p>
-                <p className="text-2xl font-bold text-blue-600">₹{Math.round((detailModal.data?.reduce((sum: number, exp: Expense) => sum + exp.amount, 0) || 0) / (detailModal.data?.length || 1)).toLocaleString()}</p>
+                <p className="text-sm text-text-muted mb-1">{t('expenses.averageExpense')}</p>
+                <p className="text-2xl font-bold text-info">₹{Math.round((detailModal.data?.reduce((sum: number, exp: Expense) => sum + exp.amount, 0) || 0) / (detailModal.data?.length || 1)).toLocaleString()}</p>
               </div>
               <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{t('common.total')} {t('common.records')}</p>
+                <p className="text-sm text-text-muted mb-1">{t('common.total')} {t('common.records')}</p>
                 <p className="text-2xl font-bold text-purple-600">{detailModal.data?.length || 0}</p>
               </div>
             </div>
@@ -372,14 +372,14 @@ const ExpenseManagement = () => {
               {detailModal.data?.map((expense: Expense) => (
                 <div
                   key={expense.id}
-                  className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:shadow-md transition-shadow"
+                  className="p-4 border border-border rounded-lg hover:shadow-md transition-shadow"
                 >
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                     <div className="flex items-center gap-4 flex-1">
                       <div className="text-3xl">{getCategoryIcon(expense.category)}</div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-bold text-gray-900 dark:text-white">
+                          <h3 className="font-bold text-text">
                             {expense.description === 'Rice seeds (Basmati)' ? t('expenses.riceSeedsBasmati') :
                              expense.description === 'Wheat seeds' ? t('expenses.wheatSeeds') :
                              expense.description === 'Field preparation labor' ? t('expenses.fieldPreparationLabor') :
@@ -392,7 +392,7 @@ const ExpenseManagement = () => {
                             {t(`expenses.${expense.category}`)}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1">
+                        <p className="text-sm text-text-muted flex items-center gap-1">
                           <Calendar size={14} />
                           {formatDateDisplay(expense.date)}
                           {expense.relatedCropId && (
@@ -402,7 +402,7 @@ const ExpenseManagement = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white">₹{expense.amount.toLocaleString()}</p>
+                      <p className="text-2xl font-bold text-text">₹{expense.amount.toLocaleString()}</p>
                     </div>
                   </div>
                 </div>
@@ -421,8 +421,8 @@ const ExpenseManagement = () => {
         >
           <div className="space-y-4">
             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6">
-              <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{t('expenses.totalExpenses')}: ₹{Object.values(detailModal.data || {}).reduce((sum: number, val: any) => sum + val, 0).toLocaleString()}</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{t('common.total')} {Object.keys(detailModal.data || {}).length} {t('expenses.category')}</p>
+              <h3 className="font-semibold text-text mb-2">{t('expenses.totalExpenses')}: ₹{Object.values(detailModal.data || {}).reduce((sum: number, val: any) => sum + val, 0).toLocaleString()}</h3>
+              <p className="text-sm text-text-muted">{t('common.total')} {Object.keys(detailModal.data || {}).length} {t('expenses.category')}</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {Object.entries(detailModal.data || {}).map(([category, total]) => {
@@ -439,28 +439,28 @@ const ExpenseManagement = () => {
                       <div className="flex items-center gap-3">
                         <div className="text-4xl">{getCategoryIcon(category)}</div>
                         <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white">{t(`expenses.${category}`)}</h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">{categoryExpenses.length} {t('common.records')}</p>
+                          <h4 className="font-semibold text-text">{t(`expenses.${category}`)}</h4>
+                          <p className="text-sm text-text-muted">{categoryExpenses.length} {t('common.records')}</p>
                         </div>
                       </div>
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">{t('expenses.totalExpenses')}</span>
-                        <span className="text-xl font-bold text-gray-900 dark:text-white">₹{(total as number).toLocaleString()}</span>
+                        <span className="text-sm text-text-muted">{t('expenses.totalExpenses')}</span>
+                        <span className="text-xl font-bold text-text">₹{(total as number).toLocaleString()}</span>
                       </div>
                       <div className="mt-2">
                         <ProgressBar
                           value={progressValue}
                           className="bg-gray-200 dark:bg-gray-600"
-                          barClassName="bg-primary-600"
+                          barClassName="bg-accent"
                           aria-valuenow={progressValue}
                           aria-valuemin={0}
                           aria-valuemax={100}
                           aria-label={`Expense progress: ${progressValue}%`}
                         />
                       </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{percentage}% {t('common.of')} {t('expenses.totalExpenses')}</p>
+                      <p className="text-xs text-text-muted mt-1">{percentage}% {t('common.of')} {t('expenses.totalExpenses')}</p>
                     </div>
                   </div>
                 );

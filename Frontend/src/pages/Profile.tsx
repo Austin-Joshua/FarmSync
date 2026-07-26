@@ -134,7 +134,7 @@ const Profile = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t('profile.title')}</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">{t('profile.subtitle')}</p>
+          <p className="text-text-muted mt-1 text-sm">{t('profile.subtitle')}</p>
         </div>
         {!isEditing && (
           <button onClick={() => setIsEditing(true)} className="btn-primary flex items-center gap-2">
@@ -155,7 +155,7 @@ const Profile = () => {
                   ? <img src={profilePictureUrl} alt={user?.name || 'Profile'} className="w-full h-full object-cover" />
                   : avatarInitial}
               </div>
-              <label htmlFor="profile-picture-input" className="absolute -bottom-2 -right-2 bg-primary-600 hover:bg-primary-700 text-white rounded-full p-2 cursor-pointer shadow-lg transition-all transform hover:scale-110">
+              <label htmlFor="profile-picture-input" className="absolute -bottom-2 -right-2 bg-accent hover:bg-accent-hover text-white rounded-full p-2 cursor-pointer shadow-lg transition-all transform hover:scale-110">
                 <Camera size={16} />
                 <input id="profile-picture-input" type="file" accept="image/*" className="hidden" onChange={handlePictureChange} />
               </label>
@@ -189,7 +189,7 @@ const Profile = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <UserIcon size={12} className="text-primary-500" /> {t('profile.fullName')}
+                    <UserIcon size={12} className="text-accent" /> {t('profile.fullName')}
                   </label>
                   {isEditing
                     ? <input className="input text-sm" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
@@ -198,14 +198,14 @@ const Profile = () => {
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <Mail size={12} className="text-primary-500" /> {t('email')}
+                    <Mail size={12} className="text-accent" /> {t('email')}
                   </label>
-                  <p className="text-gray-600 dark:text-gray-400 font-medium text-sm">{formData.email}</p>
+                  <p className="text-text-muted font-medium text-sm">{formData.email}</p>
                 </div>
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <Phone size={12} className="text-primary-500" /> {t('profile.phoneNumber')}
+                    <Phone size={12} className="text-accent" /> {t('profile.phoneNumber')}
                   </label>
                   {isEditing
                     ? <input className="input text-sm" type="tel" value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="+91 9876543210" />
@@ -214,7 +214,7 @@ const Profile = () => {
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <Globe size={12} className="text-primary-500" /> Language
+                    <Globe size={12} className="text-accent" /> Language
                   </label>
                   {isEditing
                     ? <select className="input text-sm" value={formData.preferredLanguage} onChange={e => setFormData({...formData, preferredLanguage: e.target.value})}>
@@ -229,15 +229,15 @@ const Profile = () => {
             <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
               <h3 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Farm Location</h3>
               {!isEditing && (
-                <div className="flex items-center gap-2 mb-3 text-sm text-gray-600 dark:text-gray-400">
-                  <MapPin size={14} className="text-primary-500 shrink-0" />
+                <div className="flex items-center gap-2 mb-3 text-sm text-text-muted">
+                  <MapPin size={14} className="text-accent shrink-0" />
                   <span>{locationDisplay}</span>
                 </div>
               )}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <MapPin size={12} className="text-primary-500" /> State
+                    <MapPin size={12} className="text-accent" /> State
                   </label>
                   {isEditing
                     ? <select className="input text-sm" value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})}>
@@ -249,7 +249,7 @@ const Profile = () => {
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <Building2 size={12} className="text-primary-500" /> District
+                    <Building2 size={12} className="text-accent" /> District
                   </label>
                   {isEditing
                     ? <input className="input text-sm" value={formData.district} onChange={e => setFormData({...formData, district: e.target.value})} placeholder="e.g. Nashik" />
@@ -258,7 +258,7 @@ const Profile = () => {
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <Home size={12} className="text-primary-500" /> Village / Town
+                    <Home size={12} className="text-accent" /> Village / Town
                   </label>
                   {isEditing
                     ? <input className="input text-sm" value={formData.village} onChange={e => setFormData({...formData, village: e.target.value})} placeholder="e.g. Igatpuri" />
@@ -273,7 +273,7 @@ const Profile = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <Ruler size={12} className="text-primary-500" /> {t('profile.landSizeAcres')}
+                    <Ruler size={12} className="text-accent" /> {t('profile.landSizeAcres')}
                   </label>
                   {isEditing
                     ? <input type="number" step="0.1" min="0" className="input text-sm" value={formData.landSize || ''} onChange={e => setFormData({...formData, landSize: parseFloat(e.target.value) || 0})} placeholder="e.g. 5.5" />
@@ -282,7 +282,7 @@ const Profile = () => {
 
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                    <Droplets size={12} className="text-primary-500" /> {t('profile.soilType')}
+                    <Droplets size={12} className="text-accent" /> {t('profile.soilType')}
                   </label>
                   {isEditing
                     ? <select className="input text-sm" value={formData.soilType} onChange={e => setFormData({...formData, soilType: e.target.value})}>

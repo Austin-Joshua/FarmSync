@@ -173,7 +173,7 @@ const CropCalendar = () => {
       const emptySlots = Array(firstDayOffset).fill(null);
 
       return (
-        <div key={monthName} className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-md border border-gray-100 dark:border-gray-700/50 flex flex-col justify-between">
+        <div key={monthName} className="bg-surface rounded-2xl p-4 shadow-md border border-gray-100 dark:border-gray-700/50 flex flex-col justify-between">
           <div>
             <h3 className="text-center font-black text-sm text-gray-800 dark:text-white uppercase tracking-wider mb-3">
               {monthName}
@@ -218,7 +218,7 @@ const CropCalendar = () => {
                     }}
                     className={`aspect-square rounded-lg flex flex-col items-center justify-center text-xs relative cursor-pointer group hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all ${
                       isTodayDate 
-                        ? 'bg-primary-600 font-bold text-white shadow-md shadow-primary-500/20' 
+                        ? 'bg-accent font-bold text-white shadow-md shadow-accent/20' 
                         : 'text-gray-700 dark:text-gray-300'
                     }`}
                   >
@@ -229,7 +229,7 @@ const CropCalendar = () => {
                       <div className="flex gap-0.5 mt-0.5 absolute bottom-1">
                         {hasPlanting && <span className="w-1 h-1 rounded-full bg-green-500"></span>}
                         {hasHarvest && <span className="w-1 h-1 rounded-full bg-amber-500"></span>}
-                        {hasOther && <span className="w-1 h-1 rounded-full bg-blue-500"></span>}
+                        {hasOther && <span className="w-1 h-1 rounded-full bg-info"></span>}
                       </div>
                     )}
 
@@ -266,25 +266,25 @@ const CropCalendar = () => {
       {/* Header section with Year Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black text-gray-900 dark:text-white flex items-center gap-3">
-            <CalendarIcon className="text-primary-600" size={32} />
+          <h1 className="text-3xl font-black text-text flex items-center gap-3">
+            <CalendarIcon className="text-accent" size={32} />
             Annual Crop Calendar
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">Smart scheduling & crop lifecycle timelines</p>
+          <p className="text-text-muted mt-1">Smart scheduling & crop lifecycle timelines</p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-1">
+          <div className="flex items-center bg-surface rounded-xl border border-border shadow-sm p-1">
             <button 
               onClick={() => setCurrentDate(new Date(selectedYear - 1, 0, 1))} 
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-600 dark:text-gray-400 transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-text-muted transition-colors"
             >
               <ChevronLeft size={16} />
             </button>
             <span className="px-4 font-black text-gray-800 dark:text-white tracking-widest">{selectedYear}</span>
             <button 
               onClick={() => setCurrentDate(new Date(selectedYear + 1, 0, 1))} 
-              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-600 dark:text-gray-400 transition-colors"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-text-muted transition-colors"
             >
               <ChevronRight size={16} />
             </button>
@@ -292,12 +292,12 @@ const CropCalendar = () => {
 
           <button 
             onClick={() => setCurrentDate(new Date())} 
-            className="px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 font-bold border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 transition-colors text-sm shadow-sm"
+            className="px-4 py-2 bg-surface text-gray-700 dark:text-gray-300 font-bold border border-border rounded-xl hover:bg-gray-50 transition-colors text-sm shadow-sm"
           >
             Today
           </button>
 
-          <button onClick={() => setShowAddModal(true)} className="btn-primary flex items-center gap-2 shadow-lg shadow-primary-500/20 py-2 text-sm">
+          <button onClick={() => setShowAddModal(true)} className="btn-primary flex items-center gap-2 shadow-lg shadow-accent/20 py-2 text-sm">
             <Plus size={16} />
             New Event
           </button>
@@ -312,8 +312,8 @@ const CropCalendar = () => {
       {/* Crop Timelines Section */}
       <div className="card p-6 shadow-xl space-y-6">
         <div className="border-b border-gray-100 dark:border-gray-700/50 pb-4">
-          <h2 className="text-xl font-black uppercase tracking-wider text-gray-900 dark:text-white flex items-center gap-2">
-            <Sprout className="text-primary-600" size={24} />
+          <h2 className="text-xl font-black uppercase tracking-wider text-text flex items-center gap-2">
+            <Sprout className="text-accent" size={24} />
             Crop Growth Timelines ({selectedYear})
           </h2>
           <p className="text-xs text-gray-500 mt-1">Horizontal streaks plotting sowing-to-harvest lifecycles</p>
@@ -321,7 +321,7 @@ const CropCalendar = () => {
 
         {crops.length === 0 ? (
           <div className="text-center py-12">
-            <Sprout size={48} className="mx-auto text-gray-300 mb-3 animate-pulse" />
+            <Sprout size={48} className="mx-auto text-gray-300 mb-3" />
             <p className="text-sm font-bold text-gray-400">No crops active or planned for this season</p>
           </div>
         ) : (
@@ -330,9 +330,9 @@ const CropCalendar = () => {
             {/* Timeline Month Header */}
             <div className="flex items-center">
               <div className="w-48 shrink-0 text-xs font-black uppercase tracking-widest text-gray-400">Crop Details</div>
-              <div className="flex-1 grid grid-cols-12 gap-0 text-center text-[10px] font-black text-gray-400 border-b border-gray-100 dark:border-gray-800 pb-2">
+              <div className="flex-1 grid grid-cols-12 gap-0 text-center text-[10px] font-black text-gray-400 border-b border-border pb-2">
                 {MONTH_NAMES.map(m => (
-                  <div key={`timeline-h-${m}`} className="truncate border-l border-gray-100 dark:border-gray-800 first:border-l-0">
+                  <div key={`timeline-h-${m}`} className="truncate border-l border-border first:border-l-0">
                     {m.substring(0, 3)}
                   </div>
                 ))}
@@ -365,7 +365,7 @@ const CropCalendar = () => {
                         <span className="text-xl shrink-0">{icon}</span>
                         <div className="truncate">
                           <h4 className="text-sm font-bold text-gray-800 dark:text-white truncate">{crop.name}</h4>
-                          <p className="text-[10px] text-gray-500 dark:text-gray-400">
+                          <p className="text-[10px] text-text-muted">
                             {format(new Date(crop.sowingDate), 'MMM d')} - {crop.harvestDate ? format(new Date(crop.harvestDate), 'MMM d') : 'Active'}
                           </p>
                         </div>
@@ -373,12 +373,12 @@ const CropCalendar = () => {
                     </div>
 
                     {/* Right Column: Track */}
-                    <div className="flex-1 h-12 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl relative overflow-hidden border border-gray-100 dark:border-gray-800/80 flex items-center">
+                    <div className="flex-1 h-12 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl relative overflow-hidden border border-border/80 flex items-center">
                       
                       {/* Month boundaries background */}
                       <div className="absolute inset-0 grid grid-cols-12 pointer-events-none">
                         {Array(12).fill(0).map((_, i) => (
-                          <div key={`grid-line-${i}`} className="border-l border-gray-100 dark:border-gray-800/50 first:border-l-0 h-full"></div>
+                          <div key={`grid-line-${i}`} className="border-l border-border/50 first:border-l-0 h-full"></div>
                         ))}
                       </div>
 
@@ -427,15 +427,15 @@ const CropCalendar = () => {
       {/* Add Event Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in duration-200 border border-gray-100 dark:border-gray-700">
-            <div className="px-8 py-6 bg-primary-600 text-white flex justify-between items-center">
+          <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-md overflow-hidden animate-in zoom-in duration-200 border border-gray-100 dark:border-gray-700">
+            <div className="px-8 py-6 bg-accent text-white flex justify-between items-center">
               <h2 className="text-xl font-black uppercase tracking-wider">New Activity</h2>
               <button onClick={() => setShowAddModal(false)} className="hover:rotate-90 transition-transform"><X size={24} /></button>
             </div>
             <form onSubmit={handleAddEvent} className="p-8 space-y-5">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-600 dark:text-gray-400 block mb-1">Activity Type</label>
-                <select className="w-full px-4 py-3 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none" value={newEvent.event_type} onChange={e => setNewEvent({...newEvent, event_type: e.target.value as any})}>
+                <label className="text-xs font-bold text-text-muted block mb-1">Activity Type</label>
+                <select className="w-full px-4 py-3 text-sm border border-border rounded-xl bg-surface text-text outline-none" value={newEvent.event_type} onChange={e => setNewEvent({...newEvent, event_type: e.target.value as any})}>
                   <option value="planting">Planting</option>
                   <option value="harvest">Harvest</option>
                   <option value="fertilizer">Fertilizer</option>
@@ -445,12 +445,12 @@ const CropCalendar = () => {
                 </select>
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-600 dark:text-gray-400 block mb-1">Task Title</label>
-                <input className="w-full px-4 py-3 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none" value={newEvent.title} onChange={e => setNewEvent({...newEvent, title: e.target.value})} placeholder="e.g. Fertilize Field A" required />
+                <label className="text-xs font-bold text-text-muted block mb-1">Task Title</label>
+                <input className="w-full px-4 py-3 text-sm border border-border rounded-xl bg-surface text-text outline-none" value={newEvent.title} onChange={e => setNewEvent({...newEvent, title: e.target.value})} placeholder="e.g. Fertilize Field A" required />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-600 dark:text-gray-400 block mb-1">Date</label>
-                <input type="date" className="w-full px-4 py-3 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none" value={newEvent.event_date} onChange={e => setNewEvent({...newEvent, event_date: e.target.value})} required />
+                <label className="text-xs font-bold text-text-muted block mb-1">Date</label>
+                <input type="date" className="w-full px-4 py-3 text-sm border border-border rounded-xl bg-surface text-text outline-none" value={newEvent.event_date} onChange={e => setNewEvent({...newEvent, event_date: e.target.value})} required />
               </div>
               <div className="pt-4 flex gap-3">
                 <button type="submit" disabled={saving} className="btn-primary flex-1 py-4 text-lg font-black uppercase tracking-widest flex items-center justify-center gap-2">
@@ -466,7 +466,7 @@ const CropCalendar = () => {
       {/* Selected Event Modal */}
       {showEventModal && selectedEvent && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in duration-200">
+          <div className="bg-surface rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden animate-in fade-in duration-200">
             <div className={`h-32 ${getEventColor(selectedEvent.event_type)} flex items-center justify-center border-none`}>
               {(() => {
                 const Icon = getEventIcon(selectedEvent.event_type);
@@ -476,13 +476,13 @@ const CropCalendar = () => {
             <div className="p-8">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-1">{selectedEvent.title}</h3>
+                  <h3 className="text-2xl font-black text-text mb-1">{selectedEvent.title}</h3>
                   <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">{selectedEvent.event_type}</p>
                 </div>
                 <button onClick={() => setShowEventModal(false)}><X size={24} className="text-gray-300" /></button>
               </div>
               
-              <div className="flex items-center gap-2 text-primary-600 font-bold mb-6">
+              <div className="flex items-center gap-2 text-accent font-bold mb-6">
                 <CalendarIcon size={18} />
                 {format(new Date(selectedEvent.event_date), 'MMMM d, yyyy')}
               </div>
@@ -499,7 +499,7 @@ const CropCalendar = () => {
                   <Check size={18} />
                   {selectedEvent.is_completed ? 'Undo' : 'Done'}
                 </button>
-                <button onClick={() => handleDeleteEvent(selectedEvent.id)} className="flex items-center justify-center gap-2 py-3 px-4 bg-red-50 text-red-600 rounded-xl font-bold hover:bg-red-100 transition-all">
+                <button onClick={() => handleDeleteEvent(selectedEvent.id)} className="flex items-center justify-center gap-2 py-3 px-4 bg-red-50 text-danger rounded-xl font-bold hover:bg-red-100 transition-all">
                   <Trash2 size={18} />
                   Delete
                 </button>

@@ -101,7 +101,7 @@ const MarketPrices = () => {
       case 'up':
         return <TrendingUp className="text-green-500" size={20} />;
       case 'down':
-        return <TrendingDown className="text-red-500" size={20} />;
+        return <TrendingDown className="text-danger" size={20} />;
       default:
         return <Minus className="text-gray-500" size={20} />;
     }
@@ -112,9 +112,9 @@ const MarketPrices = () => {
       case 'up':
         return 'text-green-600 dark:text-green-400';
       case 'down':
-        return 'text-red-600 dark:text-red-400';
+        return 'text-danger dark:text-red-400';
       default:
-        return 'text-gray-600 dark:text-gray-400';
+        return 'text-text-muted';
     }
   };
 
@@ -125,7 +125,7 @@ const MarketPrices = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
             {t('marketPrices.title', 'Market Prices')}
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+          <p className="text-text-muted text-sm mt-1">
             {t('marketPrices.subtitle', 'Track real-time crop prices and get selling recommendations')}
           </p>
         </div>
@@ -138,7 +138,7 @@ const MarketPrices = () => {
       </div>
 
       {/* Crop Selection */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6">
+      <div className="bg-surface rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6">
         <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
           {t('marketPrices.selectCrop', 'Select Crop')}
         </label>
@@ -149,8 +149,8 @@ const MarketPrices = () => {
               onClick={() => setSelectedCrop(crop)}
               className={`py-2.5 px-3 rounded-xl border-2 transition-all text-sm font-semibold capitalize ${
                 selectedCrop === crop
-                  ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-primary-300 text-gray-600 dark:text-gray-300'
+                  ? 'border-accent bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300'
+                  : 'border-border hover:border-primary-300 text-text-muted'
               }`}
             >
               {crop}
@@ -167,7 +167,7 @@ const MarketPrices = () => {
 
       {loading && (
         <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-primary-600" />
+          <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-accent" />
           <p className="mt-3 text-gray-500 text-sm">{t('common.loading', 'Loading...')}</p>
         </div>
       )}
@@ -175,7 +175,7 @@ const MarketPrices = () => {
       {currentPrice && !loading && (
         <>
           {/* Current Price Card */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6">
+          <div className="bg-surface rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100 capitalize">
                 {currentPrice.crop}
@@ -206,11 +206,11 @@ const MarketPrices = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  <p className="text-sm text-text-muted mb-1">
                     {t('marketPrices.currentPrice', 'Current Price')}
                   </p>
                   <div className="flex items-center gap-2">
-                    <IndianRupee className="text-primary-600" size={24} />
+                    <IndianRupee className="text-accent" size={24} />
                     <span className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                       ₹{currentPrice.currentPrice.toFixed(2)}
                     </span>
@@ -226,7 +226,7 @@ const MarketPrices = () => {
                 </div>
 
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  <p className="text-sm text-text-muted mb-1">
                     {t('marketPrices.market', 'Market')}
                   </p>
                   <p className="text-xl font-semibold text-gray-900 dark:text-gray-100">
@@ -239,7 +239,7 @@ const MarketPrices = () => {
                 </div>
 
                 <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  <p className="text-sm text-text-muted mb-1">
                     {t('marketPrices.priceRange', 'Price Range')}
                   </p>
                   <p className="text-sm text-gray-900 dark:text-gray-100">
@@ -260,7 +260,7 @@ const MarketPrices = () => {
               <div className="bg-gradient-to-r from-primary-50 to-green-50 dark:from-primary-900/20 dark:to-green-900/20 rounded-xl shadow-lg p-6 mb-6 border border-primary-200 dark:border-primary-800">
                 <div className="flex items-start gap-4">
                   <div className="bg-primary-100 dark:bg-primary-900/30 p-3 rounded-lg">
-                    <Calendar className="text-primary-600 dark:text-primary-400" size={24} />
+                    <Calendar className="text-accent dark:text-accent" size={24} />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
@@ -280,7 +280,7 @@ const MarketPrices = () => {
                       {t('marketPrices.confidence', 'Confidence')}:{' '}
                       <span className="font-semibold">{(bestTimeToSell.confidence * 100).toFixed(0)}%</span>
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                    <p className="text-sm text-text-muted mt-2">
                       {bestTimeToSell.reason}
                     </p>
                   </div>
@@ -290,7 +290,7 @@ const MarketPrices = () => {
 
             {/* Price History Chart */}
             {priceHistory.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6">
+              <div className="bg-surface rounded-xl shadow-lg p-6 mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                     <BarChart3 size={24} />
@@ -299,7 +299,7 @@ const MarketPrices = () => {
                 </div>
                 <div className="overflow-x-auto">
                   <div className="min-w-full">
-                    <div className="grid grid-cols-7 gap-2 text-xs text-gray-600 dark:text-gray-400 mb-2">
+                    <div className="grid grid-cols-7 gap-2 text-xs text-text-muted mb-2">
                       <div>{t('marketPrices.date', 'Date')}</div>
                       <div>{t('marketPrices.price', 'Price')}</div>
                       <div>{t('marketPrices.change', 'Change')}</div>
@@ -314,7 +314,7 @@ const MarketPrices = () => {
                         >
                           <div>{formatDateShort(item.date)}</div>
                           <div className="font-semibold">₹{item.price.toFixed(2)}</div>
-                          <div className={item.change && item.change > 0 ? 'text-green-600' : item.change && item.change < 0 ? 'text-red-600' : ''}>
+                          <div className={item.change && item.change > 0 ? 'text-green-600' : item.change && item.change < 0 ? 'text-danger' : ''}>
                             {item.change ? `${item.change > 0 ? '+' : ''}${item.change.toFixed(2)}%` : '-'}
                           </div>
                           <div>{item.trend && getTrendIcon(item.trend)}</div>
@@ -330,9 +330,9 @@ const MarketPrices = () => {
         )}
 
         {!selectedCrop && !loading && (
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 sm:p-12 text-center">
+          <div className="bg-surface rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 sm:p-12 text-center">
             <BarChart3 className="mx-auto text-gray-300 dark:text-gray-600 mb-4" size={48} />
-            <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">
+            <p className="text-text-muted text-lg font-medium">
               {t('marketPrices.selectCropMessage', 'Select a crop to view market prices')}
             </p>
             <p className="text-xs text-gray-400 mt-2">Choose from rice, wheat, tomato, cotton, and more</p>

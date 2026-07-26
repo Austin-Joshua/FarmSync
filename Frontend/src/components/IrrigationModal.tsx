@@ -94,13 +94,13 @@ const IrrigationModal = ({ isOpen, onClose, onSave, irrigation = null, mode = 'a
       }}
     >
       <div 
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-300"
+        className="bg-surface rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Droplets size={24} className="text-primary-600" />
+        <div className="flex items-center justify-between p-6 border-b border-border">
+          <h2 className="text-2xl font-bold text-text flex items-center gap-2">
+            <Droplets size={24} className="text-accent" />
             {mode === 'edit' ? t('irrigation.editIrrigation') : t('irrigation.scheduleIrrigation')}
           </h2>
           <button
@@ -124,7 +124,7 @@ const IrrigationModal = ({ isOpen, onClose, onSave, irrigation = null, mode = 'a
               id="irrigation-crop-select"
               value={formData.cropId}
               onChange={(e) => setFormData({ ...formData, cropId: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent bg-white dark:bg-gray-700 text-text"
               required
               aria-label={t('irrigation.selectCrop') || 'Select Crop'}
             >
@@ -154,12 +154,12 @@ const IrrigationModal = ({ isOpen, onClose, onSave, irrigation = null, mode = 'a
                   onClick={() => setFormData({ ...formData, method: method.value as any })}
                   className={`p-4 border-2 rounded-lg transition-all ${
                     formData.method === method.value
-                      ? 'border-primary-600 bg-primary-50 dark:bg-primary-900/20'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                      ? 'border-accent bg-primary-50 dark:bg-primary-900/20'
+                      : 'border-border hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
                   <div className="text-2xl mb-2">{method.icon}</div>
-                  <div className="font-medium text-gray-900 dark:text-white capitalize">{method.label}</div>
+                  <div className="font-medium text-text capitalize">{method.label}</div>
                 </button>
               ))}
             </div>
@@ -196,26 +196,26 @@ const IrrigationModal = ({ isOpen, onClose, onSave, irrigation = null, mode = 'a
               aria-label={t('irrigation.duration')}
               value={formData.duration}
               onChange={(e) => setFormData({ ...formData, duration: parseFloat(e.target.value) || 0 })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent bg-white dark:bg-gray-700 text-text"
               required
             />
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-xs text-text-muted mt-1">
               {t('irrigation.durationHint') || 'Enter duration in hours (e.g., 2.5 for 2 hours 30 minutes)'}
             </p>
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-3 pt-4 border-t border-border">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 text-gray-900 dark:text-white"
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 text-text"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
               <Save size={18} />
               {mode === 'edit' ? t('common.save') : t('irrigation.scheduleIrrigation')}

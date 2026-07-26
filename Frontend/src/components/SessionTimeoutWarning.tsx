@@ -71,28 +71,28 @@ const SessionTimeoutWarning: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-500">
-      <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-2xl max-w-md w-full p-10 border-t-8 border-amber-500 text-center transform scale-up-center">
-        <div className="w-20 h-20 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center text-amber-600 mx-auto mb-8 animate-pulse">
+      <div className="bg-surface rounded-[2.5rem] shadow-2xl max-w-md w-full p-10 border-t-8 border-amber-500 text-center transform scale-up-center">
+        <div className="w-20 h-20 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center text-warning mx-auto mb-8">
            <Clock size={40} />
         </div>
         
-        <h3 className="text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tighter mb-4 italic">Security Alert</h3>
+        <h3 className="text-3xl font-black text-text uppercase tracking-tighter mb-4 italic">Security Alert</h3>
         <p className="text-gray-500 font-medium mb-8">
           Your encryption key is rotating soon. Current session will terminate in {' '}
-          <span className="text-amber-600 font-black font-mono text-xl">{formatTime(timeRemaining)}</span>
+          <span className="text-warning font-black font-mono text-xl">{formatTime(timeRemaining)}</span>
         </p>
 
         <div className="flex flex-col gap-3">
            <button 
              onClick={() => window.location.reload()} 
-             className="w-full py-4 bg-primary-600 text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-xl shadow-primary-500/20 hover:scale-[1.02] active:scale-100 transition-all"
+             className="w-full py-4 bg-accent text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 shadow-xl shadow-accent/20 hover:scale-[1.02] active:scale-100 transition-all"
            >
              <RefreshCw size={20} />
              Renew Handshake
            </button>
            <button 
              onClick={() => { logout(); window.location.href = '/login'; }} 
-             className="w-full py-4 bg-gray-50 dark:bg-gray-800 text-gray-500 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all border border-gray-100 dark:border-gray-800"
+             className="w-full py-4 bg-surface-sunken text-gray-500 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all border border-border"
            >
              <LogOut size={20} />
              Terminate Session

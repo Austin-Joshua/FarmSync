@@ -103,11 +103,11 @@ const CropFormModal = ({ isOpen, onClose, onSave, crop = null, mode = 'add' }: C
       }}
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-300"
+        className="bg-surface rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-300"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="flex items-center justify-between p-6 border-b border-border">
+          <h2 className="text-2xl font-bold text-text">
             {mode === 'edit' ? t('crops.editCrop') || 'Edit Crop' : t('crops.addNewCrop') || 'Add New Crop'}
           </h2>
           <button
@@ -282,8 +282,8 @@ const CropFormModal = ({ isOpen, onClose, onSave, crop = null, mode = 'add' }: C
           </div>
 
           {/* Soil Parameters Section */}
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <div className="border-t border-border pt-4">
+            <h3 className="text-lg font-semibold text-text mb-4">
               {t('crops.soilParameters') || 'Soil Parameters'}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -335,8 +335,8 @@ const CropFormModal = ({ isOpen, onClose, onSave, crop = null, mode = 'add' }: C
           </div>
 
           {/* Weather Parameters */}
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <div className="border-t border-border pt-4">
+            <h3 className="text-lg font-semibold text-text mb-4">
               {t('crops.weatherParameters') || 'Weather Parameters'}
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -382,7 +382,7 @@ const CropFormModal = ({ isOpen, onClose, onSave, crop = null, mode = 'add' }: C
             </div>
           </div>
 
-          <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-3 pt-4 border-t border-border">
             <button
               type="button"
               onClick={onClose}
@@ -392,7 +392,7 @@ const CropFormModal = ({ isOpen, onClose, onSave, crop = null, mode = 'add' }: C
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+              className="flex-1 px-4 py-2 bg-accent text-white rounded-lg font-medium hover:bg-accent-hover transition-all duration-150 ease-in-out hover:scale-100 active:scale-100 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
             >
               <Save size={18} />
               {mode === 'edit' ? t('common.save') || 'Save Changes' : t('crops.addCrop') || 'Add Crop'}

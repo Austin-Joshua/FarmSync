@@ -13,7 +13,7 @@ const Badge: React.FC<BadgeProps> = ({
   const baseStyle = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold font-semibold uppercase tracking-wider';
   
   const variants = {
-    primary: 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-primary-400',
+    primary: 'bg-primary-50 text-primary-700 dark:bg-primary-900/20 dark:text-accent',
     secondary: 'bg-earth-50 text-earth-700 dark:bg-earth-900/20 dark:text-earth-400',
     success: 'bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-400',
     warning: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-400',

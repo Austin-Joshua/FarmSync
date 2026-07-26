@@ -360,13 +360,13 @@ const Settings = () => {
     <div className="space-y-6 max-w-7xl mx-auto">
       <div>
         <h1 className="text-3xl font-black text-gray-900 dark:text-gray-100">{t('settings.title')}</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">Configure your personal identity, family members, agricultural properties, and app environment.</p>
+        <p className="text-text-muted mt-1">Configure your personal identity, family members, agricultural properties, and app environment.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Navigation Sidebar */}
         <div className="lg:col-span-1 space-y-2">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-150 dark:border-gray-700 p-4 shadow-sm space-y-1">
+          <div className="bg-surface rounded-2xl border border-gray-150 dark:border-gray-700 p-4 shadow-sm space-y-1">
             {tabs.map((tab) => {
               const IconComponent = tab.icon;
               const isActive = activeTab === tab.id;
@@ -379,14 +379,14 @@ const Settings = () => {
                   }}
                   className={`w-full text-left px-4 py-3 rounded-xl transition-all flex items-center gap-3.5 group border-l-4 ${
                     isActive
-                      ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/20 dark:text-primary-400 font-bold border-primary-600 dark:border-primary-500'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-750 hover:text-gray-900 dark:hover:text-white border-transparent'
+                      ? 'bg-primary-50 text-primary-700 dark:bg-primary-950/20 dark:text-accent font-bold border-accent dark:border-accent'
+                      : 'text-text-muted hover:bg-gray-50 dark:hover:bg-gray-750 hover:text-gray-900 dark:hover:text-white border-transparent'
                   }`}
                 >
                   <IconComponent 
                     size={20} 
                     className={`${
-                      isActive ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400 group-hover:text-gray-650 dark:group-hover:text-gray-300'
+                      isActive ? 'text-accent dark:text-accent' : 'text-gray-400 group-hover:text-gray-650 dark:group-hover:text-gray-300'
                     }`} 
                   />
                   <div>
@@ -405,19 +405,19 @@ const Settings = () => {
         <div className="lg:col-span-3 space-y-6">
           {/* Tab 1: Personal Details */}
           {activeTab === 'profile' && (
-            <div className="card space-y-6 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
+            <div className="card space-y-6 bg-surface p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
               <div className="flex flex-col sm:flex-row gap-6 items-center border-b border-gray-100 dark:border-gray-700/50 pb-6">
                 <div className="relative group shrink-0">
                   <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-xl bg-gray-100 dark:bg-gray-700">
                     {previewUrl || user?.picture_url ? (
                       <img src={previewUrl || user?.picture_url} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-4xl text-primary-700 dark:text-primary-400 font-black bg-primary-50 dark:bg-primary-950/20">
+                      <div className="w-full h-full flex items-center justify-center text-4xl text-primary-700 dark:text-accent font-black bg-primary-50 dark:bg-primary-950/20">
                         {user?.name?.charAt(0)}
                       </div>
                     )}
                   </div>
-                  <label htmlFor="settings-profile-picture-input" className="absolute bottom-0 right-0 p-2 bg-primary-600 text-white rounded-full cursor-pointer shadow-lg hover:bg-primary-700 transition-colors">
+                  <label htmlFor="settings-profile-picture-input" className="absolute bottom-0 right-0 p-2 bg-accent text-white rounded-full cursor-pointer shadow-lg hover:bg-accent-hover transition-colors">
                     <Camera size={16} />
                     <input 
                       id="settings-profile-picture-input" 
@@ -437,7 +437,7 @@ const Settings = () => {
                 </div>
                 
                 <div className="space-y-1.5 text-center sm:text-left">
-                  <h2 className="text-xl font-black text-gray-900 dark:text-white">{profileData.name || 'Agribusiness Owner'}</h2>
+                  <h2 className="text-xl font-black text-text">{profileData.name || 'Agribusiness Owner'}</h2>
                   <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{user?.role || 'Farmer'}</p>
                   {previewUrl && (
                     <button onClick={handlePictureUpload} className="btn-primary py-1 px-3 text-xs font-bold flex items-center gap-1.5" disabled={uploadingPicture}>
@@ -582,10 +582,10 @@ const Settings = () => {
 
           {/* Tab 2: Family & Household */}
           {activeTab === 'family' && (
-            <div className="card space-y-6 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
+            <div className="card space-y-6 bg-surface p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
               <div>
-                <h2 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                  <Users className="text-primary-600" size={24} />
+                <h2 className="text-xl font-black text-text flex items-center gap-2">
+                  <Users className="text-accent" size={24} />
                   Family & Household Details
                 </h2>
                 <p className="text-xs text-gray-550 dark:text-gray-400 mt-1">Provide household statistics, active field helpers, and critical emergency next of kin contact parameters.</p>
@@ -654,7 +654,7 @@ const Settings = () => {
 
               <div className="border-t border-gray-100 dark:border-gray-700/50 pt-5 mt-4 space-y-4">
                 <h3 className="text-sm font-bold text-gray-800 dark:text-gray-250 uppercase tracking-widest flex items-center gap-2">
-                  <Shield className="text-red-500" size={16} />
+                  <Shield className="text-danger" size={16} />
                   Emergency Contact / Next of Kin
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -719,10 +719,10 @@ const Settings = () => {
 
           {/* Tab 3: Farm Details */}
           {activeTab === 'farm' && (
-            <div className="card space-y-6 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
+            <div className="card space-y-6 bg-surface p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
               <div>
-                <h2 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                  <Sprout className="text-primary-600" size={24} />
+                <h2 className="text-xl font-black text-text flex items-center gap-2">
+                  <Sprout className="text-accent" size={24} />
                   Agribusiness & Land Details
                 </h2>
                 <p className="text-xs text-gray-550 dark:text-gray-400 mt-1">Provide agricultural field dimensions, soil specifications, crops cultivated, livestock inventory, and machinery checklist.</p>
@@ -894,13 +894,13 @@ const Settings = () => {
                         disabled={!isEditing}
                         className={`text-left px-3 py-2.5 rounded-xl border text-xs font-bold flex items-center justify-between transition-all ${
                           isChecked
-                            ? 'bg-primary-50 border-primary-300 text-primary-700 dark:bg-primary-950/20 dark:border-primary-800 dark:text-primary-400'
+                            ? 'bg-primary-50 border-primary-300 text-primary-700 dark:bg-primary-950/20 dark:border-primary-800 dark:text-accent'
                             : 'bg-transparent border-gray-200 text-gray-600 dark:border-gray-700 dark:text-gray-400'
                         } ${isEditing ? 'cursor-pointer hover:border-primary-400' : 'cursor-not-allowed opacity-80'}`}
                       >
                         <span>{item}</span>
                         {isChecked && (
-                          <span className="w-2 h-2 rounded-full bg-primary-600 dark:bg-primary-400 shadow-sm shrink-0 ml-1.5" />
+                          <span className="w-2 h-2 rounded-full bg-accent dark:bg-primary-400 shadow-sm shrink-0 ml-1.5" />
                         )}
                       </button>
                     );
@@ -931,10 +931,10 @@ const Settings = () => {
           {activeTab === 'preferences' && (
             <div className="space-y-6">
               {/* Appearance & Localization */}
-              <div className="card space-y-6 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
+              <div className="card space-y-6 bg-surface p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
                 <div>
-                  <h2 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                    <Globe className="text-primary-600" size={24} />
+                  <h2 className="text-xl font-black text-text flex items-center gap-2">
+                    <Globe className="text-accent" size={24} />
                     Appearance & Localization
                   </h2>
                   <p className="text-xs text-gray-550 dark:text-gray-400 mt-1">Configure screen colors, languages, unit preferences, and app navigation defaults.</p>
@@ -942,17 +942,17 @@ const Settings = () => {
                 
                 <div className="flex items-center justify-between p-4 bg-gray-50/50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/80">
                   <div className="flex items-center gap-3">
-                    <div className={`p-3 rounded-xl ${currentTheme === 'dark' ? 'bg-amber-100 text-amber-600' : 'bg-indigo-100 text-indigo-600'}`}>
+                    <div className={`p-3 rounded-xl ${currentTheme === 'dark' ? 'bg-amber-100 text-warning' : 'bg-indigo-100 text-indigo-600'}`}>
                       {currentTheme === 'dark' ? <Moon size={24} /> : <Sun size={24} />}
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">{t('settings.appearance')}</h3>
+                      <h3 className="font-bold text-text uppercase tracking-wider text-sm">{t('settings.appearance')}</h3>
                       <p className="text-xs text-gray-550 dark:text-gray-400">{currentTheme === 'dark' ? t('common.darkMode') : t('common.lightMode')}</p>
                     </div>
                   </div>
                   <button
                     onClick={toggleTheme}
-                    className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-primary-600 transition-colors focus:outline-none shadow-inner"
+                    className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-accent transition-colors focus:outline-none shadow-inner"
                   >
                     <span
                       className={`${
@@ -1000,10 +1000,10 @@ const Settings = () => {
               </div>
 
               {/* Notification Settings */}
-              <div className="card space-y-6 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
+              <div className="card space-y-6 bg-surface p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
                 <div>
-                  <h2 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                    <Bell className="text-primary-600" size={24} />
+                  <h2 className="text-xl font-black text-text flex items-center gap-2">
+                    <Bell className="text-accent" size={24} />
                     Notification & Weather Settings
                   </h2>
                   <p className="text-xs text-gray-550 dark:text-gray-400 mt-1">Configure warning channels and update intervals for weather reports and bids.</p>
@@ -1035,7 +1035,7 @@ const Settings = () => {
                       type="checkbox" 
                       checked={notificationSettings.push}
                       onChange={() => handleSaveNotifications('push')}
-                      className="rounded text-primary-600 focus:ring-primary-500 w-4 h-4 cursor-pointer"
+                      className="rounded text-accent focus:ring-accent w-4 h-4 cursor-pointer"
                     />
                   </div>
 
@@ -1048,7 +1048,7 @@ const Settings = () => {
                       type="checkbox" 
                       checked={notificationSettings.email}
                       onChange={() => handleSaveNotifications('email')}
-                      className="rounded text-primary-600 focus:ring-primary-500 w-4 h-4 cursor-pointer"
+                      className="rounded text-accent focus:ring-accent w-4 h-4 cursor-pointer"
                     />
                   </div>
 
@@ -1061,7 +1061,7 @@ const Settings = () => {
                       type="checkbox" 
                       checked={notificationSettings.sms}
                       onChange={() => handleSaveNotifications('sms')}
-                      className="rounded text-primary-600 focus:ring-primary-500 w-4 h-4 cursor-pointer"
+                      className="rounded text-accent focus:ring-accent w-4 h-4 cursor-pointer"
                     />
                   </div>
 
@@ -1074,17 +1074,17 @@ const Settings = () => {
                       type="checkbox" 
                       checked={notificationSettings.market}
                       onChange={() => handleSaveNotifications('market')}
-                      className="rounded text-primary-600 focus:ring-primary-500 w-4 h-4 cursor-pointer"
+                      className="rounded text-accent focus:ring-accent w-4 h-4 cursor-pointer"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Data Sync & Security */}
-              <div className="card space-y-6 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
+              <div className="card space-y-6 bg-surface p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
                 <div>
-                  <h2 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                    <Shield className="text-primary-600" size={24} />
+                  <h2 className="text-xl font-black text-text flex items-center gap-2">
+                    <Shield className="text-accent" size={24} />
                     Data Synchronization & Security
                   </h2>
                   <p className="text-xs text-gray-550 dark:text-gray-400 mt-1">Configure background sync conditions and biometric screen security.</p>
@@ -1098,7 +1098,7 @@ const Settings = () => {
                     </div>
                     <button
                       onClick={() => handlePreferenceChange('wifiSync', !appPreferences.wifiSync)}
-                      className="relative inline-flex h-5 w-10 items-center rounded-full bg-gray-200 dark:bg-primary-600 transition-colors focus:outline-none"
+                      className="relative inline-flex h-5 w-10 items-center rounded-full bg-gray-200 dark:bg-accent transition-colors focus:outline-none"
                     >
                       <span
                         className={`${
@@ -1115,7 +1115,7 @@ const Settings = () => {
                     </div>
                     <button
                       onClick={() => handlePreferenceChange('autoSync', !appPreferences.autoSync)}
-                      className="relative inline-flex h-5 w-10 items-center rounded-full bg-gray-200 dark:bg-primary-600 transition-colors focus:outline-none"
+                      className="relative inline-flex h-5 w-10 items-center rounded-full bg-gray-200 dark:bg-accent transition-colors focus:outline-none"
                     >
                       <span
                         className={`${
@@ -1132,7 +1132,7 @@ const Settings = () => {
                     </div>
                     <button
                       onClick={() => handlePreferenceChange('biometricLock', !appPreferences.biometricLock)}
-                      className="relative inline-flex h-5 w-10 items-center rounded-full bg-gray-200 dark:bg-primary-600 transition-colors focus:outline-none"
+                      className="relative inline-flex h-5 w-10 items-center rounded-full bg-gray-200 dark:bg-accent transition-colors focus:outline-none"
                     >
                       <span
                         className={`${
@@ -1145,10 +1145,10 @@ const Settings = () => {
               </div>
 
               {/* Cache Management & Utilities */}
-              <div className="card space-y-6 bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
+              <div className="card space-y-6 bg-surface p-6 rounded-2xl border border-gray-150 dark:border-gray-700 shadow-sm">
                 <div>
-                  <h2 className="text-xl font-black text-gray-900 dark:text-white flex items-center gap-2">
-                    <Database className="text-primary-600" size={24} />
+                  <h2 className="text-xl font-black text-text flex items-center gap-2">
+                    <Database className="text-accent" size={24} />
                     Storage & Local Caching
                   </h2>
                   <p className="text-xs text-gray-550 dark:text-gray-400 mt-1">Manage database size, clean offline segments, and export profile telemetry datasets.</p>
@@ -1159,7 +1159,7 @@ const Settings = () => {
                     <div>
                       <p className="text-sm font-bold text-gray-850 dark:text-gray-200">IndexedDB Storage</p>
                       <p className="text-[11px] text-gray-500 dark:text-gray-450">Offline map segments, sensor logs, and crop checklists</p>
-                      <p className="text-xs text-primary-600 font-bold mt-1">Current usage: {cacheSize}</p>
+                      <p className="text-xs text-accent font-bold mt-1">Current usage: {cacheSize}</p>
                     </div>
                     <button 
                       onClick={clearAppCache}
@@ -1177,7 +1177,7 @@ const Settings = () => {
                     </div>
                     <button 
                       onClick={handleExportData}
-                      className="px-3.5 py-2 bg-primary-50 text-primary-700 dark:bg-primary-950/20 dark:text-primary-400 font-bold border border-primary-100 dark:border-primary-900 rounded-xl hover:bg-primary-100 dark:hover:bg-primary-900/45 transition-colors text-xs flex items-center gap-1.5 shrink-0"
+                      className="px-3.5 py-2 bg-primary-50 text-primary-700 dark:bg-primary-950/20 dark:text-accent font-bold border border-primary-100 dark:border-primary-900 rounded-xl hover:bg-primary-100 dark:hover:bg-primary-900/45 transition-colors text-xs flex items-center gap-1.5 shrink-0"
                     >
                       <Download size={14} />
                       Export Data
@@ -1193,12 +1193,12 @@ const Settings = () => {
                     <AlertTriangle size={24} />
                   </div>
                   <div>
-                    <h2 className="text-lg font-black text-gray-900 dark:text-white">Danger Zone</h2>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Critical administrative utilities. Actions here cannot be undone.</p>
+                    <h2 className="text-lg font-black text-text">Danger Zone</h2>
+                    <p className="text-xs text-text-muted">Critical administrative utilities. Actions here cannot be undone.</p>
                   </div>
                 </div>
 
-                <div className="p-4 bg-white dark:bg-gray-900/30 rounded-2xl border border-red-100 dark:border-red-900/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="p-4 bg-surface/30 rounded-2xl border border-red-100 dark:border-red-900/20 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="text-center sm:text-left">
                     <p className="text-sm font-bold text-gray-850 dark:text-gray-200">Reset Application Preferences</p>
                     <p className="text-[11px] text-gray-500 dark:text-gray-455">Clear all local configurations and restore to default parameters</p>

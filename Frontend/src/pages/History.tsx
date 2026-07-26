@@ -180,7 +180,7 @@ const History = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">My Orders & Purchases</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Track and manage your order history with local farmers</p>
+            <p className="text-text-muted mt-1">Track and manage your order history with local farmers</p>
           </div>
           <button
             onClick={exportData}
@@ -199,7 +199,7 @@ const History = () => {
             </div>
             <div>
               <h3 className="font-bold text-gray-400 uppercase text-[10px] tracking-wider">Total Purchases</h3>
-              <p className="text-3xl font-black text-gray-900 dark:text-white mt-0.5">{CITIZEN_ORDERS.length}</p>
+              <p className="text-3xl font-black text-text mt-0.5">{CITIZEN_ORDERS.length}</p>
             </div>
           </div>
 
@@ -219,7 +219,7 @@ const History = () => {
             </div>
             <div>
               <h3 className="font-bold text-gray-400 uppercase text-[10px] tracking-wider">Total Items Bought</h3>
-              <p className="text-3xl font-black text-gray-900 dark:text-white mt-0.5">{totalItems} items</p>
+              <p className="text-3xl font-black text-text mt-0.5">{totalItems} items</p>
             </div>
           </div>
         </div>
@@ -231,10 +231,10 @@ const History = () => {
           </h2>
           <div className="space-y-4">
             {CITIZEN_ORDERS.map((order) => (
-              <div key={order.id} className="p-5 bg-gray-50 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-md transition-all">
+              <div key={order.id} className="p-5 bg-surface-sunken/40 rounded-2xl border border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:shadow-md transition-all">
                 <div className="space-y-2">
                   <div className="flex items-center gap-3">
-                    <span className="font-black text-sm text-gray-900 dark:text-white">Order #{order.id}</span>
+                    <span className="font-black text-sm text-text">Order #{order.id}</span>
                     <span className="text-xs text-gray-400">{order.date}</span>
                     <span className="flex items-center gap-1 text-[10px] bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-400 px-2 py-0.5 rounded-full font-bold uppercase">
                       <CheckCircle size={10} /> {order.status}
@@ -256,7 +256,7 @@ const History = () => {
                 <div className="flex items-end md:items-center gap-4 w-full md:w-auto justify-between md:justify-end pt-3 md:pt-0 border-t md:border-t-0 border-gray-200 dark:border-gray-850">
                   <div className="text-left md:text-right">
                     <span className="text-[10px] text-gray-400 block uppercase font-bold">Amount Paid</span>
-                    <span className="text-lg font-black text-gray-900 dark:text-white">₹{order.total}</span>
+                    <span className="text-lg font-black text-text">₹{order.total}</span>
                   </div>
                   <button
                     onClick={() => toast.success(`Delivery details for #${order.id}: Delivered to address on ${order.deliveryDate}.`)}
@@ -273,26 +273,26 @@ const History = () => {
         {/* Frequently Bought Food and Related Items (Quick Reorder Panel) */}
         <div className="card">
           <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-2">
-            <Flame size={20} className="text-orange-500 animate-pulse" /> Frequently Bought Items & Related Products
+            <Flame size={20} className="text-orange-500" /> Frequently Bought Items & Related Products
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {FREQUENT_ITEMS.map((item) => (
-              <div key={item.id} className="p-4 bg-gray-50 dark:bg-gray-800/40 border border-gray-100 dark:border-gray-850 rounded-2xl flex flex-col justify-between hover:shadow-md transition-all">
+              <div key={item.id} className="p-4 bg-surface-sunken/40 border border-gray-100 dark:border-gray-850 rounded-2xl flex flex-col justify-between hover:shadow-md transition-all">
                 <div>
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-3xl">{item.icon}</span>
-                    <div className="flex items-center text-amber-500 text-[10px] font-bold">
+                    <div className="flex items-center text-warning text-[10px] font-bold">
                       <Star size={10} fill="currentColor" />
                       <span className="text-gray-700 dark:text-gray-300 ml-0.5">{item.rating}</span>
                     </div>
                   </div>
-                  <h3 className="font-bold text-sm text-gray-900 dark:text-white mb-0.5 truncate">{item.name}</h3>
+                  <h3 className="font-bold text-sm text-text mb-0.5 truncate">{item.name}</h3>
                   <span className="text-[10px] text-gray-400 font-semibold block mb-3">{item.sales}</span>
                 </div>
-                <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
+                <div className="flex items-center justify-between pt-2 border-t border-border">
                   <div>
                     <span className="text-[9px] text-gray-400 block uppercase">Price</span>
-                    <span className="font-bold text-sm text-gray-900 dark:text-white">₹{item.price}/{item.unit}</span>
+                    <span className="font-bold text-sm text-text">₹{item.price}/{item.unit}</span>
                   </div>
                   <button
                     onClick={() => addToCart({ ...item, quantity: 1 })}
@@ -315,7 +315,7 @@ const History = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t('history.title')}</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">{t('history.subtitle')}</p>
+          <p className="text-text-muted mt-1">{t('history.subtitle')}</p>
         </div>
         <button
           onClick={exportData}
@@ -353,7 +353,7 @@ const History = () => {
         </div>
 
         {selectedMonth && selectedMonthData && (
-          <div className="mt-8 p-8 bg-gray-50 dark:bg-gray-950/20 rounded-2xl border border-gray-100 dark:border-gray-800 animate-in fade-in slide-in-from-top-4 duration-300">
+          <div className="mt-8 p-8 bg-gray-50 dark:bg-gray-950/20 rounded-2xl border border-border animate-in fade-in slide-in-from-top-4 duration-300">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                 {getMonthName(selectedMonth - 1)} 2024 {t('history.detailedAnalysis')}
@@ -368,7 +368,7 @@ const History = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="bg-surface p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="p-2 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-lg">
                     <TrendingUp size={20} />
@@ -380,26 +380,26 @@ const History = () => {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="bg-surface p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg">
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 text-info rounded-lg">
                     <Package size={20} />
                   </div>
                   <span className="font-bold text-gray-500 uppercase text-xs tracking-wider">{t('history.cropsSold')}</span>
                 </div>
-                <div className="text-3xl font-black text-blue-600 dark:text-blue-400">
+                <div className="text-3xl font-black text-info dark:text-blue-400">
                   {Math.round(selectedMonthData.cropsSold)}{t('common.kg')}
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="bg-surface p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 bg-amber-100 dark:bg-amber-900/30 text-amber-600 rounded-lg">
+                  <div className="p-2 bg-amber-100 dark:bg-amber-900/30 text-warning rounded-lg">
                     <BarChart3 size={20} />
                   </div>
                   <span className="font-bold text-gray-500 uppercase text-xs tracking-wider">{t('history.avgPrice')}</span>
                 </div>
-                <div className="text-3xl font-black text-amber-600 dark:text-amber-400">
+                <div className="text-3xl font-black text-warning dark:text-amber-400">
                   ₹{selectedMonthData.averagePrice.toFixed(1)}
                 </div>
               </div>
@@ -417,7 +417,7 @@ const History = () => {
              <TrendingUp size={120} />
           </div>
           <div className="flex items-center justify-between relative z-10">
-            <h3 className="font-bold text-gray-500 dark:text-gray-400 group-hover:text-white uppercase text-xs tracking-widest">{t('history.totalAnnualIncome')}</h3>
+            <h3 className="font-bold text-text-muted group-hover:text-white uppercase text-xs tracking-widest">{t('history.totalAnnualIncome')}</h3>
             <Eye size={18} className="text-gray-400 group-hover:text-white" />
           </div>
           <div className="text-4xl font-black text-emerald-600 dark:text-emerald-400 mt-4 group-hover:text-white relative z-10 transition-colors">
@@ -433,10 +433,10 @@ const History = () => {
              <Package size={120} />
           </div>
           <div className="flex items-center justify-between relative z-10">
-            <h3 className="font-bold text-gray-500 dark:text-gray-400 group-hover:text-white uppercase text-xs tracking-widest">{t('history.totalCropsSold')}</h3>
+            <h3 className="font-bold text-text-muted group-hover:text-white uppercase text-xs tracking-widest">{t('history.totalCropsSold')}</h3>
             <Eye size={18} className="text-gray-400 group-hover:text-white" />
           </div>
-          <div className="text-4xl font-black text-blue-600 dark:text-blue-400 mt-4 group-hover:text-white relative z-10 transition-colors">
+          <div className="text-4xl font-black text-info dark:text-blue-400 mt-4 group-hover:text-white relative z-10 transition-colors">
             {Math.round(monthlyIncome.reduce((sum, month) => sum + month.cropsSold, 0)).toLocaleString()}{t('common.kg')}
           </div>
         </div>
@@ -449,10 +449,10 @@ const History = () => {
              <BarChart3 size={120} />
           </div>
           <div className="flex items-center justify-between relative z-10">
-            <h3 className="font-bold text-gray-500 dark:text-gray-400 group-hover:text-white uppercase text-xs tracking-widest">{t('history.averagePrice')}</h3>
+            <h3 className="font-bold text-text-muted group-hover:text-white uppercase text-xs tracking-widest">{t('history.averagePrice')}</h3>
             <Eye size={18} className="text-gray-400 group-hover:text-white" />
           </div>
-          <div className="text-4xl font-black text-amber-600 dark:text-amber-400 mt-4 group-hover:text-white relative z-10 transition-colors">
+          <div className="text-4xl font-black text-warning dark:text-amber-400 mt-4 group-hover:text-white relative z-10 transition-colors">
             ₹{(monthlyIncome.reduce((sum, month) => sum + month.averagePrice, 0) / (monthlyIncome.length || 1)).toFixed(1)}
           </div>
         </div>
@@ -467,9 +467,9 @@ const History = () => {
         >
           <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
             {detailModal.data?.map((income: MonthlyIncome) => (
-              <div key={income.id} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+              <div key={income.id} className="flex items-center justify-between p-4 bg-surface-sunken/50 rounded-xl border border-gray-100 dark:border-gray-700">
                 <div>
-                  <p className="font-bold text-gray-900 dark:text-white">{getMonthName(income.month - 1)} {income.year}</p>
+                  <p className="font-bold text-text">{getMonthName(income.month - 1)} {income.year}</p>
                   <p className="text-xs text-gray-500">{income.cropsSold.toFixed(0)} kg sold @ ₹{income.averagePrice.toFixed(1)}/kg</p>
                 </div>
                 <div className="text-right">

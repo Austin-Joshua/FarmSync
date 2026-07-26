@@ -111,8 +111,8 @@ const Community = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Farmer Community</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Connect, share, and learn with fellow farmers</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-text">Farmer Community</h1>
+          <p className="text-text-muted text-sm mt-1">Connect, share, and learn with fellow farmers</p>
         </div>
         <button onClick={() => setShowNewPost(!showNewPost)} className="btn-primary flex items-center gap-2 self-start sm:self-auto text-sm">
           <Plus size={18} /> New Discussion
@@ -124,16 +124,16 @@ const Community = () => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input type="text" placeholder="Search discussions..." value={search} onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary-500 outline-none text-sm" />
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-surface focus:ring-2 focus:ring-accent outline-none text-sm" />
         </div>
         {allTags.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            <button onClick={() => setActiveTag(null)} className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${!activeTag ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200'}`}>
+            <button onClick={() => setActiveTag(null)} className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${!activeTag ? 'bg-accent text-white' : 'bg-gray-100 dark:bg-gray-800 text-text-muted hover:bg-gray-200'}`}>
               All
             </button>
             {allTags.slice(0, 6).map(tag => (
               <button key={tag} onClick={() => setActiveTag(activeTag === tag ? null : tag)}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 ${activeTag === tag ? 'bg-primary-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200'}`}>
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 ${activeTag === tag ? 'bg-accent text-white' : 'bg-gray-100 dark:bg-gray-800 text-text-muted hover:bg-gray-200'}`}>
                 <Tag size={10} /> {tag}
               </button>
             ))}
@@ -143,12 +143,12 @@ const Community = () => {
 
       {/* New Post Form */}
       {showNewPost && (
-        <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 space-y-3">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white">Start a Discussion</h2>
+        <div className="bg-surface p-4 sm:p-6 rounded-2xl shadow-sm border border-border space-y-3">
+          <h2 className="text-lg font-bold text-text">Start a Discussion</h2>
           <input type="text" placeholder="Discussion title..." value={newPostTitle} onChange={e => setNewPostTitle(e.target.value)}
-            className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm focus:ring-2 focus:ring-primary-500 outline-none" />
+            className="w-full p-3 rounded-xl border border-border bg-surface-sunken text-sm focus:ring-2 focus:ring-accent outline-none" />
           <textarea placeholder="Describe your question or topic in detail..." rows={4} value={newPostContent} onChange={e => setNewPostContent(e.target.value)}
-            className="w-full p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm focus:ring-2 focus:ring-primary-500 outline-none resize-none" />
+            className="w-full p-3 rounded-xl border border-border bg-surface-sunken text-sm focus:ring-2 focus:ring-accent outline-none resize-none" />
           <div className="flex justify-end gap-2">
             <button onClick={() => setShowNewPost(false)} className="btn-secondary text-sm">Cancel</button>
             <button onClick={handleCreatePost} className="btn-primary text-sm">Post Discussion</button>
@@ -160,31 +160,31 @@ const Community = () => {
       {loading ? (
         <div className="space-y-3">
           {[1,2,3].map(i => (
-            <div key={i} className="h-32 bg-gray-100 dark:bg-gray-800 rounded-2xl animate-pulse" />
+            <div key={i} className="h-32 bg-gray-100 dark:bg-gray-800 rounded-2xl" />
           ))}
         </div>
       ) : filteredPosts.length === 0 ? (
-        <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700">
+        <div className="text-center py-12 bg-surface rounded-2xl border border-border">
           <MessageSquare size={40} className="mx-auto text-gray-300 dark:text-gray-600 mb-3" />
           <p className="text-gray-500 font-medium">No discussions found</p>
-          <button onClick={() => setShowNewPost(true)} className="mt-3 text-primary-600 font-bold text-sm hover:underline">Start the first one!</button>
+          <button onClick={() => setShowNewPost(true)} className="mt-3 text-accent font-bold text-sm hover:underline">Start the first one!</button>
         </div>
       ) : (
         <div className="space-y-3 sm:space-y-4">
           {filteredPosts.map(post => {
             const isExpanded = expandedPost === post.id;
             return (
-              <div key={post.id} className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-md transition-all border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div key={post.id} className="bg-surface rounded-2xl shadow-sm hover:shadow-md transition-all border border-border overflow-hidden">
                 <div className="p-4 sm:p-5">
                   {/* Post header */}
                   <div className="flex items-start gap-3 mb-3">
-                    <div className="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 font-bold text-sm flex-shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-accent font-bold text-sm flex-shrink-0">
                       {post.author?.name?.charAt(0) || 'F'}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-gray-900 dark:text-white text-sm sm:text-base leading-tight">{post.title}</h3>
+                      <h3 className="font-bold text-text text-sm sm:text-base leading-tight">{post.title}</h3>
                       <p className="text-xs text-gray-500 mt-0.5">
-                        <span className="font-semibold text-primary-600 dark:text-primary-400">{post.author?.name || 'Anonymous'}</span>
+                        <span className="font-semibold text-accent dark:text-accent">{post.author?.name || 'Anonymous'}</span>
                         {' • '}{formatDateDisplay(post.createdAt)}
                       </p>
                     </div>
@@ -202,11 +202,11 @@ const Community = () => {
                   )}
 
                   {/* Actions */}
-                  <div className="flex items-center gap-4 mt-4 text-gray-500 dark:text-gray-400">
-                    <button onClick={() => handleLike(post.id)} className="flex items-center gap-1.5 hover:text-primary-600 transition-colors text-sm">
+                  <div className="flex items-center gap-4 mt-4 text-text-muted">
+                    <button onClick={() => handleLike(post.id)} className="flex items-center gap-1.5 hover:text-accent transition-colors text-sm">
                       <ThumbsUp size={15} /> <span>{post.likesCount || 0}</span>
                     </button>
-                    <button onClick={() => setExpandedPost(isExpanded ? null : post.id)} className="flex items-center gap-1.5 hover:text-primary-600 transition-colors text-sm">
+                    <button onClick={() => setExpandedPost(isExpanded ? null : post.id)} className="flex items-center gap-1.5 hover:text-accent transition-colors text-sm">
                       <MessageSquare size={15} /> <span>{post.replies?.length || 0} replies</span>
                       {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                     </button>
@@ -218,7 +218,7 @@ const Community = () => {
 
                 {/* Replies section */}
                 {isExpanded && (
-                  <div className="border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4 sm:p-5 space-y-3">
+                  <div className="border-t border-gray-100 dark:border-gray-700 bg-surface-sunken/50 p-4 sm:p-5 space-y-3">
                     {post.replies?.length > 0 && (
                       <div className="space-y-3 mb-4">
                         {post.replies.map((reply: any, i: number) => (
@@ -226,8 +226,8 @@ const Community = () => {
                             <div className="w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
                               <User2 size={14} className="text-gray-500" />
                             </div>
-                            <div className="flex-1 bg-white dark:bg-gray-800 rounded-xl p-3 border border-gray-200 dark:border-gray-700">
-                              <p className="text-xs font-bold text-primary-600 dark:text-primary-400 mb-1">{reply.author} <span className="text-gray-400 font-normal">{reply.time}</span></p>
+                            <div className="flex-1 bg-surface rounded-xl p-3 border border-border">
+                              <p className="text-xs font-bold text-accent dark:text-accent mb-1">{reply.author} <span className="text-gray-400 font-normal">{reply.time}</span></p>
                               <p className="text-sm text-gray-700 dark:text-gray-300">{reply.content}</p>
                             </div>
                           </div>
@@ -236,13 +236,13 @@ const Community = () => {
                     )}
                     {/* Reply input */}
                     <div className="flex items-start gap-2">
-                      <div className="w-7 h-7 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 text-xs font-bold flex-shrink-0">
+                      <div className="w-7 h-7 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-accent text-xs font-bold flex-shrink-0">
                         {user?.name?.charAt(0) || 'Y'}
                       </div>
                       <div className="flex-1 flex items-end gap-2">
                         <input
                           type="text" placeholder="Write a reply..." value={replyText} onChange={e => setReplyText(e.target.value)}
-                          className="flex-1 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-primary-500 outline-none"
+                          className="flex-1 px-3 py-2 rounded-xl border border-border bg-surface text-sm focus:ring-2 focus:ring-accent outline-none"
                         />
                         <button
                           onClick={() => {
@@ -253,7 +253,7 @@ const Community = () => {
                             setReplyText('');
                             toast.success('Reply posted!');
                           }}
-                          className="p-2 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-all"
+                          className="p-2 bg-accent text-white rounded-xl hover:bg-accent-hover transition-all"
                         >
                           <Send size={16} />
                         </button>

@@ -184,7 +184,7 @@ const LocationMap = ({
   return (
     <div ref={containerRef} className="flex flex-col lg:flex-row gap-4 w-full h-full min-h-0 bg-transparent">
       {/* Map Side */}
-      <div className="flex-1 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 relative h-full min-h-0" style={{ height }}>
+      <div className="flex-1 rounded-2xl overflow-hidden border border-border relative h-full min-h-0" style={{ height }}>
         <MapContainer
           key={theme} // Force redraw on theme swap
           center={center}
@@ -250,7 +250,7 @@ const LocationMap = ({
 
         {/* Float drawing indicators */}
         {isEditable && drawMode && (
-          <div className="absolute top-4 left-14 z-[400] bg-white/90 dark:bg-[#0b130e]/95 backdrop-blur border border-accent/30 px-4 py-2 rounded-xl text-xs font-black text-emerald-600 uppercase tracking-widest animate-pulse shadow-md">
+          <div className="absolute top-4 left-14 z-[400] bg-white/90 dark:bg-[#0b130e]/95 backdrop-blur border border-accent/30 px-4 py-2 rounded-xl text-xs font-black text-emerald-600 uppercase tracking-widest shadow-md">
             📍 Boundary Mode: Click Map to Place Vertices
           </div>
         )}
@@ -260,9 +260,9 @@ const LocationMap = ({
       {isEditable && (
         <div className="w-full lg:w-80 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/5 p-6 rounded-[2rem] shadow-xl flex flex-col justify-between gap-6">
           <div className="space-y-5">
-            <div className="flex items-center gap-2 border-b border-gray-100 dark:border-white/5 pb-3">
+            <div className="flex items-center gap-2 border-b border-border pb-3">
               <Compass className="text-accent" size={20} />
-              <h3 className="text-sm font-black uppercase tracking-wider text-gray-900 dark:text-white">Mapping Controls</h3>
+              <h3 className="text-sm font-black uppercase tracking-wider text-text">Mapping Controls</h3>
             </div>
 
             {/* GPS Trigger */}
@@ -299,7 +299,7 @@ const LocationMap = ({
                   step="0.000001"
                   value={lat}
                   onChange={(e) => setLat(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent"
+                  className="w-full bg-gray-50 dark:bg-white/5 border border-border rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent"
                 />
               </div>
               <div className="space-y-1">
@@ -309,7 +309,7 @@ const LocationMap = ({
                   step="0.000001"
                   value={lng}
                   onChange={(e) => setLng(parseFloat(e.target.value) || 0)}
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent"
+                  className="w-full bg-gray-50 dark:bg-white/5 border border-border rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-accent"
                 />
               </div>
             </div>
@@ -323,7 +323,7 @@ const LocationMap = ({
                   value={villageVal}
                   onChange={(e) => setVillageVal(e.target.value)}
                   placeholder="e.g. Igatpuri"
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-accent"
+                  className="w-full bg-gray-50 dark:bg-white/5 border border-border rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-accent"
                 />
               </div>
               <div className="space-y-1">
@@ -333,7 +333,7 @@ const LocationMap = ({
                   value={districtVal}
                   onChange={(e) => setDistrictVal(e.target.value)}
                   placeholder="e.g. Nashik"
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-accent"
+                  className="w-full bg-gray-50 dark:bg-white/5 border border-border rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-accent"
                 />
               </div>
               <div className="space-y-1">
@@ -343,14 +343,14 @@ const LocationMap = ({
                   value={stateVal}
                   onChange={(e) => setStateVal(e.target.value)}
                   placeholder="e.g. Maharashtra"
-                  className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-accent"
+                  className="w-full bg-gray-50 dark:bg-white/5 border border-border rounded-xl px-3 py-2.5 text-xs font-semibold focus:outline-none focus:border-accent"
                 />
               </div>
             </div>
 
             {/* Polygon draw options */}
             {drawnPoints.length > 0 && (
-              <div className="flex gap-2 border-t border-gray-100 dark:border-white/5 pt-4">
+              <div className="flex gap-2 border-t border-border pt-4">
                 <button
                   onClick={undoLastVertex}
                   className="flex-1 py-2 bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-700 dark:text-gray-300 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all"
@@ -360,7 +360,7 @@ const LocationMap = ({
                 </button>
                 <button
                   onClick={clearBoundary}
-                  className="flex-1 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all"
+                  className="flex-1 py-2 bg-red-500/10 hover:bg-red-500/20 text-danger rounded-xl text-[10px] font-black uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all"
                 >
                   <Trash2 size={12} />
                   Clear Poly

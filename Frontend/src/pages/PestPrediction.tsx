@@ -89,7 +89,7 @@ const PestPrediction: React.FC = () => {
                 name="crop"
                 value={formData.crop}
                 onChange={handleChange}
-                className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-gray-900 dark:text-white"
+                className="w-full px-4 py-2 bg-surface-sunken border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-text"
               >
                 <option value="Wheat">Wheat</option>
                 <option value="Rice">Rice</option>
@@ -112,13 +112,13 @@ const PestPrediction: React.FC = () => {
                 onChange={handleChange}
                 required
                 placeholder="e.g., 28.5"
-                className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-gray-900 dark:text-white"
+                className="w-full px-4 py-2 bg-surface-sunken border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-text"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-2">
-                <Droplets className="w-4 h-4 text-blue-500" />
+                <Droplets className="w-4 h-4 text-info" />
                 Humidity (%)
               </label>
               <input
@@ -129,7 +129,7 @@ const PestPrediction: React.FC = () => {
                 onChange={handleChange}
                 required
                 placeholder="e.g., 65.0"
-                className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-gray-900 dark:text-white"
+                className="w-full px-4 py-2 bg-surface-sunken border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-text"
               />
             </div>
 
@@ -146,7 +146,7 @@ const PestPrediction: React.FC = () => {
                 onChange={handleChange}
                 required
                 placeholder="e.g., 20.0"
-                className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-gray-900 dark:text-white"
+                className="w-full px-4 py-2 bg-surface-sunken border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors text-text"
               />
             </div>
 
@@ -170,7 +170,7 @@ const PestPrediction: React.FC = () => {
           ) : result ? (
             <div className="text-center space-y-4">
               <div className={`mx-auto w-24 h-24 rounded-full flex items-center justify-center ${
-                result.risk === 'High' ? 'bg-red-100 text-red-600' :
+                result.risk === 'High' ? 'bg-red-100 text-danger' :
                 result.risk === 'Medium' ? 'bg-orange-100 text-orange-600' :
                 'bg-green-100 text-green-600'
               }`}>
@@ -178,11 +178,11 @@ const PestPrediction: React.FC = () => {
               </div>
               
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                <h3 className="text-2xl font-bold text-text">
                   {result.risk} Risk Level
                 </h3>
                 <p className={`mt-2 font-medium ${
-                  result.risk === 'High' ? 'text-red-600 dark:text-red-400' :
+                  result.risk === 'High' ? 'text-danger dark:text-red-400' :
                   result.risk === 'Medium' ? 'text-orange-600 dark:text-orange-400' :
                   'text-green-600 dark:text-green-400'
                 }`}>
@@ -191,9 +191,9 @@ const PestPrediction: React.FC = () => {
               </div>
               
               {result.risk !== 'Low' && (
-                <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-xl text-left">
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Recommended Actions:</h4>
-                  <ul className="list-disc list-inside text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                <div className="mt-6 p-4 bg-surface-sunken rounded-xl text-left">
+                  <h4 className="font-semibold text-text mb-2">Recommended Actions:</h4>
+                  <ul className="list-disc list-inside text-sm text-text-muted space-y-1">
                     <li>Inspect crops visually for early signs of damage.</li>
                     <li>Prepare organic or chemical countermeasures.</li>
                     <li>Adjust irrigation schedules to reduce surface humidity if possible.</li>
@@ -202,7 +202,7 @@ const PestPrediction: React.FC = () => {
               )}
             </div>
           ) : (
-            <div className="text-center text-gray-500 dark:text-gray-400">
+            <div className="text-center text-text-muted">
               <Bug className="w-16 h-16 mx-auto mb-4 opacity-20" />
               <p>Enter field data and run the analysis to see AI pest predictions here.</p>
             </div>

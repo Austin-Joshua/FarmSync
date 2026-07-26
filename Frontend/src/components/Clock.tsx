@@ -54,21 +54,21 @@ const Clock = () => {
         className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out text-gray-700 dark:text-gray-300 hover:scale-100 active:scale-100"
         title={formatDate(currentTime)}
       >
-        <ClockIcon size={16} className="flex-shrink-0 animate-pulse" />
+        <ClockIcon size={16} className="flex-shrink-0" />
         <span className="font-mono text-sm font-medium">{formatTime(currentTime)}</span>
         <CalendarIcon size={14} className="flex-shrink-0 opacity-70" />
         <span className="text-xs opacity-70 hidden sm:inline">{shortDate}</span>
       </button>
 
       {showDate && (
-        <div className="absolute right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl p-4 z-50 min-w-[280px] animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="flex items-center gap-2 mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-            <CalendarIcon size={18} className="text-primary-600" />
-            <span className="font-semibold text-gray-900 dark:text-white">{t('common.date') || 'Date'}</span>
+        <div className="absolute right-0 mt-2 bg-surface border border-border rounded-lg shadow-xl p-4 z-50 min-w-[280px] animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center gap-2 mb-3 pb-3 border-b border-border">
+            <CalendarIcon size={18} className="text-accent" />
+            <span className="font-semibold text-text">{t('common.date') || 'Date'}</span>
           </div>
           <div className="text-sm text-gray-700 dark:text-gray-300 space-y-1">
             <div className="font-medium">{formatDate(currentTime)}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-100 dark:border-gray-700">
+            <div className="text-xs text-text-muted pt-2 border-t border-gray-100 dark:border-gray-700">
               {t('common.time') || 'Time'}: {formatTime(currentTime)}
             </div>
           </div>
